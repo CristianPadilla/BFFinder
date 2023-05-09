@@ -1,10 +1,11 @@
 server:
-  port: 9191
+  port: 8084
 
 spring:
   application:
-    name: AUTH-SERVICE
+    name: PET-SERVICE
   config:
+    #    import: 'optional:configserver:'
     import: configserver:http://localhost:9296
   datasource:
     url: jdbc:mysql://${DB_HOST:localhost}:3306/bffinder

@@ -6,20 +6,20 @@ spring:
     name: API-GATEWAY
   config:
     import: configserver:http://localhost:9296
-  datasource:
-    url: jdbc:mysql://localhost:3306/bffinder
-    username: root
-    password: cpadilla
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQLDialect
+  #  datasource:
+  #    url: jdbc:mysql://localhost:3306/bffinder
+  #    username: root
+  #    password: Playtech123
+  #    driver-class-name: com.mysql.cj.jdbc.Driver
+  #  jpa:
+  #    hibernate:
+  #      ddl-auto: update
+  #    show-sql: true
+  #    properties:
+  #      hibernate:
+  #        format_sql: true
+  #    database: mysql
+  #    database-platform: org.hibernate.dialect.MySQLDialect
   cloud:
     gateway:
       routes:
@@ -27,14 +27,21 @@ spring:
           uri: lb://USER-SERVICE #name registered in eureka
           predicates:
             - Path=/user/**
+        #          filters:
+        #            - name: CircuitBreaker
+        #              args:
+        #                name: PRODUCT-SERVICE
+        #                fallbackuri: forward:/productServiceFallBack
+        #            - name: RequestRateLimiter
+        #              args:
+        #                redis-rate-limiter.replenishRate: 1
+        #                redis-rate-limiter.burstCapacity: 1
+        - id: PET-SERVICE
+          uri: lb://PET-SERVICE
+          predicates:
+            - Path=/pet/**
 
-
-#          filters:
-#            - name: CircuitBreaker
-#              args:
-#                name: PRODUCT-SERVICE
-#                fallbackuri: forward:/productServiceFallBack
-#            - name: RequestRateLimiter
-#              args:
-#                redis-rate-limiter.replenishRate: 1
-#                redis-rate-limiter.burstCapacity: 1
+        - id: AUTH-SERVICE
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
