@@ -3,6 +3,7 @@ package com.cpadilla.authservice.controller;
 import com.cpadilla.authservice.entity.UserCredentialsEntity;
 import com.cpadilla.authservice.model.AuthRequest;
 import com.cpadilla.authservice.service.AuthService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@Log4j2
 public class AuthController {
 
 
@@ -23,6 +25,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public String register(@RequestBody UserCredentialsEntity user) {
+        log.info("/register CONTROLLER");
         return service.register(user);
     }
 

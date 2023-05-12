@@ -1,9 +1,6 @@
 package com.cpadilla.authservice.service;
 
 import com.cpadilla.authservice.entity.UserCredentialsEntity;
-import com.cpadilla.authservice.model.AuthenticationResponse;
-import com.cpadilla.authservice.model.RegisterRequest;
-import com.cpadilla.authservice.model.UserCredentialsResponse;
 import com.cpadilla.authservice.repository.UserCredentialsRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;

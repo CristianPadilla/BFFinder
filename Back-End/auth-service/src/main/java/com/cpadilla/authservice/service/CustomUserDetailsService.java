@@ -20,17 +20,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
+        log.info("Looking for a user with username: {}", username);
         Optional<UserCredentialsEntity> credentials = repository.findByEmail(username);
         return credentials.map(CustomUserDetails::new).orElseThrow(() -> new UsernameNotFoundException("user not found with email: " + username));
 
-
-//        Optional<UserCredentialsEntity> credentials = repository.findByEmail(username);
-//        var credenciales = credentials.map(CustomUserDetails::new);
-//        String nombre = credentials.map(UserCredentialsEntity::getEmail).orElse("j");
-//        log.info("===========credenciales {}", credenciales.getClass());
-//        var respuesta = credenciales.orElseThrow(() -> new UsernameNotFoundException("user not found with email: " + username));
-//        log.info("===========respuesta {}", respuesta.getClass());
-//        return respuesta;
     }
 }

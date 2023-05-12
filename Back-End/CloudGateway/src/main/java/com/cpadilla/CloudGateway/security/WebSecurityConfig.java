@@ -24,7 +24,9 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity httpSecurity) {
-        httpSecurity.authorizeExchange()
+        httpSecurity.csrf()
+                .disable()
+                .authorizeExchange()
                 .anyExchange()
                 .permitAll();
 
