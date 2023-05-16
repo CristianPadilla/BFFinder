@@ -27,6 +27,8 @@ spring:
           uri: lb://USER-SERVICE #name registered in eureka
           predicates:
             - Path=/user/**
+          filters:
+            - AuthenticationFilter #name of the filter class, filter for validate token
         #          filters:
         #            - name: CircuitBreaker
         #              args:
@@ -40,6 +42,8 @@ spring:
           uri: lb://PET-SERVICE
           predicates:
             - Path=/pet/**
+          filters:
+            - AuthenticationFilter
 
         - id: AUTH-SERVICE
           uri: lb://AUTH-SERVICE
