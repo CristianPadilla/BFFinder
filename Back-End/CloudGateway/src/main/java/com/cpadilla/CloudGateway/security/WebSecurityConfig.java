@@ -19,8 +19,6 @@ import org.springframework.web.server.WebFilter;
 @EnableWebFluxSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
-//    private final JwtAuthenticationFilter jwtAuthFilter;
-//    private final ReactiveAuthenticationManager authenticationManager;
 
     @Bean
     public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity httpSecurity) {
@@ -33,23 +31,5 @@ public class WebSecurityConfig {
         return httpSecurity.build();
     }
 
-   /* @Bean
-    public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf()
-                .disable()
-                .authorizeExchange()
-                .pathMatchers("")
-                .permitAll()
-                .anyExchange()
-                .authenticated()
-                .and()
-//                .sessionManagment()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .authenticationManager(authenticationManager)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        ;
-
-        return httpSecurity.build();
-    }*/
 
 }

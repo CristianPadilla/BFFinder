@@ -8,9 +8,11 @@ import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+
 import org.springframework.web.server.ResponseStatusException;
+import reactor.core.publisher.Mono;
 
 @Component
 @Log4j2
@@ -30,6 +32,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     private JwtUtil jwtUtil;
 
 
+
     public AuthenticationFilter() {
         super(Config.class);
     }
@@ -37,20 +40,31 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     @Override
     public GatewayFilter apply(Config config) {
         return (((exchange, chain) -> {
-            log.info("HOLAAAAAAAAAAAAAAAAAAAAAAAA");
             //Nueva logica de amigoscode
-            final String jwt;
-            final String userEmail;
-            final String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION) != null
-                    ? exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0)
-                    : null;
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            if (validator.isSecured.test(exchange.getRequest())) { //Check if request corresponds to unsecured endpoints
+                final String jwt;
+                final String userEmail;
+                final String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION) != null
+                        ? exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0)
+                        : null;
+                if (authHeader == null || !authHeader.startsWith("Bearer ")) {
 //                chain.filter(exchange);// do not know if necessary or not
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "INVALID_AUTHORIZATION_HEADER");
-            }
-            jwt = authHeader.substring(7);
-            userEmail = jwtUtil.extractUsername(jwt);
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "INVALID_AUTHORIZATION_HEADER");
+                }
+                jwt = authHeader.substring(7);
+                userEmail = jwtUtil.extractUsername(jwt);
 
+                try {
+                    //REST call to auth Service (unsafe way to validate token because of service call)
+//                    restTemplate.getForObject("http://AUTH-SERVICE/auth/validate?token=" + authHeader, String.class);
+
+                    // a better solution is to add the token validation logic to gateway
+                    log.info("HOLbBBBBBBBBBBBBBBBBBBBBB " + jwt);
+                    jwtUtil.validateToken(jwt);
+                } catch (Exception e) {
+                    throw new RuntimeException("unauthorized access to application");
+                }
+            }
 
 //            if (validator.isSecured.test(exchange.getRequest())) { //Check if request corresponds to unsecured endpoints
 //
@@ -69,8 +83,6 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 //                } catch (Exception e) {
 //                    throw new RuntimeException("unauthirized access to application");
 //                }
-
-
 //            }
 
             return chain.filter(exchange);

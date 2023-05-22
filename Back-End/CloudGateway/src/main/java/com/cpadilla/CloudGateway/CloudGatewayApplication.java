@@ -17,9 +17,5 @@ public class CloudGatewayApplication {
         SpringApplication.run(CloudGatewayApplication.class, args);
     }
 
-//    @Bean
-//    public WebClient.Builder getWebClientBuilder(){
-//        return WebClient.builder();
-//    }
 
 }

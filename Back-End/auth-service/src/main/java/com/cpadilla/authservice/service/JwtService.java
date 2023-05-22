@@ -21,9 +21,9 @@ public class JwtService {
     private static final String SECRET_KEY = "5367566B59703373367638792F423F4528482B4D6251655468576D5A71347437";
 
 
-    public void validateToken(final String token) {
-        Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token);
-    }
+//    public void validateToken(final String token) {
+//        Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token);
+//    }
 
     //
 //
@@ -41,24 +41,12 @@ public class JwtService {
 //                .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
 //    }
 //
-    private Key getSignKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
 
-
-    //
-//    public boolean isTokenValid(String token, UserDetails userDetails) {
-//        final String username = extractUsername(token);
-//        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
-//    }
-//
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
         return Jwts
                 .builder()
                 .setClaims(extraClaims)

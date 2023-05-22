@@ -1,10 +1,12 @@
 package com.cpadilla.authservice.controller;
 
-import com.cpadilla.authservice.entity.UserCredentialsEntity;
-import com.cpadilla.authservice.model.AuthRequest;
-import com.cpadilla.authservice.service.AuthService;
+import com.cpadilla.authservice.model.AuthenticationRequest;
+import com.cpadilla.authservice.model.AuthenticationResponse;
+import com.cpadilla.authservice.model.RegisterRequest;
+import com.cpadilla.authservice.service.AuthenticationService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,54 +19,45 @@ public class AuthController {
 
 
     @Autowired
-    private AuthService service;
+    private AuthenticationService service;
 
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+//    @Autowired
+//    private AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
-    public String register(@RequestBody UserCredentialsEntity user) {
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest registerRequest) {
         log.info("/register CONTROLLER");
-        return service.register(user);
+        return ResponseEntity.ok(service.register(registerRequest));
     }
 
-    @PostMapping("/token")
-    public String getToken(@RequestBody AuthRequest authRequest) {
-        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-        if (authenticate.isAuthenticated()) {
-            return service.generateToken(authRequest.getUsername());
-        } else {
-            throw new RuntimeException("invalid access");
-        }
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthenticationResponse> getToken(@RequestBody AuthenticationRequest authenticationRequest) {
+        log.info("/authenticate CONTROLLER");
+        return ResponseEntity.ok(service.authenticate(authenticationRequest));
+
     }
-
-    @GetMapping("/validate")
-    public String validateToken(@RequestParam("token") String token) {
-        service.validateToken(token);
-        return "Token is valid";
-    }
-
-
 //    @PostMapping("/register")
-//    public ResponseEntity<AuthenticationResponse> register(
-//            @RequestBody RegisterRequest request
-//    ) {
-//        return ResponseEntity.ok(service.register(request));
+//    public String register(@RequestBody UserCredentialsEntity user) {
+//        log.info("/register CONTROLLER");
+//        return service.register(user);
 //    }
-//    @PostMapping("/authenticate")
-//    public ResponseEntity<AuthenticationResponse> authenticate(
-//            @RequestBody AuthenticationRequest request
-//    ) {
-//        return ResponseEntity.ok(service.authenticate(request));
+
+//    @PostMapping("/token")
+//    public String getToken(@RequestBody AuthenticationRequest authRequest) {
+//        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+//        if (authenticate.isAuthenticated()) {
+//            return service.generateToken(authRequest.getUsername());
+//        } else {
+//            throw new RuntimeException("invalid access");
+//        }
 //    }
-//
-//    @PostMapping("/refresh-token")
-//    public void refreshToken(
-//            HttpServletRequest request,
-//            HttpServletResponse response
-//    ) throws IOException {
-//        service.refreshToken(request, response);
+
+
+//    @GetMapping("/validate")
+//    public String validateToken(@RequestParam("token") String token) {
+//        service.validateToken(token);
+//        return "Token is valid";
 //    }
 
 
