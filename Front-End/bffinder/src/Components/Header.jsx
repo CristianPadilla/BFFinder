@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
 import 'styles/Header.scss';
 import { Button } from "@mui/material";
 
 const Header = () => {
+
+  useEffect(() => {
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('header');
+      header.classList.toggle('abajo', window.scrollY > 0);
+    });
+  }, []);
+
   return (
     <div>
       <header>
