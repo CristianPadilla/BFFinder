@@ -23,8 +23,8 @@ public class CustomUserDetails implements UserDetails {
     private String username;
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+//    @Enumerated(EnumType.STRING)
+//    private Role role;
 
 
     public CustomUserDetails(UserCredentialsEntity userCredentials) {
