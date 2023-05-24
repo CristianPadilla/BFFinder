@@ -20,37 +20,11 @@ public class JwtUtil {
     //encryption key generated online, remember the minimum size for jwt is 256 bit
     private static final String SECRET_KEY = "5367566B59703373367638792F423F4528482B4D6251655468576D5A71347437";
 
-//    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-//        return Jwts.builder()
-//                .setClaims(extraClaims)
-//                .setSubject(userDetails.getUsername())
-//                .setIssuedAt(new Date(System.currentTimeMillis()))
-//                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))// expires at 24 hours
-//                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-//                .compact();
-//    }
-//
 
-//    public String generateToken(UserDetails userDetails) {
-//        return generateToken(new HashMap<>(), userDetails);
-//    }
-//
-//    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-//        Map<String, Object> claims = new HashMap<>();
-//        return Jwts
-//                .builder()
-//                .setClaims(extraClaims)
-//                .setSubject(userDetails.getUsername())
-//                .setIssuedAt(new Date(System.currentTimeMillis()))
-//                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
-//                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-//                .compact();
-//    }
-//
-
-        public void validateToken(final String token) {
+    public void validateToken(final String token) {
         Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token);
     }
+
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
