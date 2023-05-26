@@ -3,29 +3,42 @@ import "styles/login.scss";
 //import { Button } from "@mui/material";
 import imglog from "imgs/login_cat.svg";
 import imgreg from "imgs/register_dog.svg";
-//import axios from 'axios';
+import axios from 'axios';
 
 const API = "";
 
 const Login = () => {
-  
-  /*const [log, setLog] = useState([]);
-  
-  const handleClick = () => {
-    setLog('Si envia');
-  }*/
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [token, setToken] = useState('');
 
-  /*useEffect(async () => {
-    const response = await axios(API);
-    setLog(response.data);
-  }, [])*/
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post('http://localhost:9090/auth/authenticate', {
+        email: email,
+        password: password
+      });
+
+      // Aquí puedes manejar la respuesta de la API, como almacenar el token de autenticación en el estado de tu aplicación.
+      setToken(response.data.token);
+
+      // Restablecer los valores de los campos de correo electrónico y contraseña
+      /*setEmail('');
+      setPassword('');*/
+
+    } catch (error) {
+      // Aquí puedes manejar los errores, como mostrar un mensaje de error al usuario.
+      console.error(error);
+    }
+  };
 
   const [isSignUpMode, setIsSignUpMode] = useState(false);
 
   const handleSignUpClick = () => {
     setIsSignUpMode(true);
   };
-
   const handleSignInClick = () => {
     setIsSignUpMode(false);
   };
@@ -47,17 +60,27 @@ const Login = () => {
     <div className={`container ${isSignUpMode ? "sign-up-mode" : ""}`}>
         <div className="forms-container">
           <div className="signin-signup">
-            <form action="#" className="sign-in-form">
+            <form className="sign-in-form" onSubmit={handleLogin}>
               <h2 className="titulo">Iniciar Sesión</h2>
 
               <div className="input-field">
                 <i className="fas fa-user" />
-                <input type="text" placeholder="ejemplo@mail.com" />
+                <input 
+                type="text" 
+                value={email}  
+                onChange={e => setEmail(e.target.value)} 
+                placeholder="ejemplo@mail.com" 
+                />
               </div>
 
               <div className="input-field">
                 <i className="fas fa-lock" />
-                <input type="password" placeholder="******" />
+                <input 
+                type="password" 
+                placeholder="******" 
+                value={password}
+                onChange={e => setPassword(e.target.value)} 
+                />
               </div>
 
               <input
@@ -66,6 +89,7 @@ const Login = () => {
                 value="Iniciar Sesión"
                 className="btn"
               />
+              {token && <p>Token de autenticación: {token}</p>}
 
               <p className="social-text">O Ingresa con Google</p>
 
