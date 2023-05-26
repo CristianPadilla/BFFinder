@@ -1,4 +1,4 @@
-package com.cpadilla.CloudGateway.filters;
+package com.cpadilla.CloudGateway.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
