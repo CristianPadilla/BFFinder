@@ -1,32 +1,56 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
+import { useNavigate } from "react-router-dom";
 import "styles/login.scss";
 //import { Button } from "@mui/material";
 import imglog from "imgs/login_cat.svg";
 import imgreg from "imgs/register_dog.svg";
-import axios from 'axios';
+import axios from "axios";
 
 const API = "";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [token, setToken] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [token, setToken] = useState("");
+  const navigate = useNavigate(); // Obtiene el objeto navigate
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    //   function main() {
+    //     const body = {
+    //        username:"wakanda@mail.com",
+    //        password:"12345"
+    //     }
+
+    //      axios.post('http://localhost:9090/auth/authenticate', body)
+    //      .then(function(res) {
+    //          console.log(res);
+    //     })
+    //        .catch(function(err) {
+    //          let mensaje = 'Error de conexión ' + err;
+    //          console.log(mensaje);
+    //        })
+    //  }
+
     try {
-      const response = await axios.post('http://localhost:9090/auth/authenticate', {
-        email: email,
-        password: password
-      });
+      const response = await axios.post(
+        "http://localhost:9090/auth/authenticate",
+        {
+          username: username,
+          password: password,
+        }
+      );
 
       // Aquí puedes manejar la respuesta de la API, como almacenar el token de autenticación en el estado de tu aplicación.
       setToken(response.data.token);
 
+      setUsername("");
+      setPassword("");
       // Restablecer los valores de los campos de correo electrónico y contraseña
-      /*setEmail('');
-      setPassword('');*/
+
+      // Redirige al usuario a la página Dashboard después de obtener el token
+      navigate.push("/perfil");
 
     } catch (error) {
       // Aquí puedes manejar los errores, como mostrar un mensaje de error al usuario.
@@ -58,105 +82,118 @@ const Login = () => {
 
   return (
     <div className={`container ${isSignUpMode ? "sign-up-mode" : ""}`}>
-        <div className="forms-container">
-          <div className="signin-signup">
-            <form className="sign-in-form" onSubmit={handleLogin}>
-              <h2 className="titulo">Iniciar Sesión</h2>
+      <div className="forms-container">
+        <div className="signin-signup">
+          <form className="sign-in-form" onSubmit={handleLogin}>
+            <h2 className="titulo">Iniciar Sesión</h2>
 
-              <div className="input-field">
-                <i className="fas fa-user" />
-                <input 
-                type="text" 
-                value={email}  
-                onChange={e => setEmail(e.target.value)} 
-                placeholder="ejemplo@mail.com" 
-                />
-              </div>
-
-              <div className="input-field">
-                <i className="fas fa-lock" />
-                <input 
-                type="password" 
-                placeholder="******" 
-                value={password}
-                onChange={e => setPassword(e.target.value)} 
-                />
-              </div>
-
+            <div className="input-field">
+              <i className="fas fa-user" />
               <input
-                id="sign-in-btn"
-                type="submit"
-                value="Iniciar Sesión"
-                className="btn"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="ejemplo@mail.com"
               />
-              {token && <p>Token de autenticación: {token}</p>}
+            </div>
 
-              <p className="social-text">O Ingresa con Google</p>
+            <div className="input-field">
+              <i className="fas fa-lock" />
+              <input
+                type="password"
+                placeholder="******"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
 
-              <div className="social-media">
-                <button type="button" className="googlebutton">
-                  Iniciar sesión con Google
-                </button>
-              </div>
-            </form>
+            <input
+              id="sign-in-btn"
+              type="submit"
+              value="Iniciar Sesión"
+              className="btn"
+            />
+            {token && <p>Token: {token}</p>}
 
-            <form action="#" className="sign-up-form" id="sign-up-form">
-              <h2 className="titulo">Registrarse</h2>
+            <p className="social-text">O Ingresa con Google</p>
 
-              <div className="input-field">
-                <i className="fas fa-user" />
-                <input type="text" placeholder="Username" />
-              </div>
-
-              <div className="input-field">
-                <i className="fas fa-envelope" />
-                <input type="email" placeholder="ejemplo@mail.com" />
-              </div>
-
-              <div className="input-field">
-                <i className="fas fa-lock" />
-                <input type="password" placeholder="Crea contraseña" />
-              </div>
-
-              <input type="submit" id="sign-up-btn" value="Registrarse" className="btn" />
-
-              <p className="social-text">O Registrate con Google</p>
-
-              <div className="social-media">
-                <button type="button" className="googlebutton">
-                  Registrarse con Google
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <div className="panels-container">
-          <div className="panel left-panel">
-            <div className="content">
-              <h3> No tienes una cuenta?</h3>
-              <p>
-                Cree una nueva cuenta, para ingresar a BFFinder y adoptar a los
-                peluditos que requieren un hogar 🐾.
-              </p>
-              <button className="btn transparent" id="sign-up-btn" onClick={handleSignUpClick}>
-                Registrate
+            <div className="social-media">
+              <button type="button" className="googlebutton">
+                Iniciar sesión con Google
               </button>
             </div>
-            <img src={imglog} className="image" alt="imglog" />
-          </div>
+          </form>
 
-          <div className="panel right-panel">
-            <div className="content">
-              <h3>Ya tienes una cuenta?</h3>
-              <p>Ingresa para ir al login.</p>
-              <button className="btn transparent" id="sign-in-btn" onClick={handleSignInClick}>
-                Logueate
+          <form action="#" className="sign-up-form" id="sign-up-form">
+            <h2 className="titulo">Registrarse</h2>
+
+            <div className="input-field">
+              <i className="fas fa-user" />
+              <input type="text" placeholder="Username" />
+            </div>
+
+            <div className="input-field">
+              <i className="fas fa-envelope" />
+              <input type="email" placeholder="ejemplo@mail.com" />
+            </div>
+
+            <div className="input-field">
+              <i className="fas fa-lock" />
+              <input type="password" placeholder="Crea contraseña" />
+            </div>
+
+            <input
+              type="submit"
+              id="sign-up-btn"
+              value="Registrarse"
+              className="btn"
+            />
+
+            <p className="social-text">O Registrate con Google</p>
+
+            <div className="social-media">
+              <button type="button" className="googlebutton">
+                Registrarse con Google
               </button>
             </div>
-            <img src={imgreg} className="image" alt="imgreg" />
-          </div>
+          </form>
         </div>
+      </div>
+
+      <div className="panels-container">
+        <div className="panel left-panel">
+          <div className="content">
+            <h3> No tienes una cuenta?</h3>
+            <p>
+              Cree una nueva cuenta, para ingresar a BFFinder y adoptar a los
+              peluditos que requieren un hogar 🐾.
+            </p>
+            <button
+              className="btn transparent"
+              id="sign-up-btn"
+              onClick={handleSignUpClick}
+            >
+              Registrate
+            </button>
+          </div>
+          <img src={imglog} className="image" alt="imglog" />
+        </div>
+
+        <div className="panel right-panel">
+          <div className="content">
+            <h3>Ya tienes una cuenta?</h3>
+            <p>Ingresa para ir al login.</p>
+            <button
+              className="btn transparent"
+              id="sign-in-btn"
+              onClick={handleSignInClick}
+            >
+              Logueate
+            </button>
+          </div>
+          <img src={imgreg} className="image" alt="imgreg" />
+        </div>
+      </div>
     </div>
   );
 };
