@@ -34,5 +34,12 @@ public class UserController {
 
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> getUserById(@PathVariable("id") int userId) {
+        log.info("FROM CONTROLLER LAYER: getting user by user id {}", userId);
+        return new ResponseEntity<>(service.getUserById(userId), HttpStatus.OK);
+
+    }
+
 
 }
