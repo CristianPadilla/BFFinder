@@ -3,6 +3,8 @@ package com.cpadilla.petservice.service;
 import com.cpadilla.petservice.model.PetRequest;
 import com.cpadilla.petservice.model.PetResponse;
 
+import java.util.List;
+
 public interface PetService {
 
     PetResponse getPetById(int petId);
@@ -12,5 +14,7 @@ public interface PetService {
     int updatePet(PetRequest petRequest);
 
     void disablePet (int petId);
+
+    List<PetResponse> getAllByOwnerId(int ownerId);
 
 }

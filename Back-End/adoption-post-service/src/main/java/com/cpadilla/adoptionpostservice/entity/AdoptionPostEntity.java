@@ -23,6 +23,8 @@ public class AdoptionPostEntity {
     private String description;
     private boolean status;
     private Instant date;
+    @Column(name = "pet_id")
+    private int petId;
 
 
 }

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PetDetails {
+public class PetResponse {
 
     private int id;
     private String name;
@@ -24,4 +24,6 @@ public class PetDetails {
 
     private OwnerDetails ownerDetails;
     private BreedDetails breedDetails;
+
+
 }

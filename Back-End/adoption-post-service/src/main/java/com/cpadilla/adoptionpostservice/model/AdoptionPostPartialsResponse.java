@@ -12,11 +12,9 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AdoptionPostResponse {
+public class AdoptionPostPartialsResponse {
 
     private int id;
-    private String description;
-    private Instant date;
-
-    private PetDetails petDetails;
+    private boolean status;
+    private PetPartialDetails petDetails;
 }

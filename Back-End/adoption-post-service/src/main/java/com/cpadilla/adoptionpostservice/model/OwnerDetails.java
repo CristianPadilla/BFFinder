@@ -1,22 +1,21 @@
 package com.cpadilla.adoptionpostservice.model;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class AdoptionPostResponse {
+public class OwnerDetails {
 
-    private int id;
-    private String description;
-    private Instant date;
+    private long userId;
+    private String name;
+    private String surname;
+    private String phoneNumber;
 
-    private PetDetails petDetails;
+
 }

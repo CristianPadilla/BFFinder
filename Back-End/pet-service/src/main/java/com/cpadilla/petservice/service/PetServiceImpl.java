@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Log4j2
 public class PetServiceImpl implements PetService {
@@ -76,6 +79,7 @@ public class PetServiceImpl implements PetService {
                 .size(petRequest.getSize())
                 .sterilized(petRequest.isSterilized())
                 .dewormed(petRequest.isDewormed())
+                .status(true)
                 .breedId(petRequest.getBreedId())
                 .ownerId(petRequest.getOwnerId())
                 .build();
@@ -105,5 +109,26 @@ public class PetServiceImpl implements PetService {
     @Override
     public void disablePet(int petId) {
 
+    }
+
+    @Override
+    public List<PetResponse> getAllByOwnerId(int ownerId) {
+        return repository.findAllByOwnerId(ownerId)
+                .stream()
+                .map(petEntity ->
+                        PetResponse.builder()
+                                .id(petEntity.getId())
+                                .name(petEntity.getName())
+                                .weight(petEntity.getWeight())
+                                .age(petEntity.getAge())
+                                .vaccinated(petEntity.getVaccinated())
+                                .dangerous(petEntity.getDangerous())
+                                .size(petEntity.getSize())
+                                .sterilized(petEntity.getSterilized())
+                                .status(petEntity.getStatus())
+                                .dewormed(petEntity.getDewormed())
+//                                .breedDetails(pe)// still not implemented
+                                .build()
+                ).collect(Collectors.toList());
     }
 }

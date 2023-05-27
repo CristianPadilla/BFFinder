@@ -20,19 +20,4 @@ public class OwnerDetails {
     private String surname;
     private String phoneNumber;
 
-//    private String password;
-//    private String email;
-//    private int socialStratum;
-//    private String address;
-//    private int inHomeAvailableSpace;
-//    private int departmentId;
-//    private int townId;
-//    private String neighborhood;
-//    private String profession;
-//    private boolean ownHome;
-//    private boolean hasPet;
-//    private Instant birthDate;
-//    private char health;
-//    private boolean IsTypeFoundation;
-
 }
