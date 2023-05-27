@@ -7,7 +7,7 @@ import com.cpadilla.userservice.model.UserResponse;
 
 public interface UserService {
 
-    long saveUser(UserRequest user);
+//    long saveUser(UserRequest user);// responsability is now of auth service
 
     UserResponse getUserById(long userId);
 

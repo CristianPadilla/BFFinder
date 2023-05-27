@@ -1,5 +1,6 @@
 package com.cpadilla.petservice.model;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PetResponse {
+public class PetRequest {
 
     private int id;
     private String name;
@@ -19,11 +20,7 @@ public class PetResponse {
     private boolean dangerous;
     private char size;
     private boolean sterilized;
-    private boolean status;
     private boolean dewormed;
-
-    private OwnerDetails ownerDetails;
-    private BreedDetails breedDetails;
-
-
+    private int ownerId;
+    private int breedId;
 }
