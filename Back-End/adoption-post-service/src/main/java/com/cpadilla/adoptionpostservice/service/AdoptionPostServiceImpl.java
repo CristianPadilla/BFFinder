@@ -72,6 +72,30 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         return repository.save(postEntity).getId();
     }
 
+
+    @Override
+    public int updatePost(PostRequest request) {
+        var adoptionPostRequest = request.getAdoptionPostRequest();
+
+        var postEntity = repository.findById(adoptionPostRequest.getId())
+                .orElseThrow(() -> new CustomException("Adoption post not found with id: " + adoptionPostRequest.getId(), "ADOPTION_POST_NOT_FOUND", HttpStatus.NOT_FOUND.value()));
+        var petToSave = PetRequest.builder()
+                .id(postEntity.getPetId())
+                .name(adoptionPostRequest.getPetRequest().getName())
+                .weight(adoptionPostRequest.getPetRequest().getWeight())
+                .age(adoptionPostRequest.getPetRequest().getAge())
+                .vaccinated(adoptionPostRequest.getPetRequest().isVaccinated())
+                .dangerous(adoptionPostRequest.getPetRequest().isDangerous())
+                .size(adoptionPostRequest.getPetRequest().getSize())
+                .sterilized(adoptionPostRequest.getPetRequest().isSterilized())
+                .dewormed(adoptionPostRequest.getPetRequest().isDewormed())
+                .build();
+        postEntity.setDescription(adoptionPostRequest.getDescription());
+
+        petService.updatePet(petToSave);
+        return repository.save(postEntity).getId();
+    }
+
     @Override
     public List<AdoptionPostPartialsResponse> getAllPostsByUserId(int userId) {
         var pets = petService.getAllByOwnerId(userId).getBody();
@@ -92,11 +116,6 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                     .collect(Collectors.toList());
         } else throw new CustomException("not available posts", "POSTS_NOT_FOUND", HttpStatus.NOT_FOUND.value());
 
-    }
-
-    @Override
-    public int updatePost(AdoptionPostRequest request) {
-        return 0;
     }
 
     @Override

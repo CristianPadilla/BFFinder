@@ -15,7 +15,7 @@ public interface AdoptionPostService {
 
     List<AdoptionPostPartialsResponse> getAllPostsByUserId(int userId);
 
-    int updatePost(AdoptionPostRequest request);
+    int updatePost(PostRequest request);
 
     int cancelPost(int postId);
 
