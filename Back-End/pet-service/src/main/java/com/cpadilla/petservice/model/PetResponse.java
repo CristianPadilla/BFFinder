@@ -11,16 +11,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PetResponse {
 
-    private int petId;
+    private int id;
     private String name;
     private double weight;
     private int age;
-    private boolean vaccined;
+    private boolean vaccinated;
     private boolean dangerous;
     private char size;
     private boolean sterilized;
     private boolean status;
+    private boolean dewormed;
 
+    private OwnerDetails ownerDetails;
+    private BreedDetails breedDetails;
 
 
 }

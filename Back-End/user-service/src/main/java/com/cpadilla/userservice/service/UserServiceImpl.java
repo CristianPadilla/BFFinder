@@ -19,11 +19,6 @@ public class UserServiceImpl implements UserService {
     private UserRepository repository;
 
     @Override
-    public long saveUser(UserRequest user) {
-        return 0;
-    }
-
-    @Override
     public UserResponse getUserById(long userId) {
         log.info("from service layer: getting user by id {}", userId);
         UserEntity userEntity = repository.findById(userId)
@@ -34,18 +29,18 @@ public class UserServiceImpl implements UserService {
                 .surname(userEntity.getSurname())
                 .email(userEntity.getEmail())
                 .phoneNumber(userEntity.getPhoneNumber())
-                .socialStratum(userEntity.getSocialStratum())
+                .socialStratum(userEntity.getSocialStratum() != null ? userEntity.getSocialStratum() : 0)
                 .address(userEntity.getAddress())
-                .inHomeAvailableSpace(userEntity.getInHomeAvailableSpace())
-                .departmentId(userEntity.getDepartmentId())
-                .townId(userEntity.getTownId())
+                .inHomeAvailableSpace(userEntity.getInHomeAvailableSpace() != null ? userEntity.getInHomeAvailableSpace() : 0)
+                .departmentId(userEntity.getDepartmentId() != null ? userEntity.getDepartmentId() : 0)
+                .townId(userEntity.getTownId() != null ? userEntity.getTownId() : 0)
                 .neighborhood(userEntity.getNeighborhood())
                 .profession(userEntity.getProfession())
-                .ownHome(userEntity.getOwnHome())
-                .hasPet(userEntity.getHasPet())
+                .ownHome(userEntity.getOwnHome() != null ? userEntity.getOwnHome() : false)
+                .hasPet(userEntity.getHasPet() != null ? userEntity.getHasPet() : false)
                 .birthDate(userEntity.getBirthDate())
-                .health(userEntity.getHealth())
-                .IsTypeFoundation(userEntity.getIsTypeFoundation())
+                .health(userEntity.getHealth() != null ? userEntity.getHealth() : 'G')
+                .IsTypeFoundation(userEntity.getIsTypeFoundation() != null ? userEntity.getIsTypeFoundation() : false)
                 .build();
 
     }
