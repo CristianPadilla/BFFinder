@@ -21,13 +21,13 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest registerRequest) {
-        log.info("/register CONTROLLER");
+        log.info("saving user from auth service CONTROLLER");
         return ResponseEntity.ok(service.register(registerRequest));
     }
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> getToken(@RequestBody AuthenticationRequest authenticationRequest) {
-        log.info("/authenticate CONTROLLER");
+        log.info("authenticate from auth service CONTROLLER");
         return ResponseEntity.ok(service.authenticate(authenticationRequest));
 
     }

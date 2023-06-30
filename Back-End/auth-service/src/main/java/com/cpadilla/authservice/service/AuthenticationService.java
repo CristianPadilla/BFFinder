@@ -1,6 +1,10 @@
 package com.cpadilla.authservice.service;
 
 import com.cpadilla.authservice.entity.UserCredentialsEntity;
+import com.cpadilla.authservice.exception.BadRegistrationRequestException;
+import com.cpadilla.authservice.exception.SimpleAuthGlobalException;
+import com.cpadilla.authservice.exception.UserAlreadyExistException;
+import com.cpadilla.authservice.exception.UserNotFoundException;
 import com.cpadilla.authservice.model.AuthenticationRequest;
 import com.cpadilla.authservice.model.AuthenticationResponse;
 import com.cpadilla.authservice.model.CustomUserDetails;
@@ -34,13 +38,20 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
 
+        if (request == null) throw new BadRegistrationRequestException();
+
+        if (repository.findByEmail(request.getEmail()).isPresent())
+            throw new UserAlreadyExistException("User with email " + request.getEmail() + " is already registered");
+
         var user = UserCredentialsEntity.builder()
                 .name(request.getFirstname())
                 .surname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
+
         repository.save(user);
+
         var jwtToken = jwtService.generateToken(CustomUserDetails.builder()
                 .username(user.getEmail())
                 .password(user.getPassword())
