@@ -58,17 +58,16 @@ public class JwtUtil {
     }
 
     public Claims extractAllClaims(String token) {
-        log.info("hola9 XX Validating token: ");
-        try {
+//        try {
             return Jwts
                     .parserBuilder()
                     .setSigningKey(getSignInKey())
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-        } catch (ExpiredJwtException e) {
-            throw new JwtExpiredException();
-        }
+//        } catch (ExpiredJwtException e) {
+//            throw new JwtExpiredException(e.getMessage());
+//        }
 
     }
 
