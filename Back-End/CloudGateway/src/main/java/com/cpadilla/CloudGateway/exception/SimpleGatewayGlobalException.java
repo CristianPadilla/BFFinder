@@ -11,6 +11,7 @@ public class SimpleGatewayGlobalException extends RuntimeException {
 
     private String message;
     private String code;
+    private String errDetails;
 
     public SimpleGatewayGlobalException(String message){
         super(message);

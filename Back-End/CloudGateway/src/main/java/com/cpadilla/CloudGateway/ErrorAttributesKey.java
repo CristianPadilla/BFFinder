@@ -6,9 +6,14 @@ import lombok.Getter;
 public enum ErrorAttributesKey {
     CODE("code"),
     MESSAGE("message"),
-    TIME("timestamp");
+
+    DETAILS("details"),
+    TIME("timestamp"),
+    STATUS_CODE("status_code");
+
 
     private final String key;
+
     ErrorAttributesKey(String key) {
         this.key = key;
     }

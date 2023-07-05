@@ -1,6 +1,7 @@
 package com.cpadilla.CloudGateway.exception;
 
 import com.cpadilla.CloudGateway.ErrorAttributesKey;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
@@ -17,6 +18,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
+@Log4j2
 @Component
 @Order(-2)
 public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHandler {
@@ -39,8 +41,9 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
 
         final Map<String, Object> errorPropertiesMap = getErrorAttributes(request, ErrorAttributeOptions.defaults());
 
-        int statusCode = Integer.parseInt(errorPropertiesMap.get(ErrorAttributesKey.CODE.getKey()).toString());
-        return ServerResponse.status(HttpStatus.valueOf(statusCode))
+
+        int code = Integer.parseInt(errorPropertiesMap.get(ErrorAttributesKey.STATUS_CODE.getKey()).toString());
+        return ServerResponse.status(HttpStatus.valueOf(code))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(errorPropertiesMap));
     }

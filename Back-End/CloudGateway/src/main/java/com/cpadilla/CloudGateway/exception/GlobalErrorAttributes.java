@@ -2,6 +2,7 @@ package com.cpadilla.CloudGateway.exception;
 
 import com.cpadilla.CloudGateway.ErrorAttributesKey;
 import io.jsonwebtoken.ExpiredJwtException;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.core.annotation.MergedAnnotations;
@@ -22,10 +23,13 @@ record ExceptionRule(Class<?> exceptionClass, HttpStatus status) {
 }
 
 @Component
+@Log4j2
 public class GlobalErrorAttributes extends DefaultErrorAttributes {
 
     private final List<ExceptionRule> exceptionsRules = List.of(
-            new ExceptionRule(JwtExpiredException.class, HttpStatus.UNAUTHORIZED)
+            new ExceptionRule(JwtExpiredException.class, HttpStatus.UNAUTHORIZED),
+            new ExceptionRule(ExpiredJwtException.class, HttpStatus.UNAUTHORIZED),
+            new ExceptionRule(Exception.class, HttpStatus.INTERNAL_SERVER_ERROR)
     );
 
 
@@ -39,15 +43,17 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
                 .filter(Objects::nonNull)
                 .findFirst();
 
-
         return exceptionRuleOptional.<Map<String, Object>>map(exceptionRule
-                        -> Map.of(ErrorAttributesKey.CODE.getKey(), exceptionRule.status().value(),
-                        ErrorAttributesKey.MESSAGE.getKey(),HttpStatus.BAD_REQUEST,
-                        ErrorAttributesKey.TIME.getKey(), timestamp))
+                        -> Map.of(
+                        ErrorAttributesKey.CODE.getKey(), error instanceof JwtExpiredException ? ((JwtExpiredException) error).getCode() : exceptionRule.status().value(),
+                        ErrorAttributesKey.MESSAGE.getKey(), error.getMessage(),
+                        ErrorAttributesKey.DETAILS.getKey(), error instanceof SimpleGatewayGlobalException ? ((SimpleGatewayGlobalException) error).getErrDetails() : "An internal error occur",
+                        ErrorAttributesKey.TIME.getKey(), timestamp,
+                        ErrorAttributesKey.STATUS_CODE.getKey(), exceptionRule.status().value()
+                ))
                 .orElseGet(() -> Map.of(ErrorAttributesKey.CODE.getKey(), determineHttpStatus(error).value(), ErrorAttributesKey.MESSAGE.getKey(), error.getMessage(), ErrorAttributesKey.TIME.getKey(), timestamp));
     }
 
-// error.getClass().isInstance(ExpiredJwtException.class) ? HttpStatus.BAD_REQUEST : exceptionRule.status().value()
     private HttpStatus determineHttpStatus(Throwable error) {
         return error instanceof ResponseStatusException err
                 ? HttpStatus.valueOf(err.getStatusCode().value())
