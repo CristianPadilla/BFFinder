@@ -29,7 +29,8 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
     private final List<ExceptionRule> exceptionsRules = List.of(
             new ExceptionRule(JwtExpiredException.class, HttpStatus.UNAUTHORIZED),
             new ExceptionRule(ExpiredJwtException.class, HttpStatus.UNAUTHORIZED),
-            new ExceptionRule(Exception.class, HttpStatus.INTERNAL_SERVER_ERROR)
+            new ExceptionRule(InvalidJwtException.class, HttpStatus.UNAUTHORIZED)
+//            new ExceptionRule(Exception.class, HttpStatus.INTERNAL_SERVER_ERROR)
     );
 
 
@@ -45,7 +46,7 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
 
         return exceptionRuleOptional.<Map<String, Object>>map(exceptionRule
                         -> Map.of(
-                        ErrorAttributesKey.CODE.getKey(), error instanceof JwtExpiredException ? ((JwtExpiredException) error).getCode() : exceptionRule.status().value(),
+                        ErrorAttributesKey.CODE.getKey(), error instanceof SimpleGatewayGlobalException ? ((SimpleGatewayGlobalException) error).getCode() : exceptionRule.status().value(),
                         ErrorAttributesKey.MESSAGE.getKey(), error.getMessage(),
                         ErrorAttributesKey.DETAILS.getKey(), error instanceof SimpleGatewayGlobalException ? ((SimpleGatewayGlobalException) error).getErrDetails() : "An internal error occur",
                         ErrorAttributesKey.TIME.getKey(), timestamp,

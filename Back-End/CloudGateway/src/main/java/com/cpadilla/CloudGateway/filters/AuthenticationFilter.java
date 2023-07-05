@@ -1,5 +1,6 @@
 package com.cpadilla.CloudGateway.filters;
 
+import com.cpadilla.CloudGateway.exception.InvalidJwtException;
 import com.cpadilla.CloudGateway.security.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.log4j.Log4j2;
@@ -37,7 +38,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                         exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0) :
                         null;
                 if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "INVALID_AUTHORIZATION_HEADER");
+                    throw new InvalidJwtException();
                 }
                 jwt = authHeader.substring(7);
                 userEmail = jwtUtil.extractUsername(jwt);
