@@ -1,6 +1,7 @@
 package com.cpadilla.adoptionpostservice.controller;
 
 import com.cpadilla.adoptionpostservice.model.AdoptionPostPartialsResponse;
+import com.cpadilla.adoptionpostservice.model.AdoptionPostRequest;
 import com.cpadilla.adoptionpostservice.model.AdoptionPostResponse;
 import com.cpadilla.adoptionpostservice.model.PostRequest;
 import com.cpadilla.adoptionpostservice.service.AdoptionPostService;
@@ -38,5 +39,11 @@ public class AdoptionPostController {
         log.info("Creating post from CONTROLLER layer");
         return new ResponseEntity<>(service.savePost(request), HttpStatus.OK);
     }
+
+//    @PutMapping("/update")
+//    public ResponseEntity<Integer> updateAdoptionPost(@RequestBody AdoptionPostRequest request) {
+//        log.info("Creating post from CONTROLLER layer");
+//        return new ResponseEntity<>(service.savePost(request), HttpStatus.OK);
+//    }
 
 }

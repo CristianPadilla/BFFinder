@@ -17,5 +17,5 @@ public class AdoptionPostRequest {
     private int id;
     private String description;
     private boolean status;
-    private PetRequest petRequest;
+    private int petId;
 }

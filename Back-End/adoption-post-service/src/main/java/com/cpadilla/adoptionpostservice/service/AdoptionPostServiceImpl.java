@@ -2,7 +2,8 @@ package com.cpadilla.adoptionpostservice.service;
 
 import com.cpadilla.adoptionpostservice.entity.AdoptionPostEntity;
 import com.cpadilla.adoptionpostservice.exception.CustomException;
-import com.cpadilla.adoptionpostservice.exception.NoPostsFoundException;
+import com.cpadilla.adoptionpostservice.exception.PetNotFoundException;
+import com.cpadilla.adoptionpostservice.exception.PostNotFoundException;
 import com.cpadilla.adoptionpostservice.external.client.PetService;
 import com.cpadilla.adoptionpostservice.model.*;
 import com.cpadilla.adoptionpostservice.repository.AdoptionPostRepository;
@@ -12,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,15 +60,19 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     public int savePost(PostRequest request) {
         var adoptionPostRequest = request.getAdoptionPostRequest();
 
-        adoptionPostRequest.getPetRequest().setOwnerId(request.getUserId());
+//        adoptionPostRequest.getPetRequest().setOwnerId(request.getUserId());
 
-        int petId = petService.savePet(adoptionPostRequest.getPetRequest()).getBody();
+        var petId = 0;
+        petId = petService.getById(adoptionPostRequest.getPetId()).getBody().getId();
+        if (petId == 0)
+            throw new PetNotFoundException("Not possible to create adoption post, specified pet not found with id " + adoptionPostRequest.getPetId());
 
         var postEntity = AdoptionPostEntity.builder()
                 .description(adoptionPostRequest.getDescription())
                 .status(true)
                 .date(Instant.now())
                 .petId(petId)
+                .userId(request.getUserId())
                 .build();
         return repository.save(postEntity).getId();
     }
@@ -95,13 +99,18 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                                 .build();
                     })
                     .collect(Collectors.toList());
-        } else throw new NoPostsFoundException("not available posts for user with id " + userId);
+        } else throw new PostNotFoundException("not available posts for user with id " + userId);
 
     }
 
     @Override
     public int updatePost(AdoptionPostRequest request) {
-        return 0;
+
+        AdoptionPostEntity postToUpdate = repository.findById(request.getId())
+                .orElseThrow(() -> new PostNotFoundException("The adoption post not found for id " + request.getId()));
+
+        postToUpdate.setDescription(request.getDescription());
+        return repository.save(postToUpdate).getId();
     }
 
     @Override

@@ -27,7 +27,7 @@ public class BreedServiceImpl implements BreedService {
         var breedEntity = repository.findById(breedId)
                 .orElseThrow(() -> new CustomException("breed not with id: " + breedId, "BREED_NOT_FOUND", HttpStatus.NOT_FOUND.value()));
 
-        var specie = specieService.getSpecieById(breedEntity.getId()).getBody();
+        var specie = specieService.getSpecieById(breedEntity.getSpecieId()).getBody();
         var specieDetails = SpecieDetails.builder()
                 .id(specie.getId())
                 .name(specie.getName())
