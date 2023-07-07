@@ -29,7 +29,7 @@ public class AdoptionPostController {
 
     @GetMapping("/all/user/{id}")
     public ResponseEntity<List<AdoptionPostPartialsResponse>> getAllAdoptionPostsByUserId(@PathVariable("id") int userId) {
-        log.info("Getting post with id {} from CONTROLLER layer", userId);
+        log.info("Getting post by user with id {} from CONTROLLER layer", userId);
         return new ResponseEntity<>(service.getAllPostsByUserId(userId), HttpStatus.OK);
     }
 

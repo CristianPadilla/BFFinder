@@ -2,6 +2,7 @@ package com.cpadilla.adoptionpostservice.service;
 
 import com.cpadilla.adoptionpostservice.entity.AdoptionPostEntity;
 import com.cpadilla.adoptionpostservice.exception.CustomException;
+import com.cpadilla.adoptionpostservice.exception.NoPostsFoundException;
 import com.cpadilla.adoptionpostservice.external.client.PetService;
 import com.cpadilla.adoptionpostservice.model.*;
 import com.cpadilla.adoptionpostservice.repository.AdoptionPostRepository;
@@ -74,23 +75,27 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
     @Override
     public List<AdoptionPostPartialsResponse> getAllPostsByUserId(int userId) {
-        var pets = petService.getAllByOwnerId(userId).getBody();
-        if (pets.size() > 0) {
-            return pets.stream()
-                    .map(petResponse -> {
-                        var postEntity = repository.findByPetId(petResponse.getId());
+
+        var postEntities = repository.findAllByUserIdAndStatusIsTrue(userId);
+
+
+        if (postEntities.size() > 0) {
+            return postEntities.stream()
+                    .map(post -> {
+                        log.info("post  ========= {}", post.toString());
+                        var pet = petService.getById(post.getPetId()).getBody();
                         var petDetails = PetPartialDetails.builder()
-                                .id(petResponse.getId())
-                                .name(petResponse.getName())
-                                .breedDetails(petResponse.getBreedDetails())
+                                .id(pet.getId())
+                                .name(pet.getName())
+                                .breedDetails(pet.getBreedDetails())
                                 .build();
                         return AdoptionPostPartialsResponse.builder()
-                                .id(postEntity.getId())
+                                .id(post.getId())
                                 .petDetails(petDetails)
                                 .build();
                     })
                     .collect(Collectors.toList());
-        } else throw new CustomException("not available posts", "POSTS_NOT_FOUND", HttpStatus.NOT_FOUND.value());
+        } else throw new NoPostsFoundException("not available posts for user with id " + userId);
 
     }
 
