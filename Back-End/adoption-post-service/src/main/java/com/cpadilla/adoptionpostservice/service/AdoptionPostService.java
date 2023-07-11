@@ -16,7 +16,7 @@ public interface AdoptionPostService {
     List<AdoptionPostPartialsResponse> getAllPostsByUserId(int userId);
     List<AdoptionPostPartialsResponse> getAllSorted(String sortingMethod, boolean desc);
 
-    int updatePost(PostRequest request);
+    int updatePost(AdoptionPostRequest request);
 
     int cancelPost(int postId);
 
