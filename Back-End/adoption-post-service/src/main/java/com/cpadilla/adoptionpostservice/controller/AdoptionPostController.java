@@ -30,8 +30,14 @@ public class AdoptionPostController {
 
     @GetMapping("/all/user/{id}")
     public ResponseEntity<List<AdoptionPostPartialsResponse>> getAllAdoptionPostsByUserId(@PathVariable("id") int userId) {
-        log.info("Getting post by user with id {} from CONTROLLER layer", userId);
+        log.info("Getting all post by user with id {} from CONTROLLER layer", userId);
         return new ResponseEntity<>(service.getAllPostsByUserId(userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/all/sort/{sortMethod}/{desc}")
+    public ResponseEntity<List<AdoptionPostPartialsResponse>> getAllAdoptionPostsByUserId(@PathVariable("sortMethod") String sortingMethod, @PathVariable("desc") boolean isDecending) {
+        log.info("Getting by {} sorted post from CONTROLLER layer ", sortingMethod);
+        return new ResponseEntity<>(service.getAllSorted(sortingMethod, isDecending), HttpStatus.OK);
     }
 
     @PostMapping("/save")
@@ -40,10 +46,10 @@ public class AdoptionPostController {
         return new ResponseEntity<>(service.savePost(request), HttpStatus.OK);
     }
 
-//    @PutMapping("/update")
-//    public ResponseEntity<Integer> updateAdoptionPost(@RequestBody AdoptionPostRequest request) {
-//        log.info("Creating post from CONTROLLER layer");
-//        return new ResponseEntity<>(service.savePost(request), HttpStatus.OK);
-//    }
+    @PutMapping("/update")
+    public ResponseEntity<Integer> updateAdoptionPost(@RequestBody AdoptionPostRequest request) {
+        log.info("Updating post from CONTROLLER layer");
+        return new ResponseEntity<>(service.updatePost(request), HttpStatus.OK);
+    }
 
 }
