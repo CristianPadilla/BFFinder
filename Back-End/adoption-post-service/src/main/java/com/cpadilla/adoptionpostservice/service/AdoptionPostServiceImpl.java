@@ -2,16 +2,18 @@ package com.cpadilla.adoptionpostservice.service;
 
 import com.cpadilla.adoptionpostservice.entity.AdoptionPostEntity;
 import com.cpadilla.adoptionpostservice.exception.CustomException;
+import com.cpadilla.adoptionpostservice.exception.PetNotFoundException;
+import com.cpadilla.adoptionpostservice.exception.PostNotFoundException;
 import com.cpadilla.adoptionpostservice.external.client.PetService;
 import com.cpadilla.adoptionpostservice.model.*;
 import com.cpadilla.adoptionpostservice.repository.AdoptionPostRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,16 +60,17 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     @Override
     public int savePost(PostRequest request) {
         var adoptionPostRequest = request.getAdoptionPostRequest();
-
-        adoptionPostRequest.getPetRequest().setOwnerId(request.getUserId());
-
-        int petId = petService.savePet(adoptionPostRequest.getPetRequest()).getBody();
+        var petId = 0;
+        petId = petService.getById(adoptionPostRequest.getPetId()).getBody().getId();
+        if (petId == 0)
+            throw new PetNotFoundException("Not possible to create adoption post, specified pet not found with id " + adoptionPostRequest.getPetId());
 
         var postEntity = AdoptionPostEntity.builder()
                 .description(adoptionPostRequest.getDescription())
                 .status(true)
                 .date(Instant.now())
                 .petId(petId)
+                .userId(request.getUserId())
                 .build();
         return repository.save(postEntity).getId();
     }
@@ -98,28 +101,72 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
     @Override
     public List<AdoptionPostPartialsResponse> getAllPostsByUserId(int userId) {
-        var pets = petService.getAllByOwnerId(userId).getBody();
-        if (pets.size() > 0) {
-            return pets.stream()
-                    .map(petResponse -> {
-                        var postEntity = repository.findByPetId(petResponse.getId());
+
+        var postEntities = repository.findAllByUserIdAndStatusIsTrueOrderByDateDesc(userId);
+
+
+        if (postEntities.size() > 0) {
+            return postEntities.stream()
+                    .map(post -> {
+                        log.info("post  ========= {}", post.toString());
+                        var pet = petService.getById(post.getPetId()).getBody();
                         var petDetails = PetPartialDetails.builder()
-                                .id(petResponse.getId())
-                                .name(petResponse.getName())
-                                .breedDetails(petResponse.getBreedDetails())
+                                .id(pet.getId())
+                                .name(pet.getName())
+                                .breedDetails(pet.getBreedDetails())
                                 .build();
                         return AdoptionPostPartialsResponse.builder()
-                                .id(postEntity.getId())
+                                .id(post.getId())
                                 .petDetails(petDetails)
                                 .build();
                     })
                     .collect(Collectors.toList());
-        } else throw new CustomException("not available posts", "POSTS_NOT_FOUND", HttpStatus.NOT_FOUND.value());
+        } else throw new PostNotFoundException("not available posts for user with id " + userId);
+
+    }
+
+    public List<AdoptionPostPartialsResponse> getAllSorted(String sortingMethod, boolean desc) {
+
+        var postEntities =
+                repository.findAllByStatusTrue(Sort.by("date").descending());
+
+
+        if (postEntities.size() > 0) {
+            return postEntities.stream()
+                    .map(post -> {
+                        var pet = petService.getById(post.getPetId()).getBody();
+                        var petDetails = PetPartialDetails.builder()
+                                .id(pet.getId())
+                                .name(pet.getName())
+                                .breedDetails(pet.getBreedDetails())
+                                .build();
+                        return AdoptionPostPartialsResponse.builder()
+                                .id(post.getId())
+                                .petDetails(petDetails)
+                                .build();
+                    })
+                    .collect(Collectors.toList());
+        }
+        else throw new PostNotFoundException("not available posts for user with id ");
 
     }
 
     @Override
+    public int updatePost(AdoptionPostRequest request) {
+
+        AdoptionPostEntity postToUpdate = repository.findById(request.getId())
+                .orElseThrow(() -> new PostNotFoundException("The adoption post not found for id " + request.getId()));
+
+        postToUpdate.setDescription(request.getDescription());
+        return repository.save(postToUpdate).getId();
+    }
+
+    @Override
     public int cancelPost(int postId) {
-        return 0;
+        AdoptionPostEntity postToUpdate = repository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("The adoption post not found for id " + postId));
+
+        postToUpdate.setStatus(false);
+        return repository.save(postToUpdate).getId();
     }
 }

@@ -1,11 +1,14 @@
 package com.cpadilla.CloudGateway.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.cpadilla.CloudGateway.exception.JwtExpiredException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.header.Header;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -15,6 +18,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@Log4j2
 public class JwtUtil {
 
     //encryption key generated online, remember the minimum size for jwt is 256 bit
@@ -49,12 +53,17 @@ public class JwtUtil {
     }
 
     public Claims extractAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts
+                    .parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            throw new JwtExpiredException("Token has expired", e.getMessage());
+        }
+
     }
 
     private Key getSignInKey() {

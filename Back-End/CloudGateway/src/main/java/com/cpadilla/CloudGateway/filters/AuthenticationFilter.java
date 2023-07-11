@@ -1,6 +1,8 @@
 package com.cpadilla.CloudGateway.filters;
 
+import com.cpadilla.CloudGateway.exception.InvalidJwtException;
 import com.cpadilla.CloudGateway.security.JwtUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -32,9 +34,11 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
             if (validator.isSecured.test(exchange.getRequest())) { //Check if request corresponds to unsecured endpoints
                 final String jwt;
                 final String userEmail;
-                final String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION) != null ? exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0) : null;
+                final String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION) != null ?
+                        exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0) :
+                        null;
                 if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "INVALID_AUTHORIZATION_HEADER");
+                    throw new InvalidJwtException();
                 }
                 jwt = authHeader.substring(7);
                 userEmail = jwtUtil.extractUsername(jwt);

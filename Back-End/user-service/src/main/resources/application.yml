@@ -10,7 +10,7 @@ spring:
   datasource:
     url: jdbc:mysql://${DB_HOST:localhost}:3306/bffinder
     username: root
-    password: cpadilla
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
