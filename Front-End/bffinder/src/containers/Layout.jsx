@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Layout = ({children}) => {
+const Layout = ({areClass, css, children}) => {
     return (
-        <div className='Layout'>
+        <div className={areClass} style={css}>
             {children}
         </div>
     );

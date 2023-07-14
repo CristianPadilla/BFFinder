@@ -7,14 +7,15 @@ import RecoveryPassword from "containers/RecoveryPassword";
 import Home from "pages/Home";
 import NotFound from "pages/NotFound";
 import Perfil from "pages/Perfil";
+import Autenticacion from "../pages/Autenticacion";
 
 const App = () => {
   return (
 	<BrowserRouter>
-		<Layout>
+		<Layout areClass={'Layout'} css = {style.css} >
 			<Routes>
 				<Route path="/" element={<Home />} />
-				<Route path="/login" element={<Login/>} />
+				<Route path="/login" element={<Autenticacion/>} />
 				<Route path="/perfil" element={<Perfil/>} />
 				<Route path="/recovery-password" element={<RecoveryPassword/>} />
 				<Route path="*" element={<NotFound/>} />
@@ -23,5 +24,11 @@ const App = () => {
 	</BrowserRouter>
   );
 }; 
+
+const style = {
+	css: {
+		backgroundColor: "white",
+	}
+}
 
 export default App;
