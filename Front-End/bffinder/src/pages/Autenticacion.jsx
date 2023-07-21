@@ -29,6 +29,7 @@ export default function Autenticacion() {
     return <div className={`container ${isSignUpMode ? "sign-up-mode" : ""}`}>
         <div className="forms-container">
             <div className="signin-signup">
+                {/* {isSignUpMode ? <SignUp /> : <SignIn /> } */}
                 <SignIn />
                 <SignUp />
                 <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
