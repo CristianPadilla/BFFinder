@@ -14,6 +14,7 @@
     background-color: #000;
     opacity: 0.3;
 }
+
 header {
     position: fixed;
     top: 0;
@@ -22,22 +23,13 @@ header {
     display: flex;
     justify-content: space-around;
     transition: 0.7s;
-    padding: 30px 20px;
     z-index: 10;
-}
-header.abajo {
     background: white;
     padding: 15px 20px;
+     
 }
 
 nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-header ul {
-    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -50,18 +42,36 @@ header ul li {
 header ul li a {
     position: relative;
     font-size: large;
-    margin: 0 15px;
+    margin: 0 50px;
     text-decoration: none;
-    color: $letras-header;
+    color: $black;
     letter-spacing: 2px;
     font-weight: 600;
     transition: 0.7s;
 }
 
-header.abajo .logo,
-header.abajo ul li a {
-    color: #000;
+/*submenu*/
+header li ul {
+    display:none;
+    position:absolute;
+    min-width:140px;
 }
+
+header li:hover > ul {
+    display:block;
+    padding: 5% 0;
+    background: white;
+}
+
+header li ul li {
+    position:relative;
+}
+
+header li ul li ul {
+    right:-140px;
+    top:0px;
+}
+/*fin submenu*/
 
 .zona1 {
     position: relative;
@@ -73,7 +83,7 @@ header.abajo ul li a {
     display: flex; /* Utilizamos flexbox para alinear el contenido */
     justify-content: flex-start; /* Alinea el contenido hacia el inicio (izquierda) */
     align-items: flex-start; /* Alinea el contenido hacia la parte superior */
-    overflow: hidden; /* Recorta lo que se desborda de la figura */
+    
 }
 
 .zona1::before {
@@ -125,6 +135,11 @@ header.abajo ul li a {
     margin: 10px 0;
     cursor: pointer;
     transition: 0.5s;
+}
+
+header.abajo .logo,
+header.abajo ul li a {
+    color: #000;
 }
 
 .btnh {
@@ -228,7 +243,7 @@ header.abajo ul li a {
 
     .btnf {
         bottom: 9%;
-        left: 16%;
+        left: 22%;
         width: 251px;
         font-size: 1.3rem;
     }

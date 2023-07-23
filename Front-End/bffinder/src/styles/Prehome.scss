@@ -1,0 +1,27 @@
+.title-container {
+    display: flex;
+    align-items: center; /* Centra verticalmente el contenido */
+    justify-content: center; /* Centra horizontalmente el contenido */
+    height: 100px; /* Ajusta la altura del contenedor */
+    // margin-top: 2rem;
+    margin-bottom: 3rem;
+}
+
+.title-pre {
+    margin: 6%;
+    font-size: 2rem;
+}
+
+.container-sections {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centra el contenido verticalmente */
+    align-items: center; /* Centra el contenido horizontalmente */
+    padding: 5px;
+}
+
+.section-content {
+    max-width: 1200px; /* Ancho máximo del contenido para evitar que se desborde en pantallas grandes */
+    width: 100%; /* El contenido se ajustará al ancho de la sección */
+}

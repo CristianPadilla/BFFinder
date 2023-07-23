@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import 'styles/Header.scss';
 import { Button } from "@mui/material";
+import imglogobff from "imgs/logo-bffinder.png";
+import logobff from "imgs/logo-bffinder-FINAL2.png";
 
 const Header = () => {
 
@@ -14,40 +16,44 @@ const Header = () => {
   return (
     <div>
       <header>
-        <a href="#" className="logo">
-          BFFinder
+        
+        <a href="#" className="logoh">
+          <img src={logobff} className="logobff" alt="imglog" />
         </a>
+        
         <nav>
           <ul>
             <li>
               <a href="#">Inicio</a>
             </li>
             <li>
-              <a href="#">Nosotros</a>
+              <a href="#">Mascotas</a>
             </li>
             <li>
-              <a href="#">Servicios</a>
+              <a href="#">Fundaciones</a>
             </li>
             <li>
-              <a href="#">Portafolio</a>
-            </li>
-            <li>
-              <a href="#">Contacto</a>
+            <input
+              id="post-btn"
+              type="submit"
+              value="Publicar Mascota"
+              className="btnh"
+            />
             </li>
           </ul>
         </nav>
       </header>
-      <section className="zona1 fondo" />
-      <section>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum.
+      <section className="zona1">
+        <p className='text-figure'>Miles de animalitos estan en busca de un hogar.</p>
+      <input
+              id="sign-in-btn"
+              type="submit"
+              value="Iniciar Sesión"
+              className="btnf"
+            />
+            
       </section>
-      <Button>Prueba</Button>
+     
     </div>
   );
 };
