@@ -6,6 +6,8 @@ import MuiAlert from "@material-ui/lab/Alert";
 import SignUp from '../containers/SignUp';
 import imglog from "imgs/login_cat.svg";
 import imgreg from "imgs/register_dog.svg";
+import 'animate.css';
+
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -29,9 +31,9 @@ export default function Autenticacion() {
     return <div className={`container ${isSignUpMode ? "sign-up-mode" : ""}`}>
         <div className="forms-container">
             <div className="signin-signup">
-                {/* {isSignUpMode ? <SignUp /> : <SignIn /> } */}
-                <SignIn />
-                <SignUp />
+                {isSignUpMode ? <SignUp /> : <SignIn /> }
+                {/* <SignIn />
+                <SignUp /> */}
                 <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
                     <Alert onClose={handleClose} severity="error">
                         {"Replicando funcionalidad"}
