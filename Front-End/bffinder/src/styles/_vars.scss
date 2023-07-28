@@ -16,10 +16,22 @@ $color-hover-boton: rgb(250, 170, 100);
 $color-second-boton: #E9B88C;
 $color-letras-bold: #A77A23;
 $color-hipervinculos: #DCA644;
+$color-bolas: linear-gradient(-45deg, #c98c56 0%, #f18d36 100%);
+
+$pantallas-pequenas: 280px;
+$pantallas-medianas: 1200px;
+$pantallas-mediag: 1400px;
+$pantallas-mediapequena: 1000px;
+
+$letras-header: rgb(255, 255, 255);
 
 $fondo-dog: url(https://as2.ftcdn.net/v2/jpg/03/41/73/57/1000_F_341735787_46xjDjoh5T9dShls1sIudnJ08kHqcMRW.jpg);
+$fondo-sections: #fdfbf7;
 
-body {
-    margin: 0;
-    font-family: 'Varela Round', sans-serif;
-}
+
+$color: #4e4e4e;
+
+// body {
+//     margin: 0;
+//     font-family: 'Varela Round', sans-serif;
+// }

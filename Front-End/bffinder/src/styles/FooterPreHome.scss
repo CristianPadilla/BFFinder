@@ -1,0 +1,38 @@
+@import "vars";
+
+.footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-image: $color-bolas;
+    padding: 16px;
+  
+    .social-icons {
+      margin-bottom: 16px;
+  
+      // Estilos para los íconos de redes sociales
+      .MuiIconButton-root {
+        margin: 0 8px;
+        color: white;
+        
+  
+        &:hover {
+          background-color: $color-primary-boton;
+        }
+      }
+
+      .MuiSvgIcon-root {
+        font-size: 35px;
+    }
+}
+  
+    .rights-text {
+      color: white;
+      letter-spacing: 1px;
+      font-size: 1rem;
+      font-weight: 500;
+      margin-top: 8px;
+    }
+  }
+  
