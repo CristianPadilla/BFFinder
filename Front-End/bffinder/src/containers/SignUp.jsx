@@ -6,37 +6,32 @@ import FormikRegisterFoundationPage from "../pages/FormikRegisterFoundationPage"
 export default function SignUp() {
   const [selectedRole, setSelectedRole] = useState("user");
 
-  const [register, setRegister] = useState({
-    firstname: "",
-    lastname: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+  // const [register, setRegister] = useState({
+  //   firstname: "",
+  //   lastname: "",
+  //   email: "",
+  //   password: "",
+  //   confirmPassword: "",
+  // });
 
-  const handleChange = (e) => {
-    setRegister({ ...register, [e.target.name]: e.target.value });
-  };
+  // const handleChange = (e) => {
+  //   setRegister({ ...register, [e.target.name]: e.target.value });
+  // };
 
   return (
     <>
-      {/* <div>
+      <div>
         <button onClick={() => setSelectedRole("user")}>Administrador</button>
         <button onClick={() => setSelectedRole("foundation")}>
           Usuario Regular
         </button>
-      </div> */}
+      </div>
 
-      {/* <div> */}
-        {selectedRole === "user" ? (
-          <FormikRegisterUserPage />
-        ) : (
-          <FormikRegisterFoundationPage />
-        )}
-      {/* </div> */}
-
-      {/* <button>Registrarse</button> */}
-       {/* <FormikRegisterUserPage /> */}
+      {selectedRole === "user" ? (
+        <FormikRegisterUserPage />
+      ) : (
+        <FormikRegisterFoundationPage />
+      )}
     </>
   );
 

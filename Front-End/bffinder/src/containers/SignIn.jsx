@@ -19,7 +19,7 @@ export default function SignIn() {
         e.preventDefault();
     }
 
-    return <form className="sign-in-form" onSubmit={handleLogin}>
+    return <form className="sign-in-form animate__animated animate__backInLeft" onSubmit={handleLogin}>
         <h2 className="titulo">Iniciar Sesión</h2>
 
         <div className="input-field">

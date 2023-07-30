@@ -11,7 +11,8 @@
   width: 100%;
   
   min-height: 100vh;
-  overflow: hidden;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .forms-container {
@@ -27,6 +28,7 @@
   top: 50%;
   transform: translate(-50%, -50%);
   left: 75%;
+  // overflow-y: scroll;
   width: 50%;
   transition: 1s 0.7s ease-in-out;
   display: grid;
@@ -49,6 +51,10 @@ form {
 form.sign-up-form {
   opacity: 0;
   z-index: 1;
+  margin-top: 150px;
+  // overflow-y: scroll;
+  // height: auto;
+  max-height: 100%;
 }
 
 form.sign-in-form {
@@ -491,3 +497,20 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 } 
+
+
+.form-select {
+  border: none;
+  background-color: transparent;
+  color: #aaa;
+  font-size: 1.1rem;
+}
+
+.form-select:active {
+  border: none!important;
+}
+
+.form-datepicker {
+  color: #aaa !important;
+  font-size: 1.1rem;
+}
