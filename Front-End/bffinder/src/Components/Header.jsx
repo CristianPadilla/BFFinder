@@ -1,59 +1,107 @@
-import React, { useEffect, useState } from 'react';
-import 'styles/Header.scss';
-import { Button } from "@mui/material";
+import React, { useEffect } from "react";
+import "styles/Header.scss";
+import { Link } from "react-scroll"; //libreria react-scroll para las sections
+import { useNavigate } from "react-router-dom";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+// import { Button } from "@mui/material";
 import imglogobff from "imgs/logo-bffinder.png";
 import logobff from "imgs/logo-bffinder-FINAL2.png";
 
 const Header = () => {
+  const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    window.addEventListener('scroll', () => {
+  const handleLoginClick = () => {
+    navigate("/login");
+  };
+
+  const handleModalOpen = () => {
+    setOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setOpen(false);
+  };
+
+  //Para que el nav identifique si el usuario bajo en la pagina
+    const handleScroll = () => {
       const header = document.querySelector('header');
-      header.classList.toggle('abajo', window.scrollY > 0);
-    });
-  }, []);
+      header.classList.toggle('scrolled', window.scrollY > 0);
+    };
+  
+    useEffect(() => {
+      window.addEventListener('scroll', handleScroll);
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }, []);
+
 
   return (
-    <div>
+    <div id="inicio" className="header-container">
       <header>
-        
         <a href="#" className="logoh">
           <img src={logobff} className="logobff" alt="imglog" />
         </a>
-        
+
         <nav>
           <ul>
             <li>
-              <a href="#">Inicio</a>
+              <Link to="inicio" spy={true} smooth={true} duration={500}>Inicio</Link >
             </li>
             <li>
-              <a href="#">Mascotas</a>
+              <Link to="mascotas" spy={true} smooth={true} duration={500}>
+                Mascotas
+              </Link>
             </li>
             <li>
-              <a href="#">Fundaciones</a>
+              <Link to="fundaciones" spy={true} smooth={true} duration={500}>
+                Fundaciones
+              </Link>
             </li>
             <li>
-            <input
-              id="post-btn"
-              type="submit"
-              value="Publicar Mascota"
-              className="btnh"
-            />
+              <input
+                id="post-btn"
+                type="submit"
+                value="Publicar Mascota"
+                className="btnh"
+                onClick={handleModalOpen}
+              />
+              <Dialog open={open} onClose={handleModalClose}>
+                <DialogTitle><b>Atención</b></DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    <h3>Para publicar una mascota en BFFinder debes primero
+                    iniciar sesión.</h3>
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button variant="contained" color="error" onClick={handleModalClose}>Cancelar</Button>
+                  <Button variant="contained" color="success" onClick={handleLoginClick}>Iniciar Sesión</Button>
+                </DialogActions>
+              </Dialog>
             </li>
           </ul>
         </nav>
       </header>
       <section className="zona1">
-        <p className='text-figure'>Miles de animalitos estan en busca de un hogar.</p>
-      <input
-              id="sign-in-btn"
-              type="submit"
-              value="Iniciar Sesión"
-              className="btnf"
-            />
-            
+        <p className="text-figure">
+          Miles de animalitos estan en busca de un hogar.
+        </p>
+        <input
+          id="sign-in-btn"
+          type="submit"
+          value="Iniciar Sesión"
+          className="btnf"
+          onClick={handleLoginClick}
+        />
       </section>
-     
+      <section className="abajo"></section>
     </div>
   );
 };

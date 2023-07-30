@@ -24,11 +24,30 @@ header {
     transition: 0.7s;
     padding: 30px 20px;
     z-index: 10;
+
+    &.scrolled {
+        background: white;
+        padding: 15px 20px;
+    
+        ul li a {
+          color: #000;
+        }
+      }
 }
-header.abajo {
-    background: white;
+
+.scrolled {
+    background: white !important;
     padding: 15px 20px;
-}
+  
+    ul li a {
+      color: #000;
+    }
+  }
+
+// header.abajo {
+//     background: white !important;
+//     padding: 15px 20px;
+// }
 
 nav {
     display: flex;
@@ -56,12 +75,13 @@ header ul li a {
     letter-spacing: 2px;
     font-weight: 600;
     transition: 0.7s;
+    // cursor: pointer;
 }
 
-header.abajo .logo,
-header.abajo ul li a {
-    color: #000;
-}
+// header.abajo .logo,
+// header.abajo ul li a {
+//     color: #000;
+// }
 
 .zona1 {
     position: relative;
@@ -73,7 +93,7 @@ header.abajo ul li a {
     display: flex; /* Utilizamos flexbox para alinear el contenido */
     justify-content: flex-start; /* Alinea el contenido hacia el inicio (izquierda) */
     align-items: flex-start; /* Alinea el contenido hacia la parte superior */
-    overflow: hidden; /* Recorta lo que se desborda de la figura */
+    overflow: hidden !important; /* Recorta lo que se desborda de la figura */
 }
 
 .zona1::before {

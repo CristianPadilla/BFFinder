@@ -9,12 +9,12 @@ const Home = () => {
   return (
     <>
       <Header />
-      <section className="container-sections">
+      <section id="mascotas" className="container-sections">
         <div className="section-content">
             <PrePost />
         </div>
       </section>
-      <section className="container-sections">
+      <section id="fundaciones" className="container-sections">
         <div className="section-content">
            <Fundations /> 
         </div>
