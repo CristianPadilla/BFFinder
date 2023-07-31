@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
-import { FormikRegisterUserPage } from "../pages/FormikRegisterUserPage";
-import FormikRegisterFoundationPage from "../pages/FormikRegisterFoundationPage";
+import { RegisterUserPage } from "../pages/RegisterUserPage";
+import RegisterFoundationPage from "../pages/RegisterFoundationPage";
 
 export default function SignUp() {
   const [selectedRole, setSelectedRole] = useState("user");
@@ -28,9 +28,9 @@ export default function SignUp() {
       </div>
 
       {selectedRole === "user" ? (
-        <FormikRegisterUserPage />
+        <RegisterUserPage />
       ) : (
-        <FormikRegisterFoundationPage />
+        <RegisterFoundationPage />
       )}
     </>
   );
