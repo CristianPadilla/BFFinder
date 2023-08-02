@@ -1,9 +1,6 @@
 package com.cpadilla.adoptionpostservice.service;
 
-import com.cpadilla.adoptionpostservice.model.AdoptionPostPartialsResponse;
-import com.cpadilla.adoptionpostservice.model.AdoptionPostRequest;
-import com.cpadilla.adoptionpostservice.model.AdoptionPostResponse;
-import com.cpadilla.adoptionpostservice.model.PostRequest;
+import com.cpadilla.adoptionpostservice.model.*;
 
 import java.util.List;
 
@@ -15,6 +12,7 @@ public interface AdoptionPostService {
 
     List<AdoptionPostPartialsResponse> getAllPostsByUserId(int userId);
     List<AdoptionPostPartialsResponse> getAllSorted(String sortingMethod, boolean desc);
+    List<AdoptionPostPartialsResponse> getAllFilter(FilterRequest filterRequest);
 
     int updatePost(AdoptionPostRequest request);
 

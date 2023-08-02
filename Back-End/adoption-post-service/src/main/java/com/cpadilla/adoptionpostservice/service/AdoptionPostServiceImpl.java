@@ -27,6 +27,9 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     @Autowired
     private PetService petService;
 
+    @Autowired
+    private AdoptionPostFilterSpecification<AdoptionPostEntity> filterSpecification;
+
 
     @Override
     public AdoptionPostResponse getAdoptionPostById(int postId) {
@@ -101,6 +104,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
     }
 
+    @Override
     public List<AdoptionPostPartialsResponse> getAllSorted(String sortingMethod, boolean desc) {
 
         var postEntities =
@@ -119,11 +123,48 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                         return AdoptionPostPartialsResponse.builder()
                                 .id(post.getId())
                                 .petDetails(petDetails)
+                                .date(post.getDate())
                                 .build();
                     })
                     .collect(Collectors.toList());
         }
         else throw new PostNotFoundException("not available posts for user with id ");
+
+    }
+
+    @Override
+    public List<AdoptionPostPartialsResponse> getAllFilter(FilterRequest filterRequest) {
+        var specification =
+                filterSpecification.getSearchSpecification(filterRequest.getSearchRequests());
+
+        var postEntities =
+                repository.findAll(specification);
+        return postEntities.stream().map(post ->  {
+            return AdoptionPostPartialsResponse.builder()
+                    .id(post.getId())
+                    .status(post.isStatus())
+                    .date(post.getDate())
+                    .build();
+        }).collect(Collectors.toList());
+
+
+//        if (postEntities.size() > 0) {
+//            return postEntities.stream()
+//                    .map(post -> {
+//                        var pet = petService.getById(post.getPetId()).getBody();
+//                        var petDetails = PetPartialDetails.builder()
+//                                .id(pet.getId())
+//                                .name(pet.getName())
+//                                .breedDetails(pet.getBreedDetails())
+//                                .build();
+//                        return AdoptionPostPartialsResponse.builder()
+//                                .id(post.getId())
+//                                .petDetails(petDetails)
+//                                .build();
+//                    })
+//                    .collect(Collectors.toList());
+//        }
+//        else throw new PostNotFoundException("not available posts for user with id ");
 
     }
 
