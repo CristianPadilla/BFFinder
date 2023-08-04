@@ -1,5 +1,6 @@
 package com.cpadilla.adoptionpostservice.service;
 
+import com.cpadilla.adoptionpostservice.entity.AdoptionPostEntity;
 import com.cpadilla.adoptionpostservice.model.FilterRequest;
 import com.cpadilla.adoptionpostservice.model.SearchRequest;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -15,7 +16,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @Log4j2
@@ -30,35 +30,48 @@ public class AdoptionPostFilterSpecification<T> {
         };
     }
 
-    public Specification<T> getSearchSpecification(List<SearchRequest> searchRequests) {
+//    public Specification<T> getSearchSpecification(List<SearchRequest> searchRequests) {
+//        return (root, query, criteriaBuilder) -> {
+//            List<Predicate> predicates = new ArrayList<>();
+//            predicates.add(criteriaBuilder.equal(root.get("status"), true)); // filter active ones
+//
+//            for (SearchRequest searchRequest : searchRequests) {
+//                log.info("applying filter {}", searchRequest.getFilter());
+//                Object formatedValue = "";
+//                if (searchRequest.getFilter().equals("date")) {
+//                    log.info("applying filter of date for posts before {}", searchRequest.getValue());
+//                    var takenDate = LocalDate.parse(searchRequest.getValue());
+//                    formatedValue = takenDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+//                    predicates.add(criteriaBuilder
+//                            .lessThanOrEqualTo(root.get(searchRequest.getFilter()), Instant.parse(formatedValue.toString())));
+//                    continue;
+//                } else if (searchRequest.getFilter().equals("id")) {
+//                    formatedValue = searchRequest.getValue();
+//                }
+//                Predicate equal = criteriaBuilder
+//                        .equal(root.get(searchRequest.getFilter()), formatedValue);
+//                predicates.add(equal);
+//            }
+//            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+//        };
+//    }
+
+
+    public Specification<AdoptionPostEntity> getSearchSpecification(FilterRequest filterRequest) {
         return (root, query, criteriaBuilder) -> {
+
             List<Predicate> predicates = new ArrayList<>();
+            Object formatedValue = "";
 
-            for (SearchRequest searchRequest : searchRequests) {
-                log.info("=================== 111 {}", searchRequest.getFilter());
-                Object formatedValue = "";
-                if (searchRequest.getFilter().equals("status")) {
-                    formatedValue = Boolean.parseBoolean(searchRequest.getValue());
+            predicates.add(criteriaBuilder.equal(root.get("status"), true)); // filter active ones
 
-                } else if (searchRequest.getFilter().equals("date")) {
-                    log.info("============11======= ");
-                    var takenDate = LocalDate.parse(searchRequest.getValue());
-                    formatedValue = takenDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
-                    log.info("============22======= {}", formatedValue.toString());
-                    Predicate equal = criteriaBuilder
-                            .lessThanOrEqualTo(root.get(searchRequest.getFilter()), Instant.parse(formatedValue.toString()));
-                    predicates.add(equal);
-                    continue;
-//                        formatedValue= Instant.parse(searchRequest.getValue());
-//                    formatedValue = "2020-08-21T00:00:00.000Z";
-
-                } else if (searchRequest.getFilter().equals("id")) {
-                    formatedValue = searchRequest.getValue();
-                }
-                Predicate equal = criteriaBuilder
-                        .equal(root.get(searchRequest.getFilter()), formatedValue);
-                predicates.add(equal);
+            if (filterRequest.getDate()!= null && !filterRequest.getDate().isEmpty()) {
+                log.info("applying filter of date for posts with date before {}", filterRequest.getDate());
+                var takenDate = LocalDate.parse(filterRequest.getDate());
+                formatedValue = takenDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("date"), Instant.parse(formatedValue.toString())));
             }
+
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }

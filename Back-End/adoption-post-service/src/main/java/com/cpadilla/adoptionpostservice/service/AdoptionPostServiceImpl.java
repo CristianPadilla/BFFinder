@@ -127,44 +127,38 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                                 .build();
                     })
                     .collect(Collectors.toList());
-        }
-        else throw new PostNotFoundException("not available posts for user with id ");
+        } else throw new PostNotFoundException("not available posts for user with id ");
 
     }
 
     @Override
     public List<AdoptionPostPartialsResponse> getAllFilter(FilterRequest filterRequest) {
+        String sizeFilter = filterRequest.getSize();
+
         var specification =
-                filterSpecification.getSearchSpecification(filterRequest.getSearchRequests());
+                filterSpecification.getSearchSpecification(filterRequest);
 
         var postEntities =
-                repository.findAll(specification);
-        return postEntities.stream().map(post ->  {
-            return AdoptionPostPartialsResponse.builder()
-                    .id(post.getId())
-                    .status(post.isStatus())
-                    .date(post.getDate())
-                    .build();
-        }).collect(Collectors.toList());
+                repository.findAll(specification, Sort.by("date").descending());
 
-
-//        if (postEntities.size() > 0) {
-//            return postEntities.stream()
-//                    .map(post -> {
-//                        var pet = petService.getById(post.getPetId()).getBody();
-//                        var petDetails = PetPartialDetails.builder()
-//                                .id(pet.getId())
-//                                .name(pet.getName())
-//                                .breedDetails(pet.getBreedDetails())
-//                                .build();
-//                        return AdoptionPostPartialsResponse.builder()
-//                                .id(post.getId())
-//                                .petDetails(petDetails)
-//                                .build();
-//                    })
-//                    .collect(Collectors.toList());
-//        }
-//        else throw new PostNotFoundException("not available posts for user with id ");
+        if (postEntities.size() > 0) {
+            return postEntities.stream().map(post -> {
+                        var pet = petService.getById(post.getPetId()).getBody();
+                        var petDetails = PetPartialDetails.builder()
+                                .id(pet.getId())
+                                .name(pet.getName())
+                                .breedDetails(pet.getBreedDetails())
+                                .size(pet.getSize())
+                                .build();
+                        return AdoptionPostPartialsResponse.builder()
+                                .id(post.getId())
+                                .status(post.isStatus())
+                                .date(post.getDate())
+                                .petDetails(petDetails)
+                                .build();
+                    }).filter(post -> petPassesFilter(post.getPetDetails(), filterRequest))
+                    .collect(Collectors.toList());
+        } else throw new PostNotFoundException("not available posts for user with id ");
 
     }
 
@@ -185,5 +179,39 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
         postToUpdate.setStatus(false);
         return repository.save(postToUpdate).getId();
+    }
+
+
+    public boolean petPassesFilter(PetPartialDetails petDetails, FilterRequest filter) {
+
+        if (filter.getSize() != null) {
+            var sizeFilter = filter.getSize().toLowerCase();
+            if (sizeFilter.equals("l") || sizeFilter.equals("s") || sizeFilter.equals("m")) {
+                if (sizeFilter.charAt(0) != petDetails.getSize()) return false;
+            } else
+                throw new CustomException("Filter 'size' is not valid", "FILTER_NOT_VALID", HttpStatus.NOT_FOUND.value());
+        }
+
+        if (filter.getSpecieId() != 0) {
+            if (petDetails.getBreedDetails().getSpecie().getId() != filter.getSpecieId()) return false;
+            if (filter.getBreedId() != 0 && petDetails.getBreedDetails().getId() != filter.getBreedId()) return false;
+        }
+
+
+//        if (filter.getSize() != null) {
+//            var sizeFilter = filter.getSize().toLowerCase();
+//            if ((sizeFilter.equals("l") || sizeFilter.equals("s") || sizeFilter.equals("m"))) {
+//                if (sizeFilter.charAt(0) != petDetails.getSize()) return false;
+//            } else
+//                throw new CustomException("Filter 'size' is not valid", "FILTER_NOT_VALID", HttpStatus.NOT_FOUND.value());
+//        }
+//
+//        if (filter.getSpecieId() != 0 && (!(petDetails.getBreedDetails().getSpecie().getId() == filter.getSpecieId())))
+//            return false;
+//        if (filter.getSpecieId() != 0 && (filter.getBreedId() != 0 && !(petDetails.getBreedDetails().getId() == filter.getBreedId())))
+//            return false;
+
+
+        return true;
     }
 }

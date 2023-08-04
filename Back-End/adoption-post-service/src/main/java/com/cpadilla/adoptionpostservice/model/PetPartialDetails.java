@@ -14,4 +14,5 @@ public class PetPartialDetails {
     private int id;
     private String name;
     private BreedDetails breedDetails;
+    private char size;
 }

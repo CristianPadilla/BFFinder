@@ -9,6 +9,8 @@ import com.cpadilla.petservice.model.*;
 import com.cpadilla.petservice.repository.PetRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,9 @@ public class PetServiceImpl implements PetService {
 
     @Autowired
     private OwnerService ownerService;
+
+    @Autowired
+    private PetFilterSpecification<PetEntity> filterSpecification;
 
 
     @Override
@@ -64,6 +69,46 @@ public class PetServiceImpl implements PetService {
                 .ownerDetails(ownerDetails)
                 .breedDetails(breedDetails)
                 .build();
+    }
+
+    @Override
+    public PetResponse getAllFilter(FilterRequest filters) { // method not completed
+        log.info("Getting pets by filters {} at SERVICE layer", filters);
+
+//        var specification =
+//                filterSpecification.getSearchSpecification(filters);
+//
+//        var petEntity = repository.findAll(specification);
+//
+//        var owner = ownerService.getUserById(petEntity.getOwnerId()).getBody();
+//        var ownerDetails = OwnerDetails.builder()
+//                .userId(owner.getUserId())
+//                .name(owner.getName())
+//                .surname(owner.getSurname())
+//                .phoneNumber(owner.getPhoneNumber())
+//                .build();
+//
+//        var breed = breedService.getBreedById(petEntity.getBreedId()).getBody();
+//        var breedDetails = BreedDetails.builder()
+//                .id(breed.getId())
+//                .name(breed.getName())
+//                .specie(breed.getSpecie())
+//                .build();
+//
+//        return PetResponse.builder()
+//                .id(petEntity.getId())
+//                .name(petEntity.getName())
+//                .weight(petEntity.getWeight())
+//                .age(petEntity.getAge())
+//                .vaccinated(petEntity.getVaccinated())
+//                .dangerous(petEntity.getDangerous())
+//                .size(petEntity.getSize())
+//                .sterilized(petEntity.getSterilized() != null ? petEntity.getSterilized() : false)
+//                .dewormed(petEntity.getDewormed() != null ? petEntity.getDewormed() : false)
+//                .ownerDetails(ownerDetails)
+//                .breedDetails(breedDetails)
+//                .build();
+        return null;
     }
 
     @Override
@@ -116,19 +161,19 @@ public class PetServiceImpl implements PetService {
         return repository.findAllByOwnerId(ownerId)
                 .stream()
                 .map(petEntity ->
-                        PetResponse.builder()
-                                .id(petEntity.getId())
-                                .name(petEntity.getName())
-                                .weight(petEntity.getWeight())
-                                .age(petEntity.getAge())
-                                .vaccinated(petEntity.getVaccinated())
-                                .dangerous(petEntity.getDangerous())
-                                .size(petEntity.getSize())
-                                .sterilized(petEntity.getSterilized())
-                                .status(petEntity.getStatus())
-                                .dewormed(petEntity.getDewormed())
+                                PetResponse.builder()
+                                        .id(petEntity.getId())
+                                        .name(petEntity.getName())
+                                        .weight(petEntity.getWeight())
+                                        .age(petEntity.getAge())
+                                        .vaccinated(petEntity.getVaccinated())
+                                        .dangerous(petEntity.getDangerous())
+                                        .size(petEntity.getSize())
+                                        .sterilized(petEntity.getSterilized())
+                                        .status(petEntity.getStatus())
+                                        .dewormed(petEntity.getDewormed())
 //                                .breedDetails(pe)// still not implemented
-                                .build()
+                                        .build()
                 ).collect(Collectors.toList());
     }
 }
