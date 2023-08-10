@@ -9,4 +9,6 @@ public interface LocationService {
 
     int saveAddress(LocationRequest locationRequest);
 
+    int updateAddress(LocationRequest locationRequest);
+
 }

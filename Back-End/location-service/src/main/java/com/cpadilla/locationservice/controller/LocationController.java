@@ -26,4 +26,10 @@ public class LocationController {
     public ResponseEntity<Integer> saveAddress(@RequestBody LocationRequest locationRequest) {
         return new ResponseEntity<>(service.saveAddress(locationRequest), HttpStatus.OK);
     }
+
+
+    @PutMapping("/update")
+    public ResponseEntity<Integer> updateAddress(@RequestBody LocationRequest locationRequest) {
+        return new ResponseEntity<>(service.updateAddress(locationRequest), HttpStatus.OK);
+    }
 }

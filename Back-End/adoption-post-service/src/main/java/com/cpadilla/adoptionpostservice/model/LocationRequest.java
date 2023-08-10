@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class LocationRequest {
 
+    private int id;
     private int cityId;
 }

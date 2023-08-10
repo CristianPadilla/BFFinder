@@ -56,12 +56,18 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .breedDetails(petResponse.getBreedDetails())
                 .build();
 
+        var locationResponse = locationService.getById(postEntity.getAddressId()).getBody();
+        var locationDetails = LocationDetails.builder()
+                .id(locationResponse.getId())
+                .city(locationResponse.getCity())
+                .build();
 
         return AdoptionPostResponse.builder()
                 .id(postEntity.getId())
                 .description(postEntity.getDescription())
                 .date(postEntity.getDate())
                 .petDetails(petDetails)
+                .locationDetails(locationDetails)
                 .build();
     }
 
@@ -132,9 +138,17 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                                 .name(pet.getName())
                                 .breedDetails(pet.getBreedDetails())
                                 .build();
+
+                        var locationResponse = locationService.getById(post.getAddressId()).getBody();
+                        var locationDetails = LocationDetails.builder()
+                                .id(locationResponse.getId())
+                                .city(locationResponse.getCity())
+                                .build();
+
                         return AdoptionPostPartialsResponse.builder()
                                 .id(post.getId())
                                 .petDetails(petDetails)
+                                .locationDetails(locationDetails)
                                 .date(post.getDate())
                                 .build();
                     })
@@ -176,6 +190,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                                 .locationDetails(locationDetails)
                                 .build();
                     }).filter(post -> petPassesFilter(post.getPetDetails(), filterRequest))// apply pet filters
+                    .filter(post -> filterRequest.getCityId() != 0 && post.getLocationDetails().getCity().getId() == filterRequest.getCityId())// location filter
                     .collect(Collectors.toList());
         } else throw new PostNotFoundException("not available posts with specified filters");
 
@@ -184,10 +199,22 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     @Override
     public int updatePost(AdoptionPostRequest request) {
 
-        AdoptionPostEntity postToUpdate = repository.findById(request.getId())
+        var postToUpdate = repository.findById(request.getId())
                 .orElseThrow(() -> new PostNotFoundException("The adoption post not found for id " + request.getId()));
 
-        postToUpdate.setDescription(request.getDescription());
+        var currentLocationDetails = locationService.getById(postToUpdate.getAddressId()).getBody();
+
+
+        if (!request.getDescription().equals(postToUpdate.getDescription()))
+            postToUpdate.setDescription(request.getDescription());
+
+        if (request.getLocation().getCityId() != currentLocationDetails.getCity().getId()) // update city only
+            locationService.updateAddress(LocationRequest.builder()
+                    .id(currentLocationDetails.getId())
+                    .cityId(request.getLocation().getCityId())
+                    .build());
+
+
         return repository.save(postToUpdate).getId();
     }
 
@@ -215,22 +242,6 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
             if (petDetails.getBreedDetails().getSpecie().getId() != filter.getSpecieId()) return false;
             if (filter.getBreedId() != 0 && petDetails.getBreedDetails().getId() != filter.getBreedId()) return false;
         }
-
-
-//        if (filter.getSize() != null) {
-//            var sizeFilter = filter.getSize().toLowerCase();
-//            if ((sizeFilter.equals("l") || sizeFilter.equals("s") || sizeFilter.equals("m"))) {
-//                if (sizeFilter.charAt(0) != petDetails.getSize()) return false;
-//            } else
-//                throw new CustomException("Filter 'size' is not valid", "FILTER_NOT_VALID", HttpStatus.NOT_FOUND.value());
-//        }
-//
-//        if (filter.getSpecieId() != 0 && (!(petDetails.getBreedDetails().getSpecie().getId() == filter.getSpecieId())))
-//            return false;
-//        if (filter.getSpecieId() != 0 && (filter.getBreedId() != 0 && !(petDetails.getBreedDetails().getId() == filter.getBreedId())))
-//            return false;
-
-
         return true;
     }
 }

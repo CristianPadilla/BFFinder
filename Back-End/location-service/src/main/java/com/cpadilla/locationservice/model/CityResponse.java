@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CityResponse {
 
+    private int id;
     private String name;
     private DepartmentResponse department;
 }

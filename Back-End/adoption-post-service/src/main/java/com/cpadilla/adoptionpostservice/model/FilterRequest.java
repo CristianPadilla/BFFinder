@@ -16,7 +16,6 @@ public class FilterRequest {
     private int specieId;
     private int breedId;
     private int cityId;
-    private int departmentId;
 
 //    private List<SearchRequest> searchRequests;
 }

@@ -9,6 +9,7 @@ import lombok.Data;
 @Builder
 public class LocationRequest {
 
+    private int id;
     private String address;
     private String moreInfo;
     private String neighborhood;

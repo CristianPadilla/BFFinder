@@ -31,4 +31,5 @@ public class AdoptionPostEntity {
     private int addressId;
 
 
+
 }

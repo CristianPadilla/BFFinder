@@ -16,7 +16,6 @@ public class AdoptionPostRequest {
 
     private int id;
     private String description;
-    private boolean status;
     private int petId;
     private LocationRequest location;
 }
