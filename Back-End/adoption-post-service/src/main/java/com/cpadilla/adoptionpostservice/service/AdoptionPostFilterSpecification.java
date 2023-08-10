@@ -65,9 +65,9 @@ public class AdoptionPostFilterSpecification<T> {
 
             predicates.add(criteriaBuilder.equal(root.get("status"), true)); // filter active ones
 
-            if (filterRequest.getDate()!= null && !filterRequest.getDate().isEmpty()) {
-                log.info("applying filter of date for posts with date before {}", filterRequest.getDate());
-                var takenDate = LocalDate.parse(filterRequest.getDate());
+            if (filterRequest.getFromDate()!= null && !filterRequest.getFromDate().isEmpty()) {// date filter
+                log.info("applying filter of date for posts with date before {}", filterRequest.getFromDate());
+                var takenDate = LocalDate.parse(filterRequest.getFromDate());
                 formatedValue = takenDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("date"), Instant.parse(formatedValue.toString())));
             }

@@ -27,6 +27,8 @@ public class AdoptionPostEntity {
     private int petId;
     @Column(name = "user_id")
     private int userId;
+    @Column(name = "address_id")
+    private int addressId;
 
 
 }

@@ -2,8 +2,10 @@ package com.cpadilla.adoptionpostservice.service;
 
 import com.cpadilla.adoptionpostservice.entity.AdoptionPostEntity;
 import com.cpadilla.adoptionpostservice.exception.CustomException;
+import com.cpadilla.adoptionpostservice.exception.LocationNotCreatedException;
 import com.cpadilla.adoptionpostservice.exception.PetNotFoundException;
 import com.cpadilla.adoptionpostservice.exception.PostNotFoundException;
+import com.cpadilla.adoptionpostservice.external.client.LocationService;
 import com.cpadilla.adoptionpostservice.external.client.PetService;
 import com.cpadilla.adoptionpostservice.model.*;
 import com.cpadilla.adoptionpostservice.repository.AdoptionPostRepository;
@@ -26,6 +28,9 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
     @Autowired
     private PetService petService;
+
+    @Autowired
+    private LocationService locationService;
 
     @Autowired
     private AdoptionPostFilterSpecification<AdoptionPostEntity> filterSpecification;
@@ -68,12 +73,19 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         if (petId == 0)
             throw new PetNotFoundException("Not possible to create adoption post, specified pet not found with id " + adoptionPostRequest.getPetId());
 
+        var addressId = 0;
+        addressId = locationService.saveAddress(adoptionPostRequest.getLocation()).getBody();
+        if (addressId == 0)
+            throw new LocationNotCreatedException("Not possible to save location at address table");
+
+
         var postEntity = AdoptionPostEntity.builder()
                 .description(adoptionPostRequest.getDescription())
                 .status(true)
                 .date(Instant.now())
                 .petId(petId)
                 .userId(request.getUserId())
+                .addressId(addressId)
                 .build();
         return repository.save(postEntity).getId();
     }
@@ -133,10 +145,9 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
     @Override
     public List<AdoptionPostPartialsResponse> getAllFilter(FilterRequest filterRequest) {
-        String sizeFilter = filterRequest.getSize();
 
         var specification =
-                filterSpecification.getSearchSpecification(filterRequest);
+                filterSpecification.getSearchSpecification(filterRequest); // apply post filters
 
         var postEntities =
                 repository.findAll(specification, Sort.by("date").descending());
@@ -150,15 +161,23 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                                 .breedDetails(pet.getBreedDetails())
                                 .size(pet.getSize())
                                 .build();
+
+                        var locationResponse = locationService.getById(post.getAddressId()).getBody();
+                        var locationDetails = LocationDetails.builder()
+                                .id(locationResponse.getId())
+                                .city(locationResponse.getCity())
+                                .build();
+
                         return AdoptionPostPartialsResponse.builder()
                                 .id(post.getId())
                                 .status(post.isStatus())
                                 .date(post.getDate())
                                 .petDetails(petDetails)
+                                .locationDetails(locationDetails)
                                 .build();
-                    }).filter(post -> petPassesFilter(post.getPetDetails(), filterRequest))
+                    }).filter(post -> petPassesFilter(post.getPetDetails(), filterRequest))// apply pet filters
                     .collect(Collectors.toList());
-        } else throw new PostNotFoundException("not available posts for user with id ");
+        } else throw new PostNotFoundException("not available posts with specified filters");
 
     }
 

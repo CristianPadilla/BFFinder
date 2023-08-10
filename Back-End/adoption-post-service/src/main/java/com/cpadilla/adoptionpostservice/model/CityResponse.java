@@ -6,17 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AdoptionPostRequest {
+public class CityResponse {
 
-    private int id;
-    private String description;
-    private boolean status;
-    private int petId;
-    private LocationRequest location;
+    private String name;
+    private DepartmentResponse department;
 }

@@ -9,14 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FilterRequest {
+public class LocationRequest {
 
-    private String fromDate;
-    private String size;
-    private int specieId;
-    private int breedId;
     private int cityId;
-    private int departmentId;
-
-//    private List<SearchRequest> searchRequests;
 }

@@ -71,3 +71,10 @@ spring:
             - Path=/post/**
           filters:
             - AuthenticationFilter
+
+        - id: LOCATION-SERVICE
+          uri: lb://LOCATION-SERVICE
+          predicates:
+              - Path=/location/**
+          filters:
+              - AuthenticationFilter
