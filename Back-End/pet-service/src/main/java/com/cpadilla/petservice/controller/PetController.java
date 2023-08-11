@@ -26,7 +26,7 @@ public class PetController {
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<PetResponse> getAllFilter(@RequestBody FilterRequest filterRequest) {
+    public ResponseEntity<List<PetResponse>> getAllFilter(@RequestBody FilterRequest filterRequest) {
         return new ResponseEntity<>(service.getAllFilter(filterRequest), HttpStatus.OK);
     }
 

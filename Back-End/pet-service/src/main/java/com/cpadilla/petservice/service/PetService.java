@@ -9,7 +9,7 @@ import java.util.List;
 public interface PetService {
 
     PetResponse getPetById(int petId);
-    PetResponse getAllFilter(FilterRequest filters);
+    List<PetResponse> getAllFilter(FilterRequest filters);
 
     int savePet(PetRequest petRequest);
 

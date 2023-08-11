@@ -75,7 +75,13 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     public int savePost(PostRequest request) {
         var adoptionPostRequest = request.getAdoptionPostRequest();
         var petId = 0;
+
+        var isPublished = repository.findByPetIdAndStatusIsTrue(adoptionPostRequest.getPetId()).isPresent();
+        if (isPublished) // verify if pet already has a post
+            throw new CustomException("Pet is already published", "POST_ALREADY_EXIST", HttpStatus.CONFLICT.value());
+
         petId = petService.getById(adoptionPostRequest.getPetId()).getBody().getId();
+
         if (petId == 0)
             throw new PetNotFoundException("Not possible to create adoption post, specified pet not found with id " + adoptionPostRequest.getPetId());
 
@@ -225,6 +231,11 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
         postToUpdate.setStatus(false);
         return repository.save(postToUpdate).getId();
+    }
+
+    @Override
+    public boolean checkPetIsPosted(int petId) {
+        return repository.findByPetIdAndStatusIsTrue(petId).isPresent();
     }
 
 

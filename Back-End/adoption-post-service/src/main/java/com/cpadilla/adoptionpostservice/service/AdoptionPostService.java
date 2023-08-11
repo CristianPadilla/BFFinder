@@ -17,6 +17,7 @@ public interface AdoptionPostService {
     int updatePost(AdoptionPostRequest request);
 
     int cancelPost(int postId);
+    boolean checkPetIsPosted(int petId);
 
 
 }

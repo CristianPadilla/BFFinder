@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Log4j2
 @RestController
 @RequestMapping("/breed")
@@ -24,5 +26,11 @@ public class BreedController {
     public ResponseEntity<BreedResponse> getBreedById(@PathVariable(name = "id") int breedId) {
         log.info("Getting breed info with id: {} from CONTROLLER layer", breedId);
         return new ResponseEntity<>(service.getBreedById(breedId), HttpStatus.OK);
+    }
+
+    @GetMapping("/specie/{specieId}")
+    public ResponseEntity<List<BreedResponse>> getAllBreedsBySpecieId(@PathVariable(name = "specieId") int specieId) {
+        log.info("Getting breeds for specie with id: {} from CONTROLLER layer", specieId);
+        return new ResponseEntity<>(service.getAllBreedsBySpecieId(specieId), HttpStatus.OK);
     }
 }
