@@ -42,8 +42,11 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
         final Map<String, Object> errorPropertiesMap = getErrorAttributes(request, ErrorAttributeOptions.defaults());
 
         log.info("Handling exception from gateway");
-        int code = Integer.parseInt(errorPropertiesMap.get(ErrorAttributesKey.STATUS_CODE.getKey()).toString());
-        return ServerResponse.status(HttpStatus.valueOf(code))
+        int code =
+                errorPropertiesMap.get(ErrorAttributesKey.STATUS_CODE.getKey()) != null ?
+                        Integer.parseInt(errorPropertiesMap.get(ErrorAttributesKey.STATUS_CODE.getKey()).toString())
+                        : HttpStatus.INTERNAL_SERVER_ERROR.value();
+        return ServerResponse.status(HttpStatus.valueOf(500))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(errorPropertiesMap));
     }

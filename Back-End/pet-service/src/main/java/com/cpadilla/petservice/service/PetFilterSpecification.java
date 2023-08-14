@@ -47,35 +47,43 @@ public class PetFilterSpecification<T> {
 
             predicates.add(criteriaBuilder.equal(root.get("status"), true)); // filter active ones
 
-            if (filterRequest.getSize() != null) {
-                var sizeFilter = filterRequest.getSize().toLowerCase();
-                if (sizeFilter.equals("l") || sizeFilter.equals("s") || sizeFilter.equals("m")) {
+            if (filterRequest.getSize() != null) { // size filter
+                var sizeFilter = filterRequest.getSize().toLowerCase().charAt(0);
+                if (sizeFilter != 'l' || sizeFilter != 'm' || sizeFilter != 's') {
                     log.info("applying filter of size in pet query");
-                    predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("size"), sizeFilter));
+                    predicates.add(criteriaBuilder.equal(root.get("size"), sizeFilter));
                 } else
                     throw new CustomException("Filter 'size' is not valid", "FILTER_NOT_VALID", HttpStatus.NOT_FOUND.value());
             }
 
-            if (filterRequest.getSpecieId() != 0) {
-
+            if (filterRequest.getSpecieId() != 0) {// specie & breed filters
+                log.info("applying filter of specie id: {} in pet query", filterRequest.getSpecieId());
                 var filteredBreeds = breedService.getAllBreedsBySpecieId(filterRequest.getSpecieId()).getBody();
                 if (filteredBreeds == null || filteredBreeds.size() == 0)
                     throw new CustomException("no breeds available for specie with id " + filterRequest.getSpecieId(), "NO_BREEDS_FOUND", HttpStatus.NOT_FOUND.value());
 
-
                 List<Integer> allowedBreedIds;
-//                predicates.add(root.get("breedId").in(allowedBreedIds));
-
                 if (filterRequest.getBreedId() == 0) {
                     allowedBreedIds = filteredBreeds.stream().map(BreedResponse::getId).toList();
-                    predicates.add(root.get("breedId").in(allowedBreedIds));
                 } else {
+                    log.info("applying filter of breed id: {} in pet query", filterRequest.getBreedId());
                     allowedBreedIds = filteredBreeds.stream()
                             .map(BreedResponse::getId)
                             .filter(id -> id == filterRequest.getBreedId())
                             .toList();
                 }
+                predicates.add(root.get("breedId").in(allowedBreedIds));
+            }
 
+            if (filterRequest.getAge() != 0) {// age filter
+                log.info("applying filter of age <= {} years old at pet query", filterRequest.getAge());
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("age"), filterRequest.getAge()));
+            }
+
+            if (filterRequest.getName() != null && !filterRequest.getName().isEmpty()) {// name filter
+                log.info("applying filter of name for pets with name {}", filterRequest.getName());
+                var nameFilter = filterRequest.getName().toLowerCase(); // from that day start
+                predicates.add(criteriaBuilder.like(root.get("name"), "%"+nameFilter+"%"));
             }
 
 

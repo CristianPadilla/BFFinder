@@ -14,7 +14,7 @@ public class FilterRequest {
     private String size;
     private int specieId;
     private int breedId;
-    private int cityId;
-    private int departmentId;
+    private String name;
+    private int age;
 
 }

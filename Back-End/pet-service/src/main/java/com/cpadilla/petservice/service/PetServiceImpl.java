@@ -88,37 +88,42 @@ public class PetServiceImpl implements PetService {
         var specification =
                 filterSpecification.getSearchSpecification(filters);
 
-        var petEntity = repository.findAll(specification);
+        var petEntities = repository.findAll(specification);
 
-        var owner = ownerService.getUserById(petEntity.getOwnerId()).getBody();
-        var ownerDetails = OwnerDetails.builder()
-                .userId(owner.getUserId())
-                .name(owner.getName())
-                .surname(owner.getSurname())
-                .phoneNumber(owner.getPhoneNumber())
-                .build();
+        return petEntities.stream()
+                .map(petEntity -> {
 
-        var breed = breedService.getBreedById(petEntity.getBreedId()).getBody();
-        var breedDetails = BreedDetails.builder()
-                .id(breed.getId())
-                .name(breed.getName())
-                .specie(breed.getSpecie())
-                .build();
+                    var owner = ownerService.getUserById(petEntity.getOwnerId()).getBody();
+                    var ownerDetails = OwnerDetails.builder()
+                            .userId(owner.getUserId())
+                            .name(owner.getName())
+                            .surname(owner.getSurname())
+                            .phoneNumber(owner.getPhoneNumber())
+                            .build();
 
-        return PetResponse.builder()
-                .id(petEntity.getId())
-                .name(petEntity.getName())
-                .weight(petEntity.getWeight())
-                .age(petEntity.getAge())
-                .vaccinated(petEntity.getVaccinated())
-                .dangerous(petEntity.getDangerous())
-                .size(petEntity.getSize())
-                .sterilized(petEntity.getSterilized() != null ? petEntity.getSterilized() : false)
-                .dewormed(petEntity.getDewormed() != null ? petEntity.getDewormed() : false)
-                .ownerDetails(ownerDetails)
-                .breedDetails(breedDetails)
-                .build();
-//        return null;
+                    var breed = breedService.getBreedById(petEntity.getBreedId()).getBody();
+                    var breedDetails = BreedDetails.builder()
+                            .id(breed.getId())
+                            .name(breed.getName())
+                            .specie(breed.getSpecie())
+                            .build();
+
+                    return PetResponse.builder()
+                            .id(petEntity.getId())
+                            .name(petEntity.getName())
+                            .weight(petEntity.getWeight())
+                            .age(petEntity.getAge())
+                            .vaccinated(petEntity.getVaccinated())
+                            .dangerous(petEntity.getDangerous())
+                            .size(petEntity.getSize())
+                            .sterilized(petEntity.getSterilized() != null ? petEntity.getSterilized() : false)
+                            .dewormed(petEntity.getDewormed() != null ? petEntity.getDewormed() : false)
+                            .ownerDetails(ownerDetails)
+                            .breedDetails(breedDetails)
+                            .build();
+                }).collect(Collectors.toList());
+
+
     }
 
     @Override
