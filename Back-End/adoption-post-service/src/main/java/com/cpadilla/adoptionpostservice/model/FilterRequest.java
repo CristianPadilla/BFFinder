@@ -17,5 +17,5 @@ public class FilterRequest {
     private int breedId;
     private int cityId;
 
-//    private List<SearchRequest> searchRequests;
+
 }
