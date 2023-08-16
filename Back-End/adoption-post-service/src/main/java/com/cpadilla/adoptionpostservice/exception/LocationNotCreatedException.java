@@ -3,7 +3,7 @@ package com.cpadilla.adoptionpostservice.exception;
 public class LocationNotCreatedException extends SimpleGlobalException {
 
     public LocationNotCreatedException() {
-        super("No pet were found", GlobalErrorCode.LOCATION_NOT_CREATED);
+        super("Could not save the location entity", GlobalErrorCode.LOCATION_NOT_CREATED);
     }
 
     public LocationNotCreatedException(String message) {

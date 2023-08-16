@@ -1,18 +1,14 @@
 package com.cpadilla.authservice.model;
 
-import com.cpadilla.authservice.entity.UserCredentialsEntity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import com.cpadilla.authservice.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 
 @Builder
 @Data
@@ -27,7 +23,7 @@ public class CustomUserDetails implements UserDetails {
 //    private Role role;
 
 
-    public CustomUserDetails(UserCredentialsEntity userCredentials) {
+    public CustomUserDetails(UserEntity userCredentials) {
         this.username = userCredentials.getEmail();
         this.password = userCredentials.getPassword();
     }
