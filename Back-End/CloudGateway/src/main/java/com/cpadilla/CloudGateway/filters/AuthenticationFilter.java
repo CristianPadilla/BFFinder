@@ -31,6 +31,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     @Override
     public GatewayFilter apply(Config config) {
         return (((exchange, chain) -> {
+            log.info("Authenticating request from gateway service");
             if (validator.isSecured.test(exchange.getRequest())) { //Check if request corresponds to unsecured endpoints
                 final String jwt;
                 final String userEmail;

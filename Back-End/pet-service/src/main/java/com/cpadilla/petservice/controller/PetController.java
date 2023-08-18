@@ -1,5 +1,6 @@
 package com.cpadilla.petservice.controller;
 
+import com.cpadilla.petservice.model.FilterRequest;
 import com.cpadilla.petservice.model.PetRequest;
 import com.cpadilla.petservice.model.PetResponse;
 import com.cpadilla.petservice.service.PetService;
@@ -22,6 +23,11 @@ public class PetController {
     @GetMapping("/{id}")
     public ResponseEntity<PetResponse> getById(@PathVariable("id") int petId) {
         return new ResponseEntity<>(service.getPetById(petId), HttpStatus.OK);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<PetResponse>> getAllFilter(@RequestBody FilterRequest filterRequest) {
+        return new ResponseEntity<>(service.getAllFilter(filterRequest), HttpStatus.OK);
     }
 
     @GetMapping("/owner/{id}")

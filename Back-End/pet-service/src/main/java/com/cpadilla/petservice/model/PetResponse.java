@@ -21,6 +21,7 @@ public class PetResponse {
     private boolean sterilized;
     private boolean status;
     private boolean dewormed;
+    private boolean isPublished;
 
     private OwnerDetails ownerDetails;
     private BreedDetails breedDetails;
