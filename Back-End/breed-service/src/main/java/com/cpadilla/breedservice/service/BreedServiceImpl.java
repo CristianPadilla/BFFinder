@@ -4,10 +4,14 @@ import com.cpadilla.breedservice.exception.CustomException;
 import com.cpadilla.breedservice.external.client.SpecieService;
 import com.cpadilla.breedservice.model.BreedResponse;
 import com.cpadilla.breedservice.model.SpecieDetails;
+import com.cpadilla.breedservice.model.SpecieResponse;
 import com.cpadilla.breedservice.repository.BreedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BreedServiceImpl implements BreedService {
@@ -40,6 +44,27 @@ public class BreedServiceImpl implements BreedService {
                 .name(breedEntity.getName())
                 .specie(specieDetails)
                 .build();
+    }
+
+    @Override
+    public List<BreedResponse> getAllBreedsBySpecieId(int specieId) {
+        var breeds = repository.findAllBySpecieId(specieId);
+
+        return breeds.stream()
+                .map(breed -> {
+                    var specie = specieService.getSpecieById(breed.getSpecieId()).getBody();
+                    var specieResponse = SpecieDetails.builder()
+                            .id(specie.getId())
+                            .name(specie.getName())
+                            .build();
+
+                    return BreedResponse.builder()
+                            .id(breed.getId())
+                            .name(breed.getName())
+                            .specie(specieResponse)
+                            .build();
+
+                }).collect(Collectors.toList());
     }
 
     @Override

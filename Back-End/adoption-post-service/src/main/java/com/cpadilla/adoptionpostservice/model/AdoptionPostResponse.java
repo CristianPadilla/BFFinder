@@ -19,4 +19,5 @@ public class AdoptionPostResponse {
     private Instant date;
 
     private PetDetails petDetails;
+    private LocationDetails locationDetails;
 }

@@ -1,5 +1,4 @@
-package com.cpadilla.authservice.entity;
-
+package com.cpadilla.locationservice.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,22 +6,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "user")
-public class UserCredentialsEntity
-{
+@Entity
+@Table(name = "department")
+public class DepartmentEntity {
 
     @Id
+    @Column(name = "department_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "user_id")
-    private int id;
+    private Integer id;
     private String name;
-    private String surname;
-    private String email;
-    private String password;
-
 }

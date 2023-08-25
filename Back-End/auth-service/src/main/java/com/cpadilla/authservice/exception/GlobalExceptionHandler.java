@@ -17,12 +17,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(SimpleAuthGlobalException.class)
     protected ResponseEntity<ErrorResponse> handleAuthGlobalException(SimpleAuthGlobalException exception, Locale locale) {
-        log.info("Handling auth exception from auth service");
+        log.info("Handling auth exception from auth service: " + exception.getMessage());
         return ResponseEntity
                 .badRequest()
                 .body(ErrorResponse.builder()
                         .code(exception.getCode())
                         .message(exception.getMessage())
+                        .details(exception.getDetails())
                         .timestamp(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
                         .build());
     }
