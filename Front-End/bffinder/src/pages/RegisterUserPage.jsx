@@ -98,23 +98,25 @@ export function RegisterUserPage() {
             className="sign-up-form  animate__animated animate__backInLeft"
             id="sign-up-form"
           >
-            {/* <h2 className='titulo'>Registrarse</h2> */}
 
             <div className="input-field">
               <i className="fas fa-user" />
-              <Field name="firstname" placeholder="Nombre" type="text"></Field>
+              <Field name="firstname" placeholder="Pedro" type="text"></Field>
               <ErrorMessage name="firstname" component="span"></ErrorMessage>
             </div>
+
             <div className="input-field">
               <i className="fas fa-user" />
-              <Field name="lastname" placeholder="Apellido" type="text"></Field>
+              <Field name="lastname" placeholder="Pérez" type="text"></Field>
               <ErrorMessage name="lastname" component="span"></ErrorMessage>
             </div>
+
             <div className="input-field">
               <i className="fas fa-user" />
-              <Field name="phone" placeholder="Telefono" type="number"></Field>
+              <Field name="phone" placeholder="3213213322" type="number"></Field>
               <ErrorMessage name="phone" component="span"></ErrorMessage>
             </div>
+
             <div className="input-field">
               <i className="fas fa-envelope" />
               <Field
@@ -124,6 +126,7 @@ export function RegisterUserPage() {
               ></Field>
               <ErrorMessage name="email" component="span"></ErrorMessage>
             </div>
+
             <div className="input-field">
               <i className="fas fa-envelope" />
               <Field
@@ -133,6 +136,37 @@ export function RegisterUserPage() {
               ></Field>
               <ErrorMessage name="email2" component="span"></ErrorMessage>
             </div>
+
+            <div className="input-field">
+              <i className="fas fa-envelope" />
+              <Field
+                name="address"
+                placeholder="Dirección de residencia"
+                type="text"
+              ></Field>
+              <ErrorMessage name="address" component="span"></ErrorMessage>
+            </div>
+
+            <div className="input-field">
+              <i className="fas fa-envelope" />
+              <Field
+                name="address_additional"
+                placeholder="Piso 3 apartamento 2"
+                type="text"
+              ></Field>
+              <ErrorMessage name="address_additional" component="span"></ErrorMessage>
+            </div>
+
+            <div className="input-field">
+              <i className="fas fa-envelope" />
+              <Field
+                name="neighborhood"
+                placeholder="San Francisco"
+                type="text"
+              ></Field>
+              <ErrorMessage name="neighborhood" component="span"></ErrorMessage>
+            </div>
+
             <div className="input-field">
               <i className="fas fa-envelope" />
               <Field
@@ -145,43 +179,27 @@ export function RegisterUserPage() {
                 <option value="3">Antioquia</option>
                 <option value="2">Cundinamarca</option>
               </Field>
-              <ErrorMessage name="department" component="span"></ErrorMessage>
-              {/* <select
-                value={values.department}
-                onChange={handleChange}
-                name='department'
-                className='form-select form-select-lg mb-3'
-                // aria-label='Large select example'
-              >
-                <option defaultValue='0'>Departamento de residencia</option>
-                <option value='1'>Valle del cauca</option>
-                <option value='3'>Antioquia</option>
-                <option value='2'>Cundinamarca</option>
-              </select>
-              {touched.department && errors.department && (
-                <span>{errors.department}</span>
-              )} */}
+              <ErrorMessage name="department" component="span"></ErrorMessage>  
             </div>
-            {/* <div className='input-field'>
-              <i className='fas fa-envelope' />
 
-              <select
+            <div className="input-field">
+              <i className="fas fa-envelope" />
+              <Field
                 name='city'
                 className='form-select form-select-lg mb-3'
-                value={values.city}
-                onChange={handleChange}
+                as="select"
                 // aria-label='Large select example'
               >
                 <option defaultValue='0'>Municipio de residencia</option>
                 <option value='1'>Cali</option>
                 <option value='3'>Jamundí</option>
                 <option value='2'>Palmira</option>
-              </select>
-              {touched.city && errors.city && <span>{errors.city}</span>}
-            </div> */}
+              </Field>
+              <ErrorMessage name="city" component="span"></ErrorMessage>
+            </div>
+
             <div className="input-field">
               <i className="fas fa-envelope" />
-
               <Field
                 name="date"
                 className="form-datepicker"
@@ -210,6 +228,7 @@ export function RegisterUserPage() {
               ></Field>
               <ErrorMessage name="password2" component="span"></ErrorMessage>
             </div>
+            
             <div>
               <label className="switch">
                 Términos y condiciones
