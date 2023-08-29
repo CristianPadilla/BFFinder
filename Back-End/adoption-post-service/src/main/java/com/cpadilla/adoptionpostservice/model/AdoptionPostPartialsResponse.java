@@ -16,5 +16,7 @@ public class AdoptionPostPartialsResponse {
 
     private int id;
     private boolean status;
+    private Instant date;
     private PetPartialDetails petDetails;
+    private LocationDetails locationDetails;
 }
