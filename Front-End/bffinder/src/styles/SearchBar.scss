@@ -1,0 +1,47 @@
+@import "vars";
+
+// /* Estilo para el borde antes de hacer clic */
+// .search-bar-wrapper .MuiInputBase-root.MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+//     border-color:  $color-second-boton !important;
+// }
+
+// /* Estilo para el borde al hacer clic o en foco */
+// .search-bar-wrapper .MuiInputBase-root.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+//     border-color: $color-hover-boton !important;
+// }
+
+// /* Estilo para el borde al pasar el cursor sobre el input */
+// .search-bar-wrapper .MuiInputBase-root.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+//     border-color: $color-bolas !important;
+// }
+
+.MuiTextField-root {
+    &.custom-search-bar {
+        .MuiInputLabel-root.Mui-focused {
+            color: $color-letras-bold !important;
+        }
+        .MuiOutlinedInput-root {
+            &.Mui-focused .MuiOutlinedInput-notchedOutline {
+                border-color: $color-second-boton !important;
+            }
+            &:hover .MuiOutlinedInput-notchedOutline {
+                border-color: $color-hover-boton !important;
+            }
+            &.Mui-focused .MuiSvgIcon-root {
+                // Cambia el color del ícono en estado enfocado
+                color: $color-second-boton !important;
+            }
+            &:hover .MuiSvgIcon-root {
+                // Cambia el color del ícono en estado hover
+                color: $color-hover-boton !important;
+            }
+            .MuiSvgIcon-root {
+                // Cambia el color del ícono en estado por defecto
+                color: $color-second-boton !important;
+            }
+            &:not(.Mui-focused):not(:hover) .MuiOutlinedInput-notchedOutline {
+                border-color: $color-second-boton !important;
+            }
+        }
+    }
+}

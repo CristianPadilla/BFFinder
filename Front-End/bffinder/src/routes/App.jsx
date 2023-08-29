@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "containers/Layout";
 import Login from "containers/Login";
 import RecoveryPassword from "containers/RecoveryPassword";
+import PreHome from "pages/PreHome";
 import Home from "pages/Home";
 import NotFound from "pages/NotFound";
 import Perfil from "pages/Perfil";
@@ -14,9 +15,10 @@ const App = () => {
 	<BrowserRouter>
 		<Layout areClass={'Layout'} css = {style.css} >
 			<Routes>
-				<Route path="/" element={<Home />} />
+				<Route path="/" element={<PreHome />} />
 				<Route path="/login" element={<Autenticacion/>} />
 				<Route path="/perfil" element={<Perfil/>} />
+				<Route path="/home" element={<Home/>} />
 				<Route path="/recovery-password" element={<RecoveryPassword/>} />
 				<Route path="*" element={<NotFound/>} />
 			</Routes>

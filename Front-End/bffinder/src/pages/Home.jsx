@@ -1,29 +1,26 @@
-import React from "react";
-import Header from "../Components/Header";
-import PrePost from "../containers/SectionPrePosts";
-import Fundations from "../containers/SectionFundation";
-import Footer from "../Components/FooterPreHome";
-import 'styles/Prehome.scss';
+import React from 'react';
+import { useNavigate } from "react-router-dom";
+import NavHome from "../Components/NavHome";
+import SectionPosts from '../containers/SectionAllPosts';
 
 const Home = () => {
-  return (
-    <>
-      <Header />
-      <section id="mascotas" className="container-sections">
-        <div className="section-content">
-            <PrePost />
+
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        // Realiza las acciones de cierre de sesión aquí, como eliminar el token de autenticación del almacenamiento
+    
+        // Redirige al usuario a la página de inicio de sesión después de cerrar sesión
+        navigate("/login");
+      };
+
+    return (
+        <div>
+            <NavHome/>
+            <SectionPosts />
         </div>
-      </section>
-      <section id="fundaciones" className="container-sections">
-        <div className="section-content">
-           <Fundations /> 
-        </div>
-      </section>
-      <section>
-        <Footer />
-      </section>
-    </>
-  );
+    );
 };
 
 export default Home;
