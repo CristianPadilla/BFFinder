@@ -1,35 +1,50 @@
-import React from 'react'
+import React from "react";
+import { TextInputComponent } from "../Components/TextInputComponent";
 
 const FormikRegisterFoundationPage = () => {
   return (
-   <>
-   <form className="sign-up-form" id="sign-up-form">
-     <h2 className="titulo">Registrarse</h2>
+    <>
+      <form className="sign-up-form" id="sign-up-form">
+        <h2 className="titulo">Registrarse</h2>
 
-     <div className="input-field">
-       <i className="fas fa-user" />
-       <input type="text" placeholder="Nombre" value="" name="firstname" />
-     </div>
-     <div className="input-field">
-       <i className="fas fa-envelope" />
-       <input
-         type="email"
-         placeholder="ejemplo@mail.com"
-         value=""
-         name="email"
-       />
-     </div>
+        <div className="input-field">
+          <i className="fas fa-user" />
+          <input type="text" placeholder="Nombre" value="" name="firstname" />
+        </div>
+        <div className="input-field">
+          <i className="fas fa-envelope" />
+          <input
+            type="email"
+            placeholder="ejemplo@mail.com"
+            value=""
+            name="email"
+          />
+        </div>
 
-     <input
-       type="submit"
-       id="sign-up-btn"
-       value="Registrarse"
-       className="btn"
-       // onClick={registerUser}
-     />
-   </form>
- </>
-  )
-}
+        <TextInputComponent
+          type="text"
+          label="Información adicional de domicilio"
+          name="address_additional"
+          placeholder="Piso 3, apartamento 2"
+        />
 
-export default FormikRegisterFoundationPage
+        <TextInputComponent
+          type="text"
+          label="Barrio/Localidad"
+          name="neighborhood"
+          placeholder="San Francisco"
+        />
+
+        <input
+          type="submit"
+          id="sign-up-btn"
+          value="Registrarse"
+          className="btn"
+          // onClick={registerUser}
+        />
+      </form>
+    </>
+  );
+};
+
+export default FormikRegisterFoundationPage;

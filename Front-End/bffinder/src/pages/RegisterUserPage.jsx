@@ -2,6 +2,7 @@ import React from "react";
 import "../styles/login.scss";
 import { useFormik, Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { TextInputComponent } from "../Components/TextInputComponent";
 
 export function RegisterUserPage() {
   // const registerUser = async () => {
@@ -63,20 +64,19 @@ export function RegisterUserPage() {
             )
             .required("El telefono es requerido"),
           email: Yup.string()
-            .email("El correo no es valido")
-            .required("El email es requerido"),
+            .email("Correo no válido")
+            .required("El correo es requerido"),
           email2: Yup.string()
             .email("El email no es valido")
             .oneOf([Yup.ref("email"), null], "Los correos no coinciden")
             .required("El email es requerido"),
+          address: Yup.string(),
           department: Yup.string()
-            .min(2, "El departamento debe tener al menos 2 caracteres")
-            .max(15, "El departamento debe tener 15 caracteres o menos")
-            .required("El departamento es requerido"),
-          city: Yup.string()
-            .min(2, "La ciudad debe tener al menos 2 caracteres")
-            .max(15, "La ciudad debe tener 15 caracteres o menos")
-            .required("La ciudad es requerido"),
+            // .notOneOf(["mesopotamia"], "esta opcion no está permitida")// en caso de bloquear una opcion
+            .required("Debe seleccionar un departamento de residencia"),
+          city: Yup.string().required(
+            "Debe seleccionar un municipio de residencia"
+          ),
           password: Yup.string()
             .min(8, "La contraseña debe tener al menos 8 caracteres")
             .max(15, "La contraseña debe tener 15 caracteres o menos")
@@ -98,74 +98,53 @@ export function RegisterUserPage() {
             className="sign-up-form  animate__animated animate__backInLeft"
             id="sign-up-form"
           >
-
-            <div className="input-field">
-              <i className="fas fa-user" />
-              <Field name="firstname" placeholder="Pedro" type="text"></Field>
+            {/* <div className="input-field"> */}
+            {/* <i className="fas fa-user" /> */}
+            <TextInputComponent
+              type="text"
+              label="Nombre"
+              name="firstname"
+              placeholder="Pedro"
+            />
+            {/* <Field name="firstname" placeholder="Pedro" type="text"></Field>
               <ErrorMessage name="firstname" component="span"></ErrorMessage>
-            </div>
+            </div> */}
 
-            <div className="input-field">
-              <i className="fas fa-user" />
-              <Field name="lastname" placeholder="Pérez" type="text"></Field>
-              <ErrorMessage name="lastname" component="span"></ErrorMessage>
-            </div>
+            <TextInputComponent
+              type="text"
+              label="Apellido"
+              name="lastname"
+              placeholder="Pérez"
+            />
 
-            <div className="input-field">
-              <i className="fas fa-user" />
-              <Field name="phone" placeholder="3213213322" type="number"></Field>
-              <ErrorMessage name="phone" component="span"></ErrorMessage>
-            </div>
+            <TextInputComponent
+              type="number"
+              label="Número de celular"
+              name="phone"
+              placeholder="Su número de cel"
+            />
 
-            <div className="input-field">
-              <i className="fas fa-envelope" />
-              <Field
-                name="email"
-                placeholder="ejemplo@mail.com"
-                type="email"
-              ></Field>
-              <ErrorMessage name="email" component="span"></ErrorMessage>
-            </div>
+            <TextInputComponent
+              type="email"
+              label="Correo electrónico"
+              name="email"
+              placeholder="ejemplo@mail.com"
+            />
 
-            <div className="input-field">
-              <i className="fas fa-envelope" />
-              <Field
-                name="email2"
-                placeholder="Confirma tu correo"
-                type="email"
-              ></Field>
-              <ErrorMessage name="email2" component="span"></ErrorMessage>
-            </div>
+            <TextInputComponent
+              type="email"
+              label="Confirma tu correo"
+              name="email2"
+              placeholder="repite tu correo electrónico"
+            />
 
-            <div className="input-field">
-              <i className="fas fa-envelope" />
-              <Field
-                name="address"
-                placeholder="Dirección de residencia"
-                type="text"
-              ></Field>
-              <ErrorMessage name="address" component="span"></ErrorMessage>
-            </div>
-
-            <div className="input-field">
-              <i className="fas fa-envelope" />
-              <Field
-                name="address_additional"
-                placeholder="Piso 3 apartamento 2"
-                type="text"
-              ></Field>
-              <ErrorMessage name="address_additional" component="span"></ErrorMessage>
-            </div>
-
-            <div className="input-field">
-              <i className="fas fa-envelope" />
-              <Field
-                name="neighborhood"
-                placeholder="San Francisco"
-                type="text"
-              ></Field>
-              <ErrorMessage name="neighborhood" component="span"></ErrorMessage>
-            </div>
+            <TextInputComponent
+              type="text"
+              label="Dirección de residencia"
+              name="address"
+              placeholder="Calle 12, #13d-14"
+            />
+           
 
             <div className="input-field">
               <i className="fas fa-envelope" />
@@ -174,26 +153,26 @@ export function RegisterUserPage() {
                 as="select"
                 className="form-select form-select-lg mb-3"
               >
-                <option defaultValue="0">Departamento de residencia</option>
+                <option defaultValue="">Departamento de residencia</option>
                 <option value="1">Valle del cauca</option>
                 <option value="3">Antioquia</option>
                 <option value="2">Cundinamarca</option>
               </Field>
-              <ErrorMessage name="department" component="span"></ErrorMessage>  
+              <ErrorMessage name="department" component="span"></ErrorMessage>
             </div>
 
             <div className="input-field">
               <i className="fas fa-envelope" />
               <Field
-                name='city'
-                className='form-select form-select-lg mb-3'
+                name="city"
+                className="form-select form-select-lg mb-3"
                 as="select"
                 // aria-label='Large select example'
               >
-                <option defaultValue='0'>Municipio de residencia</option>
-                <option value='1'>Cali</option>
-                <option value='3'>Jamundí</option>
-                <option value='2'>Palmira</option>
+                <option defaultValue="0">Municipio de residencia</option>
+                <option value="1">Cali</option>
+                <option value="3">Jamundí</option>
+                <option value="2">Palmira</option>
               </Field>
               <ErrorMessage name="city" component="span"></ErrorMessage>
             </div>
@@ -228,7 +207,7 @@ export function RegisterUserPage() {
               ></Field>
               <ErrorMessage name="password2" component="span"></ErrorMessage>
             </div>
-            
+
             <div>
               <label className="switch">
                 Términos y condiciones
