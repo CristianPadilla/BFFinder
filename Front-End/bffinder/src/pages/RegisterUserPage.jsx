@@ -3,6 +3,8 @@ import "../styles/login.scss";
 import { useFormik, Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { TextInputComponent } from "../Components/TextInputComponent";
+import { SelectInputComponent } from "../Components/SelectInputComponent";
+import { CheckboxInputComponent } from "../Components/CheckboxInputComponent";
 
 export function RegisterUserPage() {
   // const registerUser = async () => {
@@ -144,82 +146,57 @@ export function RegisterUserPage() {
               name="address"
               placeholder="Calle 12, #13d-14"
             />
-           
 
-            <div className="input-field">
-              <i className="fas fa-envelope" />
-              <Field
-                name="department"
-                as="select"
-                className="form-select form-select-lg mb-3"
-              >
-                <option defaultValue="">Departamento de residencia</option>
-                <option value="1">Valle del cauca</option>
-                <option value="3">Antioquia</option>
-                <option value="2">Cundinamarca</option>
-              </Field>
-              <ErrorMessage name="department" component="span"></ErrorMessage>
-            </div>
+            <SelectInputComponent
+              name="department"
+              label="Departamento de residencia"
+              className="form-select form-select-lg mb-3"
+            >
+              <option defaultValue="">Selecciona un departamento</option>
+              <option value="1">Valle del cauca</option>
+              <option value="3">Antioquia</option>
+              <option value="2">Cundinamarca</option>
+            </SelectInputComponent>
 
-            <div className="input-field">
-              <i className="fas fa-envelope" />
-              <Field
-                name="city"
-                className="form-select form-select-lg mb-3"
-                as="select"
-                // aria-label='Large select example'
-              >
-                <option defaultValue="0">Municipio de residencia</option>
-                <option value="1">Cali</option>
-                <option value="3">Jamundí</option>
-                <option value="2">Palmira</option>
-              </Field>
-              <ErrorMessage name="city" component="span"></ErrorMessage>
-            </div>
+            <SelectInputComponent
+              name="city"
+              className="form-select form-select-lg mb-3"
+              label="Municipio de residencia"
+            >
+              <option defaultValue="0">Selecciona un municipio</option>
+              <option value="1">Cali</option>
+              <option value="3">Jamundí</option>
+              <option value="2">Palmira</option>
+            </SelectInputComponent>
 
-            <div className="input-field">
-              <i className="fas fa-envelope" />
-              <Field
-                name="date"
-                className="form-datepicker"
-                type="date"
-                placeholder="Fecha de nacimiento"
-              ></Field>
-              <ErrorMessage name="date" component="span"></ErrorMessage>
-            </div>
+            <TextInputComponent
+              type="date"
+              label="Fecha de nacimiento"
+              name="date"
+              className="form-datepicker"
+            />
 
-            <div className="input-field">
-              <i className="fas fa-lock" />
-              <Field
-                name="password"
-                placeholder="Contraseña"
-                type="password"
-              ></Field>
-              <ErrorMessage name="password" component="span"></ErrorMessage>
-            </div>
+            <TextInputComponent
+              type="password"
+              label="Contraseña"
+              name="password"
+              placeholder="********"
+            />
 
-            <div className="input-field">
-              <i className="fas fa-lock" />
-              <Field
-                name="password2"
-                placeholder="Confirma tu contraseña"
-                type="password"
-              ></Field>
-              <ErrorMessage name="password2" component="span"></ErrorMessage>
-            </div>
+            <TextInputComponent
+              type="password"
+              label="Confirma tu contraseña"
+              name="password2"
+              placeholder="********"
+            />
 
-            <div>
-              <label className="switch">
-                Términos y condiciones
-                <Field
-                  name="terms"
-                  type="checkbox"
-                  className="slider round"
-                ></Field>
-                <span className="slider round"></span>
-                <ErrorMessage name="terms" component="span"></ErrorMessage>
-              </label>
-            </div>
+            <CheckboxInputComponent
+              label="Términos y condiciones"
+              name="terms"
+              className="slider round"
+              labelClassName="switch"
+              spanClassName="slider round"
+            />
 
             <input
               type="submit"
