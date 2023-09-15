@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Nav from "../Components/Navp";
+// import Nav from "../Components/Nav";
 
 const Perfil = () => {
   const navigate = useNavigate();
@@ -45,7 +45,7 @@ const Perfil = () => {
 
   return (
     <div>
-      <Nav />
+      {/* <Nav /> */}
       <h1>INGRESO AL PERFIL</h1>
       <p>🎂</p>
 

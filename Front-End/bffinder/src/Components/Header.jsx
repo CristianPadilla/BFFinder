@@ -44,12 +44,12 @@ const Header = () => {
 
   return (
     <div id="inicio" className="header-container">
-      <header>
+      <header className="header-prehome">
         <a href="#" className="logoh">
           <img src={logobff} className="logobff" alt="imglog" />
         </a>
 
-        <nav>
+        <nav className="nav-prehome">
           <ul>
             <li>
               <Link to="inicio" spy={true} smooth={true} duration={500}>Inicio</Link >

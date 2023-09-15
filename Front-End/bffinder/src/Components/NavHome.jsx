@@ -1,19 +1,31 @@
-import React from "react";
-
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+// import "styles/Navp.scss";
+import "styles/NavHome.scss";
 import { Button } from "@mui/material";
 import imglogobff from "imgs/logo-bffinder.png";
 import logobff from "imgs/logo-bffinder-FINAL2.png";
 
-const Header = () => {
+const NavHome = () => {
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    // Realiza las acciones de cierre de sesión aquí, como eliminar el token de autenticación del almacenamiento
+
+    // Redirige al usuario a la página de inicio de sesión después de cerrar sesión
+    navigate("/login");
+  };
 
   return (
     <div>
-      <header>
+      <header className="header-home">
         <a href="#">
           <img src={logobff} className="logobff" alt="imglog" />
         </a>
 
-        <nav>
+        <nav className="nav-h">
           <ul>
             <li>
               <a href="#">Inicio</a>
@@ -29,29 +41,20 @@ const Header = () => {
             </li>
 
             <li>
+            <form onSubmit={handleLogout}>
               <input
                 id="post-btn"
                 type="submit"
                 value="Publicar Mascota"
-                className="btnh"
+                className="btnp"
               />
+              </form>
             </li>
           </ul>
         </nav>
       </header>
-      <section className="zona1">
-        <p className="text-figure">
-          Miles de animalitos estan en busca de un hogar.
-        </p>
-        <input
-          id="sign-in-btn"
-          type="submit"
-          value="Iniciar Sesión"
-          className="btnf"
-        />
-      </section>
     </div>
   );
 };
 
-export default Header;
+export default NavHome;

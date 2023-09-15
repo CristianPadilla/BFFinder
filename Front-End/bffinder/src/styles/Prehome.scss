@@ -1,3 +1,5 @@
+@import "vars";
+
 // body, html {
 //     margin: 0;
 //     padding: 0;
@@ -26,6 +28,7 @@
     justify-content: center; /* Centra el contenido verticalmente */
     align-items: center; /* Centra el contenido horizontalmente */
     padding: 5px;
+    background-color: $fondo-sections;
 }
 
 // .container-sections {
