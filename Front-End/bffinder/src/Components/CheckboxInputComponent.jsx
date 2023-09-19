@@ -8,17 +8,23 @@ export const CheckboxInputComponent = ({ label, ...props }) => {
     <>
       <label className={props.labelClassName}>
         <input
+          name={props.name}
+          onChange={props.onInputChange}
+          checked={props.value}
           type="checkbox"
           className={props.className}
           {...field}
           {...props}
-          placeholder={props.placeholder}
         />
         <span className={props.spanClassName}></span>
         {label}
       </label>
 
-      <ErrorMessage name={props.name} component="span" className={props.errorClassName} />
+      <ErrorMessage
+        name={props.name}
+        component="span"
+        className={props.errorClassName}
+      />
     </>
   );
 };

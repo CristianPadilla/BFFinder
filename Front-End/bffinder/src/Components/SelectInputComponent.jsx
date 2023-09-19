@@ -10,12 +10,18 @@ export const SelectInputComponent = ({ label, ...props }) => {
       <div className="input-field">
         <i className="fas fa-user" />
         <select
+          name={props.name}
+          onChange={props.onInputChange}
           className={props.className}
           {...field}
           {...props}
         />
       </div>
-      <ErrorMessage name={props.name} component="span" className={props.errorClassName} />
+      <ErrorMessage
+        name={props.name}
+        component="span"
+        className={props.errorClassName}
+      />
     </>
   );
 };

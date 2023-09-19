@@ -1,12 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/login.scss";
-import { useFormik, Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, Form, FormikContext } from "formik";
 import * as Yup from "yup";
 import { TextInputComponent } from "../Components/TextInputComponent";
 import { SelectInputComponent } from "../Components/SelectInputComponent";
 import { CheckboxInputComponent } from "../Components/CheckboxInputComponent";
 
+const formFields = {
+  firstname: "",
+  lastname: "",
+  phone: "",
+  email: "",
+  email2: "",
+  address: "",
+  department: "",
+  city: "",
+  password: "",
+  password2: "",
+  terms: false,
+};
+
 export function RegisterUserPage() {
+  // console.log("======firstname: " + firstname);
   // const registerUser = async () => {
   //   const response = await fetch('http://localhost:3001/api/users', {
 
@@ -31,22 +46,26 @@ export function RegisterUserPage() {
   //   console.log(data);
   // };
 
+
   return (
     <>
       <Formik
-        initialValues={{
-          firstname: "",
-          lastname: "",
-          phone: "",
-          email: "",
-          email2: "",
-          department: "",
-          city: "",
-          password: "",
-          password2: "",
-          terms: false,
-        }}
+        initialValues={formFields}
+        // initialValues={{
+        //   firstname: "",
+        //   lastname: "",
+        //   phone: "",
+        //   email: "",
+        //   email2: "",
+        //   address: "",
+        //   department: "",
+        //   city: "",
+        //   password: "",
+        //   password2: "",
+        //   terms: false,
+        // }}
         onSubmit={(values) => {
+          // logica para registrarse 
           console.log(values);
         }}
         validationSchema={Yup.object({
@@ -100,23 +119,26 @@ export function RegisterUserPage() {
             className="sign-up-form  animate__animated animate__backInLeft"
             id="sign-up-form"
           >
-            {/* <div className="input-field"> */}
-            {/* <i className="fas fa-user" /> */}
             <TextInputComponent
               type="text"
               label="Nombre"
               name="firstname"
+              //errorClassName="sign-up-form"
+              // labelClassName= "clase"
               placeholder="Pedro"
+              value={formik.values.firstname}
+              onChange={formik.handleChange}
             />
-            {/* <Field name="firstname" placeholder="Pedro" type="text"></Field>
-              <ErrorMessage name="firstname" component="span"></ErrorMessage>
-            </div> */}
 
             <TextInputComponent
               type="text"
               label="Apellido"
               name="lastname"
               placeholder="Pérez"
+              // value={lastname}
+              // onChange={onInputChange}
+              value={formik.values.lastname}
+              onChange={formik.handleChange}
             />
 
             <TextInputComponent
@@ -124,6 +146,10 @@ export function RegisterUserPage() {
               label="Número de celular"
               name="phone"
               placeholder="Su número de cel"
+              // value={phone}
+              // onChange={onInputChange}
+              value={formik.values.phone}
+              onChange={formik.handleChange}
             />
 
             <TextInputComponent
@@ -131,6 +157,10 @@ export function RegisterUserPage() {
               label="Correo electrónico"
               name="email"
               placeholder="ejemplo@mail.com"
+              // value={email}
+              // onChange={onInputChange}
+              value={formik.values.email}
+              onChange={formik.handleChange}
             />
 
             <TextInputComponent
@@ -138,6 +168,10 @@ export function RegisterUserPage() {
               label="Confirma tu correo"
               name="email2"
               placeholder="repite tu correo electrónico"
+              // value={email2}
+              // onChange={onInputChange}
+              value={formik.values.email2}
+              onChange={formik.handleChange}
             />
 
             <TextInputComponent
@@ -145,12 +179,20 @@ export function RegisterUserPage() {
               label="Dirección de residencia"
               name="address"
               placeholder="Calle 12, #13d-14"
+              // value={address}
+              // onChange={onInputChange}
+              value={formik.values.address}
+              onChange={formik.handleChange}
             />
 
             <SelectInputComponent
               name="department"
               label="Departamento de residencia"
               className="form-select form-select-lg mb-3"
+              // value={department}
+              // onChange={onInputChange}
+              value={formik.values.department}
+              onChange={formik.handleChange}
             >
               <option defaultValue="">Selecciona un departamento</option>
               <option value="1">Valle del cauca</option>
@@ -162,6 +204,10 @@ export function RegisterUserPage() {
               name="city"
               className="form-select form-select-lg mb-3"
               label="Municipio de residencia"
+              // value={city}
+              // onChange={onInputChange}
+              value={formik.values.city}
+              onChange={formik.handleChange}
             >
               <option defaultValue="0">Selecciona un municipio</option>
               <option value="1">Cali</option>
@@ -170,17 +216,14 @@ export function RegisterUserPage() {
             </SelectInputComponent>
 
             <TextInputComponent
-              type="date"
-              label="Fecha de nacimiento"
-              name="date"
-              className="form-datepicker"
-            />
-
-            <TextInputComponent
               type="password"
               label="Contraseña"
               name="password"
               placeholder="********"
+              // value={password}
+              // onChange={onInputChange}
+              value={formik.values.password}
+              onChange={formik.handleChange}
             />
 
             <TextInputComponent
@@ -188,6 +231,10 @@ export function RegisterUserPage() {
               label="Confirma tu contraseña"
               name="password2"
               placeholder="********"
+              // value={password2}
+              // onChange={onInputChange}
+              value={formik.values.password2}
+              onChange={formik.handleChange}
             />
 
             <CheckboxInputComponent
@@ -196,6 +243,10 @@ export function RegisterUserPage() {
               className="slider round"
               labelClassName="switch"
               spanClassName="slider round"
+              // value={terms}
+              // onChange={(e)=> onInputChange(e,'checkbox')}
+              // value={formik.values.terms}
+              // onChange={formik.handleChange}
             />
 
             <input
@@ -203,7 +254,6 @@ export function RegisterUserPage() {
               id="sign-up-btn"
               value="Registrarse"
               className="btn"
-              // onClick={registerUser}
             />
 
             <p className="social-text">O Registrate con Google</p>

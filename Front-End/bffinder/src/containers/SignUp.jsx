@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { RegisterUserPage } from "../pages/RegisterUserPage";
-import RegisterFoundationPage from "../pages/RegisterFoundationPage";
+import { RegisterFoundationPage } from "../pages/RegisterFoundationPage";
 
 export default function SignUp() {
   const [selectedRole, setSelectedRole] = useState("user");

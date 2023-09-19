@@ -1,7 +1,6 @@
 import React from "react";
 import { TextInputComponent } from "../Components/TextInputComponent";
-
-const FormikRegisterFoundationPage = () => {
+export function RegisterFoundationPage() {
   return (
     <>
       <form className="sign-up-form" id="sign-up-form">
@@ -21,7 +20,16 @@ const FormikRegisterFoundationPage = () => {
           />
         </div>
 
-        <TextInputComponent
+        {/* <TextInputComponent
+              type="date"
+              label="Fecha de nacimiento"
+              name="date"
+              className="form-datepicker"
+              value={dat}
+              onChange={onInputChange}  
+            /> */}
+
+        {/* <TextInputComponent
           type="text"
           label="Información adicional de domicilio"
           name="address_additional"
@@ -33,7 +41,7 @@ const FormikRegisterFoundationPage = () => {
           label="Barrio/Localidad"
           name="neighborhood"
           placeholder="San Francisco"
-        />
+        /> */}
 
         <input
           type="submit"
@@ -45,6 +53,4 @@ const FormikRegisterFoundationPage = () => {
       </form>
     </>
   );
-};
-
-export default FormikRegisterFoundationPage;
+}
