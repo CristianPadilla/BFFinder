@@ -78,3 +78,10 @@ spring:
               - Path=/location/**
           filters:
               - AuthenticationFilter
+
+        - id: IMAGE-SERVICE
+          uri: lb://IMAGE-SERVICE
+          predicates:
+            - Path=/image/**
+          filters:
+            - AuthenticationFilter
