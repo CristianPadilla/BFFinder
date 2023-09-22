@@ -15,6 +15,7 @@ const formFields = {
   address: "",
   department: "",
   city: "",
+  date: "",
   password: "",
   password2: "",
   terms: false,
@@ -46,26 +47,12 @@ export function RegisterUserPage() {
   //   console.log(data);
   // };
 
-
   return (
     <>
       <Formik
         initialValues={formFields}
-        // initialValues={{
-        //   firstname: "",
-        //   lastname: "",
-        //   phone: "",
-        //   email: "",
-        //   email2: "",
-        //   address: "",
-        //   department: "",
-        //   city: "",
-        //   password: "",
-        //   password2: "",
-        //   terms: false,
-        // }}
         onSubmit={(values) => {
-          // logica para registrarse 
+          // logica para registrarse
           console.log(values);
         }}
         validationSchema={Yup.object({
@@ -91,13 +78,28 @@ export function RegisterUserPage() {
             .email("El email no es valido")
             .oneOf([Yup.ref("email"), null], "Los correos no coinciden")
             .required("El email es requerido"),
-          address: Yup.string(),
+          address: Yup.string()
+            .min(4, "El domicilio debe tener al menos 4 caracteres")
+            .max(30, "El domicilio debe tener 30 caracteres o menos"),
           department: Yup.string()
             // .notOneOf(["mesopotamia"], "esta opcion no está permitida")// en caso de bloquear una opcion
             .required("Debe seleccionar un departamento de residencia"),
           city: Yup.string().required(
             "Debe seleccionar un municipio de residencia"
           ),
+          date: Yup.date()
+            .max(new Date(), "La fecha no puede ser mayor a la fecha actual")
+            .required("La fecha de nacimiento es requerida")
+            .transform(function (value, originalValue) {
+              if (this.isType(value)) {
+                return value;
+              }
+              const result = parse(originalValue, "dd.MM.yyyy", new Date());
+              return result;
+            })
+            .typeError("please enter a valid date")
+            .min("1910-01-01", "Seleccione una fecha valida"),
+
           password: Yup.string()
             .min(8, "La contraseña debe tener al menos 8 caracteres")
             .max(15, "La contraseña debe tener 15 caracteres o menos")
@@ -123,74 +125,22 @@ export function RegisterUserPage() {
               type="text"
               label="Nombre"
               name="firstname"
-              //errorClassName="sign-up-form"
-              // labelClassName= "clase"
               placeholder="Pedro"
               value={formik.values.firstname}
               onChange={formik.handleChange}
             />
-
             <TextInputComponent
               type="text"
               label="Apellido"
               name="lastname"
               placeholder="Pérez"
-              // value={lastname}
-              // onChange={onInputChange}
               value={formik.values.lastname}
               onChange={formik.handleChange}
             />
-
-            <TextInputComponent
-              type="number"
-              label="Número de celular"
-              name="phone"
-              placeholder="Su número de cel"
-              // value={phone}
-              // onChange={onInputChange}
-              value={formik.values.phone}
-              onChange={formik.handleChange}
-            />
-
-            <TextInputComponent
-              type="email"
-              label="Correo electrónico"
-              name="email"
-              placeholder="ejemplo@mail.com"
-              // value={email}
-              // onChange={onInputChange}
-              value={formik.values.email}
-              onChange={formik.handleChange}
-            />
-
-            <TextInputComponent
-              type="email"
-              label="Confirma tu correo"
-              name="email2"
-              placeholder="repite tu correo electrónico"
-              // value={email2}
-              // onChange={onInputChange}
-              value={formik.values.email2}
-              onChange={formik.handleChange}
-            />
-
-            <TextInputComponent
-              type="text"
-              label="Dirección de residencia"
-              name="address"
-              placeholder="Calle 12, #13d-14"
-              // value={address}
-              // onChange={onInputChange}
-              value={formik.values.address}
-              onChange={formik.handleChange}
-            />
-
             <SelectInputComponent
               name="department"
               label="Departamento de residencia"
               className="form-select form-select-lg mb-3"
-              // value={department}
-              // onChange={onInputChange}
               value={formik.values.department}
               onChange={formik.handleChange}
             >
@@ -199,13 +149,10 @@ export function RegisterUserPage() {
               <option value="3">Antioquia</option>
               <option value="2">Cundinamarca</option>
             </SelectInputComponent>
-
             <SelectInputComponent
               name="city"
               className="form-select form-select-lg mb-3"
               label="Municipio de residencia"
-              // value={city}
-              // onChange={onInputChange}
               value={formik.values.city}
               onChange={formik.handleChange}
             >
@@ -214,29 +161,62 @@ export function RegisterUserPage() {
               <option value="3">Jamundí</option>
               <option value="2">Palmira</option>
             </SelectInputComponent>
-
+            <TextInputComponent
+              type="text"
+              label="Dirección de residencia"
+              name="address"
+              placeholder="Calle 12, #13d-14"
+              value={formik.values.address}
+              onChange={formik.handleChange}
+            />
+            <TextInputComponent
+              type="date"
+              label="Fecha de nacimiento"
+              name="date"
+              className="form-datepicker"
+              value={formik.values.date}
+              onChange={formik.handleChange}
+            />
+            <TextInputComponent
+              type="number"
+              label="Número de celular"
+              name="phone"
+              placeholder="Su número de cel"
+              value={formik.values.phone}
+              onChange={formik.handleChange}
+            />
+            <TextInputComponent
+              type="email"
+              label="Correo electrónico"
+              name="email"
+              placeholder="ejemplo@mail.com"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+            />
+            <TextInputComponent
+              type="email"
+              label="Confirma tu correo"
+              name="email2"
+              placeholder="repite tu correo electrónico"
+              value={formik.values.email2}
+              onChange={formik.handleChange}
+            />
             <TextInputComponent
               type="password"
               label="Contraseña"
               name="password"
               placeholder="********"
-              // value={password}
-              // onChange={onInputChange}
               value={formik.values.password}
               onChange={formik.handleChange}
             />
-
             <TextInputComponent
               type="password"
               label="Confirma tu contraseña"
               name="password2"
               placeholder="********"
-              // value={password2}
-              // onChange={onInputChange}
               value={formik.values.password2}
               onChange={formik.handleChange}
             />
-
             <CheckboxInputComponent
               label="Términos y condiciones"
               name="terms"
@@ -248,14 +228,12 @@ export function RegisterUserPage() {
               // value={formik.values.terms}
               // onChange={formik.handleChange}
             />
-
             <input
               type="submit"
               id="sign-up-btn"
               value="Registrarse"
               className="btn"
             />
-
             <p className="social-text">O Registrate con Google</p>
             <div className="social-media">
               <button type="button" className="googlebutton">
