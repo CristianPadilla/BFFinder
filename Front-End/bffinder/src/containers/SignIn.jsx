@@ -1,12 +1,15 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function SignIn() {
 
+    const navigate = useNavigate();
     const [credentials, setCredentials] = useState({
         username: '',
         password: ''
     })
+    const [token, setToken] = useState("");
 
     // const handleChange = (e) => {
     //     setCredentials({
@@ -15,9 +18,41 @@ export default function SignIn() {
     //     })
     // }
 
-    const handleLogin = (e) => {
-        e.preventDefault();
+     //login
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+        console.log('entra try ' + credentials.username);
+      const response = await axios.post(
+        "http://localhost:9090/auth/authenticate",
+        {
+          username: credentials.username,
+          password: credentials.password,
+        }
+      );
+      console.log('despues petición');
+      // Aqu铆 puedes manejar la respuesta de la API, como almacenar el token de autenticaci贸n en el estado de tu aplicaci贸n.
+      setToken(response.data.token);
+      navigate("/home");
+
+    } catch (error) {
+        console.log('entra catch');
+      if (error.response && error.response.status === 404) {
+        // setAlertMessage("El usuario no se encuentra registrado en el sistema");
+      }
+      if (error.response && error.response.status === 403) {
+        // setAlertMessage("Por favor, llene todos los campos");
+      } else {
+        // setAlertMessage(
+        //   "El correo electr贸nico o la contrase帽a son incorrectas"
+        // );
+      }
+    //   setOpen(true);
+      console.error(error);
     }
+  };
+
 
     return <form className="sign-in-form animate__animated animate__backInLeft" onSubmit={handleLogin}>
         <h2 className="titulo">Iniciar Sesión</h2>

@@ -67,10 +67,16 @@ form.sign-in-form {
   margin-bottom: 10px;
 }
 
+// input
+
+.label-input{
+  
+}
+
 .input-field {
-  max-width: 345px;
+  max-width: 325px;
   width: 100%;
-  background-color: #edecec;
+  background-color: #f0efef;
   margin: 10px 0;
   height: 55px;
   border-radius: 25px;
@@ -102,6 +108,7 @@ form.sign-in-form {
   color: #aaa;
   font-weight: 500;
 }
+// fin input
 
 .social-text {
   padding: 0.7rem 0;

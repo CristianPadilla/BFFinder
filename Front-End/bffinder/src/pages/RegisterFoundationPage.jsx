@@ -21,15 +21,6 @@ export function RegisterFoundationPage() {
         </div>
 
         {/* <TextInputComponent
-              type="date"
-              label="Fecha de nacimiento"
-              name="date"
-              className="form-datepicker"
-              value={dat}
-              onChange={onInputChange}  
-            /> */}
-
-        {/* <TextInputComponent
           type="text"
           label="Información adicional de domicilio"
           name="address_additional"

@@ -1,32 +1,47 @@
-// .layout-container {
-//     display: flex;
-//     flex-direction: column;
-//   }
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Establece la altura completa de la ventana para el contenedor principal */
+  }
   
-//   .first-component {
-//     background-color: lightgray;
-//     width: 100%;
-//   }
+  /* Estilos para la barra de búsqueda (primer componente) */
+  /* Asegúrate de que `.first-component` ocupe todo el ancho de la pantalla */
+  .first-component {
+    background-color: lightgray;
+    width: 100%;
+    height: 60px; /* Establece una altura fija para el primer componente */
+    position: fixed; /* Fija el componente en la parte superior de la pantalla */
+    z-index: 1; /* Asegura que esté por encima de otros elementos */
+  }
   
-//   .grid-container {
-//     display: grid;
-//     grid-template-columns: 1fr 3fr;
-//     gap: 16px;
-//     flex: 1;
-//   }
+  /* Estilos para el contenedor principal de los componentes 2 y 3 */
+  .grid-container {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+  }
   
-//   .second-component {
-//     background-color: lightblue;
-//   }
+  /* Estilos para el panel de filtros (segundo componente) */
+  .second-component {
+    background-color: lightblue;
+    width: 25%; /* Establece un ancho fijo para el segundo componente */
+    min-height: 100%; /* Garantiza que el segundo componente cubra la altura completa del contenedor */
+    position: sticky; /* Hace que el componente se adhiera a la parte superior cuando se desplaza */
+    top: 0; /* Asegura que se adhiera a la parte superior del contenedor */
+    z-index: 1; /* Asegura que esté por encima de otros elementos */
+  }
   
-//   .third-component {
-//     background-color: lightgreen;
-//     display: flex;
-//     flex-direction: column;
-//   }
+  /* Estilos para la sección de tarjetas (tercer componente) */
+  .third-component {
+    background-color: lightgreen;
+    flex: 1;
+    overflow-y: auto; /* Agrega scroll vertical cuando el contenido excede el espacio */
+  }
   
-//   .scrollable-content {
-//     flex: 1;
-//     overflow-y: auto; /* Agrega scroll vertical cuando el contenido excede el espacio */
-//   }
+  /* Estilos adicionales para el tercer componente cuando sea necesario */
+  .scrollable-content {
+    /* Agrega estilos adicionales para el contenido desplazable si es necesario */
+  }
+  
+  /* Ajusta los estilos según sea necesario */
   

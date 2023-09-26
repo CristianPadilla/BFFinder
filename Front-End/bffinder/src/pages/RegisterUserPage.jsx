@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { TextInputComponent } from "../Components/TextInputComponent";
 import { SelectInputComponent } from "../Components/SelectInputComponent";
 import { CheckboxInputComponent } from "../Components/CheckboxInputComponent";
+import TextInputPassword from "../Components/form/TextInputPassword";
 
 const formFields = {
   firstname: "",
@@ -46,7 +47,6 @@ export function RegisterUserPage() {
   //   console.log(data);
   // };
 
-
   return (
     <>
       <Formik
@@ -65,7 +65,7 @@ export function RegisterUserPage() {
         //   terms: false,
         // }}
         onSubmit={(values) => {
-          // logica para registrarse 
+          // logica para registrarse
           console.log(values);
         }}
         validationSchema={Yup.object({
@@ -215,7 +215,7 @@ export function RegisterUserPage() {
               <option value="2">Palmira</option>
             </SelectInputComponent>
 
-            <TextInputComponent
+            {/* <TextInputComponent
               type="password"
               label="Contraseña"
               name="password"
@@ -224,6 +224,15 @@ export function RegisterUserPage() {
               // onChange={onInputChange}
               value={formik.values.password}
               onChange={formik.handleChange}
+            /> */}
+
+            <TextInputPassword
+              label="Contraseña"
+              name="password"
+              placeholder="Escribe tu contraseña"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              
             />
 
             <TextInputComponent

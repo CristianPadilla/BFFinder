@@ -6,9 +6,11 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import imgdefault from "imgs/logo-bffinder.png";
+import 'styles/Card.scss';
 
 const CardVertical = () => {
   return (
+    <div className="custom-card">
     <Card sx={{ maxWidth: 345 }}>
       <CardMedia component="img" alt="" height="250" image={imgdefault} />
       <CardContent>
@@ -29,6 +31,7 @@ const CardVertical = () => {
         </Button>
       </CardActions>
     </Card>
+    </div>
   );
 };
 

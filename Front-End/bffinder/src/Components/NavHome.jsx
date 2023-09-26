@@ -36,20 +36,24 @@ const NavHome = () => {
 
             <li><a href="#">Mi cuenta</a>
               <ul>
-                <li><a href="#">Cerrar Sesión</a></li>
+                <li>
+ {/* <form onSubmit={handleLogout}> */}
+                  <a href="/login">Cerrar Sesión</a>
+{/* </form> */}
+                  </li>
               </ul>
             </li>
 
-            <li>
-            <form onSubmit={handleLogout}>
+            {/* <li>
+           
               <input
                 id="post-btn"
                 type="submit"
                 value="Publicar Mascota"
                 className="btnp"
               />
-              </form>
-            </li>
+
+            </li> */}
           </ul>
         </nav>
       </header>
