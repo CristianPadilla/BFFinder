@@ -1,0 +1,28 @@
+server:
+  port: 8091
+
+spring:
+  application:
+    name: IMAGE-SERVICE
+  config:
+    import: configserver:http://localhost:9296
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/bffinder
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+app:
+  google-cloud-base-url-path: https://storage.googleapis.com/bffinder-e5a52.appspot.com/bffinder
+  google-cloud-images-folder: /images
+  google-cloud-profiles-folder: /profiles
+  google-cloud-posts-folder: /posts
