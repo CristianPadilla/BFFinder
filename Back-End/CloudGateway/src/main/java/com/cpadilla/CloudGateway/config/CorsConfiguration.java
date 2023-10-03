@@ -2,6 +2,7 @@ package com.cpadilla.CloudGateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+//import org.springframework.web.cors.reactive.CorsConfiguration;// todo momento
 import org.springframework.web.cors.reactive.CorsWebFilter;
 
 import java.util.Arrays;

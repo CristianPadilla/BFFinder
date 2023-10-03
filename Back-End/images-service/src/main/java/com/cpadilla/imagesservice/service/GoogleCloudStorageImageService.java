@@ -15,9 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.Date;
 
 @Service
 @Log4j2
@@ -62,7 +62,7 @@ public class GoogleCloudStorageImageService implements ImageService {
 
         var imageName = generateImageName(userId);
         var blobname = imagesBasePath + profileImagesPath + "/" + userId + "/" + imageName;
-        var createdBlobName = updateImage(blobname, image);
+        var createdBlobName = uploadImage(blobname, image);
 
         //TODO handle database stuff
 
@@ -70,7 +70,7 @@ public class GoogleCloudStorageImageService implements ImageService {
     }
 
 
-    private String updateImage(String blobName, MultipartFile image) {
+    private String uploadImage(String blobName, MultipartFile image) {
         log.info("blob name to upload =========; " + blobName);
         try {
             Blob blob = bucket.create(blobName, image.getBytes(), "image/png");

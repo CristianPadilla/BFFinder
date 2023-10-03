@@ -50,7 +50,7 @@ public class AdoptionPostController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Integer> updateAdoptionPost(@RequestBody AdoptionPostRequest request) {
+        public ResponseEntity<Integer> updateAdoptionPost(@RequestBody AdoptionPostRequest request) {
         log.info("Updating post from CONTROLLER layer");
         return new ResponseEntity<>(service.updatePost(request), HttpStatus.OK);
     }
