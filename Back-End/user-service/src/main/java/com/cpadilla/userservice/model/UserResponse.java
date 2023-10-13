@@ -20,16 +20,11 @@ public class UserResponse {
     private String email;
     private String phoneNumber;
     private int socialStratum;
-    private String address;
     private int inHomeAvailableSpace;
-    private int departmentId;
-    private int townId;
-    private String neighborhood;
     private String profession;
     private boolean ownHome;
     private boolean hasPet;
+    private String imageUrl;
     private Instant birthDate;
     private char health;
-    private boolean IsTypeFoundation;
-
 }

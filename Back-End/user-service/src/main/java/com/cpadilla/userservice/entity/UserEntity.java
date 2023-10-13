@@ -25,14 +25,8 @@ public class UserEntity {
     private String phoneNumber;
     @Column(name = "social_stratum")
     private Integer socialStratum;
-    private String address;
     @Column(name = "in_home_space")
     private Integer inHomeAvailableSpace;
-    @Column(name = "department_id")
-    private Integer departmentId;
-    @Column(name = "town_id")
-    private Integer townId;
-    private String neighborhood;
     private String profession;
     @Column(name = "own_home")
     private Boolean ownHome;
@@ -41,7 +35,7 @@ public class UserEntity {
     @Column(name = "date_of_birth")
     private Instant birthDate;
     private Character health;
-    @Column(name = "type_foundation")
-    private Boolean IsTypeFoundation;
+    @Column(name = "image_id")
+    private Integer imageId;
 
 }
