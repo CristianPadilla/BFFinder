@@ -34,7 +34,10 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = repository.findById(userId)
                 .orElseThrow(() -> new UserServiceCustomException("user with given id not found", "USER_NOT_FOUND"));
 
-//        var profileImage = imageService.ge
+        var profileImage =
+                userEntity.getImageId() != null
+                        ? imageService.getImageById(userEntity.getImageId()).getBody()
+                        : null;
 
         if (userEntity.getRole() == 'u') {
             return UserProfileResponse.builder()
@@ -43,7 +46,7 @@ public class UserServiceImpl implements UserService {
                     .surname(userEntity.getSurname())
                     .email(userEntity.getEmail())
                     .phoneNumber(userEntity.getPhoneNumber())
-//                    .profileImageUrl(newImage.getImageUrl())
+                    .profileImageUrl(profileImage != (null) ? profileImage.getImageUrl() : null)
                     .build();
         } else if (userEntity.getRole() == 's') {
             var location = locationService.getById(userEntity.getAddressId()).getBody();
@@ -52,7 +55,7 @@ public class UserServiceImpl implements UserService {
                     .name(userEntity.getName())
                     .email(userEntity.getEmail())
                     .phoneNumber(userEntity.getPhoneNumber())
-//                    .profileImageUrl(newImage.getImageUrl())
+                    .profileImageUrl(profileImage != (null) ? profileImage.getImageUrl() : null)
                     .location(location)
                     .build();
         } else throw new UserServiceCustomException("user role is not valid", "ROLE_NOT_VALID");

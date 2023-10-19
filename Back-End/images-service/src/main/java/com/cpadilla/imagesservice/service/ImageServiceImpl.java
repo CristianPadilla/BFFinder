@@ -52,7 +52,18 @@ public class ImageServiceImpl implements ImageService {
         return ImageResponse.builder()
                 .imageId(savedImage.getId())
                 .imageUrl(savedImage.getName())
-                .uploadDate(savedImage.getUploadDate())
+//                .uploadDate(savedImage.getUploadDate())
+                .build();
+    }
+
+    @Override
+    public ImageResponse getImageById(int imageId) {
+        var imageEntity = repository.findById(imageId)
+                .orElseThrow(() -> new ImageServiceCustomException("image for id " + imageId + " not found", "IMAGE_NOT_FOUND"));
+
+        return ImageResponse.builder()
+                .imageId(imageEntity.getId())
+                .imageUrl(imageEntity.getName())
                 .build();
     }
 

@@ -8,4 +8,6 @@ public interface ImageService {
 
     ImageResponse updateProfileImage(long userId, MultipartFile imag, int previousImageId);
 
+    ImageResponse getImageById(int imageId);
+
 }

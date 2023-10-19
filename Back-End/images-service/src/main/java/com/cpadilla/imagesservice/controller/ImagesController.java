@@ -17,9 +17,15 @@ public class ImagesController {
     private ImageService service;
 
     @PostMapping("/save/profile/{userId}/{previousImageId}")
-    public ResponseEntity<ImageResponse> updateProfileImage(@PathVariable("userId") long userId, @RequestBody MultipartFile image,@PathVariable("previousImageId") int previousImageId) {
+    public ResponseEntity<ImageResponse> updateProfileImage(@PathVariable("userId") long userId, @RequestBody MultipartFile image, @PathVariable("previousImageId") int previousImageId) {
         log.info("updating profile image for user with id: {} from controller layer", userId);
         return ResponseEntity.ok(service.updateProfileImage(userId, image, previousImageId));
+    }
+
+    @GetMapping("/{imageId}")
+    public ResponseEntity<ImageResponse> getImageById(@PathVariable("imageId") int imageId) {
+        log.info("getting image with id: {} from controller layer", imageId);
+        return ResponseEntity.ok(service.getImageById(imageId));
     }
 
 

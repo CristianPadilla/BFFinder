@@ -15,5 +15,5 @@ public class ImageResponse {
 
     private int imageId;
     private String imageUrl;
-    private Instant uploadDate;
+//    private Instant uploadDate;
 }
