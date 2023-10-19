@@ -35,6 +35,9 @@ public class UserEntity {
     @Column(name = "date_of_birth")
     private Instant birthDate;
     private Character health;
+    @Column(name = "address_id")
+    private Integer addressId;
+    private Character role;
     @Column(name = "image_id")
     private Integer imageId;
 

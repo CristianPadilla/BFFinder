@@ -3,13 +3,14 @@ package com.cpadilla.userservice.service;
 import com.cpadilla.userservice.entity.UserEntity;
 import com.cpadilla.userservice.exception.UserServiceCustomException;
 import com.cpadilla.userservice.external.client.ImageService;
+import com.cpadilla.userservice.external.client.LocationService;
+import com.cpadilla.userservice.model.ShelterUserProfileResponse;
 import com.cpadilla.userservice.model.UserCredentialsResponse;
-import com.cpadilla.userservice.model.UserRequest;
+import com.cpadilla.userservice.model.UserProfileResponse;
 import com.cpadilla.userservice.model.UserResponse;
 import com.cpadilla.userservice.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,25 +24,53 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ImageService imageService;
 
+
+    @Autowired
+    private LocationService locationService;
+
     @Override
     public UserResponse getUserById(long userId) {
         log.info("from service layer: getting user by id {}", userId);
         UserEntity userEntity = repository.findById(userId)
                 .orElseThrow(() -> new UserServiceCustomException("user with given id not found", "USER_NOT_FOUND"));
 
-        return UserResponse.builder().userId(userEntity.getUserId())
-                .name(userEntity.getName())
-                .surname(userEntity.getSurname())
-                .email(userEntity.getEmail())
-                .phoneNumber(userEntity.getPhoneNumber())
-                .socialStratum(userEntity.getSocialStratum() != null ? userEntity.getSocialStratum() : 0)
-                .inHomeAvailableSpace(userEntity.getInHomeAvailableSpace() != null ? userEntity.getInHomeAvailableSpace() : 0)
-                .profession(userEntity.getProfession())
-                .ownHome(userEntity.getOwnHome() != null ? userEntity.getOwnHome() : false)
-                .hasPet(userEntity.getHasPet() != null ? userEntity.getHasPet() : false)
-                .birthDate(userEntity.getBirthDate())
-                .health(userEntity.getHealth() != null ? userEntity.getHealth() : 'G')
-                .build();
+//        var profileImage = imageService.ge
+
+        if (userEntity.getRole() == 'u') {
+            return UserProfileResponse.builder()
+                    .userId(userEntity.getUserId())
+                    .name(userEntity.getName())
+                    .surname(userEntity.getSurname())
+                    .email(userEntity.getEmail())
+                    .phoneNumber(userEntity.getPhoneNumber())
+//                    .profileImageUrl(newImage.getImageUrl())
+                    .build();
+        } else if (userEntity.getRole() == 's') {
+            var location = locationService.getById(userEntity.getAddressId()).getBody();
+            return ShelterUserProfileResponse.builder()
+                    .userId(userEntity.getUserId())
+                    .name(userEntity.getName())
+                    .email(userEntity.getEmail())
+                    .phoneNumber(userEntity.getPhoneNumber())
+//                    .profileImageUrl(newImage.getImageUrl())
+                    .location(location)
+                    .build();
+        } else throw new UserServiceCustomException("user role is not valid", "ROLE_NOT_VALID");
+
+
+//        return UserProfileResponse.builder().userId(userEntity.getUserId())
+//                .name(userEntity.getName())
+//                .surname(userEntity.getSurname())
+//                .email(userEntity.getEmail())
+//                .phoneNumber(userEntity.getPhoneNumber())
+////                .socialStratum(userEntity.getSocialStratum() != null ? userEntity.getSocialStratum() : 0)
+////                .inHomeAvailableSpace(userEntity.getInHomeAvailableSpace() != null ? userEntity.getInHomeAvailableSpace() : 0)
+////                .profession(userEntity.getProfession())
+////                .ownHome(userEntity.getOwnHome() != null ? userEntity.getOwnHome() : false)
+////                .hasPet(userEntity.getHasPet() != null ? userEntity.getHasPet() : false)
+//                .birthDate(userEntity.getBirthDate())
+////                .health(userEntity.getHealth() != null ? userEntity.getHealth() : 'G')
+//                .build();
 
     }
 
@@ -72,6 +101,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse updateProfileImage(long userId, MultipartFile image) {
 
+        if (image == null) throw new UserServiceCustomException("image to ipdate is required", "FILE_NOT_VALID");
+
         log.info("updating profile photo for user with id: {} from service layer", userId);
         var userEntity = repository.findById(userId)
                 .orElseThrow(() -> new UserServiceCustomException("user with given id not found", "USER_NOT_FOUND"));
@@ -87,19 +118,25 @@ public class UserServiceImpl implements UserService {
         userEntity.setImageId(newImage.getImageId());
         var updatedUser = repository.save(userEntity);
 
-        return UserResponse.builder()
-                .userId(updatedUser.getUserId())
-                .name(updatedUser.getName())
-                .surname(updatedUser.getSurname())
-                .email(updatedUser.getEmail())
-                .phoneNumber(updatedUser.getPhoneNumber())
-                .socialStratum(updatedUser.getSocialStratum() != null ? updatedUser.getSocialStratum() : 0)
-                .inHomeAvailableSpace(updatedUser.getInHomeAvailableSpace() != null ? updatedUser.getInHomeAvailableSpace() : 0)
-                .profession(updatedUser.getProfession())
-                .ownHome(updatedUser.getOwnHome() != null ? updatedUser.getOwnHome() : false)
-                .hasPet(updatedUser.getHasPet() != null ? updatedUser.getHasPet() : false)
-                .birthDate(updatedUser.getBirthDate())
-                .health(updatedUser.getHealth() != null ? updatedUser.getHealth() : 'G')
-                .build();
+        if (updatedUser.getRole() == 'u') {
+            return UserProfileResponse.builder()
+                    .userId(updatedUser.getUserId())
+                    .name(updatedUser.getName())
+                    .surname(updatedUser.getSurname())
+                    .email(updatedUser.getEmail())
+                    .phoneNumber(updatedUser.getPhoneNumber())
+                    .profileImageUrl(newImage.getImageUrl())
+                    .build();
+        } else if (updatedUser.getRole() == 's') {
+            var location = locationService.getById(updatedUser.getAddressId()).getBody();
+            return ShelterUserProfileResponse.builder()
+                    .userId(updatedUser.getUserId())
+                    .name(updatedUser.getName())
+                    .email(updatedUser.getEmail())
+                    .phoneNumber(updatedUser.getPhoneNumber())
+                    .profileImageUrl(newImage.getImageUrl())
+                    .location(location)
+                    .build();
+        } else throw new UserServiceCustomException("user role is not valid", "ROLE_NOT_VALID");
     }
 }

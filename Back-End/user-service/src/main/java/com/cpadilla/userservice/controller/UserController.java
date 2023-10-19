@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @GetMapping("/credentials/email/{email}")
-    public ResponseEntity<UserCredentialsResponse> getUserCredentialsById(@PathVariable("email") String email) {
+    public ResponseEntity<UserCredentialsResponse> getUserCredentialsByEmail(@PathVariable("email") String email) {
         log.info("FROM CONTROLLER LAYER: getting user credentials by user email {}", email);
         return new ResponseEntity<>(service.getUserCredentialsByEmail(email), HttpStatus.OK);
 
@@ -43,7 +43,6 @@ public class UserController {
     public ResponseEntity<UserResponse> updateProfileImage(@PathVariable("id") int userId, @RequestBody MultipartFile image) {
         log.info("updating profile photo for user with id: {} from controller layer", userId);
         return new ResponseEntity<>(service.updateProfileImage(userId, image), HttpStatus.OK);
-
     }
 
 
