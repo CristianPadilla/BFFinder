@@ -83,7 +83,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         petId = petService.getById(adoptionPostRequest.getPetId()).getBody().getId();
 
         if (petId == 0)
-            throw new PetNotFoundException("Not possible to create adoption post, specified pet not found with id " + adoptionPostRequest.getPetId());
+            throw new PetNotFoundException("Not possible to create adoption| post, specified pet not found with id " + adoptionPostRequest.getPetId());
 
         var addressId = 0;
         addressId = locationService.saveAddress(adoptionPostRequest.getLocation()).getBody();

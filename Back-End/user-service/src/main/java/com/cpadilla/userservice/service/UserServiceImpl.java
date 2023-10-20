@@ -4,10 +4,7 @@ import com.cpadilla.userservice.entity.UserEntity;
 import com.cpadilla.userservice.exception.UserServiceCustomException;
 import com.cpadilla.userservice.external.client.ImageService;
 import com.cpadilla.userservice.external.client.LocationService;
-import com.cpadilla.userservice.model.ShelterUserProfileResponse;
-import com.cpadilla.userservice.model.UserCredentialsResponse;
-import com.cpadilla.userservice.model.UserProfileResponse;
-import com.cpadilla.userservice.model.UserResponse;
+import com.cpadilla.userservice.model.*;
 import com.cpadilla.userservice.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,23 +99,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse updateProfileImage(long userId, MultipartFile image) {
-
-        if (image == null) throw new UserServiceCustomException("image to ipdate is required", "FILE_NOT_VALID");
+    public UserResponse updateProfileImage(long userId, MultipartFile image) {// if want to delete, just do not send an image
 
         log.info("updating profile photo for user with id: {} from service layer", userId);
         var userEntity = repository.findById(userId)
                 .orElseThrow(() -> new UserServiceCustomException("user with given id not found", "USER_NOT_FOUND"));
 
-        log.info("11 {}  22  {} 33  {}", userId, image.getName(), userEntity.getImageId() != null && userEntity.getImageId() > 0 ? userEntity.getImageId() : 0);
-        var newImage =
-                imageService.updateProfileImage(
-                        userId,
-                        image,
-                        userEntity.getImageId() != null && userEntity.getImageId() > 0 ? userEntity.getImageId() : 0
-                ).getBody();
-
-        userEntity.setImageId(newImage.getImageId());
+        ImageResponse newImage;
+        if (image == null || image.isEmpty()) {
+            newImage = null;
+            userEntity.setImageId(null);
+        } else {
+            newImage =
+                    imageService.updateProfileImage(
+                            userId,
+                            image,
+                            userEntity.getImageId() != null && userEntity.getImageId() > 0 ? userEntity.getImageId() : 0
+                    ).getBody();
+            userEntity.setImageId(newImage.getImageId());
+        }
         var updatedUser = repository.save(userEntity);
 
         if (updatedUser.getRole() == 'u') {
@@ -128,7 +127,7 @@ public class UserServiceImpl implements UserService {
                     .surname(updatedUser.getSurname())
                     .email(updatedUser.getEmail())
                     .phoneNumber(updatedUser.getPhoneNumber())
-                    .profileImageUrl(newImage.getImageUrl())
+                    .profileImageUrl(newImage != null ? newImage.getImageUrl() : null)
                     .build();
         } else if (updatedUser.getRole() == 's') {
             var location = locationService.getById(updatedUser.getAddressId()).getBody();
@@ -137,7 +136,7 @@ public class UserServiceImpl implements UserService {
                     .name(updatedUser.getName())
                     .email(updatedUser.getEmail())
                     .phoneNumber(updatedUser.getPhoneNumber())
-                    .profileImageUrl(newImage.getImageUrl())
+                    .profileImageUrl(newImage != null ? newImage.getImageUrl() : null)
                     .location(location)
                     .build();
         } else throw new UserServiceCustomException("user role is not valid", "ROLE_NOT_VALID");

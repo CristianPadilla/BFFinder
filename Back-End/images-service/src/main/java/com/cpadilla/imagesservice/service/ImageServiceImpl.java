@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.List;
 
 @Service
 @Log4j2
@@ -57,6 +58,11 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    public void uploadPostImages(long postId, MultipartFile[] images) {
+
+    }
+
+    @Override
     public ImageResponse getImageById(int imageId) {
         var imageEntity = repository.findById(imageId)
                 .orElseThrow(() -> new ImageServiceCustomException("image for id " + imageId + " not found", "IMAGE_NOT_FOUND"));
@@ -65,6 +71,13 @@ public class ImageServiceImpl implements ImageService {
                 .imageId(imageEntity.getId())
                 .imageUrl(imageEntity.getName())
                 .build();
+    }
+
+    @Override
+    public List<ImageResponse> getImagesByPostId(int postId) {
+
+//        var images = repository.
+        return null;
     }
 
 

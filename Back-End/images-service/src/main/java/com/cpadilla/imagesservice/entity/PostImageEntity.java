@@ -26,6 +26,6 @@ public class PostImageEntity {
 
     @ManyToOne
     @JoinColumn(name = "image_id")
-    @MapsId("id")
+    @MapsId("id")// PK attribute in ImageEntity for when saving in cascade a postimage know wich image corresponds
     private ImageEntity imageEntity;
 }
