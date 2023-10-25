@@ -99,7 +99,14 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .userId(request.getUserId())
                 .addressId(addressId)
                 .build();
-        return repository.save(postEntity).getId();
+        var createdPost = repository.save(postEntity);
+
+        //todo  solicitar creacion de imagenes al micro
+
+        //todo registrar en la tabla intermedia
+
+
+        return createdPost.getId();
     }
 
     @Override

@@ -58,26 +58,44 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public void uploadPostImages(long postId, MultipartFile[] images) {
+    public ImageResponse uploadPostImage(int postId, MultipartFile image) {
+        log.info("uploading post image for post id {} from service layer", postId);
+        var imageName = generateImageName(postId);
+        var blobname = "/" + postId + "/" + imageName; // image name must include user id folder
+        var createdBlobName = storageService.uploadPostImage(blobname, image);
 
+        var imageEntity = ImageEntity.builder()
+                .name(createdBlobName)
+                .status(true)
+                .uploadDate(Instant.now())
+                .build();
+        var savedImage = repository.save(imageEntity);
+
+        return ImageResponse.builder()
+                .imageId(savedImage.getId())
+                .imageUrl(savedImage.getName())
+//                .uploadDate(savedImage.getUploadDate())
+                .build();
+    }
+
+    @Override
+    public void deleteImage(int imageId) {
+        log.info("disabling image with id: {} from service layer", imageId);
+        var image = repository.findByIdAndStatusTrue(imageId)
+                .orElseThrow(() -> new ImageServiceCustomException("image not found for id " + imageId, "IMAGE_NOT_FOUND"));
+        image.setStatus(false);
+        repository.save(image);
     }
 
     @Override
     public ImageResponse getImageById(int imageId) {
-        var imageEntity = repository.findById(imageId)
+        var imageEntity = repository.findByIdAndStatusTrue(imageId)
                 .orElseThrow(() -> new ImageServiceCustomException("image for id " + imageId + " not found", "IMAGE_NOT_FOUND"));
 
         return ImageResponse.builder()
                 .imageId(imageEntity.getId())
                 .imageUrl(imageEntity.getName())
                 .build();
-    }
-
-    @Override
-    public List<ImageResponse> getImagesByPostId(int postId) {
-
-//        var images = repository.
-        return null;
     }
 
 

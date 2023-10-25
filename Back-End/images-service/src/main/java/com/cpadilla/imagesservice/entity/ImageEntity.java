@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Table(name = "image")
@@ -27,7 +28,7 @@ public class ImageEntity {
     @Column(name = "upload_date")
     private Instant uploadDate;
 
-//    @
-//    private PostImageEntity postImage;
+//    @ManyToOne
+//    private PostImageEntity post;
 
 }

@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 //@Service
 public interface ImageService {
 
-    @PostMapping(value = "/save/profile/{userId}/{previousImageId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/profile/{userId}/{previousImageId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<ImageResponse> updateProfileImage(@PathVariable("userId") long userId, @RequestBody MultipartFile image, @PathVariable("previousImageId") int previousImageId);
 
     @GetMapping("/{imageId}")

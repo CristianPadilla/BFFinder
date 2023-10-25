@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "image_adoption_post")
 @Data
@@ -15,17 +17,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostImageEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_image_post")
-    private int id;
-    @Column(name = "image_id")
-    private int imageId;
-    @Column(name = "post_id")
-    private int postId;
+    @EmbeddedId
+    private PostImagePKEntity id;
 
     @ManyToOne
-    @JoinColumn(name = "image_id")
-    @MapsId("id")// PK attribute in ImageEntity for when saving in cascade a postimage know wich image corresponds
+    @JoinColumn(name = "image_id", insertable = false, updatable = false)
+//    @MapsId("id")// PK attribute in ImageEntity for when saving in cascade a postimage know wich image corresponds
     private ImageEntity imageEntity;
+
 }

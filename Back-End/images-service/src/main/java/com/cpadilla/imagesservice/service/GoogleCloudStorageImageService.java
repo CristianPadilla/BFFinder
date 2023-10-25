@@ -69,4 +69,17 @@ public class GoogleCloudStorageImageService implements CloudStorageService {
 
     }
 
+    @Override
+    public String uploadPostImage(String blobName, MultipartFile image) {
+        log.info("uploading blob named {} from google cloud storage service ", blobName);
+        try {
+            Blob blob = bucket.create(imagesBasePath + postImagesPath + blobName, image.getBytes(), "image/png");
+            var imageUrl = StorageBaseUrl + blob.getName();
+            log.info("created blob name: " + blob.getName() + " at url: " + imageUrl);
+            return imageUrl;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
