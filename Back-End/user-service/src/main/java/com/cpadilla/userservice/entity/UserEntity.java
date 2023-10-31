@@ -21,6 +21,9 @@ public class UserEntity {
     private String surname;
     private String password;
     private String email;
+    private Integer nit;
+    @Column(name = "commercial_reg_num")
+    private Integer comercialRegistrationNumber;
     @Column(name = "phone_number")
     private String phoneNumber;
     @Column(name = "social_stratum")
