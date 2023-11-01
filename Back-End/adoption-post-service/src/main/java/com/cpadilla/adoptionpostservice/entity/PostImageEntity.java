@@ -1,24 +1,26 @@
-package com.cpadilla.imagesservice.entity;
+package com.cpadilla.adoptionpostservice.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
+@Entity
+@Table(name = "image_adoption_post")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Embeddable
-public class PostImagePKEntity implements Serializable {
+public class PostImageEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @Column(name = "image_id")
     private int imageId;
     @Column(name = "post_id")
-    private int postId;
+    private int PostId;
+
 }

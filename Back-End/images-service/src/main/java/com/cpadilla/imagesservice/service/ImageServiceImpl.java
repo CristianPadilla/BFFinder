@@ -4,7 +4,6 @@ import com.cpadilla.imagesservice.entity.ImageEntity;
 import com.cpadilla.imagesservice.exception.ImageServiceCustomException;
 import com.cpadilla.imagesservice.model.ImageResponse;
 import com.cpadilla.imagesservice.repository.ImageRepository;
-import com.cpadilla.imagesservice.repository.PostImageRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.List;
 
 @Service
 @Log4j2
@@ -26,8 +24,6 @@ public class ImageServiceImpl implements ImageService {
     @Autowired
     private ImageRepository repository;
 
-    @Autowired
-    private PostImageRepository postImageRepository;
 
 
     @Override
