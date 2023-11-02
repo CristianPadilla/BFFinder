@@ -25,7 +25,6 @@ public class ImageServiceImpl implements ImageService {
     private ImageRepository repository;
 
 
-
     @Override
     public ImageResponse updateProfileImage(long userId, MultipartFile image, int previousImageId) {
         log.info("updating profile image for user id {} from image service ", userId);
@@ -40,11 +39,7 @@ public class ImageServiceImpl implements ImageService {
                 .build();
         var savedImage = repository.save(imageEntity);
 
-        if (previousImageId > 0) {// disable previous image
-            var previousImage = repository.findById(previousImageId).orElseThrow(() -> new ImageServiceCustomException("previous image not found for id " + previousImageId, "IMAGE_NOT_FOUND"));
-            previousImage.setStatus(false);
-            repository.save(previousImage);
-        }
+        if (previousImageId > 0) deleteImage(previousImageId);// disable previous image
 
         return ImageResponse.builder()
                 .imageId(savedImage.getId())

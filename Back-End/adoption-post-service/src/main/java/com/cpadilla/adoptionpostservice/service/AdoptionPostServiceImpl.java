@@ -273,6 +273,14 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         return savedImage;
     }
 
+    @Override
+    public ImageResponse cancelPostImage(int postId, int imageId) {
+        log.info("deleting post image with id {} for post id {} from service layer", postId, imageId);
+        var imageToDelete = imageService.getImageById(imageId).getBody();
+//        var postTo
+        return null;
+    }
+
 
     public boolean petPassesFilter(PetPartialDetails petDetails, FilterRequest filter) {
 
