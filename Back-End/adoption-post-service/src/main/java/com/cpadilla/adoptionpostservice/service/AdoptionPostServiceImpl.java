@@ -266,7 +266,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
         var postImage = PostImageEntity.builder()
                 .imageId(savedImage.getImageId())
-                .PostId(postId)
+                .postId(postId)
                 .build();
         postImageRepository.save(postImage);
 
@@ -274,11 +274,12 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     }
 
     @Override
-    public ImageResponse cancelPostImage(int postId, int imageId) {
+    public void cancelPostImage(int postId, int imageId) {
         log.info("deleting post image with id {} for post id {} from service layer", postId, imageId);
-        var imageToDelete = imageService.getImageById(imageId).getBody();
-//        var postTo
-        return null;
+        if (postImageRepository.findByPostIdAndImageId(postId, imageId) == null)
+            throw new CustomException("No image related to post with id: " + postId, "POST_IMAGE_NOT_FOUND", HttpStatus.NOT_FOUND.value()); // delete portImage registry?
+
+        imageService.deleteImageById(imageId);
     }
 
 

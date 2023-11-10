@@ -12,7 +12,7 @@ public interface AdoptionPostService {
     int savePost(PostRequest request);
 
     ImageResponse savePostImage(int postId, MultipartFile image);
-    ImageResponse cancelPostImage(int postId, int imageId);
+    void cancelPostImage(int postId, int imageId);
 
     List<AdoptionPostPartialsResponse> getAllPostsByUserId(int userId);
 

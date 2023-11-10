@@ -21,6 +21,6 @@ public class PostImageEntity {
     @Column(name = "image_id")
     private int imageId;
     @Column(name = "post_id")
-    private int PostId;
+    private int postId;
 
 }
