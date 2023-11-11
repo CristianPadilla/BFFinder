@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+
 export default function SignIn() {
 
     const navigate = useNavigate();
@@ -54,7 +55,7 @@ export default function SignIn() {
   };
 
 
-    return <form className="sign-in-form animate__animated animate__backInLeft" onSubmit={handleLogin}>
+    return <form className="sign-in-form" onSubmit={handleLogin}>
         <h2 className="titulo">Iniciar Sesión</h2>
 
         <div className="input-field">

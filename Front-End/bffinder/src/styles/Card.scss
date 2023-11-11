@@ -1,3 +1,35 @@
-.custom-card {
-    margin: 16px;
+// .custom-card {
+//     margin: 16px;
+//   }
+
+.register-form {
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 1rem 0 1rem 0;
+  display: flex;
+  
+}
+
+.register-form-container {
+  width: 100%;
+  height: 100%;
+}
+
+.card-register {
+  height: 93vh;
+  width: 80vh;
+  position: absolute;
+}
+
+@media (max-height: 800px) {
+  .form-container {
+    margin-top: 15rem;
+    margin-bottom: 3rem;
   }
+}
+
+// @media (max-width: 827px) {
+//   .card-register {
+//     height: auto;
+//   }
+// }

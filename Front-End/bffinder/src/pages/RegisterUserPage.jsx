@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/login.scss";
+import "../styles/Card.scss";
 import { Formik, Form, FormikContext } from "formik";
 import * as Yup from "yup";
 import { TextInputComponent } from "../Components/TextInputComponent";
 import { SelectInputComponent } from "../Components/SelectInputComponent";
 import { CheckboxInputComponent } from "../Components/CheckboxInputComponent";
 import TextInputPassword from "../Components/form/TextInputPassword";
+import axios from "axios";
 
 const formFields = {
   firstname: "",
@@ -26,6 +28,10 @@ export function RegisterUserPage() {
   // console.log("======firstname: " + firstname);
   // const registerUser = async () => {
   //   const response = await fetch('http://localhost:3001/api/users', {
+  const [cityOptions, setCityOptions] = useState([]);
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const [departmentOptions, setDepartmentOptions] = useState([]);
 
   //     method: 'POST',
   //     headers: {
@@ -47,6 +53,39 @@ export function RegisterUserPage() {
   //   const data = await response.json();
   //   console.log(data);
   // };
+
+  // Obtener la lista de departamentos de Colombia desde la API
+  useEffect(() => {
+    axios
+      .get("https://api-colombia.com/api/v1/Department")
+      .then((response) => {
+        const departmentNames = response.data.map((department) => ({
+          id: department.id,
+          title: department.name,
+        }));
+        setDepartmentOptions(departmentNames);
+      })
+      .catch((error) => {
+        console.error("Error al cargar los departamentos:", error);
+      });
+  }, []);
+
+  // Cargar las ciudades correspondientes al departamento seleccionado
+  const handleDepartmentChange = (selectedDepartment) => {
+    axios
+      .get(
+        `https://api-colombia.com/api/v1/Department/${selectedDepartment.id}/cities`
+      )
+      .then((response) => {
+        const cityNames = response.data.map((city) => city.name);
+        console.log(cityNames);
+        setCityOptions(cityNames);
+        setSelectedDepartment(selectedDepartment);
+      })
+      .catch((error) => {
+        console.error("Error fetching cities:", error);
+      });
+  };
 
   return (
     <>
@@ -118,13 +157,15 @@ export function RegisterUserPage() {
         })}
       >
         {(formik) => (
+          <div className="register-form-container">
           <Form
-            className="sign-up-form  animate__animated animate__backInLeft"
+            className="sign-up-form register-form"
             id="sign-up-form"
           >
+            <div className="form-container">
             <TextInputComponent
               type="text"
-              label="Nombre"
+              label="Nombres"
               name="firstname"
               placeholder="Pedro"
               value={formik.values.firstname}
@@ -138,52 +179,12 @@ export function RegisterUserPage() {
               value={formik.values.lastname}
               onChange={formik.handleChange}
             />
-            <SelectInputComponent
-              name="department"
-              label="Departamento de residencia"
-              className="form-select form-select-lg mb-3"
-              value={formik.values.department}
-              onChange={formik.handleChange}
-            >
-              <option defaultValue="">Selecciona un departamento</option>
-              <option value="1">Valle del cauca</option>
-              <option value="3">Antioquia</option>
-              <option value="2">Cundinamarca</option>
-            </SelectInputComponent>
-            <SelectInputComponent
-              name="city"
-              className="form-select form-select-lg mb-3"
-              label="Municipio de residencia"
-              value={formik.values.city}
-              onChange={formik.handleChange}
-            >
-              <option defaultValue="0">Selecciona un municipio</option>
-              <option value="1">Cali</option>
-              <option value="3">Jamundí</option>
-              <option value="2">Palmira</option>
-            </SelectInputComponent>
-            <TextInputComponent
-              type="text"
-              label="Dirección de residencia"
-              name="address"
-              placeholder="Calle 12, #13d-14"
-              value={formik.values.address}
-              onChange={formik.handleChange}
-            />
             <TextInputComponent
               type="date"
-              label="Fecha de nacimiento"
+              label="Fecha de Nacimiento"
               name="date"
               className="form-datepicker"
               value={formik.values.date}
-              onChange={formik.handleChange}
-            />
-            <TextInputComponent
-              type="number"
-              label="Número de celular"
-              name="phone"
-              placeholder="Su número de cel"
-              value={formik.values.phone}
               onChange={formik.handleChange}
             />
             <TextInputComponent
@@ -202,7 +203,7 @@ export function RegisterUserPage() {
               value={formik.values.email2}
               onChange={formik.handleChange}
             />
-            <TextInputComponent
+            {/* <TextInputComponent
               type="password"
               label="Contraseña"
               name="password"
@@ -210,22 +211,23 @@ export function RegisterUserPage() {
               value={formik.values.password}
               onChange={formik.handleChange}
             /> */}
-
             <TextInputPassword
               label="Contraseña"
               name="password"
               placeholder="Escribe tu contraseña"
               value={formik.values.password}
               onChange={formik.handleChange}
-              
             />
             <TextInputComponent
-              type="password"
-              label="Confirma tu contraseña"
-              name="password2"
-              placeholder="********"
-              value={formik.values.password2}
+              type="number"
+              label="Número de telefono"
+              name="numbercel"
+              placeholder="322000550"
+              value={formik.values.numbercel}
               onChange={formik.handleChange}
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
             <CheckboxInputComponent
               label="Términos y condiciones"
@@ -244,13 +246,15 @@ export function RegisterUserPage() {
               value="Registrarse"
               className="btn"
             />
-            <p className="social-text">O Registrate con Google</p>
+            <p className="social-text">O</p>
             <div className="social-media">
               <button type="button" className="googlebutton">
                 Registrarse con Google
               </button>
             </div>
+            </div>
           </Form>
+          </div>
         )}
       </Formik>
     </>

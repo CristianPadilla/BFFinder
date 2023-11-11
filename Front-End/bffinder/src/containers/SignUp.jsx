@@ -8,6 +8,8 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { RegisterUserPage } from "../pages/RegisterUserPage";
 import { RegisterFoundationPage } from "../pages/RegisterFoundationPage";
+import "../styles/Card.scss";
+
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -45,7 +47,7 @@ export default function SignUp() {
   };
 
   return (
-    <Card>
+    <Card className="card-register">
       <CardContent>
         <Box>
           <Box>

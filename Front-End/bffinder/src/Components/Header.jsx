@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import "styles/Header.scss";
 import { Link } from "react-scroll"; //libreria react-scroll para las sections
 import { useNavigate } from "react-router-dom";
@@ -15,6 +15,7 @@ import logobff from "imgs/logo-bffinder-FINAL2.png";
 const Header = () => {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
+  const headerRef = useRef(null);
 
   const handleLoginClick = () => {
     navigate("/login");
@@ -29,9 +30,16 @@ const Header = () => {
   };
 
   //Para que el nav identifique si el usuario bajo en la pagina
+    // const handleScroll = () => {
+    //   console.log(header);
+    //   const header = document.querySelector('header');
+    //   header.classList.toggle('scrolled', window.scrollY > 0);
+    // };
+
     const handleScroll = () => {
-      const header = document.querySelector('header');
-      header.classList.toggle('scrolled', window.scrollY > 0);
+      if (headerRef.current) {
+        headerRef.current.classList.toggle("scrolled", window.scrollY > 0);
+      }
     };
   
     useEffect(() => {
@@ -44,7 +52,7 @@ const Header = () => {
 
   return (
     <div id="inicio" className="header-container">
-      <header className="header-prehome">
+      <header ref={headerRef} className="header-prehome">
         <a href="#" className="logoh">
           <img src={logobff} className="logobff" alt="imglog" />
         </a>

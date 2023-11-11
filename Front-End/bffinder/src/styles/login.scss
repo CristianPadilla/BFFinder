@@ -1,5 +1,9 @@
 @import 'vars';
 
+html, body {
+  height: 100%;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -11,7 +15,7 @@
   width: 100%;
   
   min-height: 100vh;
-  overflow-y: scroll;
+  overflow-y: hidden;
   overflow-x: hidden;
 }
 
@@ -23,7 +27,7 @@
   left: 0;
 }
 
-.signin-signup {
+.signin {
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -36,12 +40,23 @@
   z-index: 5;
 }
 
+.signup {
+  position: absolute;
+  top: 10%;
+  bottom: 55%;
+  left: 25%;
+  transform: translate(-50%, -50%);
+  width: 40%; /* Ajusta el ancho del formulario según tus necesidades */
+  height: 10%;
+  z-index: 5;
+}
+
 form {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding: 0rem 5rem;
+  // padding: 0rem 5rem;
   transition: all 0.2s 0.7s;
   overflow: hidden;
   grid-column: 1 / 2;
@@ -51,10 +66,10 @@ form {
 form.sign-up-form {
   opacity: 0;
   z-index: 1;
-  margin-top: 150px;
+  // margin-top: 150px;
   // overflow-y: scroll;
   // height: auto;
-  max-height: 100%;
+  // max-height: 100%;
 }
 
 form.sign-in-form {
@@ -67,11 +82,11 @@ form.sign-in-form {
   margin-bottom: 10px;
 }
 
-// input
+// // input
 
-.label-input{
-  
-}
+// .label-input{
+
+// }
 
 .input-field {
   max-width: 325px;
@@ -244,7 +259,7 @@ form.sign-in-form {
 }
 
 .container.sign-up-mode .signin-signup {
-  margin-top: 20vh; //provisional pero se debe solucionar
+  // margin-top: 20vh; //provisional pero se debe solucionar
   left: 25%;
 }
 

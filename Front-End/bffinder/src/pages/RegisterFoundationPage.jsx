@@ -2,8 +2,10 @@ import React from "react";
 import { TextInputComponent } from "../Components/TextInputComponent";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
+import "../styles/Card.scss";
 import { SelectInputComponent } from "../Components/SelectInputComponent";
 import { CheckboxInputComponent } from "../Components/CheckboxInputComponent";
+import TextInputPassword from "../Components/form/TextInputPassword";
 
 const formFields = {
   name: "", //1
@@ -105,10 +107,8 @@ export function RegisterFoundationPage() {
         })}
       >
         {(formik) => (
-          <Form
-            className="sign-up-form  animate__animated animate__backInLeft"
-            id="sign-up-form"
-          >
+          <div className="register-form-container">
+          <Form className="sign-up-form register-form" id="sign-up-form">
             <TextInputComponent
               type="text"
               label="Nombre de la organización"
@@ -119,29 +119,13 @@ export function RegisterFoundationPage() {
             />
             <TextInputComponent
               type="text"
-              label="Descripción"
-              name="description"
-              placeholder="Ingrese una breve descripción de la organizacion"
-              value={formik.values.description}
-              onChange={formik.handleChange}
-            />
-            <TextInputComponent
-              type="text"
               label="Sitio web"
               name="webPageUrl"
               placeholder="mifundacion.com"
               value={formik.values.webPageUrl}
               onChange={formik.handleChange}
             />
-            <TextInputComponent
-              type="date"
-              label="Fecha de fundacion"
-              name="date"
-              className="form-datepicker"
-              value={formik.values.date}
-              onChange={formik.handleChange}
-            />
-            <SelectInputComponent
+            {/* <SelectInputComponent
               name="department"
               label="Departamento"
               className="form-select form-select-lg mb-3"
@@ -180,21 +164,21 @@ export function RegisterFoundationPage() {
               placeholder="San Cristobal"
               value={formik.values.neighborhood}
               onChange={formik.handleChange}
-            />
+            /> */}
             <TextInputComponent
-              type="text"
-              label="Información de domicilio adicional"
-              name="moreInfo"
-              placeholder="Edificio 1, piso 2"
-              value={formik.values.moreInfo}
+              type="number"
+              label="Numero de Identificación Tributaria (Nit)"
+              name="nit"
+              placeholder="123456789"
+              value={formik.values.nit}
               onChange={formik.handleChange}
             />
             <TextInputComponent
               type="number"
-              label="Número Telefónico"
-              name="phone"
-              placeholder="1122334"
-              value={formik.values.phone}
+              label="Número de Matrícula Mercantil (Cámara de Comercio)"
+              name="numMatricula"
+              placeholder="12345678900"
+              value={formik.values.numMatricula}
               onChange={formik.handleChange}
             />
             <TextInputComponent
@@ -214,20 +198,11 @@ export function RegisterFoundationPage() {
               onChange={formik.handleChange}
             />
 
-            <TextInputComponent
-              type="password"
+            <TextInputPassword
               label="Contraseña"
               name="password"
-              placeholder="********"
+              placeholder="Escribe tu contraseña"
               value={formik.values.password}
-              onChange={formik.handleChange}
-            />
-            <TextInputComponent
-              type="password"
-              label="Confirma tu contraseña"
-              name="password2"
-              placeholder="********"
-              value={formik.values.password2}
               onChange={formik.handleChange}
             />
             <CheckboxInputComponent
@@ -243,13 +218,14 @@ export function RegisterFoundationPage() {
               value="Registrarse"
               className="btn"
             />
-            <p className="social-text">O Registrate con Google</p>
+            <p className="social-text">O</p>
             <div className="social-media">
               <button type="button" className="googlebutton">
                 Registrarse con Google
               </button>
             </div>
           </Form>
+          </div>
         )}
       </Formik>
     </>

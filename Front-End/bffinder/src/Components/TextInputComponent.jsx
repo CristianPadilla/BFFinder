@@ -12,9 +12,13 @@ export const TextInputComponent = ({ label, ...props }) => {
         <input onChange={props.onInputChange} name={props.name} className={props.className} {...field} {...props} placeholder={props.placeholder} />
       </div>
       <ErrorMessage name={props.name} component="span" className={props.errorClassName} /> */}
-
-      <TextField label={label} onChange={props.onInputChange} name={props.name} className={props.className} {...field} {...props} placeholder={props.placeholder} variant="filled" />
-      <ErrorMessage name={props.name} component="p" className={props.errorClassName} />
+      <div style={{ margin: '.7rem' }}>
+        <TextField label={label} onChange={props.onInputChange} name={props.name} className={props.className} {...field} {...props} placeholder={props.placeholder} variant="outlined" />
+        <div style={{ textAlign: 'center' }}>
+          <ErrorMessage name={props.name} component="span" className={props.errorClassName} style={{ fontSize: '.7rem' }}/>
+        </div>
+        
+      </div>
     </>
   );
 };

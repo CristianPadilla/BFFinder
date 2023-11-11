@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useField, ErrorMessage } from 'formik';
-import FilledInput from '@mui/material/FilledInput';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 
@@ -25,7 +25,7 @@ const TextInputPassword = ({ label, ...props }) => {
         shrink={true}>
         {label}
       </InputLabel>
-      <FilledInput
+      <OutlinedInput
         {...field}
         {...props}
         type={showPassword ? 'text' : 'password'}
@@ -45,7 +45,10 @@ const TextInputPassword = ({ label, ...props }) => {
         }
       />
       </FormControl>
-      <ErrorMessage name={props.name} component="p" className={props.errorClassName} />
+
+      <div style={{ textAlign: 'center' }}>
+        <ErrorMessage name={props.name} component="span" className={props.errorClassName} style={{ fontSize: '.7rem', marginTop: '0' }}/>
+      </div>
 
     </>
   );
