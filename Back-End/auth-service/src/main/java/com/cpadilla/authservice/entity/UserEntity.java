@@ -23,16 +23,12 @@ public class UserEntity {
     private int id;
     private String name;
     private String surname;
-    private String description;
+    private String nit;
     @Column(name = "phone_number")
     private String phone;
-    @Column(name = "date_of_birth")
-    private Instant date;
+    @Column(name = "commercial_reg_num")
+    private String comercialRegistrationNumber;
     private char role;
-    @Column(name = "web_page_url")
-    private String webPage;
-    @Column(name = "address_id")
-    private int addressId;
     private String email;
     private String password;
 

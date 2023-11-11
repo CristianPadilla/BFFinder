@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 @Log4j2
 @Service
 public class UserServiceImpl implements UserService {
@@ -68,4 +71,17 @@ public class UserServiceImpl implements UserService {
                 .password(userEntity.getPassword())
                 .build();
     }
+
+    // editar
+    //        var addressId = 0;
+//        addressId = locationService.saveAddress(request.getLocation()).getBody();
+
+
+//    var parsedDate = request.getDateOfCreation() != null ?
+//            LocalDate.parse(request.getDateOfCreation()).atStartOfDay(ZoneId.systemDefault()).toInstant()
+//            : null;
+
+//    var date = LocalDate.parse(request.getDateOfBirth()).atStartOfDay(ZoneId.systemDefault()).toInstant(); // parse date
+
+
 }

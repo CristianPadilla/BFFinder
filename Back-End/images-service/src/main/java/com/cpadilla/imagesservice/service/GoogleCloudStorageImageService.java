@@ -14,7 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 
 @Service
 @Log4j2
@@ -24,14 +27,14 @@ public class GoogleCloudStorageImageService implements ImageService {
     @Value("${app.google-cloud-base-url-path}")
     private String StorageBaseUrl;
 
-    @Value("${app.google-cloud-images-folder}")
-    private String imagesPath;
+    @Value("${app.google-cloud-images-folder-path}")
+    private String imagesBasePath;
 
-    @Value("${app.google-cloud-profiles-folder}")
-    private String profilesPath;
+    @Value("${app.google-cloud-profile-images-folder}")
+    private String profileImagesPath;
 
-    @Value("${app.google-cloud-posts-folder}")
-    private String postsPath;
+    @Value("${app.google-cloud-post-images-folder}")
+    private String postImagesPath;
 
     private Bucket bucket;
 
@@ -55,18 +58,34 @@ public class GoogleCloudStorageImageService implements ImageService {
 
     @Override
     public String updateProfileImage(String userId, MultipartFile image) {
-
-
-        String blobName = "bffinder/blobCristian"+userId;
-        Blob blob = bucket.create(blobName, "Hello, World!".getBytes(StandardCharsets.UTF_8), "text/plain");
-
-
-        System.out.println("=========== BLOB INFO: " + blob);
-
         //https://storage.googleapis.com/bffinder-e5a52.appspot.com/bffinder/image.png
 
-        log.info("=============HOLAAAA:  " + StorageBaseUrl);
-        log.info("=============HOLAAAA:  " + imagesPath);
+        var imageName = generateImageName(userId);
+        var blobname = imagesBasePath + profileImagesPath + "/" + userId + "/" + imageName;
+        var createdBlobName = uploadImage(blobname, image);
+
+        //TODO handle database stuff
+
         return null;
+    }
+
+
+    private String uploadImage(String blobName, MultipartFile image) {
+        log.info("blob name to upload =========; " + blobName);
+        try {
+            Blob blob = bucket.create(blobName, image.getBytes(), "image/png");
+            log.info("created blob name: " + blob.getName());
+            return blob.getName();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
+    public String generateImageName(String identifier) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");// include milliseconds
+        String timestamp = dateFormat.format(Date.from(Instant.now()));
+        return identifier + "_" + timestamp + ".png";
     }
 }

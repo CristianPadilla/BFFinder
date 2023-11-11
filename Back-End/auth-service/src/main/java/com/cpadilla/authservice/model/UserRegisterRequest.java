@@ -16,6 +16,6 @@ public class UserRegisterRequest {
     private String email;
     private String password;
     private String phone;
-    private String dateOfBirth;
-    private LocationRequest location;
+//    private String dateOfBirth;
+//    private LocationRequest location;
 }

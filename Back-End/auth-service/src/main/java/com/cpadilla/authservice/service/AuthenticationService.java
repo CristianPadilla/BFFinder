@@ -41,7 +41,7 @@ public class AuthenticationService {
     private LocationService locationService;
 
 
-    public AuthenticationResponse register(UserRegisterRequest request) {
+    public void register(UserRegisterRequest request) {
 
         if (request == null // provitional validation
                 || request.getEmail() == null || request.getEmail().isBlank() || request.getEmail().isEmpty()
@@ -53,73 +53,40 @@ public class AuthenticationService {
         if (repository.findByEmail(request.getEmail()).isPresent())
             throw new UserAlreadyExistException("User with email " + request.getEmail() + " is already registered");
 
-        var addressId = 0;
-        addressId = locationService.saveAddress(request.getLocation()).getBody();
-
-        var date = LocalDate.parse(request.getDateOfBirth()).atStartOfDay(ZoneId.systemDefault()).toInstant();
-
         var user = UserEntity.builder()
                 .name(request.getFirstname())
                 .surname(request.getLastname())
                 .email(request.getEmail())
-                .phone(request.getPhone())
-                .addressId(addressId)
                 .role('u')
-                .date(request.getDateOfBirth() != null && !request.getDateOfBirth().isEmpty() && !request.getDateOfBirth().isBlank()
-                        ? date : null)
+                .phone(request.getPhone())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
 
         repository.save(user);
-
-        var jwtToken = jwtService.generateToken(CustomUserDetails.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .build());
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
     }
 
-    public AuthenticationResponse registerShelter(ShelterRegisterRequest request) {
+    public void registerShelter(ShelterRegisterRequest request) {
 
         if (request == null // provitional validation
                 || request.getEmail() == null || request.getEmail().isBlank() || request.getEmail().isEmpty()
                 || request.getName() == null || request.getName().isBlank() || request.getName().isEmpty()
-                || request.getLocation() == null
+                || request.getNit() == null || request.getNit().isBlank() || request.getNit().isEmpty()
                 || request.getPassword() == null || request.getPassword().isBlank() || request.getPassword().isEmpty()
         ) throw new BadRegistrationRequestException();
 
         if (repository.findByEmail(request.getEmail()).isPresent())
             throw new UserAlreadyExistException("Shelter with email " + request.getEmail() + " is already registered");
 
-        var addressId = 0;
-        addressId = locationService.saveAddress(request.getLocation()).getBody();
-
-        var date = LocalDate.parse(request.getDateOfCreation()).atStartOfDay(ZoneId.systemDefault()).toInstant();
-
         var user = UserEntity.builder()
                 .name(request.getName())
                 .email(request.getEmail())
-                .description(request.getDescription())
-                .phone(request.getPhone())
-                .webPage(request.getWebPageUrl())
-                .addressId(addressId)
                 .role('s')
-                .date(request.getDateOfCreation() != null && !request.getDateOfCreation().isEmpty() && !request.getDateOfCreation().isBlank()
-                        ? date : null)
+                .nit(request.getNit())
+                .comercialRegistrationNumber(request.getComercialRegistrationNumber())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
 
         repository.save(user);
-
-        var jwtToken = jwtService.generateToken(CustomUserDetails.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .build());
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {

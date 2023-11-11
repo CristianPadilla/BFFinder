@@ -16,7 +16,7 @@ public class ImagesController {
     private ImageService service;
 
     @PostMapping("/save/profile/{userId}")
-    public ResponseEntity<String> saveImages(@PathVariable("userId") String userId, MultipartFile image) {
+    public ResponseEntity<String> updateProfileImage(@PathVariable("userId") String userId, @RequestBody MultipartFile image) {
         log.info("saving profile image for user with id: {}", userId);
         return ResponseEntity.ok(service.updateProfileImage(userId, image));
     }

@@ -7,6 +7,7 @@ import com.cpadilla.authservice.model.UserRegisterRequest;
 import com.cpadilla.authservice.service.AuthenticationService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,15 +22,17 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody UserRegisterRequest userRegisterRequest) {
+    public ResponseEntity<Void> register(@RequestBody UserRegisterRequest userRegisterRequest) {
         log.info("saving user from auth service CONTROLLER");
-        return ResponseEntity.ok(service.register(userRegisterRequest));
+        service.register(userRegisterRequest);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/register/shelter")
-    public ResponseEntity<AuthenticationResponse> registerShelter(@RequestBody ShelterRegisterRequest userRegisterRequest) {
+    public ResponseEntity<Void> registerShelter(@RequestBody ShelterRegisterRequest userRegisterRequest) {
         log.info("saving shelter user from auth service CONTROLLER");
-        return ResponseEntity.ok(service.registerShelter(userRegisterRequest));
+        service.registerShelter(userRegisterRequest);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/authenticate")
