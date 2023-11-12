@@ -12,15 +12,12 @@ import axios from "axios";
 const formFields = {
   firstname: "",
   lastname: "",
-  phone: "",
+  date: "",
   email: "",
   email2: "",
-  address: "",
-  department: "",
-  city: "",
-  date: "",
   password: "",
   password2: "",
+  phone: "",
   terms: false,
 };
 
@@ -28,10 +25,6 @@ export function RegisterUserPage() {
   // console.log("======firstname: " + firstname);
   // const registerUser = async () => {
   //   const response = await fetch('http://localhost:3001/api/users', {
-  const [cityOptions, setCityOptions] = useState([]);
-  const [selectedCity, setSelectedCity] = useState(null);
-  const [selectedDepartment, setSelectedDepartment] = useState(null);
-  const [departmentOptions, setDepartmentOptions] = useState([]);
 
   //     method: 'POST',
   //     headers: {
@@ -54,39 +47,6 @@ export function RegisterUserPage() {
   //   console.log(data);
   // };
 
-  // Obtener la lista de departamentos de Colombia desde la API
-  useEffect(() => {
-    axios
-      .get("https://api-colombia.com/api/v1/Department")
-      .then((response) => {
-        const departmentNames = response.data.map((department) => ({
-          id: department.id,
-          title: department.name,
-        }));
-        setDepartmentOptions(departmentNames);
-      })
-      .catch((error) => {
-        console.error("Error al cargar los departamentos:", error);
-      });
-  }, []);
-
-  // Cargar las ciudades correspondientes al departamento seleccionado
-  const handleDepartmentChange = (selectedDepartment) => {
-    axios
-      .get(
-        `https://api-colombia.com/api/v1/Department/${selectedDepartment.id}/cities`
-      )
-      .then((response) => {
-        const cityNames = response.data.map((city) => city.name);
-        console.log(cityNames);
-        setCityOptions(cityNames);
-        setSelectedDepartment(selectedDepartment);
-      })
-      .catch((error) => {
-        console.error("Error fetching cities:", error);
-      });
-  };
-
   return (
     <>
       <Formik
@@ -99,51 +59,42 @@ export function RegisterUserPage() {
           firstname: Yup.string()
             .min(3, "El nombre debe tener al menos 3 caracteres")
             .max(15, "El nombre debe tener 15 caracteres o menos")
-            .required("El nombre es requerido"),
+            .required("El nombre es obligatorio"),
           lastname: Yup.string()
             .min(3, "El apellido debe tener al menos 3 caracteres")
             .max(15, "El apellido debe tener 15 caracteres o menos")
-            .required("El apellido es requerido"),
+            .required("El apellido es obligatorio"),
           phone: Yup.string()
             .test(
               "len",
               "El número telefono debe tener 10 caracteres",
               (val) => val.length === 10
             )
-            .required("El telefono es requerido"),
+            .required("El telefono es obligatorio"),
           email: Yup.string()
             .email("Correo no válido")
-            .required("El correo es requerido"),
+            .required("El correo es obligatorio"),
           email2: Yup.string()
             .email("El email no es valido")
             .oneOf([Yup.ref("email"), null], "Los correos no coinciden")
-            .required("El email es requerido"),
-          address: Yup.string()
-            .min(4, "El domicilio debe tener al menos 4 caracteres")
-            .max(30, "El domicilio debe tener 30 caracteres o menos"),
-          department: Yup.string()
-            // .notOneOf(["mesopotamia"], "esta opcion no está permitida")// en caso de bloquear una opcion
-            .required("Debe seleccionar un departamento de residencia"),
-          city: Yup.string().required(
-            "Debe seleccionar un municipio de residencia"
-          ),
-          date: Yup.date()
-            .max(new Date(), "La fecha no puede ser mayor a la fecha actual")
-            .required("La fecha de nacimiento es requerida")
-            .transform(function (value, originalValue) {
-              if (this.isType(value)) {
-                return value;
-              }
-              const result = parse(originalValue, "dd.MM.yyyy", new Date());
-              return result;
-            })
-            .typeError("please enter a valid date")
-            .min("1910-01-01", "Seleccione una fecha valida"),
+            .required("El email es obligatorio"),
+          // date: Yup.date()
+          //   .max(new Date(), "La fecha no puede ser mayor a la fecha actual")
+          //   .required("La fecha de nacimiento es obligatorio")
+          //   .transform(function (value, originalValue) {
+          //     if (this.isType(value)) {
+          //       return value;
+          //     }
+          //     const result = parse(originalValue, "dd.MM.yyyy", new Date());
+          //     return result;
+          //   })
+          //   .typeError("please enter a valid date")
+          //   .min("1910-01-01", "Seleccione una fecha valida"),
 
           password: Yup.string()
             .min(8, "La contraseña debe tener al menos 8 caracteres")
             .max(15, "La contraseña debe tener 15 caracteres o menos")
-            .required("La contraseña es requerido"),
+            .required("La contraseña es obligatorio"),
           password2: Yup.string()
             .oneOf(
               [Yup.ref("password"), null],
@@ -164,6 +115,7 @@ export function RegisterUserPage() {
           >
             <div className="form-container">
             <TextInputComponent
+              required
               type="text"
               label="Nombres"
               name="firstname"
@@ -172,6 +124,7 @@ export function RegisterUserPage() {
               onChange={formik.handleChange}
             />
             <TextInputComponent
+              required
               type="text"
               label="Apellido"
               name="lastname"
@@ -179,15 +132,16 @@ export function RegisterUserPage() {
               value={formik.values.lastname}
               onChange={formik.handleChange}
             />
-            <TextInputComponent
+            {/* <TextInputComponent
               type="date"
               label="Fecha de Nacimiento"
               name="date"
               className="form-datepicker"
               value={formik.values.date}
               onChange={formik.handleChange}
-            />
+            /> */}
             <TextInputComponent
+              required
               type="email"
               label="Correo electrónico"
               name="email"
@@ -196,6 +150,7 @@ export function RegisterUserPage() {
               onChange={formik.handleChange}
             />
             <TextInputComponent
+              required
               type="email"
               label="Confirma tu correo"
               name="email2"
@@ -203,20 +158,14 @@ export function RegisterUserPage() {
               value={formik.values.email2}
               onChange={formik.handleChange}
             />
-            {/* <TextInputComponent
-              type="password"
-              label="Contraseña"
-              name="password"
-              placeholder="********"
-              value={formik.values.password}
-              onChange={formik.handleChange}
-            /> */}
             <TextInputPassword
+              required
               label="Contraseña"
               name="password"
               placeholder="Escribe tu contraseña"
               value={formik.values.password}
               onChange={formik.handleChange}
+              // helperText="Some important text"
             />
             <TextInputComponent
               type="number"
@@ -230,6 +179,7 @@ export function RegisterUserPage() {
               }}
             />
             <CheckboxInputComponent
+              required
               label="Términos y condiciones"
               name="terms"
               className="slider round"

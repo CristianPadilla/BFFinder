@@ -19,7 +19,7 @@ const TextInputPassword = ({ label, ...props }) => {
 
   return (
     <>
-    <FormControl sx={{ m: 1, width: '25ch' }} variant="filled">
+    <FormControl sx={{ m: 1, width: '27ch' }} variant="filled">
       <InputLabel
         htmlFor={props.id || props.name}
         shrink={true}>

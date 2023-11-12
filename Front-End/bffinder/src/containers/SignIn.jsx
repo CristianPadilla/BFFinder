@@ -1,96 +1,112 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { TextInputComponent } from "../Components/TextInputComponent";
+import TextInputPassword from "../Components/form/TextInputPassword";
+import { Form, Formik } from "formik";
+import * as Yup from "yup";
 import axios from "axios";
 
+const formFields = {
+    email: "",
+    password: "",
+  };
 
 export default function SignIn() {
+  const navigate = useNavigate();
+  const [token, setToken] = useState("");
+  const [error, setError] = useState(null);
 
-    const navigate = useNavigate();
-    const [credentials, setCredentials] = useState({
-        username: '',
-        password: ''
-    })
-    const [token, setToken] = useState("");
+  //login
+  const handleLogin = async (values) => {
+    if (!values.email || !values.password) {
+      console.log("Correo ", values.email);
+      console.log("pass ", values.password);
+      setError("Ambos campos son obligatorios.");
+      return; // Sale de la función para evitar la solicitud si hay campos vacíos
+    }
 
-    // const handleChange = (e) => {
-    //     setCredentials({
-    //         ...credentials,
-    //         [e.target.name]: e.target.value
-    //     })
-    // }
+    console.log("Email:", values.email);
+    console.log("Password:", values.password);
 
-     //login
-  const handleLogin = async (e) => {
-    e.preventDefault();
+    console.log("Enviando solicitud de inicio de sesión...");
 
     try {
-        console.log('entra try ' + credentials.username);
       const response = await axios.post(
         "http://localhost:9090/auth/authenticate",
         {
-          username: credentials.username,
-          password: credentials.password,
+          username: values.email,
+          password: values.password,
         }
       );
-      console.log('despues petición');
-      // Aqu铆 puedes manejar la respuesta de la API, como almacenar el token de autenticaci贸n en el estado de tu aplicaci贸n.
+
       setToken(response.data.token);
       navigate("/home");
-
     } catch (error) {
-        console.log('entra catch');
-      if (error.response && error.response.status === 404) {
-        // setAlertMessage("El usuario no se encuentra registrado en el sistema");
-      }
-      if (error.response && error.response.status === 403) {
-        // setAlertMessage("Por favor, llene todos los campos");
+      if (error.response) {
+        // Se recibió una respuesta del servidor con código de error
+        setError("Error en el inicio de sesión. Verifica tus credenciales.");
+        console.error(error.response.data); // Para depuración, muestra detalles del error.
       } else {
-        // setAlertMessage(
-        //   "El correo electr贸nico o la contrase帽a son incorrectas"
-        // );
+        // Error de red u otro tipo de error
+        setError(
+          "Se produjo un error al intentar iniciar sesión. Inténtalo de nuevo más tarde."
+        );
+        console.error(error); // Para depuración, muestra el error completo.
       }
-    //   setOpen(true);
-      console.error(error);
     }
   };
 
-
-    return <form className="sign-in-form" onSubmit={handleLogin}>
-        <h2 className="titulo">Iniciar Sesión</h2>
-
-        <div className="input-field">
-            <i className="fas fa-user" />
-            <input
-                type="text"
-                value={credentials.username}
-                onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
-                placeholder="ejemplo@mail.com"
+  return (
+    <>
+      <Formik
+        initialValues={formFields}
+        onSubmit={handleLogin}
+        validationSchema={Yup.object({
+          email: Yup.string()
+            .email("Correo no válido")
+            .required("El correo es obligatorio"),
+          password: Yup.string()
+            .min(4, "La contraseña debe tener al menos 4 caracteres") //COONSULTAAAAAA
+            .max(15, "La contraseña debe tener 15 caracteres o menos")
+            .required("La contraseña es obligatoria"),
+        })}
+      >
+        {(formik) => (
+          <Form className="sign-in-form">
+            <h2 className="titulo">Iniciar Sesión</h2>
+            {error && <div className="error-message">{error}</div>}
+            <TextInputComponent
+              required
+              type="text"
+              label="Correo Electronico"
+              name="email"
+              placeholder="ejemplo@mail.com"
+              value={formik.values.email}
+              onChange={formik.handleChange}
             />
-        </div>
-
-        <div className="input-field">
-            <i className="fas fa-lock" />
-            <input
-                type="password"
-                placeholder="******"
-                value={credentials.password}
-                onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+            <TextInputPassword
+              required
+              label="Contraseña"
+              name="password"
+              placeholder="Escribe tu contraseña"
+              value={formik.values.password}
+              onChange={formik.handleChange}
             />
-        </div>
 
-        <input
-            id="sign-in-btn"
-            type="submit"
-            value="Iniciar Sesión"
-            className="btn"
-        />
-
-        <p className="social-text">O Ingresa con Google</p>
-
-        <div className="social-media">
-            <button type="button" className="googlebutton">
-                Iniciar sesión con Google
+            <button id="sign-in-btn" type="submit" className="btn">
+              Iniciar Sesión
             </button>
-        </div>
-    </form>
+
+            <p className="social-text">O Ingresa con Google</p>
+
+            <div className="social-media">
+              <button type="button" className="googlebutton">
+                Iniciar sesión con Google
+              </button>
+            </div>
+          </Form>
+        )}
+      </Formik>
+    </>
+  );
 }

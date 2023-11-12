@@ -1,5 +1,6 @@
 import { ErrorMessage, useField } from "formik";
 import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
 import React from "react";
 
 export const TextInputComponent = ({ label, ...props }) => {
@@ -13,7 +14,9 @@ export const TextInputComponent = ({ label, ...props }) => {
       </div>
       <ErrorMessage name={props.name} component="span" className={props.errorClassName} /> */}
       <div style={{ margin: '.7rem' }}>
+      <FormControl sx={{ width: '27ch' }}>
         <TextField label={label} onChange={props.onInputChange} name={props.name} className={props.className} {...field} {...props} placeholder={props.placeholder} variant="outlined" />
+        </FormControl>
         <div style={{ textAlign: 'center' }}>
           <ErrorMessage name={props.name} component="span" className={props.errorClassName} style={{ fontSize: '.7rem' }}/>
         </div>

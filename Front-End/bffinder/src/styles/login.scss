@@ -1,8 +1,8 @@
 @import 'vars';
 
-html, body {
-  height: 100%;
-}
+// html, body {
+//   height: 100%;
+// }
 
 * {
   margin: 0;
@@ -42,11 +42,11 @@ html, body {
 
 .signup {
   position: absolute;
-  top: 10%;
-  bottom: 55%;
-  left: 25%;
+  top: 8%;
+  bottom: 60%;
+  left: 22%;
   transform: translate(-50%, -50%);
-  width: 40%; /* Ajusta el ancho del formulario según tus necesidades */
+  width: 40%; 
   height: 10%;
   z-index: 5;
 }
@@ -80,6 +80,20 @@ form.sign-in-form {
   font-size: 1.8rem;
 
   margin-bottom: 10px;
+}
+
+.titulo-r {
+  font-size: 1.8rem;
+  color: #4e4e4e;
+  text-align: center;
+}
+
+@media (max-height: 800px) {
+  .titulo-r {
+    color: #4e4e4e;
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+  }
 }
 
 // // input

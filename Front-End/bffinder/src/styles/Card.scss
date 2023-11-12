@@ -23,9 +23,16 @@
 
 @media (max-height: 800px) {
   .form-container {
-    margin-top: 15rem;
+    margin-top: 13rem;
     margin-bottom: 3rem;
   }
+
+  .css-jpln7h-MuiTabs-scroller .MuiTab-root {
+    margin: 1px; /* Ajusta el margen como desees */
+    font-size: 12px; /* Ajusta el tamaño de fuente como desees */
+  }
+
+
 }
 
 // @media (max-width: 827px) {
