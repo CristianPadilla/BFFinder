@@ -80,13 +80,12 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public ImageResponse getImageById(int imageId) {
-        var imageEntity = repository.findByIdAndStatusTrue(imageId)
-                .orElseThrow(() -> new ImageServiceCustomException("image for id " + imageId + " not found", "IMAGE_NOT_FOUND"));
+        var imageEntity = repository.findByIdAndStatusTrue(imageId);
+        return imageEntity.map(entity -> ImageResponse.builder()
+                .imageId(entity.getId())
+                .imageUrl(entity.getName())
+                .build()).orElse(null);
 
-        return ImageResponse.builder()
-                .imageId(imageEntity.getId())
-                .imageUrl(imageEntity.getName())
-                .build();
     }
 
 

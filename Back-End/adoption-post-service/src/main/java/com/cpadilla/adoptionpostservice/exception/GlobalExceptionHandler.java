@@ -31,7 +31,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({CustomException.class})
     protected ResponseEntity<ErrorResponse> handleException(CustomException exception, Locale locale) {// handle general exceptions
-        log.info("Handling general exception from adoption post service  {}", exception.getMessage());
+        log.info("Handling general custom exception from adoption post service  {}", exception.getMessage());
         return ResponseEntity
                 .status(HttpStatusCode.valueOf(exception.getStatus()))
                 .body(ErrorResponse.builder()

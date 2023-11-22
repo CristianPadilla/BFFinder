@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -72,12 +73,20 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .city(locationResponse.getCity())
                 .build();
 
+        var postImages = postImageRepository.findAllByPostId(postId);
+
+        var images = postImages.stream().map(postImageEntity ->
+                imageService.getImageById(postImageEntity.getImageId()).getBody()
+
+        ).filter(Objects::nonNull).collect(Collectors.toList());
+
         return AdoptionPostResponse.builder()
                 .id(postEntity.getId())
                 .description(postEntity.getDescription())
                 .date(postEntity.getDate())
                 .petDetails(petDetails)
                 .locationDetails(locationDetails)
+                .images(images)
                 .build();
     }
 
