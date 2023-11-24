@@ -21,7 +21,7 @@ import java.time.Instant;
 
 @Service
 @Log4j2
-public class GoogleCloudStorageImageService implements ImageService {
+public class GoogleCloudStorageImageService implements CloudStorageService {
 
 
     @Value("${app.google-cloud-base-url-path}")
@@ -55,37 +55,31 @@ public class GoogleCloudStorageImageService implements ImageService {
         bucket = StorageClient.getInstance().bucket("bffinder-e5a52.appspot.com");
     }
 
-
     @Override
-    public String updateProfileImage(String userId, MultipartFile image) {
-        //https://storage.googleapis.com/bffinder-e5a52.appspot.com/bffinder/image.png
-
-        var imageName = generateImageName(userId);
-        var blobname = imagesBasePath + profileImagesPath + "/" + userId + "/" + imageName;
-        var createdBlobName = uploadImage(blobname, image);
-
-        //TODO handle database stuff
-
-        return null;
-    }
-
-
-    private String uploadImage(String blobName, MultipartFile image) {
-        log.info("blob name to upload =========; " + blobName);
+    public String uploadProfileImage(String blobName, MultipartFile image) {
+        log.info("uploading blob named {} from google cloud storage service ", blobName);
         try {
-            Blob blob = bucket.create(blobName, image.getBytes(), "image/png");
-            log.info("created blob name: " + blob.getName());
-            return blob.getName();
+            Blob blob = bucket.create(imagesBasePath + profileImagesPath + blobName, image.getBytes(), "image/png");
+            var imageUrl = StorageBaseUrl + blob.getName();
+            log.info("created blob name: " + blob.getName() + " at url: " + imageUrl);
+            return imageUrl;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
     }
 
-
-    public String generateImageName(String identifier) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");// include milliseconds
-        String timestamp = dateFormat.format(Date.from(Instant.now()));
-        return identifier + "_" + timestamp + ".png";
+    @Override
+    public String uploadPostImage(String blobName, MultipartFile image) {
+        log.info("uploading blob named {} from google cloud storage service ", blobName);
+        try {
+            Blob blob = bucket.create(imagesBasePath + postImagesPath + blobName, image.getBytes(), "image/png");
+            var imageUrl = StorageBaseUrl + blob.getName();
+            log.info("created blob name: " + blob.getName() + " at url: " + imageUrl);
+            return imageUrl;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+
 }
