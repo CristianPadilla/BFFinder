@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/login.scss";
 import "../styles/Card.scss";
 import { Formik, Form } from "formik";
@@ -7,6 +7,8 @@ import { TextInputComponent } from "../Components/TextInputComponent";
 import { SelectInputComponent } from "../Components/SelectInputComponent";
 import { CheckboxInputComponent } from "../Components/CheckboxInputComponent";
 import TextInputPassword from "../Components/form/TextInputPassword";
+import { Snackbar, Alert } from "@mui/material";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import axios from "axios";
 
 const formFields = {
@@ -22,15 +24,23 @@ const formFields = {
 };
 
 export function RegisterUserPage() {
+  const [reloadPage, setReloadPage] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+
+    if (reloadPage) {
+      window.location.reload();
+    }
+  };
+
   const handleRegistration = async (values, { setSubmitting, setErrors }) => {
     try {
-      //     console.log("Form values:", values);
-
-      // // Simular un retraso de la red
-      // console.log("Simulating network delay...");
-      // await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // console.log("Making API request...");
 
       const response = await axios.post("http://localhost:9090/auth/register", {
         firstname: values.firstname,
@@ -41,12 +51,11 @@ export function RegisterUserPage() {
       });
       // console.log("Respuesta exitosa:", response.data);
 
-      // Puedes mostrar un mensaje de éxito o redirigir a otra página
+      setOpen(true);
+      setReloadPage(true);
     } catch (error) {
-      // Si hay un error en la solicitud, puedes mostrar un mensaje de error o hacer algo más
       console.error("Error en la solicitud de registro:", error);
 
-      // Puedes ajustar esto según la estructura exacta de la respuesta de error de tu API
       setErrors({
         general: "Hubo un error en el registro. Inténtalo de nuevo.",
       });
@@ -58,6 +67,21 @@ export function RegisterUserPage() {
 
   return (
     <>
+      <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
+        <Alert
+          onClose={handleClose}
+          severity="success"
+          sx={{ width: "100%", backgroundColor: "#4CAF50", color: "#fff" }}
+          icon={
+            <CheckCircleIcon
+              fontSize="inherit"
+              style={{ color: "white" }}
+            />
+          }
+        >
+          Usuario creado exitosamente.
+        </Alert>
+      </Snackbar>
       <Formik
         initialValues={formFields}
         onSubmit={handleRegistration}
@@ -116,7 +140,7 @@ export function RegisterUserPage() {
         {(formik) => (
           <div className="register-form-container">
             <Form className="sign-up-form register-form" id="sign-up-form">
-            {console.log(formik.values)}
+              {console.log(formik.values)}
               <div className="form-container">
                 <TextInputComponent
                   required

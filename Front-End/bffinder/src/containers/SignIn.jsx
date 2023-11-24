@@ -43,15 +43,13 @@ export default function SignIn() {
       navigate("/home");
     } catch (error) {
       if (error.response) {
-        // Se recibió una respuesta del servidor con código de error
         setError("Error en el inicio de sesión. Verifica tus credenciales.");
-        console.error(error.response.data); // Para depuración, muestra detalles del error.
+        console.error(error.response.data); 
       } else {
-        // Error de red u otro tipo de error
         setError(
           "Se produjo un error al intentar iniciar sesión. Inténtalo de nuevo más tarde."
         );
-        console.error(error); // Para depuración, muestra el error completo.
+        console.error(error);
       }
     }
   };

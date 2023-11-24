@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { TextInputComponent } from "../Components/TextInputComponent";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import "../styles/Card.scss";
 import { CheckboxInputComponent } from "../Components/CheckboxInputComponent";
 import TextInputPassword from "../Components/form/TextInputPassword";
+import { Snackbar, Alert } from "@mui/material";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import axios from "axios";
 
 const formFields = {
@@ -19,6 +21,20 @@ const formFields = {
 };
 
 export function RegisterFoundationPage() {
+  const [reloadPage, setReloadPage] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+
+    if (reloadPage) {
+      window.location.reload();
+    }
+  };
 
   const handleRegistration = async (values, { setSubmitting, setErrors }) => {
     try {
@@ -38,7 +54,9 @@ export function RegisterFoundationPage() {
       );
 
       console.log("Response:", response.data);
-      // Resto del código...
+      setOpen(true);
+      setReloadPage(true);
+
     } catch (error) {
       console.error("Error:", error);
       setErrors({
@@ -51,13 +69,28 @@ export function RegisterFoundationPage() {
 
   return (
     <>
+    <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
+        <Alert
+          onClose={handleClose}
+          severity="success"
+          sx={{ width: "100%", backgroundColor: "#FFCF9F" }}
+          icon={
+            <CheckCircleIcon
+              fontSize="inherit"
+              style={{ color: "white" }}
+            />
+          }
+        >
+          Usuario Fundación creado exitosamente.
+        </Alert>
+      </Snackbar>
       <Formik
         initialValues={formFields}
         onSubmit={handleRegistration}
         validationSchema={Yup.object({
           name: Yup.string()
             .min(3, "El nombre debe tener al menos 3 caracteres")
-            .max(15, "El nombre debe tener 15 caracteres o menos")
+            .max(20, "El nombre debe tener 20 caracteres o menos")
             .required("El nombre es obligatorio"),
           email: Yup.string()
             .email("Correo no válido")
