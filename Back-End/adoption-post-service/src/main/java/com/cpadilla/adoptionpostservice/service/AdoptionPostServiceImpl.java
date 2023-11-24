@@ -1,22 +1,27 @@
 package com.cpadilla.adoptionpostservice.service;
 
 import com.cpadilla.adoptionpostservice.entity.AdoptionPostEntity;
+import com.cpadilla.adoptionpostservice.entity.PostImageEntity;
 import com.cpadilla.adoptionpostservice.exception.CustomException;
 import com.cpadilla.adoptionpostservice.exception.LocationNotCreatedException;
 import com.cpadilla.adoptionpostservice.exception.PetNotFoundException;
 import com.cpadilla.adoptionpostservice.exception.PostNotFoundException;
+import com.cpadilla.adoptionpostservice.external.client.ImageService;
 import com.cpadilla.adoptionpostservice.external.client.LocationService;
 import com.cpadilla.adoptionpostservice.external.client.PetService;
 import com.cpadilla.adoptionpostservice.model.*;
 import com.cpadilla.adoptionpostservice.repository.AdoptionPostRepository;
+import com.cpadilla.adoptionpostservice.repository.PostImageRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,10 +32,16 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     private AdoptionPostRepository repository;
 
     @Autowired
+    private PostImageRepository postImageRepository;
+
+    @Autowired
     private PetService petService;
 
     @Autowired
     private LocationService locationService;
+
+    @Autowired
+    private ImageService imageService;
 
     @Autowired
     private AdoptionPostFilterSpecification<AdoptionPostEntity> filterSpecification;
@@ -62,12 +73,20 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .city(locationResponse.getCity())
                 .build();
 
+        var postImages = postImageRepository.findAllByPostId(postId);
+
+        var images = postImages.stream().map(postImageEntity ->
+                imageService.getImageById(postImageEntity.getImageId()).getBody()
+
+        ).filter(Objects::nonNull).collect(Collectors.toList());
+
         return AdoptionPostResponse.builder()
                 .id(postEntity.getId())
                 .description(postEntity.getDescription())
                 .date(postEntity.getDate())
                 .petDetails(petDetails)
                 .locationDetails(locationDetails)
+                .images(images)
                 .build();
     }
 
@@ -99,7 +118,15 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .userId(request.getUserId())
                 .addressId(addressId)
                 .build();
-        return repository.save(postEntity).getId();
+        var createdPost = repository.save(postEntity);
+
+        //todo  solicitar creacion de imagenes al microservicio
+
+
+        //todo registrar en la tabla intermedia
+
+
+        return createdPost.getId();
     }
 
     @Override
@@ -236,6 +263,32 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     @Override
     public boolean checkPetIsPosted(int petId) {
         return repository.findByPetIdAndStatusIsTrue(petId).isPresent();
+    }
+
+    @Override
+    public ImageResponse savePostImage(int postId, MultipartFile image) {
+        log.info("saving post image for post id {} from service layer", postId);
+        if (!repository.existsById(postId))
+            throw new CustomException("Adoption post not found with id: " + postId, "ADOPTION_POST_NOT_FOUND", HttpStatus.NOT_FOUND.value());
+
+        var savedImage = imageService.uploadPostImage(postId, image).getBody();
+
+        var postImage = PostImageEntity.builder()
+                .imageId(savedImage.getImageId())
+                .postId(postId)
+                .build();
+        postImageRepository.save(postImage);
+
+        return savedImage;
+    }
+
+    @Override
+    public void cancelPostImage(int postId, int imageId) {
+        log.info("deleting post image with id {} for post id {} from service layer", postId, imageId);
+        if (postImageRepository.findByPostIdAndImageId(postId, imageId) == null)
+            throw new CustomException("No image related to post with id: " + postId, "POST_IMAGE_NOT_FOUND", HttpStatus.NOT_FOUND.value()); // delete portImage registry?
+
+        imageService.deleteImageById(imageId);
     }
 
 

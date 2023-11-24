@@ -2,6 +2,7 @@ package com.cpadilla.adoptionpostservice.exception;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,6 +29,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                         .build());
     }
 
+    @ExceptionHandler({CustomException.class})
+    protected ResponseEntity<ErrorResponse> handleException(CustomException exception, Locale locale) {// handle general exceptions
+        log.info("Handling general custom exception from adoption post service  {}", exception.getMessage());
+        return ResponseEntity
+                .status(HttpStatusCode.valueOf(exception.getStatus()))
+                .body(ErrorResponse.builder()
+                        .message("Error occur in adoption post service")
+                        .details(exception.getMessage())
+                        .timestamp(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
+                        .build());
+    }
 
     @ExceptionHandler({Exception.class})
     protected ResponseEntity handleException(Exception exception, Locale locale) {// handle general exceptions
@@ -40,5 +52,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                         .timestamp(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
                         .build());
     }
+
 
 }

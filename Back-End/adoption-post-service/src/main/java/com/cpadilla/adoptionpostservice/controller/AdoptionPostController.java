@@ -5,9 +5,12 @@ import com.cpadilla.adoptionpostservice.service.AdoptionPostService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -49,8 +52,9 @@ public class AdoptionPostController {
         return new ResponseEntity<>(service.savePost(request), HttpStatus.OK);
     }
 
+
     @PutMapping("/update")
-        public ResponseEntity<Integer> updateAdoptionPost(@RequestBody AdoptionPostRequest request) {
+    public ResponseEntity<Integer> updateAdoptionPost(@RequestBody AdoptionPostRequest request) {
         log.info("Updating post from CONTROLLER layer");
         return new ResponseEntity<>(service.updatePost(request), HttpStatus.OK);
     }
@@ -59,6 +63,20 @@ public class AdoptionPostController {
     public ResponseEntity<Boolean> checkPetIsPosted(@PathVariable("petId") int petId) {
         log.info("Checking if post already exist with prtId id {} from CONTROLLER layer", petId);
         return new ResponseEntity<>(service.checkPetIsPosted(petId), HttpStatus.OK);
+    }
+
+    // Images managment
+    @PostMapping("/image/{postId}")
+    public ResponseEntity<ImageResponse> saveAdoptionPostImage(@PathVariable("postId") int postId, @RequestBody MultipartFile image) {
+        log.info("saving post image from CONTROLLER layer");
+        return new ResponseEntity<>(service.savePostImage(postId, image), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/image/{imageId}/{postId}")
+    public ResponseEntity<Void> deleteImageFromPost(@PathVariable("imageId") int imageId, @PathVariable("postId") int postId) {
+        log.info("deleting post image from CONTROLLER layer");
+        service.cancelPostImage(postId, imageId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

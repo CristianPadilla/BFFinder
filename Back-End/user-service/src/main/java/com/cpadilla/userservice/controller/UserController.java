@@ -7,10 +7,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Log4j2
 @RestController
@@ -28,7 +26,7 @@ public class UserController {
     }
 
     @GetMapping("/credentials/email/{email}")
-    public ResponseEntity<UserCredentialsResponse> getUserCredentialsById(@PathVariable("email") String email) {
+    public ResponseEntity<UserCredentialsResponse> getUserCredentialsByEmail(@PathVariable("email") String email) {
         log.info("FROM CONTROLLER LAYER: getting user credentials by user email {}", email);
         return new ResponseEntity<>(service.getUserCredentialsByEmail(email), HttpStatus.OK);
 
@@ -39,6 +37,12 @@ public class UserController {
         log.info("FROM CONTROLLER LAYER: getting user by user id {}", userId);
         return new ResponseEntity<>(service.getUserById(userId), HttpStatus.OK);
 
+    }
+
+    @PutMapping("/update/photo/{id}")
+    public ResponseEntity<UserResponse> updateProfileImage(@PathVariable("id") int userId, @RequestBody MultipartFile image) {
+        log.info("updating profile photo for user with id: {} from controller layer", userId);
+        return new ResponseEntity<>(service.updateProfileImage(userId, image), HttpStatus.OK);
     }
 
 
