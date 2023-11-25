@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,5 +19,6 @@ public class AdoptionPostPartialsResponse {
     private boolean status;
     private Instant date;
     private PetPartialDetails petDetails;
+    private List<ImageResponse> images;
     private LocationDetails locationDetails;
 }

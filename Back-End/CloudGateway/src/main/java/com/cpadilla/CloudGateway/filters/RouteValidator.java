@@ -1,12 +1,15 @@
 package com.cpadilla.CloudGateway.filters;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 
 import java.util.List;
 import java.util.function.Predicate;
 
 @Component
+@Log4j2
 public class RouteValidator {
 
     // list of endpoints that will be allowed by the gateway
@@ -14,13 +17,16 @@ public class RouteValidator {
             "/auth/register",
             "/auth/register/shelter",
             "/auth/authenticate",
-            "/eureka"
+            "/eureka",
+            "/post/all/**"
 //            "/api-docts/",
     );
 
     public Predicate<ServerHttpRequest> isSecured =
             request -> openApiEndpoints
                     .stream()
-                    .noneMatch(uri -> request.getURI().getPath().contains(uri));
+                    .noneMatch(uri -> new AntPathMatcher().match(uri, request.getURI().getPath()));
+    ;
+
 
 }
