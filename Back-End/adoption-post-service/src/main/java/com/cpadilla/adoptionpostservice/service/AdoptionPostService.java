@@ -12,6 +12,7 @@ public interface AdoptionPostService {
     int savePost(PostRequest request);
 
     ImageResponse savePostImage(int postId, MultipartFile image);
+
     void cancelPostImage(int postId, int imageId);
 
     List<AdoptionPostPartialsResponse> getAllPostsByUserId(int userId);
@@ -25,6 +26,8 @@ public interface AdoptionPostService {
     int cancelPost(int postId);
 
     boolean checkPetIsPosted(int petId);
+
+    List<ImageResponse> findPostImages(int postId);
 
 
 }

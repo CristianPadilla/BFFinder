@@ -73,12 +73,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .city(locationResponse.getCity())
                 .build();
 
-        var postImages = postImageRepository.findAllByPostId(postId);
-
-        var images = postImages.stream().map(postImageEntity ->
-                imageService.getImageById(postImageEntity.getImageId()).getBody()
-
-        ).filter(Objects::nonNull).collect(Collectors.toList());
+        var images = findPostImages(postId);
 
         return AdoptionPostResponse.builder()
                 .id(postEntity.getId())
@@ -161,7 +156,6 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         var postEntities =
                 repository.findAllByStatusTrue(Sort.by("date").descending());
 
-
         if (postEntities.size() > 0) {
             return postEntities.stream()
                     .map(post -> {
@@ -178,11 +172,14 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                                 .city(locationResponse.getCity())
                                 .build();
 
+                        var images = findPostImages(post.getId());
+
                         return AdoptionPostPartialsResponse.builder()
                                 .id(post.getId())
                                 .petDetails(petDetails)
                                 .locationDetails(locationDetails)
                                 .date(post.getDate())
+                                .images(images)
                                 .build();
                     })
                     .collect(Collectors.toList());
@@ -215,15 +212,18 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                                 .city(locationResponse.getCity())
                                 .build();
 
+                        var images = findPostImages(post.getId());
+
                         return AdoptionPostPartialsResponse.builder()
                                 .id(post.getId())
                                 .status(post.isStatus())
                                 .date(post.getDate())
                                 .petDetails(petDetails)
                                 .locationDetails(locationDetails)
+                                .images(images)
                                 .build();
-                    }).filter(post -> petPassesFilter(post.getPetDetails(), filterRequest))// apply pet filters
-                    .filter(post -> filterRequest.getCityId() != 0 && post.getLocationDetails().getCity().getId() == filterRequest.getCityId())// location filter
+                    }).filter(post -> passesPetFilters(post.getPetDetails(), filterRequest))// apply pet filters
+                    .filter(post -> passesPostFilters(post, filterRequest))// post filters
                     .collect(Collectors.toList());
         } else throw new PostNotFoundException("not available posts with specified filters");
 
@@ -266,6 +266,17 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     }
 
     @Override
+    public List<ImageResponse> findPostImages(int postId) {
+
+        var postImages = postImageRepository.findAllByPostId(postId);
+
+        return postImages.stream().map(postImageEntity ->
+                imageService.getImageById(postImageEntity.getImageId()).getBody()
+
+        ).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    @Override
     public ImageResponse savePostImage(int postId, MultipartFile image) {
         log.info("saving post image for post id {} from service layer", postId);
         if (!repository.existsById(postId))
@@ -292,7 +303,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     }
 
 
-    public boolean petPassesFilter(PetPartialDetails petDetails, FilterRequest filter) {
+    public boolean passesPetFilters(PetPartialDetails petDetails, FilterRequest filter) {
 
         if (filter.getSize() != null) {
             var sizeFilter = filter.getSize().toLowerCase();
@@ -302,10 +313,19 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 throw new CustomException("Filter 'size' is not valid", "FILTER_NOT_VALID", HttpStatus.NOT_FOUND.value());
         }
 
-        if (filter.getSpecieId() != 0) {
+        if (filter.getSpecieId() > 0) {
             if (petDetails.getBreedDetails().getSpecie().getId() != filter.getSpecieId()) return false;
             if (filter.getBreedId() != 0 && petDetails.getBreedDetails().getId() != filter.getBreedId()) return false;
         }
+        return true;
+    }
+
+    public boolean passesPostFilters(AdoptionPostPartialsResponse postDetails, FilterRequest filter) {
+
+        if (filter.getCityId() > 0) {
+            if (postDetails.getLocationDetails().getCity().getId() != filter.getCityId()) return false;
+        }
+
         return true;
     }
 }
