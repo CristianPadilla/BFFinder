@@ -11,7 +11,7 @@
 }
 
 .content-card {
-    margin:  1rem;
+    margin: 1rem;
 }
 
 .title-card {
@@ -27,5 +27,25 @@
 /*Card*/
 
 .section-prepost {
-    // margin: 10px;
-}
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px;
+  }
+  
+  .left-arrow {
+    margin-left: -130px !important;
+    margin-right: 50px !important;
+  }
+  
+  .right-arrow {
+    margin-right: -130px !important; 
+    margin-left: 50px !important;
+  }
+  
+  
+  
+  
+  
+  

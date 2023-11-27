@@ -84,8 +84,8 @@ const Header = () => {
                 <DialogTitle><b>Atención</b></DialogTitle>
                 <DialogContent>
                   <DialogContentText>
-                    <h3>Para publicar una mascota en BFFinder debes primero
-                    iniciar sesión.</h3>
+                    <b>Para publicar una mascota en BFFinder debes
+                    iniciar sesión.</b>
                   </DialogContentText>
                 </DialogContent>
                 <DialogActions>
