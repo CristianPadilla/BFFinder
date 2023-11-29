@@ -14,12 +14,16 @@ import com.cpadilla.adoptionpostservice.repository.AdoptionPostRepository;
 import com.cpadilla.adoptionpostservice.repository.PostImageRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -188,16 +192,17 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     }
 
     @Override
-    public List<AdoptionPostPartialsResponse> getAllFilter(FilterRequest filterRequest) {
+    public Page<AdoptionPostPartialsResponse> getAllFilter(FilterRequest filterRequest) {
 
         var specification =
                 filterSpecification.getSearchSpecification(filterRequest); // apply post filters
 
         var postEntities =
-                repository.findAll(specification, Sort.by("date").descending());
-
-        if (postEntities.size() > 0) {
-            return postEntities.stream().map(post -> {
+                repository.findAll(specification, PageRequest.of(filterRequest.getPage(), filterRequest.getPageSize(), Sort.by("date").descending()));
+        List<AdoptionPostPartialsResponse> filteredPosts = new ArrayList<AdoptionPostPartialsResponse>();
+//        return postEntities.map(adoptionPostEntity -> AdoptionPostPartialsResponse.builder().build());
+        if (!postEntities.isEmpty()) {
+            filteredPosts = postEntities.stream().map(post -> {
                         var pet = petService.getById(post.getPetId()).getBody();
                         var petDetails = PetPartialDetails.builder()
                                 .id(pet.getId())
@@ -225,6 +230,11 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                     }).filter(post -> passesPetFilters(post.getPetDetails(), filterRequest))// apply pet filters
                     .filter(post -> passesPostFilters(post, filterRequest))// post filters
                     .collect(Collectors.toList());
+
+            filteredPosts.forEach(posts -> log.info("==== {}", posts));
+//            log.info("holaaaaaaaa: {}", filteredPosts);
+
+            return new PageImpl<>(filteredPosts, postEntities.getPageable(), filteredPosts.size());
         } else throw new PostNotFoundException("not available posts with specified filters");
 
     }
@@ -305,7 +315,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
     public boolean passesPetFilters(PetPartialDetails petDetails, FilterRequest filter) {
 
-        if (filter.getSize() != null) {
+        if (filter.getSize() != null && !filter.getSize().isEmpty()) {
             var sizeFilter = filter.getSize().toLowerCase();
             if (sizeFilter.equals("l") || sizeFilter.equals("s") || sizeFilter.equals("m")) {
                 if (sizeFilter.charAt(0) != petDetails.getSize()) return false;

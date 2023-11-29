@@ -1,6 +1,7 @@
 package com.cpadilla.adoptionpostservice.service;
 
 import com.cpadilla.adoptionpostservice.model.*;
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface AdoptionPostService {
 
     List<AdoptionPostPartialsResponse> getAllSorted(String sortingMethod, boolean desc);
 
-    List<AdoptionPostPartialsResponse> getAllFilter(FilterRequest filterRequest);
+    Page<AdoptionPostPartialsResponse> getAllFilter(FilterRequest filterRequest);
 
     int updatePost(AdoptionPostRequest request);
 

@@ -4,6 +4,7 @@ import com.cpadilla.adoptionpostservice.model.*;
 import com.cpadilla.adoptionpostservice.service.AdoptionPostService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class AdoptionPostController {
     }
 
     @GetMapping("/all/filter")
-    public ResponseEntity<List<AdoptionPostPartialsResponse>> getAllAdoptionPostsFiltered(@RequestBody FilterRequest filterRequest) {
+    public ResponseEntity<Page<AdoptionPostPartialsResponse>> getAllAdoptionPostsFiltered(@RequestBody FilterRequest filterRequest) {
         log.info("Getting posts filtered from CONTROLLER layer with filters: {}", filterRequest);
         return new ResponseEntity<>(service.getAllFilter(filterRequest), HttpStatus.OK);
     }
