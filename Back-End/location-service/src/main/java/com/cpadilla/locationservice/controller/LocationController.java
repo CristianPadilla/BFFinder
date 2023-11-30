@@ -1,5 +1,7 @@
 package com.cpadilla.locationservice.controller;
 
+import com.cpadilla.locationservice.model.CityResponse;
+import com.cpadilla.locationservice.model.DepartmentResponse;
 import com.cpadilla.locationservice.model.LocationRequest;
 import com.cpadilla.locationservice.model.LocationResponse;
 import com.cpadilla.locationservice.service.LocationService;
@@ -7,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/location")
@@ -19,6 +23,16 @@ public class LocationController {
     @GetMapping("/{id}")
     public ResponseEntity<LocationResponse> getById(@PathVariable("id") int addressId) {
         return new ResponseEntity<>(service.getAddressById(addressId), HttpStatus.OK);
+    }
+
+    @GetMapping("/department/all")
+    public ResponseEntity<List<DepartmentResponse>> getDepartments() {
+        return new ResponseEntity<>(service.getDepartments(), HttpStatus.OK);
+    }
+
+    @GetMapping("/department/{departmentId}/cities")
+    public ResponseEntity<List<CityResponse>> getDepartments(@PathVariable("departmentId") int departmentId) {
+        return new ResponseEntity<>(service.getCitiesByDepartment(departmentId), HttpStatus.OK);
     }
 
 

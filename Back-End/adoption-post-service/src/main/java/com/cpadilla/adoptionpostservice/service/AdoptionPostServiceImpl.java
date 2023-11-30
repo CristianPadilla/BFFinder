@@ -200,42 +200,39 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         var postEntities =
                 repository.findAll(specification, PageRequest.of(filterRequest.getPage(), filterRequest.getPageSize(), Sort.by("date").descending()));
         List<AdoptionPostPartialsResponse> filteredPosts = new ArrayList<AdoptionPostPartialsResponse>();
-//        return postEntities.map(adoptionPostEntity -> AdoptionPostPartialsResponse.builder().build());
-        if (!postEntities.isEmpty()) {
-            filteredPosts = postEntities.stream().map(post -> {
-                        var pet = petService.getById(post.getPetId()).getBody();
-                        var petDetails = PetPartialDetails.builder()
-                                .id(pet.getId())
-                                .name(pet.getName())
-                                .breedDetails(pet.getBreedDetails())
-                                .size(pet.getSize())
-                                .build();
 
-                        var locationResponse = locationService.getById(post.getAddressId()).getBody();
-                        var locationDetails = LocationDetails.builder()
-                                .id(locationResponse.getId())
-                                .city(locationResponse.getCity())
-                                .build();
+//        if (!postEntities.isEmpty()) {
+        filteredPosts = postEntities.stream().map(post -> {
+                    var pet = petService.getById(post.getPetId()).getBody();
+                    var petDetails = PetPartialDetails.builder()
+                            .id(pet.getId())
+                            .name(pet.getName())
+                            .breedDetails(pet.getBreedDetails())
+                            .size(pet.getSize())
+                            .build();
 
-                        var images = findPostImages(post.getId());
+                    var locationResponse = locationService.getById(post.getAddressId()).getBody();
+                    var locationDetails = LocationDetails.builder()
+                            .id(locationResponse.getId())
+                            .city(locationResponse.getCity())
+                            .build();
 
-                        return AdoptionPostPartialsResponse.builder()
-                                .id(post.getId())
-                                .status(post.isStatus())
-                                .date(post.getDate())
-                                .petDetails(petDetails)
-                                .locationDetails(locationDetails)
-                                .images(images)
-                                .build();
-                    }).filter(post -> passesPetFilters(post.getPetDetails(), filterRequest))// apply pet filters
-                    .filter(post -> passesPostFilters(post, filterRequest))// post filters
-                    .collect(Collectors.toList());
+                    var images = findPostImages(post.getId());
 
-            filteredPosts.forEach(posts -> log.info("==== {}", posts));
-//            log.info("holaaaaaaaa: {}", filteredPosts);
+                    return AdoptionPostPartialsResponse.builder()
+                            .id(post.getId())
+                            .status(post.isStatus())
+                            .date(post.getDate())
+                            .petDetails(petDetails)
+                            .locationDetails(locationDetails)
+                            .images(images)
+                            .build();
+                }).filter(post -> passesPetFilters(post.getPetDetails(), filterRequest))// apply pet filters
+                .filter(post -> passesPostFilters(post, filterRequest))// post filters
+                .collect(Collectors.toList());
 
-            return new PageImpl<>(filteredPosts, postEntities.getPageable(), filteredPosts.size());
-        } else throw new PostNotFoundException("not available posts with specified filters");
+        return new PageImpl<>(filteredPosts, postEntities.getPageable(), filteredPosts.size());
+//        } else throw new PostNotFoundException("not available posts with specified filters");
 
     }
 

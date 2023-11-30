@@ -16,14 +16,14 @@ import java.util.List;
 public interface PetService {
 
     @GetMapping("/{id}")
-    public ResponseEntity<PetResponse> getById(@PathVariable("id") int petId);
+    ResponseEntity<PetResponse> getById(@PathVariable("id") int petId);
 
     @PostMapping("/save")
-    public ResponseEntity<Integer> savePet(@RequestBody PetRequest pet);
+    ResponseEntity<Integer> savePet(@RequestBody PetRequest pet);
 
     @PutMapping("/update")
-    public ResponseEntity<Integer> updatePet(@RequestBody PetRequest pet);
+    ResponseEntity<Integer> updatePet(@RequestBody PetRequest pet);
 
     @GetMapping("/owner/{id}")
-    public ResponseEntity<List<PetResponse>> getAllByOwnerId(@PathVariable("id") int ownerId);
+    ResponseEntity<List<PetResponse>> getAllByOwnerId(@PathVariable("id") int ownerId);
 }
