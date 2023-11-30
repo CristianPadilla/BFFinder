@@ -34,15 +34,17 @@ public class LocationServiceImpl implements LocationService {
         var addressEntity = repository.findById(id)
                 .orElseThrow(() -> new CustomException("address not found for id: " + id, "ADDRESS_NOT_FOUND", HttpStatus.NOT_FOUND.value()));
 
-        var department = DepartmentResponse.builder()
-                .name(addressEntity.getCity().getDepartment().getName())
-                .build();
+//        var department = DepartmentResponse.builder()
+//                .name(addressEntity.getCity().getDepartment().getName())
+//                .build();
+//
+//        var city = CityResponse.builder()
+//                .id(addressEntity.getCityId())
+//                .name(addressEntity.getCity().getName())
+//                .department(department)
+//                .build();
+        var city = colombiaService.getCityById(addressEntity.getCityId()).getBody();
 
-        var city = CityResponse.builder()
-                .id(addressEntity.getCityId())
-                .name(addressEntity.getCity().getName())
-                .department(department)
-                .build();
 
         return LocationResponse.builder()
                 .id(addressEntity.getId())

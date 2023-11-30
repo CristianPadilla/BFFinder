@@ -18,6 +18,13 @@ public interface ColombiaService {
     @GetMapping("/Department")
     ResponseEntity<List<DepartmentResponse>> getDepartments();
 
+    @GetMapping("/Department/{departmentId}")
+    ResponseEntity<DepartmentResponse> getDepartmentById(@PathVariable("departmentId") int departmentId);
+
+
     @GetMapping("/Department/{departmentId}/cities")
     ResponseEntity<List<CityResponse>> getCitiesByDepartment(@PathVariable("departmentId") int departmentId);
+
+    @GetMapping("/City/{idCity}")
+    ResponseEntity<CityResponse> getCityById(@PathVariable("idCity") int idCity);
 }
