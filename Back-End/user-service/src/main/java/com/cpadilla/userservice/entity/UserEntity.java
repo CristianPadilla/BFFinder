@@ -21,8 +21,12 @@ public class UserEntity {
     private String surname;
     private String password;
     private String email;
+    private String nit;
+    private String description;
     @Column(name = "phone_number")
     private String phoneNumber;
+    @Column(name = "commercial_reg_num")
+    private String commercialRegistrationNumber;
     @Column(name = "social_stratum")
     private Integer socialStratum;
     @Column(name = "in_home_space")

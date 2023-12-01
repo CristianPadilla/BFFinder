@@ -22,7 +22,7 @@ public class PetResponse {
     private boolean status;
     private boolean dewormed;
 
-    private OwnerDetails ownerDetails;
+    private UserOwnerResponse userOwnerResponse;
     private BreedDetails breedDetails;
 
 

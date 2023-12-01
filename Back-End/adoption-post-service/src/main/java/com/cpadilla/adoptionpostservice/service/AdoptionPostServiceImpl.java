@@ -3,12 +3,12 @@ package com.cpadilla.adoptionpostservice.service;
 import com.cpadilla.adoptionpostservice.entity.AdoptionPostEntity;
 import com.cpadilla.adoptionpostservice.entity.PostImageEntity;
 import com.cpadilla.adoptionpostservice.exception.CustomException;
-import com.cpadilla.adoptionpostservice.exception.LocationNotCreatedException;
 import com.cpadilla.adoptionpostservice.exception.PetNotFoundException;
 import com.cpadilla.adoptionpostservice.exception.PostNotFoundException;
 import com.cpadilla.adoptionpostservice.external.client.ImageService;
 import com.cpadilla.adoptionpostservice.external.client.LocationService;
 import com.cpadilla.adoptionpostservice.external.client.PetService;
+import com.cpadilla.adoptionpostservice.external.client.UserService;
 import com.cpadilla.adoptionpostservice.model.*;
 import com.cpadilla.adoptionpostservice.repository.AdoptionPostRepository;
 import com.cpadilla.adoptionpostservice.repository.PostImageRepository;
@@ -48,6 +48,9 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     private ImageService imageService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private AdoptionPostFilterSpecification<AdoptionPostEntity> filterSpecification;
 
 
@@ -67,15 +70,15 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .size(petResponse.getSize())
                 .sterilized(petResponse.isSterilized())
                 .dewormed(petResponse.isDewormed())
-                .ownerDetails(petResponse.getOwnerDetails())
+                .userOwnerResponse(petResponse.getUserOwnerResponse())
                 .breedDetails(petResponse.getBreedDetails())
                 .build();
 
         var locationResponse = locationService.getById(postEntity.getAddressId()).getBody();
-        var locationDetails = LocationDetails.builder()
-                .id(locationResponse.getId())
-                .city(locationResponse.getCity())
-                .build();
+//        var locationDetails = LocationDetails.builder()
+//                .id(locationResponse.getId())
+//                .city(locationResponse.getCity())
+//                .build();
 
         var images = findPostImages(postId);
 
@@ -84,7 +87,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .description(postEntity.getDescription())
                 .date(postEntity.getDate())
                 .petDetails(petDetails)
-                .locationDetails(locationDetails)
+                .locationResponse(locationResponse)
                 .images(images)
                 .build();
     }
@@ -103,11 +106,11 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         if (petId == 0)
             throw new PetNotFoundException("Not possible to create adoption post, specified pet not found with id " + adoptionPostRequest.getPetId());
 
-        var addressId = 0;
-        addressId = locationService.saveAddress(adoptionPostRequest.getLocation()).getBody();
-        if (addressId == 0)
-            throw new LocationNotCreatedException("Not possible to save location at address table");
+        var user = userService.getUserById(request.getUserId()).getBody();
 
+        var addressId = 0;
+        if (adoptionPostRequest.getLocation() == null) addressId = user.getLocation().getId();
+        else addressId = locationService.saveAddress(adoptionPostRequest.getLocation()).getBody();
 
         var postEntity = AdoptionPostEntity.builder()
                 .description(adoptionPostRequest.getDescription())

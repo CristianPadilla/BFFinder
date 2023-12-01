@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OwnerDetails {
+public class UserOwnerResponse {
 
     private long userId;
     private String name;

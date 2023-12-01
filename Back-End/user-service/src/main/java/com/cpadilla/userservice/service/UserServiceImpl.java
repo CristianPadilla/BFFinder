@@ -36,6 +36,7 @@ public class UserServiceImpl implements UserService {
                         ? imageService.getImageById(userEntity.getImageId()).getBody()
                         : null;
 
+        var location = locationService.getById(userEntity.getAddressId()).getBody();
         if (userEntity.getRole() == 'u') {
             return UserProfileResponse.builder()
                     .userId(userEntity.getUserId())
@@ -44,16 +45,22 @@ public class UserServiceImpl implements UserService {
                     .email(userEntity.getEmail())
                     .phoneNumber(userEntity.getPhoneNumber())
                     .profileImageUrl(profileImage != (null) ? profileImage.getImageUrl() : null)
+                    .role(userEntity.getRole())
+                    .location(location)
                     .build();
         } else if (userEntity.getRole() == 's') {
-            var location = locationService.getById(userEntity.getAddressId()).getBody();
+
             return ShelterUserProfileResponse.builder()
                     .userId(userEntity.getUserId())
                     .name(userEntity.getName())
+                    .description(userEntity.getDescription())
                     .email(userEntity.getEmail())
                     .phoneNumber(userEntity.getPhoneNumber())
                     .profileImageUrl(profileImage != (null) ? profileImage.getImageUrl() : null)
                     .location(location)
+                    .role(userEntity.getRole())
+                    .nit(userEntity.getNit())
+                    .commercialRegistrationNumber(userEntity.getCommercialRegistrationNumber())
                     .build();
         } else throw new UserServiceCustomException("user role is not valid", "ROLE_NOT_VALID");
 
