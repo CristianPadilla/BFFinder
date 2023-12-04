@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class PetPartialDetails {
 
     private int id;
+    private int age;
     private String name;
     private BreedDetails breedDetails;
     private char size;

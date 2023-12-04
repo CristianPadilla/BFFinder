@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -199,17 +200,16 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
         var specification =
                 filterSpecification.getSearchSpecification(filterRequest); // apply post filters
-
         var postEntities =
                 repository.findAll(specification, PageRequest.of(filterRequest.getPage(), filterRequest.getPageSize(), Sort.by("date").descending()));
-        List<AdoptionPostPartialsResponse> filteredPosts = new ArrayList<AdoptionPostPartialsResponse>();
 
-//        if (!postEntities.isEmpty()) {
+        List<AdoptionPostPartialsResponse> filteredPosts;
         filteredPosts = postEntities.stream().map(post -> {
                     var pet = petService.getById(post.getPetId()).getBody();
                     var petDetails = PetPartialDetails.builder()
                             .id(pet.getId())
                             .name(pet.getName())
+                            .age(pet.getAge())
                             .breedDetails(pet.getBreedDetails())
                             .size(pet.getSize())
                             .build();
@@ -234,8 +234,27 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .filter(post -> passesPostFilters(post, filterRequest))// post filters
                 .collect(Collectors.toList());
 
+        var sort = filterRequest.getSort();
+        if (sort != null && !sort.isEmpty()) {
+            switch (sort) {
+                case "date" -> {
+                    if (filterRequest.isDesc())
+                        filteredPosts.sort(Comparator.comparing(AdoptionPostPartialsResponse::getDate).reversed());
+                    else filteredPosts.sort(Comparator.comparing(AdoptionPostPartialsResponse::getDate));
+                }
+                case "age" -> {
+                    if (filterRequest.isDesc())
+                        filteredPosts.sort(Comparator.comparing((AdoptionPostPartialsResponse post) -> post.getPetDetails().getAge()).reversed());
+                    else filteredPosts.sort(Comparator.comparing(post -> post.getPetDetails().getAge()));
+                }
+                default ->
+                        throw new CustomException("Sorting criteria is not valid", "SORTING_NOT_VALID", HttpStatus.BAD_REQUEST.value());
+            }
+
+        } else filteredPosts.sort(Comparator.comparing(AdoptionPostPartialsResponse::getDate));
+
         return new PageImpl<>(filteredPosts, postEntities.getPageable(), filteredPosts.size());
-//        } else throw new PostNotFoundException("not available posts with specified filters");
+
 
     }
 
@@ -337,5 +356,10 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         }
 
         return true;
+    }
+
+    public Comparator<AdoptionPostPartialsResponse> applyPetSorting(FilterRequest filterRequest, AdoptionPostPartialsResponse post) {
+        return null;
+
     }
 }

@@ -24,6 +24,8 @@ public class FilterRequest {
     private int page;
     @JsonProperty("page_size")
     private int pageSize;
+    private String sort;
+    private boolean desc;
 
 
 }
