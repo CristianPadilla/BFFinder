@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PetPartialDetails {
+public class PetPartialResponse {
 
     private int id;
     private int age;

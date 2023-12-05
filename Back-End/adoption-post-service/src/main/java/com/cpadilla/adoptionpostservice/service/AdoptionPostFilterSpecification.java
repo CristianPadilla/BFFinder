@@ -1,7 +1,7 @@
 package com.cpadilla.adoptionpostservice.service;
 
 import com.cpadilla.adoptionpostservice.entity.AdoptionPostEntity;
-import com.cpadilla.adoptionpostservice.model.FilterRequest;
+import com.cpadilla.adoptionpostservice.model.AllPostsFilterRequest;
 import jakarta.persistence.criteria.Predicate;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,7 +26,7 @@ public class AdoptionPostFilterSpecification<T> {
 //        };
 //    }
 
-    public Specification<AdoptionPostEntity> getSearchSpecification(FilterRequest filterRequest) {
+    public Specification<AdoptionPostEntity> getSearchSpecification(AllPostsFilterRequest filterRequest) {
         return (root, query, criteriaBuilder) -> {
 
             List<Predicate> predicates = new ArrayList<>();
