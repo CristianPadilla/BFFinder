@@ -19,7 +19,7 @@ public interface AdoptionPostRepository extends JpaRepository<AdoptionPostEntity
 
     List<AdoptionPostEntity> findAllByUserIdAndStatusIsTrueOrderByDateDesc(int userId);
 
-    Page<AdoptionPostEntity> findAllByUserId(int userId, Pageable pageable);
+    Page<AdoptionPostEntity> findAllByUserId(int userId, Pageable pageable, Specification<AdoptionPostEntity> specification);
 
     List<AdoptionPostEntity> findAllByStatusTrue(Sort sort);
 

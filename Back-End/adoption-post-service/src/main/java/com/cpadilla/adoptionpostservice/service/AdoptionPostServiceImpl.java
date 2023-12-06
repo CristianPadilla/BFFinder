@@ -137,9 +137,17 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         var pageSize = filterRequest.getPageSize() > 0 && filterRequest.getPageSize() <= 20
                 ? filterRequest.getPageSize()
                 : 10;
+        var postFilters = PostFilters.builder()
+                .fromDate(filterRequest.getFromDate())
+                .status(filterRequest.getStatus())
+                .build();
+
+
+        var specification =
+                filterSpecification.getSearchSpecification(postFilters); // apply post filters
 
         var postEntities = repository
-                .findAllByUserId(userId, PageRequest.of(filterRequest.getPage(), pageSize));
+                .findAllByUserId(userId, PageRequest.of(filterRequest.getPage(), pageSize), specification);
 
         List<AdoptionPostPartialsResponse> filteredPosts;
         filteredPosts = postEntities.stream()
@@ -158,6 +166,13 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                             .petPartialResponse(petDetails)
                             .build();
                 })
+                .filter(post -> passesPetFilters(post.getPetPartialResponse(), PetFilters.builder()
+                        .breedId(filterRequest.getBreedId())
+                        .specieId(filterRequest.getSpecieId())
+                        .build()))
+                .filter(post -> passesPostFilters(post, PostFilters.builder()
+                        .status(filterRequest.getStatus())
+                        .build()))
                 .collect(Collectors.toList());
 
         var sorRequest = filterRequest.getSort();
@@ -221,8 +236,12 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 ? filterRequest.getPageSize()
                 : 10;
 
+        var postFilters = PostFilters.builder()
+                .cityId(filterRequest.getCityId())
+                .status("A")
+                .build();
         var specification =
-                filterSpecification.getSearchSpecification(filterRequest); // apply post filters
+                filterSpecification.getSearchSpecification(postFilters); // apply post filters
         var postEntities =
                 repository.findAll(specification, PageRequest.of(filterRequest.getPage(), pageSize));
 
@@ -253,8 +272,12 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                             .locationResponse(locationDetails)
                             .images(images)
                             .build();
-                }).filter(post -> passesPetFilters(post.getPetPartialResponse(), filterRequest))// apply pet filters
-                .filter(post -> passesPostFilters(post, filterRequest))// post filters
+                }).filter(post -> passesPetFilters(post.getPetPartialResponse(), PetFilters.builder()
+                        .breedId(filterRequest.getBreedId())
+                        .specieId(filterRequest.getSpecieId())
+                        .size(filterRequest.getSize())
+                        .build()))// apply pet filters
+                .filter(post -> passesPostFilters(post, postFilters))// post filters
                 .collect(Collectors.toList());
 
         var sort = filterRequest.getSort();
@@ -355,14 +378,14 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     }
 
 
-    public boolean passesPetFilters(PetPartialResponse petDetails, AllPostsFilterRequest filter) {
+    public boolean passesPetFilters(PetPartialResponse petDetails, PetFilters filter) {
 
         if (filter.getSize() != null && !filter.getSize().isEmpty()) {
             var sizeFilter = filter.getSize().toLowerCase();
             if (sizeFilter.equals("l") || sizeFilter.equals("s") || sizeFilter.equals("m")) {
                 if (sizeFilter.charAt(0) != petDetails.getSize()) return false;
             } else
-                throw new CustomException("Filter 'size' is not valid", "FILTER_NOT_VALID", HttpStatus.NOT_FOUND.value());
+                throw new CustomException("Filter 'size' is not valid", "FILTER_NOT_VALID", HttpStatus.BAD_REQUEST.value());
         }
 
         if (filter.getSpecieId() > 0) {
@@ -373,10 +396,10 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         return true;
     }
 
-    public boolean passesPostFilters(AdoptionPostPartialsResponse postDetails, AllPostsFilterRequest filter) {
+    public boolean passesPostFilters(AdoptionPostPartialsResponse postResponse, PostFilters filter) {
 
         if (filter.getCityId() > 0) {
-            if (postDetails.getLocationResponse().getCity().getId() != filter.getCityId()) return false;
+            if (postResponse.getLocationResponse().getCity().getId() != filter.getCityId()) return false;
         }
 
         return true;

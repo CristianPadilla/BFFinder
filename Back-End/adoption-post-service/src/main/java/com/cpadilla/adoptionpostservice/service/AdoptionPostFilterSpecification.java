@@ -1,10 +1,13 @@
 package com.cpadilla.adoptionpostservice.service;
 
 import com.cpadilla.adoptionpostservice.entity.AdoptionPostEntity;
+import com.cpadilla.adoptionpostservice.exception.CustomException;
 import com.cpadilla.adoptionpostservice.model.AllPostsFilterRequest;
+import com.cpadilla.adoptionpostservice.model.PostFilters;
 import jakarta.persistence.criteria.Predicate;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -26,19 +29,28 @@ public class AdoptionPostFilterSpecification<T> {
 //        };
 //    }
 
-    public Specification<AdoptionPostEntity> getSearchSpecification(AllPostsFilterRequest filterRequest) {
+    public Specification<AdoptionPostEntity> getSearchSpecification(PostFilters filterRequest) {
         return (root, query, criteriaBuilder) -> {
 
             List<Predicate> predicates = new ArrayList<>();
             Object formatedValue = "";
 
-            predicates.add(criteriaBuilder.equal(root.get("status"), true)); // filter active ones
+
+                log.info("KKKKKKKKKKKKKKKKKK 1{}", filterRequest.getStatus());
 
             if (filterRequest.getFromDate()!= null && !filterRequest.getFromDate().isEmpty()) {// date filter
                 log.info("applying filter of date for posts with date before {}", filterRequest.getFromDate());
                 var dateFilter = LocalDate.parse(filterRequest.getFromDate());
                 var filter = dateFilter.atStartOfDay(ZoneId.systemDefault()).minusHours(5).toInstant(); // from that day start
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("date"), Instant.parse(filter.toString())));
+            }
+
+            if (filterRequest.getStatus() != null && !filterRequest.getStatus().isEmpty()) {
+                log.info("KKKKKKKKKKKKKKKKKK {}", filterRequest.getStatus());
+                if (filterRequest.getStatus().toUpperCase().equals("A"))  predicates.add(criteriaBuilder.equal(root.get("status"), true)); // filter active ones;
+                else if (filterRequest.getStatus().toUpperCase().equals("I"))  predicates.add(criteriaBuilder.equal(root.get("status"), false)); // filter inactive ones;
+                else
+                    throw new CustomException("Filter 'status' is not valid", "FILTER_NOT_VALID", HttpStatus.BAD_REQUEST.value());
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

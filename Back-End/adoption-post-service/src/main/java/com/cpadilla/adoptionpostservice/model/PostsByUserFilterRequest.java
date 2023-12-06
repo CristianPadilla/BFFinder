@@ -18,7 +18,7 @@ public class PostsByUserFilterRequest {
     private int specieId;
     @JsonProperty("breed_id")
     private int breedId;
-    private char status;
+    private String status;
     private int page;
     @JsonProperty("page_size")
     private int pageSize;
