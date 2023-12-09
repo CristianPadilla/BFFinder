@@ -2,6 +2,8 @@ package com.cpadilla.petservice.repository;
 
 
 import com.cpadilla.petservice.entity.PetEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +18,6 @@ public interface PetRepository extends JpaRepository<PetEntity, Integer>, JpaSpe
 
     List<PetEntity> findAllByOwnerId(int ownerId);
 
-    List<PetEntity> findAll(Specification<PetEntity> specification);
+    Page<PetEntity> findAll(Specification<PetEntity> specification, Pageable pageable);
 
 }

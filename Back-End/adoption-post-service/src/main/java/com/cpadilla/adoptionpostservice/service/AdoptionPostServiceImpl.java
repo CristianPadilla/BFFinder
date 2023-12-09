@@ -204,7 +204,6 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 repository.findAll(specification, PageRequest.of(filterRequest.getPage(), filterRequest.getPageSize(), Sort.by("date").descending()));
         List<AdoptionPostPartialsResponse> filteredPosts = new ArrayList<AdoptionPostPartialsResponse>();
 
-//        if (!postEntities.isEmpty()) {
         filteredPosts = postEntities.stream().map(post -> {
                     var pet = petService.getById(post.getPetId()).getBody();
                     var petDetails = PetPartialDetails.builder()
@@ -235,7 +234,6 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .collect(Collectors.toList());
 
         return new PageImpl<>(filteredPosts, postEntities.getPageable(), filteredPosts.size());
-//        } else throw new PostNotFoundException("not available posts with specified filters");
 
     }
 
@@ -320,7 +318,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
             if (sizeFilter.equals("l") || sizeFilter.equals("s") || sizeFilter.equals("m")) {
                 if (sizeFilter.charAt(0) != petDetails.getSize()) return false;
             } else
-                throw new CustomException("Filter 'size' is not valid", "FILTER_NOT_VALID", HttpStatus.NOT_FOUND.value());
+                throw new CustomException("Filter 'size' is not valid", "FILTER_NOT_VALID", HttpStatus.BAD_REQUEST.value());
         }
 
         if (filter.getSpecieId() > 0) {
