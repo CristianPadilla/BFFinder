@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LocationDetails {
+public class LocationPartialResponse {
 
     private int id;
     private CityResponse city;

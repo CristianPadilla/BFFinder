@@ -10,20 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FilterRequest {
+public class PetFilters {
 
-    @JsonProperty("from_date")
-    private String fromDate;
-    private String size;
-    @JsonProperty("specie_id")
     private int specieId;
-    @JsonProperty("breed_id")
     private int breedId;
-    @JsonProperty("city_id")
-    private int cityId;
-    private int page;
-    @JsonProperty("page_size")
-    private int pageSize;
-
+    private String size;
 
 }

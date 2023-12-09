@@ -9,9 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PetPartialDetails {
+public class PetPartialResponse {
 
     private int id;
+    private int age;
     private String name;
     private BreedDetails breedDetails;
     private char size;
