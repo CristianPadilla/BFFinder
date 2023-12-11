@@ -16,11 +16,11 @@ public interface AdoptionPostService {
 
     void cancelPostImage(int postId, int imageId);
 
-    Page<AdoptionPostPartialsResponse> getPostsByUserIdFilter(int userId, PostsByUserFilterRequest filterRequest);
+    Page<AdoptionPostPartialsResponse> getPostsByUserIdFilter(int userId, PostsRequest filterRequest);
 
     List<AdoptionPostPartialsResponse> getAllSorted(String sortingMethod, boolean desc);
 
-    Page<AdoptionPostPartialsResponse> getAllFilter(AllPostsFilterRequest filterRequest);
+    Page<AdoptionPostPartialsResponse> getAllFilter(PostsRequest filterRequest);
 
     int updatePost(AdoptionPostRequest request);
 

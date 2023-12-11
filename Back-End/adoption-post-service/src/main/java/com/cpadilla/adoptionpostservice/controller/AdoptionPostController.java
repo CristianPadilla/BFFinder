@@ -27,8 +27,8 @@ public class AdoptionPostController {
         return new ResponseEntity<>(service.getAdoptionPostById(postId), HttpStatus.OK);
     }
 
-    @GetMapping("/user/{id}/filter")
-    public ResponseEntity<Page<AdoptionPostPartialsResponse>> getAdoptionPostsByUserIdFilter(@PathVariable("id") int userId, @RequestBody PostsByUserFilterRequest filterRequest) {
+    @GetMapping("/user/{userId}/filter")
+    public ResponseEntity<Page<AdoptionPostPartialsResponse>> getAdoptionPostsByUserIdFilter(@PathVariable("userId") int userId, @RequestBody PostsRequest filterRequest) {
         log.info("Getting filtered post by user with id {} from CONTROLLER layer", userId);
         return new ResponseEntity<>(service.getPostsByUserIdFilter(userId, filterRequest), HttpStatus.OK);
     }
@@ -40,7 +40,7 @@ public class AdoptionPostController {
     }
 
     @GetMapping("/all/filter")
-    public ResponseEntity<Page<AdoptionPostPartialsResponse>> getAllAdoptionPostsFiltered(@RequestBody AllPostsFilterRequest filterRequest) {
+    public ResponseEntity<Page<AdoptionPostPartialsResponse>> getAllAdoptionPostsFiltered(@RequestBody PostsRequest filterRequest) {
         log.info("Getting posts filtered from CONTROLLER layer with filters: {}", filterRequest);
         return new ResponseEntity<>(service.getAllFilter(filterRequest), HttpStatus.OK);
     }

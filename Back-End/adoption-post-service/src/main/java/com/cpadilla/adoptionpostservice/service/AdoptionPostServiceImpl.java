@@ -132,22 +132,23 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     }
 
     @Override
-    public Page<AdoptionPostPartialsResponse> getPostsByUserIdFilter(int userId, PostsByUserFilterRequest filterRequest) {
+    public Page<AdoptionPostPartialsResponse> getPostsByUserIdFilter(int userId, PostsRequest request) {
 
-        var pageSize = filterRequest.getPageSize() > 0 && filterRequest.getPageSize() <= 20
-                ? filterRequest.getPageSize()
+        var pageSize = request.getPageSize() > 0 && request.getPageSize() <= 20
+                ? request.getPageSize()
                 : 10;
-        var postFilters = PostFilters.builder()
-                .fromDate(filterRequest.getFromDate())
-                .status(filterRequest.getStatus())
-                .build();
 
+        var postFilters = PostFilters.builder()
+                .fromDate(request.getFilters().getFromDate())
+                .status(request.getFilters().getStatus())
+                .userId(userId)
+                .build();
 
         var specification =
                 filterSpecification.getSearchSpecification(postFilters); // apply post filters
 
         var postEntities = repository
-                .findAllByUserId(userId, PageRequest.of(filterRequest.getPage(), pageSize), specification);
+                .findAll(specification, PageRequest.of(request.getPage(), pageSize));
 
         List<AdoptionPostPartialsResponse> filteredPosts;
         filteredPosts = postEntities.stream()
@@ -157,6 +158,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                             .id(pet.getId())
                             .name(pet.getName())
                             .age(pet.getAge())
+                            .size(pet.getSize())
                             .breedDetails(pet.getBreedDetails())
                             .build();
                     return AdoptionPostPartialsResponse.builder()
@@ -167,30 +169,36 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                             .build();
                 })
                 .filter(post -> passesPetFilters(post.getPetPartialResponse(), PetFilters.builder()
-                        .breedId(filterRequest.getBreedId())
-                        .specieId(filterRequest.getSpecieId())
+                        .breedId(request.getFilters().getBreedId())
+                        .specieId(request.getFilters().getSpecieId())
                         .build()))
                 .filter(post -> passesPostFilters(post, PostFilters.builder()
-                        .status(filterRequest.getStatus())
+                        .status(request.getFilters().getStatus())
                         .build()))
                 .collect(Collectors.toList());
 
-        var sorRequest = filterRequest.getSort();
-        Comparator<AdoptionPostPartialsResponse> comparator;
-
+        var sorRequest = request.getSorting().getSort();
+        var comparator = Comparator.comparing(AdoptionPostPartialsResponse::getDate);
+        var sortingDetails = Sort.by(Sort.Order.by("date"));
         if (sorRequest != null && !sorRequest.isEmpty()) {
-            comparator = switch (filterRequest.getSort()) {
+
+            comparator = switch (sorRequest) {
                 case "date" -> Comparator.comparing(AdoptionPostPartialsResponse::getDate);
                 case "name" -> Comparator.comparing(post -> post.getPetPartialResponse().getName());
                 case "age" -> Comparator.comparing(post -> post.getPetPartialResponse().getAge());
                 default ->
                         throw new CustomException("Sorting criteria is not valid", "SORTING_NOT_VALID", HttpStatus.BAD_REQUEST.value());
             };
-            comparator = filterRequest.isDesc() ? comparator.reversed() : comparator;
-        } else comparator = Comparator.comparing(AdoptionPostPartialsResponse::getDate);
-        filteredPosts.sort(comparator);
+            if (request.getSorting().isDesc()) {
+                comparator = comparator.reversed();
+                sortingDetails = Sort.by(Sort.Order.desc(sorRequest));
+            } else sortingDetails = Sort.by(Sort.Order.by(sorRequest));
 
-        return new PageImpl<>(filteredPosts, PageRequest.of(filterRequest.getPage(), pageSize), filteredPosts.size());
+            filteredPosts.sort(comparator);
+
+        }
+
+        return new PageImpl<>(filteredPosts, PageRequest.of(request.getPage(), pageSize, sortingDetails), filteredPosts.size());
     }
 
     @Override
@@ -231,19 +239,19 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     }
 
     @Override
-    public Page<AdoptionPostPartialsResponse> getAllFilter(AllPostsFilterRequest filterRequest) {
-        var pageSize = filterRequest.getPageSize() > 0 && filterRequest.getPageSize() <= 20
-                ? filterRequest.getPageSize()
+    public Page<AdoptionPostPartialsResponse> getAllFilter(PostsRequest request) {
+        var pageSize = request.getPageSize() > 0 && request.getPageSize() <= 20
+                ? request.getPageSize()
                 : 10;
 
         var postFilters = PostFilters.builder()
-                .cityId(filterRequest.getCityId())
+                .cityId(request.getFilters().getCityId())
                 .status("A")
                 .build();
         var specification =
                 filterSpecification.getSearchSpecification(postFilters); // apply post filters
         var postEntities =
-                repository.findAll(specification, PageRequest.of(filterRequest.getPage(), pageSize));
+                repository.findAll(specification, PageRequest.of(request.getPage(), pageSize));
 
         List<AdoptionPostPartialsResponse> filteredPosts;
 
@@ -274,30 +282,26 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                             .images(images)
                             .build();
                 }).filter(post -> passesPetFilters(post.getPetPartialResponse(), PetFilters.builder()
-                        .breedId(filterRequest.getBreedId())
-                        .specieId(filterRequest.getSpecieId())
-                        .size(filterRequest.getSize())
+                        .breedId(request.getFilters().getBreedId())
+                        .specieId(request.getFilters().getSpecieId())
+                        .size(request.getFilters().getSize())
                         .build()))// apply pet filters
                 .filter(post -> passesPostFilters(post, postFilters))// post filters
                 .collect(Collectors.toList());
 
-        var sort = filterRequest.getSort();
+        var sort = request.getSorting().getSort();
+
         if (sort != null && !sort.isEmpty()) {
-            switch (sort) {
-                case "date" -> {
-                    if (filterRequest.isDesc())
-                        filteredPosts.sort(Comparator.comparing(AdoptionPostPartialsResponse::getDate).reversed());
-                    else filteredPosts.sort(Comparator.comparing(AdoptionPostPartialsResponse::getDate));
-                }
-                case "age" -> {
-                    if (filterRequest.isDesc())
-                        filteredPosts.sort(Comparator.comparing((AdoptionPostPartialsResponse post) -> post.getPetPartialResponse().getAge()).reversed());
-                    else filteredPosts.sort(Comparator.comparing(post -> post.getPetPartialResponse().getAge()));
-                }
+            var comparator = switch (sort) {
+                case "date" -> Comparator.comparing(AdoptionPostPartialsResponse::getDate);
+                case "age" ->
+                        Comparator.comparing((AdoptionPostPartialsResponse post) -> post.getPetPartialResponse().getAge());
+
                 default ->
                         throw new CustomException("Sorting criteria is not valid", "SORTING_NOT_VALID", HttpStatus.BAD_REQUEST.value());
-            }
-
+            };
+            if (request.getSorting().isDesc()) comparator = comparator.reversed();
+            filteredPosts.sort(comparator);
         } else filteredPosts.sort(Comparator.comparing(AdoptionPostPartialsResponse::getDate));
 
         return new PageImpl<>(filteredPosts, postEntities.getPageable(), filteredPosts.size());
@@ -398,15 +402,10 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
     public boolean passesPostFilters(AdoptionPostPartialsResponse postResponse, PostFilters filter) {
 
-        if (filter.getCityId() > 0) {
-            if (postResponse.getLocationResponse().getCity().getId() != filter.getCityId()) return false;
-        }
+        if (filter.getCityId() > 0)
+            return postResponse.getLocationResponse().getCity().getId() == filter.getCityId();
 
         return true;
     }
 
-//    public Comparator<AdoptionPostPartialsResponse> applyPetSorting(FilterRequest filterRequest, AdoptionPostPartialsResponse post) {
-//        return null;
-//
-//    }
 }

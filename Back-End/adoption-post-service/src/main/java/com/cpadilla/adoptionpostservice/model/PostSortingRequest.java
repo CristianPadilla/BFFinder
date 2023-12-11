@@ -1,6 +1,5 @@
 package com.cpadilla.adoptionpostservice.model;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,10 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PostFilters {
+public class PostSortingRequest {
 
-    private String status;
-    private String fromDate;
-    private int cityId;
-    private int userId;
+    private String sort;
+    private boolean desc;
 }
