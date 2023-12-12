@@ -3,23 +3,27 @@ package com.cpadilla.adoptionpostservice.service;
 import com.cpadilla.adoptionpostservice.entity.AdoptionPostEntity;
 import com.cpadilla.adoptionpostservice.entity.PostImageEntity;
 import com.cpadilla.adoptionpostservice.exception.CustomException;
-import com.cpadilla.adoptionpostservice.exception.LocationNotCreatedException;
 import com.cpadilla.adoptionpostservice.exception.PetNotFoundException;
 import com.cpadilla.adoptionpostservice.exception.PostNotFoundException;
 import com.cpadilla.adoptionpostservice.external.client.ImageService;
 import com.cpadilla.adoptionpostservice.external.client.LocationService;
 import com.cpadilla.adoptionpostservice.external.client.PetService;
+import com.cpadilla.adoptionpostservice.external.client.UserService;
 import com.cpadilla.adoptionpostservice.model.*;
 import com.cpadilla.adoptionpostservice.repository.AdoptionPostRepository;
 import com.cpadilla.adoptionpostservice.repository.PostImageRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -44,6 +48,9 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     private ImageService imageService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private AdoptionPostFilterSpecification<AdoptionPostEntity> filterSpecification;
 
 
@@ -53,7 +60,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .orElseThrow(() -> new CustomException("Adoption post not found with id: " + postId, "ADOPTION_POST_NOT_FOUND", HttpStatus.NOT_FOUND.value()));
 
         var petResponse = petService.getById(postEntity.getPetId()).getBody();
-        var petDetails = PetDetails.builder()
+        var petDetails = PetResponse.builder()
                 .id(petResponse.getId())
                 .name(petResponse.getName())
                 .weight(petResponse.getWeight())
@@ -63,15 +70,15 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .size(petResponse.getSize())
                 .sterilized(petResponse.isSterilized())
                 .dewormed(petResponse.isDewormed())
-                .ownerDetails(petResponse.getOwnerDetails())
+                .userOwnerResponse(petResponse.getUserOwnerResponse())
                 .breedDetails(petResponse.getBreedDetails())
                 .build();
 
         var locationResponse = locationService.getById(postEntity.getAddressId()).getBody();
-        var locationDetails = LocationDetails.builder()
-                .id(locationResponse.getId())
-                .city(locationResponse.getCity())
-                .build();
+//        var locationDetails = LocationDetails.builder()
+//                .id(locationResponse.getId())
+//                .city(locationResponse.getCity())
+//                .build();
 
         var images = findPostImages(postId);
 
@@ -79,8 +86,8 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .id(postEntity.getId())
                 .description(postEntity.getDescription())
                 .date(postEntity.getDate())
-                .petDetails(petDetails)
-                .locationDetails(locationDetails)
+                .petResponse(petDetails)
+                .locationResponse(locationResponse)
                 .images(images)
                 .build();
     }
@@ -99,11 +106,11 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         if (petId == 0)
             throw new PetNotFoundException("Not possible to create adoption post, specified pet not found with id " + adoptionPostRequest.getPetId());
 
-        var addressId = 0;
-        addressId = locationService.saveAddress(adoptionPostRequest.getLocation()).getBody();
-        if (addressId == 0)
-            throw new LocationNotCreatedException("Not possible to save location at address table");
+        var user = userService.getUserById(request.getUserId()).getBody();
 
+        var addressId = 0;
+        if (adoptionPostRequest.getLocation() == null) addressId = user.getLocation().getId();
+        else addressId = locationService.saveAddress(adoptionPostRequest.getLocation()).getBody();
 
         var postEntity = AdoptionPostEntity.builder()
                 .description(adoptionPostRequest.getDescription())
@@ -125,29 +132,73 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     }
 
     @Override
-    public List<AdoptionPostPartialsResponse> getAllPostsByUserId(int userId) {
+    public Page<AdoptionPostPartialsResponse> getPostsByUserIdFilter(int userId, PostsRequest request) {
 
-        var postEntities = repository.findAllByUserIdAndStatusIsTrueOrderByDateDesc(userId);
+        var pageSize = request.getPageSize() > 0 && request.getPageSize() <= 20
+                ? request.getPageSize()
+                : 10;
 
+        var postFilters = PostFilters.builder()
+                .fromDate(request.getFilters().getFromDate())
+                .status(request.getFilters().getStatus())
+                .userId(userId)
+                .build();
 
-        if (postEntities.size() > 0) {
-            return postEntities.stream()
-                    .map(post -> {
-                        log.info("post  ========= {}", post.toString());
-                        var pet = petService.getById(post.getPetId()).getBody();
-                        var petDetails = PetPartialDetails.builder()
-                                .id(pet.getId())
-                                .name(pet.getName())
-                                .breedDetails(pet.getBreedDetails())
-                                .build();
-                        return AdoptionPostPartialsResponse.builder()
-                                .id(post.getId())
-                                .petDetails(petDetails)
-                                .build();
-                    })
-                    .collect(Collectors.toList());
-        } else throw new PostNotFoundException("not available posts for user with id " + userId);
+        var specification =
+                filterSpecification.getSearchSpecification(postFilters); // apply post filters
 
+        var postEntities = repository
+                .findAll(specification, PageRequest.of(request.getPage(), pageSize));
+
+        List<AdoptionPostPartialsResponse> filteredPosts;
+        filteredPosts = postEntities.stream()
+                .map(post -> {
+                    var pet = petService.getById(post.getPetId()).getBody();
+                    var petDetails = PetPartialResponse.builder()
+                            .id(pet.getId())
+                            .name(pet.getName())
+                            .age(pet.getAge())
+                            .size(pet.getSize())
+                            .breedDetails(pet.getBreedDetails())
+                            .build();
+                    return AdoptionPostPartialsResponse.builder()
+                            .id(post.getId())
+                            .date(post.getDate())
+                            .status(post.isStatus())
+                            .petPartialResponse(petDetails)
+                            .build();
+                })
+                .filter(post -> passesPetFilters(post.getPetPartialResponse(), PetFilters.builder()
+                        .breedId(request.getFilters().getBreedId())
+                        .specieId(request.getFilters().getSpecieId())
+                        .build()))
+                .filter(post -> passesPostFilters(post, PostFilters.builder()
+                        .status(request.getFilters().getStatus())
+                        .build()))
+                .collect(Collectors.toList());
+
+        var sorRequest = request.getSorting().getSort();
+        var comparator = Comparator.comparing(AdoptionPostPartialsResponse::getDate);
+        var sortingDetails = Sort.by(Sort.Order.by("date"));
+        if (sorRequest != null && !sorRequest.isEmpty()) {
+
+            comparator = switch (sorRequest) {
+                case "date" -> Comparator.comparing(AdoptionPostPartialsResponse::getDate);
+                case "name" -> Comparator.comparing(post -> post.getPetPartialResponse().getName());
+                case "age" -> Comparator.comparing(post -> post.getPetPartialResponse().getAge());
+                default ->
+                        throw new CustomException("Sorting criteria is not valid", "SORTING_NOT_VALID", HttpStatus.BAD_REQUEST.value());
+            };
+            if (request.getSorting().isDesc()) {
+                comparator = comparator.reversed();
+                sortingDetails = Sort.by(Sort.Order.desc(sorRequest));
+            } else sortingDetails = Sort.by(Sort.Order.by(sorRequest));
+
+            filteredPosts.sort(comparator);
+
+        }
+
+        return new PageImpl<>(filteredPosts, PageRequest.of(request.getPage(), pageSize, sortingDetails), filteredPosts.size());
     }
 
     @Override
@@ -160,14 +211,14 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
             return postEntities.stream()
                     .map(post -> {
                         var pet = petService.getById(post.getPetId()).getBody();
-                        var petDetails = PetPartialDetails.builder()
+                        var petDetails = PetPartialResponse.builder()
                                 .id(pet.getId())
                                 .name(pet.getName())
                                 .breedDetails(pet.getBreedDetails())
                                 .build();
 
                         var locationResponse = locationService.getById(post.getAddressId()).getBody();
-                        var locationDetails = LocationDetails.builder()
+                        var locationDetails = LocationPartialResponse.builder()
                                 .id(locationResponse.getId())
                                 .city(locationResponse.getCity())
                                 .build();
@@ -176,8 +227,8 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
                         return AdoptionPostPartialsResponse.builder()
                                 .id(post.getId())
-                                .petDetails(petDetails)
-                                .locationDetails(locationDetails)
+                                .petPartialResponse(petDetails)
+                                .locationResponse(locationDetails)
                                 .date(post.getDate())
                                 .images(images)
                                 .build();
@@ -188,44 +239,72 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     }
 
     @Override
-    public List<AdoptionPostPartialsResponse> getAllFilter(FilterRequest filterRequest) {
+    public Page<AdoptionPostPartialsResponse> getAllFilter(PostsRequest request) {
+        var pageSize = request.getPageSize() > 0 && request.getPageSize() <= 20
+                ? request.getPageSize()
+                : 10;
 
+        var postFilters = PostFilters.builder()
+                .cityId(request.getFilters().getCityId())
+                .status("A")
+                .build();
         var specification =
-                filterSpecification.getSearchSpecification(filterRequest); // apply post filters
-
+                filterSpecification.getSearchSpecification(postFilters); // apply post filters
         var postEntities =
-                repository.findAll(specification, Sort.by("date").descending());
+                repository.findAll(specification, PageRequest.of(request.getPage(), pageSize));
 
-        if (postEntities.size() > 0) {
-            return postEntities.stream().map(post -> {
-                        var pet = petService.getById(post.getPetId()).getBody();
-                        var petDetails = PetPartialDetails.builder()
-                                .id(pet.getId())
-                                .name(pet.getName())
-                                .breedDetails(pet.getBreedDetails())
-                                .size(pet.getSize())
-                                .build();
+        List<AdoptionPostPartialsResponse> filteredPosts;
 
-                        var locationResponse = locationService.getById(post.getAddressId()).getBody();
-                        var locationDetails = LocationDetails.builder()
-                                .id(locationResponse.getId())
-                                .city(locationResponse.getCity())
-                                .build();
+        filteredPosts = postEntities.stream().map(post -> {
+                    var pet = petService.getById(post.getPetId()).getBody();
+                    var petDetails = PetPartialResponse.builder()
+                            .id(pet.getId())
+                            .name(pet.getName())
+                            .age(pet.getAge())
+                            .breedDetails(pet.getBreedDetails())
+                            .size(pet.getSize())
+                            .build();
 
-                        var images = findPostImages(post.getId());
+                    var locationResponse = locationService.getById(post.getAddressId()).getBody();
+                    var locationDetails = LocationPartialResponse.builder()
+                            .id(locationResponse.getId())
+                            .city(locationResponse.getCity())
+                            .build();
 
-                        return AdoptionPostPartialsResponse.builder()
-                                .id(post.getId())
-                                .status(post.isStatus())
-                                .date(post.getDate())
-                                .petDetails(petDetails)
-                                .locationDetails(locationDetails)
-                                .images(images)
-                                .build();
-                    }).filter(post -> passesPetFilters(post.getPetDetails(), filterRequest))// apply pet filters
-                    .filter(post -> passesPostFilters(post, filterRequest))// post filters
-                    .collect(Collectors.toList());
-        } else throw new PostNotFoundException("not available posts with specified filters");
+                    var images = findPostImages(post.getId());
+
+                    return AdoptionPostPartialsResponse.builder()
+                            .id(post.getId())
+                            .status(post.isStatus())
+                            .date(post.getDate())
+                            .petPartialResponse(petDetails)
+                            .locationResponse(locationDetails)
+                            .images(images)
+                            .build();
+                }).filter(post -> passesPetFilters(post.getPetPartialResponse(), PetFilters.builder()
+                        .breedId(request.getFilters().getBreedId())
+                        .specieId(request.getFilters().getSpecieId())
+                        .size(request.getFilters().getSize())
+                        .build()))// apply pet filters
+                .filter(post -> passesPostFilters(post, postFilters))// post filters
+                .collect(Collectors.toList());
+
+        var sort = request.getSorting().getSort();
+
+        if (sort != null && !sort.isEmpty()) {
+            var comparator = switch (sort) {
+                case "date" -> Comparator.comparing(AdoptionPostPartialsResponse::getDate);
+                case "age" ->
+                        Comparator.comparing((AdoptionPostPartialsResponse post) -> post.getPetPartialResponse().getAge());
+
+                default ->
+                        throw new CustomException("Sorting criteria is not valid", "SORTING_NOT_VALID", HttpStatus.BAD_REQUEST.value());
+            };
+            if (request.getSorting().isDesc()) comparator = comparator.reversed();
+            filteredPosts.sort(comparator);
+        } else filteredPosts.sort(Comparator.comparing(AdoptionPostPartialsResponse::getDate));
+
+        return new PageImpl<>(filteredPosts, postEntities.getPageable(), filteredPosts.size());
 
     }
 
@@ -303,29 +382,30 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     }
 
 
-    public boolean passesPetFilters(PetPartialDetails petDetails, FilterRequest filter) {
+    public boolean passesPetFilters(PetPartialResponse petDetails, PetFilters filter) {
 
-        if (filter.getSize() != null) {
+        if (filter.getSize() != null && !filter.getSize().isEmpty()) {
             var sizeFilter = filter.getSize().toLowerCase();
             if (sizeFilter.equals("l") || sizeFilter.equals("s") || sizeFilter.equals("m")) {
                 if (sizeFilter.charAt(0) != petDetails.getSize()) return false;
             } else
-                throw new CustomException("Filter 'size' is not valid", "FILTER_NOT_VALID", HttpStatus.NOT_FOUND.value());
+                throw new CustomException("Filter 'size' is not valid", "FILTER_NOT_VALID", HttpStatus.BAD_REQUEST.value());
         }
 
         if (filter.getSpecieId() > 0) {
             if (petDetails.getBreedDetails().getSpecie().getId() != filter.getSpecieId()) return false;
-            if (filter.getBreedId() != 0 && petDetails.getBreedDetails().getId() != filter.getBreedId()) return false;
+            if (filter.getBreedId() != 0 && petDetails.getBreedDetails().getId() != filter.getBreedId())
+                return false;
         }
         return true;
     }
 
-    public boolean passesPostFilters(AdoptionPostPartialsResponse postDetails, FilterRequest filter) {
+    public boolean passesPostFilters(AdoptionPostPartialsResponse postResponse, PostFilters filter) {
 
-        if (filter.getCityId() > 0) {
-            if (postDetails.getLocationDetails().getCity().getId() != filter.getCityId()) return false;
-        }
+        if (filter.getCityId() > 0)
+            return postResponse.getLocationResponse().getCity().getId() == filter.getCityId();
 
         return true;
     }
+
 }

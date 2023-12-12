@@ -6,16 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class FilterRequest {
+public class LocationPartialResponse {
 
-    private String fromDate;
-    private String size;
-    private int specieId;
-    private int breedId;
-    private int cityId;
-
+    private int id;
+    private CityResponse city;
 
 }

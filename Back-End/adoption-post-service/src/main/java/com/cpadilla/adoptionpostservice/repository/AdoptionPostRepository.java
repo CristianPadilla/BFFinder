@@ -1,6 +1,8 @@
 package com.cpadilla.adoptionpostservice.repository;
 
 import com.cpadilla.adoptionpostservice.entity.AdoptionPostEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,11 +16,16 @@ import java.util.Optional;
 public interface AdoptionPostRepository extends JpaRepository<AdoptionPostEntity, Integer>, JpaSpecificationExecutor<AdoptionPostEntity> {
 
     List<AdoptionPostEntity> findAllByPetId(int petId);
+
     List<AdoptionPostEntity> findAllByUserIdAndStatusIsTrueOrderByDateDesc(int userId);
+
+
     List<AdoptionPostEntity> findAllByStatusTrue(Sort sort);
-    List<AdoptionPostEntity> findAll(Specification<AdoptionPostEntity> specification, Sort sort);
+
+    Page<AdoptionPostEntity> findAll(Specification<AdoptionPostEntity> specification, Pageable pageable);
 
     Optional<AdoptionPostEntity> findByPetId(int petId);
+
     Optional<AdoptionPostEntity> findByPetIdAndStatusIsTrue(int petId);
 
 }

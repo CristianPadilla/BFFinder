@@ -10,6 +10,10 @@ import com.cpadilla.petservice.model.*;
 import com.cpadilla.petservice.repository.PetRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -80,17 +84,19 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public List<PetResponse> getAllFilter(FilterRequest filters) { // method not completed
+    public Page<PetResponse> getByUserFilter(int userId, FilterRequest filters) {
         log.info("Getting pets by filters {} at SERVICE layer", filters);
 
         var specification =
                 filterSpecification.getSearchSpecification(filters);
 
-        var petEntities = repository.findAll(specification);
+        var sort = validateSorting(filters.getSort());
+        var pagesize = filters.getPageSize() > 0 && filters.getPageSize() <= 20 ? filters.getPageSize() : 10;
 
-        return petEntities.stream()
+        var petEntities = repository.findAll(specification, PageRequest.of(filters.getPage(), pagesize, Sort.by(sort).descending()));
+
+        var filteredPets = petEntities.stream()
                 .map(petEntity -> {
-
                     var owner = ownerService.getUserById(petEntity.getOwnerId()).getBody();
                     var ownerDetails = OwnerDetails.builder()
                             .userId(owner.getUserId())
@@ -121,7 +127,7 @@ public class PetServiceImpl implements PetService {
                             .build();
                 }).collect(Collectors.toList());
 
-
+        return new PageImpl<>(filteredPets, petEntities.getPageable(), filteredPets.size());
     }
 
     @Override
@@ -188,5 +194,34 @@ public class PetServiceImpl implements PetService {
 //                                .breedDetails(pe)// still not implemented
                                         .build()
                 ).collect(Collectors.toList());
+    }
+
+    public String validateSorting(String sortRequest) {
+        var sort = "name";
+        if (sortRequest != null && !sortRequest.isEmpty()) {
+            sort = switch (sortRequest) {
+                case "name", "age" -> sortRequest;
+                default ->
+                        throw new CustomException("Sorting criteria is not valid", "SORTING_NOT_VALID", HttpStatus.BAD_REQUEST.value());
+            };
+        }
+        return sort;
+    }
+
+    public boolean petPassesFilters(PetResponse petResponse, FilterRequest filter) {
+
+        if (filter.getSize() != null && !filter.getSize().isEmpty()) {
+            var sizeFilter = filter.getSize().toLowerCase();
+            if (sizeFilter.equals("l") || sizeFilter.equals("s") || sizeFilter.equals("m")) {
+                if (sizeFilter.charAt(0) != petResponse.getSize()) return false;
+            } else
+                throw new CustomException("Filter 'size' is not valid", "FILTER_NOT_VALID", HttpStatus.NOT_FOUND.value());
+        }
+
+        if (filter.getSpecieId() > 0) {
+            if (petResponse.getBreedDetails().getSpecie().getId() != filter.getSpecieId()) return false;
+            if (filter.getBreedId() != 0 && petResponse.getBreedDetails().getId() != filter.getBreedId()) return false;
+        }
+        return true;
     }
 }

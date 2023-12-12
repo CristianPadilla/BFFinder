@@ -10,13 +10,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LocationRequest {
+public class PostFiltersRequest {
 
-    private int id;
-    private String address;
-    @JsonProperty("more_info")
-    private String moreInfo;
-    private String neighborhood;
+    @JsonProperty("from_date")
+    private String fromDate;
+    @JsonProperty("specie_id")
+    private int specieId;
+    @JsonProperty("breed_id")
+    private int breedId;
     @JsonProperty("city_id")
     private int cityId;
+    private String size;
+    private String status;
 }

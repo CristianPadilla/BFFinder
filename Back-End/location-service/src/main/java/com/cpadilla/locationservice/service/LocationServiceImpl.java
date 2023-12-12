@@ -2,6 +2,7 @@ package com.cpadilla.locationservice.service;
 
 import com.cpadilla.locationservice.entity.AddressEntity;
 import com.cpadilla.locationservice.exception.CustomException;
+import com.cpadilla.locationservice.external.client.ColombiaService;
 import com.cpadilla.locationservice.model.LocationRequest;
 import com.cpadilla.locationservice.model.LocationResponse;
 import com.cpadilla.locationservice.model.CityResponse;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -21,6 +23,9 @@ public class LocationServiceImpl implements LocationService {
     @Autowired
     private AddressRepository repository;
 
+    @Autowired
+    private ColombiaService colombiaService;
+
 
     @Override
     public LocationResponse getAddressById(int id) {
@@ -29,15 +34,17 @@ public class LocationServiceImpl implements LocationService {
         var addressEntity = repository.findById(id)
                 .orElseThrow(() -> new CustomException("address not found for id: " + id, "ADDRESS_NOT_FOUND", HttpStatus.NOT_FOUND.value()));
 
-        var department = DepartmentResponse.builder()
-                .name(addressEntity.getCity().getDepartment().getName())
-                .build();
+//        var department = DepartmentResponse.builder()
+//                .name(addressEntity.getCity().getDepartment().getName())
+//                .build();
+//
+//        var city = CityResponse.builder()
+//                .id(addressEntity.getCityId())
+//                .name(addressEntity.getCity().getName())
+//                .department(department)
+//                .build();
+        var city = colombiaService.getCityById(addressEntity.getCityId()).getBody();
 
-        var city = CityResponse.builder()
-                .id(addressEntity.getCityId())
-                .name(addressEntity.getCity().getName())
-                .department(department)
-                .build();
 
         return LocationResponse.builder()
                 .id(addressEntity.getId())
@@ -76,5 +83,17 @@ public class LocationServiceImpl implements LocationService {
             currentAddress.setNeighborhood(locationRequest.getNeighborhood());
 
         return repository.save(currentAddress).getId();
+    }
+
+    @Override
+    public List<DepartmentResponse> getDepartments() {
+        var departments = colombiaService.getDepartments();
+        return departments.getBody() == null ? null : departments.getBody();
+    }
+
+    @Override
+    public List<CityResponse> getCitiesByDepartment(int departmentId) {
+        var cities = colombiaService.getCitiesByDepartment(departmentId);
+        return cities.getBody() == null ? null : cities.getBody();
     }
 }

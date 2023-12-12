@@ -1,6 +1,5 @@
-package com.cpadilla.locationservice.model;
+package com.cpadilla.adoptionpostservice.model;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DepartmentResponse {
+public class PostSortingRequest {
 
-    private int id;
-    private String name;
+    private String sort;
+    private boolean desc;
 }
