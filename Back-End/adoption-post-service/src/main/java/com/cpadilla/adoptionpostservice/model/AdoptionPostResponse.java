@@ -19,7 +19,7 @@ public class AdoptionPostResponse {
     private String description;
     private Instant date;
 
-    private PetDetails petDetails;
-    private LocationDetails locationDetails;
+    private PetResponse petResponse;
+    private LocationResponse locationResponse;
     private List<ImageResponse> images;
 }

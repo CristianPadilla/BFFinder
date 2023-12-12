@@ -47,9 +47,9 @@ public class PetFilterSpecification<T> {
 
             predicates.add(criteriaBuilder.equal(root.get("status"), true)); // filter active ones
 
-            if (filterRequest.getSize() != null) { // size filter
+            if (filterRequest.getSize() != null && !filterRequest.getSize().isEmpty()) { // size filter
                 var sizeFilter = filterRequest.getSize().toLowerCase().charAt(0);
-                if (sizeFilter != 'l' || sizeFilter != 'm' || sizeFilter != 's') {
+                if (sizeFilter == 'l' || sizeFilter == 'm' || sizeFilter == 's') {
                     log.info("applying filter of size in pet query");
                     predicates.add(criteriaBuilder.equal(root.get("size"), sizeFilter));
                 } else
@@ -83,7 +83,7 @@ public class PetFilterSpecification<T> {
             if (filterRequest.getName() != null && !filterRequest.getName().isEmpty()) {// name filter
                 log.info("applying filter of name for pets with name {}", filterRequest.getName());
                 var nameFilter = filterRequest.getName().toLowerCase(); // from that day start
-                predicates.add(criteriaBuilder.like(root.get("name"), "%"+nameFilter+"%"));
+                predicates.add(criteriaBuilder.like(root.get("name"), "%" + nameFilter + "%"));
             }
 
 

@@ -28,9 +28,9 @@ public class AddressEntity {
     @Column(name = "city_id")
     private Integer cityId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "city_id", referencedColumnName = "city_id", insertable = false, updatable = false)
-    private CityEntity city;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "city_id", referencedColumnName = "city_id", insertable = false, updatable = false)
+//    private CityEntity city;
 
 
 }

@@ -1,17 +1,19 @@
 package com.cpadilla.adoptionpostservice.model;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LocationDetails {
+@Builder
+public class PostFilters {
 
-    private int id;
-    private CityResponse city;
-
+    private String status;
+    private String fromDate;
+    private int cityId;
+    private int userId;
 }

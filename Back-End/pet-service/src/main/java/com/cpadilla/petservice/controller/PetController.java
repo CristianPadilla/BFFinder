@@ -6,6 +6,7 @@ import com.cpadilla.petservice.model.PetResponse;
 import com.cpadilla.petservice.service.PetService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +26,9 @@ public class PetController {
         return new ResponseEntity<>(service.getPetById(petId), HttpStatus.OK);
     }
 
-    @GetMapping("/filter")
-    public ResponseEntity<List<PetResponse>> getAllFilter(@RequestBody FilterRequest filterRequest) {
-        return new ResponseEntity<>(service.getAllFilter(filterRequest), HttpStatus.OK);
+    @GetMapping("/user/{userId}/filter")
+    public ResponseEntity<Page<PetResponse>> getAllFilter(@PathVariable("userId") int userId, @RequestBody FilterRequest filterRequest) {
+        return new ResponseEntity<>(service.getByUserFilter(userId, filterRequest), HttpStatus.OK);
     }
 
     @GetMapping("/owner/{id}")

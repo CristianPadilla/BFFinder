@@ -4,13 +4,12 @@ import com.cpadilla.adoptionpostservice.model.*;
 import com.cpadilla.adoptionpostservice.service.AdoptionPostService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -28,10 +27,10 @@ public class AdoptionPostController {
         return new ResponseEntity<>(service.getAdoptionPostById(postId), HttpStatus.OK);
     }
 
-    @GetMapping("/all/user/{id}")
-    public ResponseEntity<List<AdoptionPostPartialsResponse>> getAllAdoptionPostsByUserId(@PathVariable("id") int userId) {
-        log.info("Getting all post by user with id {} from CONTROLLER layer", userId);
-        return new ResponseEntity<>(service.getAllPostsByUserId(userId), HttpStatus.OK);
+    @GetMapping("/user/{userId}/filter")
+    public ResponseEntity<Page<AdoptionPostPartialsResponse>> getAdoptionPostsByUserIdFilter(@PathVariable("userId") int userId, @RequestBody PostsRequest filterRequest) {
+        log.info("Getting filtered post by user with id {} from CONTROLLER layer", userId);
+        return new ResponseEntity<>(service.getPostsByUserIdFilter(userId, filterRequest), HttpStatus.OK);
     }
 
     @GetMapping("/all/sort/{sortMethod}/{desc}")
@@ -41,7 +40,7 @@ public class AdoptionPostController {
     }
 
     @GetMapping("/all/filter")
-    public ResponseEntity<List<AdoptionPostPartialsResponse>> getAllAdoptionPostsFiltered(@RequestBody FilterRequest filterRequest) {
+    public ResponseEntity<Page<AdoptionPostPartialsResponse>> getAllAdoptionPostsFiltered(@RequestBody PostsRequest filterRequest) {
         log.info("Getting posts filtered from CONTROLLER layer with filters: {}", filterRequest);
         return new ResponseEntity<>(service.getAllFilter(filterRequest), HttpStatus.OK);
     }

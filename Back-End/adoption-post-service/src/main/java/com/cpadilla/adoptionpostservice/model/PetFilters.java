@@ -1,21 +1,19 @@
 package com.cpadilla.adoptionpostservice.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OwnerDetails {
+@Builder
+public class PetFilters {
 
-    private long userId;
-    private String name;
-    private String surname;
-    private String phoneNumber;
-
+    private int specieId;
+    private int breedId;
+    private String size;
 
 }

@@ -10,9 +10,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PostRequest {
-    @JsonProperty("user_id")
-    private int userId;
-    @JsonProperty("adoption_post_request")
-    private AdoptionPostRequest adoptionPostRequest;
+public class PostsRequest {
+
+    private String search;
+    private PostFiltersRequest filters;
+    private PostSortingRequest sorting;
+    private int page;
+    @JsonProperty("page_size")
+    private int pageSize;
+
 }

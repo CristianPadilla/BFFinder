@@ -5,14 +5,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PetPartialDetails {
+public class UserOwnerResponse {
 
-    private int id;
+    private long userId;
     private String name;
-    private BreedDetails breedDetails;
-    private char size;
+    private String surname;
+    private String phoneNumber;
+
+
 }
