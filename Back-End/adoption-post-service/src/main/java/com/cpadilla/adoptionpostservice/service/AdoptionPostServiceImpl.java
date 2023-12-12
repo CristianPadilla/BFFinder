@@ -138,10 +138,18 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 ? request.getPageSize()
                 : 10;
 
+        boolean tsFilters = request.getFilters() != null;
+
         var postFilters = PostFilters.builder()
-                .fromDate(request.getFilters().getFromDate())
-                .status(request.getFilters().getStatus())
+                .fromDate(tsFilters ? request.getFilters().getFromDate() : null)
+                .specificDate(true)
+                .status(tsFilters ? request.getFilters().getStatus() : null)
                 .userId(userId)
+                .build();
+
+        var petFilters = PetFilters.builder()
+                .breedId(tsFilters ? request.getFilters().getBreedId() : 0)
+                .specieId(tsFilters ? request.getFilters().getSpecieId() : 0)
                 .build();
 
         var specification =
@@ -168,35 +176,31 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                             .petPartialResponse(petDetails)
                             .build();
                 })
-                .filter(post -> passesPetFilters(post.getPetPartialResponse(), PetFilters.builder()
-                        .breedId(request.getFilters().getBreedId())
-                        .specieId(request.getFilters().getSpecieId())
-                        .build()))
-                .filter(post -> passesPostFilters(post, PostFilters.builder()
-                        .status(request.getFilters().getStatus())
-                        .build()))
+                .filter(post -> passesPetFilters(post.getPetPartialResponse(), petFilters))
+                .filter(post -> passesPostFilters(post, postFilters))
                 .collect(Collectors.toList());
 
-        var sorRequest = request.getSorting().getSort();
-        var comparator = Comparator.comparing(AdoptionPostPartialsResponse::getDate);
+        var sortingField = request.getSorting() != null ? request.getSorting().getSort() : null;
         var sortingDetails = Sort.by(Sort.Order.by("date"));
-        if (sorRequest != null && !sorRequest.isEmpty()) {
+        if (sortingField != null && !sortingField.isEmpty()) {
 
-            comparator = switch (sorRequest) {
+            var comparator = switch (sortingField) {
                 case "date" -> Comparator.comparing(AdoptionPostPartialsResponse::getDate);
-                case "name" -> Comparator.comparing(post -> post.getPetPartialResponse().getName());
-                case "age" -> Comparator.comparing(post -> post.getPetPartialResponse().getAge());
+                case "name" ->
+                        Comparator.comparing((AdoptionPostPartialsResponse post) -> post.getPetPartialResponse().getName());
+                case "age" ->
+                        Comparator.comparing((AdoptionPostPartialsResponse post) -> post.getPetPartialResponse().getAge());
                 default ->
                         throw new CustomException("Sorting criteria is not valid", "SORTING_NOT_VALID", HttpStatus.BAD_REQUEST.value());
             };
             if (request.getSorting().isDesc()) {
                 comparator = comparator.reversed();
-                sortingDetails = Sort.by(Sort.Order.desc(sorRequest));
-            } else sortingDetails = Sort.by(Sort.Order.by(sorRequest));
+                sortingDetails = Sort.by(Sort.Order.desc(sortingField));
+            } else sortingDetails = Sort.by(Sort.Order.by(sortingField));
 
             filteredPosts.sort(comparator);
 
-        }
+        } else filteredPosts.sort(Comparator.comparing(AdoptionPostPartialsResponse::getDate).reversed());
 
         return new PageImpl<>(filteredPosts, PageRequest.of(request.getPage(), pageSize, sortingDetails), filteredPosts.size());
     }
@@ -244,10 +248,21 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 ? request.getPageSize()
                 : 10;
 
+        boolean tsFilters = request.getFilters() != null;// there is filters?
+
         var postFilters = PostFilters.builder()
-                .cityId(request.getFilters().getCityId())
+                .departmentId(tsFilters ? request.getFilters().getDepartmentId() : 0)
+                .cityId(tsFilters ? request.getFilters().getCityId() : 0)
+                .fromDate(tsFilters ? request.getFilters().getFromDate() : null)
                 .status("A")
                 .build();
+
+        var petFilters = PetFilters.builder()
+                .breedId(tsFilters ? request.getFilters().getBreedId() : 0)
+                .specieId(tsFilters ? request.getFilters().getSpecieId() : 0)
+                .size(tsFilters ? request.getFilters().getSize() : null)
+                .build();
+
         var specification =
                 filterSpecification.getSearchSpecification(postFilters); // apply post filters
         var postEntities =
@@ -281,18 +296,15 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                             .locationResponse(locationDetails)
                             .images(images)
                             .build();
-                }).filter(post -> passesPetFilters(post.getPetPartialResponse(), PetFilters.builder()
-                        .breedId(request.getFilters().getBreedId())
-                        .specieId(request.getFilters().getSpecieId())
-                        .size(request.getFilters().getSize())
-                        .build()))// apply pet filters
+                }).filter(post -> passesPetFilters(post.getPetPartialResponse(), petFilters))// apply pet filters
                 .filter(post -> passesPostFilters(post, postFilters))// post filters
                 .collect(Collectors.toList());
 
-        var sort = request.getSorting().getSort();
+        var sortingField = request.getSorting() != null ? request.getSorting().getSort() : null;
+        var sortingDetails = Sort.by(Sort.Order.desc("date"));
 
-        if (sort != null && !sort.isEmpty()) {
-            var comparator = switch (sort) {
+        if (sortingField != null && !sortingField.isEmpty()) {
+            var comparator = switch (sortingField) {
                 case "date" -> Comparator.comparing(AdoptionPostPartialsResponse::getDate);
                 case "age" ->
                         Comparator.comparing((AdoptionPostPartialsResponse post) -> post.getPetPartialResponse().getAge());
@@ -300,12 +312,15 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 default ->
                         throw new CustomException("Sorting criteria is not valid", "SORTING_NOT_VALID", HttpStatus.BAD_REQUEST.value());
             };
-            if (request.getSorting().isDesc()) comparator = comparator.reversed();
+            if (request.getSorting().isDesc()) {
+                comparator = comparator.reversed();
+                sortingDetails = Sort.by(Sort.Order.desc(sortingField));
+            } else sortingDetails = Sort.by(Sort.Order.by(sortingField));
+
             filteredPosts.sort(comparator);
-        } else filteredPosts.sort(Comparator.comparing(AdoptionPostPartialsResponse::getDate));
+        } else filteredPosts.sort(Comparator.comparing(AdoptionPostPartialsResponse::getDate).reversed());
 
-        return new PageImpl<>(filteredPosts, postEntities.getPageable(), filteredPosts.size());
-
+        return new PageImpl<>(filteredPosts, PageRequest.of(request.getPage(), pageSize, sortingDetails), filteredPosts.size());
     }
 
     @Override
@@ -400,11 +415,13 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         return true;
     }
 
-    public boolean passesPostFilters(AdoptionPostPartialsResponse postResponse, PostFilters filter) {
-
-        if (filter.getCityId() > 0)
-            return postResponse.getLocationResponse().getCity().getId() == filter.getCityId();
-
+    public boolean passesPostFilters(AdoptionPostPartialsResponse postDetails, PostFilters filter) {
+        if (filter.getDepartmentId() > 0) {
+            if (postDetails.getLocationResponse().getCity().getDepartment().getId() != filter.getDepartmentId())
+                return false;
+            if (filter.getCityId() != 0 && filter.getCityId() != postDetails.getLocationResponse().getCity().getId())
+                return false;
+        }
         return true;
     }
 
