@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,16 +85,29 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public Page<PetResponse> getByUserFilter(int userId, FilterRequest filters) {
+    public Page<PetResponse> getByUserFilter(int userId, PetsFilterRequest filters) {
         log.info("Getting pets by filters {} at SERVICE layer", filters);
-
-        var specification =
-                filterSpecification.getSearchSpecification(filters);
-
-        var sort = validateSorting(filters.getSort());
         var pagesize = filters.getPageSize() > 0 && filters.getPageSize() <= 20 ? filters.getPageSize() : 10;
 
-        var petEntities = repository.findAll(specification, PageRequest.of(filters.getPage(), pagesize, Sort.by(sort).descending()));
+        var petsFilters = PetsFilters.builder()
+                .search(filters.getSearch())
+                .ownerId(userId)
+                .specieId(filters.getSpecieId())
+                .breedId(filters.getBreedId())
+                .size(filters.getSize())
+                .age(filters.getAge())
+                .status("A")
+                .build();
+
+        var specification =
+                filterSpecification.getSearchSpecification(petsFilters);
+
+        var sortingField = validateSorting(filters.getSort());
+        var sortingDetails = filters.isDesc()
+                ? Sort.by(Sort.Order.desc(sortingField))
+                : Sort.by(Sort.Order.by(sortingField));
+
+        var petEntities = repository.findAll(specification, PageRequest.of(filters.getPage(), pagesize, sortingDetails));
 
         var filteredPets = petEntities.stream()
                 .map(petEntity -> {
@@ -127,7 +141,23 @@ public class PetServiceImpl implements PetService {
                             .build();
                 }).collect(Collectors.toList());
 
-        return new PageImpl<>(filteredPets, petEntities.getPageable(), filteredPets.size());
+//        var sortingDetails = Sort.by(Sort.Order.by("name"));
+//        if (filters.getSort() != null && !filters.getSort().isEmpty()) {
+//            var sortingField = validateSorting(filters.getSort());
+//            var comparator = switch (sortingField) {
+//                case "name" -> Comparator.comparing(PetResponse::getName);
+//                case "age" -> Comparator.comparing(PetResponse::getAge);
+//                default -> Comparator.comparing(PetResponse::getAge);
+//            };
+//
+//
+//            filteredPets.sort(comparator);
+//            sortingDetails = filters.isDesc()
+//                    ? Sort.by(Sort.Order.desc(sortingField))
+//                    : Sort.by(Sort.Order.by(sortingField));
+//        } else filteredPets.sort(Comparator.comparing(PetResponse::getAge));
+
+        return new PageImpl<>(filteredPets, PageRequest.of(filters.getPage(), pagesize, Sort.by(Sort.Order.by("name"))), filteredPets.size());
     }
 
     @Override
@@ -208,7 +238,7 @@ public class PetServiceImpl implements PetService {
         return sort;
     }
 
-    public boolean petPassesFilters(PetResponse petResponse, FilterRequest filter) {
+    public boolean petPassesFilters(PetResponse petResponse, PetsFilterRequest filter) {
 
         if (filter.getSize() != null && !filter.getSize().isEmpty()) {
             var sizeFilter = filter.getSize().toLowerCase();
