@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class DepartmentResponse {
-
+    private int id;
     private String name;
 }

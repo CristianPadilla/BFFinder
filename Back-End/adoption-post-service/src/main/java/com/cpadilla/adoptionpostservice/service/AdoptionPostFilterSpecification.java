@@ -38,7 +38,10 @@ public class AdoptionPostFilterSpecification<T> {
                 log.info("applying filter of date for posts with date before {}", filterRequest.getFromDate());
                 var dateFilter = LocalDate.parse(filterRequest.getFromDate());
                 var filter = dateFilter.atStartOfDay(ZoneId.systemDefault()).minusHours(5).toInstant(); // from that day start
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("date"), Instant.parse(filter.toString())));
+                predicates.add(
+                        filterRequest.isSpecificDate()
+                                ? criteriaBuilder.equal(root.get("date"), Instant.parse(filter.toString()))
+                                : criteriaBuilder.greaterThanOrEqualTo(root.get("date"), Instant.parse(filter.toString())));
             }
 
             if (filterRequest.getStatus() != null && !filterRequest.getStatus().isEmpty()) {

@@ -20,6 +20,8 @@ public class PostFiltersRequest {
     private int breedId;
     @JsonProperty("city_id")
     private int cityId;
+    @JsonProperty("department_id")
+    private int departmentId;
     private String size;
     private String status;
 }
