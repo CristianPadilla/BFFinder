@@ -145,6 +145,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .specificDate(true)
                 .status(tsFilters ? request.getFilters().getStatus() : null)
                 .userId(userId)
+                .search(request.getSearch())
                 .build();
 
         var petFilters = PetFilters.builder()
@@ -176,8 +177,8 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                             .petPartialResponse(petDetails)
                             .build();
                 })
-                .filter(post -> passesPetFilters(post.getPetPartialResponse(), petFilters))
-                .filter(post -> passesPostFilters(post, postFilters))
+                .filter(post -> passesFilters(post, post.getPetPartialResponse(), petFilters, postFilters))
+//                .filter(post -> passesPostFilters(post, postFilters))
                 .collect(Collectors.toList());
 
         var sortingField = request.getSorting() != null ? request.getSorting().getSort() : null;
@@ -437,14 +438,21 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
     private boolean passesFilters(AdoptionPostPartialsResponse post, PetPartialResponse pet, PetFilters petFilters, PostFilters postFilters) {
         return (passesPetFilters(pet, petFilters)
-                && passesPostFilters(post, postFilters)
-                && passesSearchFilter(post.getUser().getName(), pet.getName(), postFilters.getSearch()));
+                && passesPostFilters(post, postFilters)// if it is getPostsByUserIdFilter service, user will come null
+                && passesSearchFilter(post.getUser() != null ? post.getUser().getName() : null, pet.getName(), postFilters.getSearch()));
     }
 
-    private boolean passesSearchFilter(String ownerName, String petName, String searchFilter) {
+    private boolean passesSearchFilter(String ownerName, String petName, String searchFilter) {// send ownerName if needed to filter only by petName
         if (searchFilter != null && !searchFilter.isEmpty()) {
-            return !searchFilter.isBlank()
-                    && (petName.toLowerCase().contains(searchFilter.toLowerCase()) || ownerName.toLowerCase().contains(searchFilter.toLowerCase()));
+            var ownerSearchValidation = ownerName == null || ownerName.toLowerCase().contains(searchFilter.toLowerCase());
+            var petSearchValidation = petName == null || petName.toLowerCase().contains(searchFilter.toLowerCase());
+
+            log.info("owner {}", ownerSearchValidation);
+            log.info("pet {}", petSearchValidation);
+            log.info("search {}", searchFilter);
+            return ownerName == null
+                    ? !searchFilter.isBlank() && (petSearchValidation)
+                    : !searchFilter.isBlank() && (petSearchValidation || ownerSearchValidation);
         } else return true;
 
     }
