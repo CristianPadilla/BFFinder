@@ -4,6 +4,7 @@ import com.cpadilla.petservice.model.PetsFilterRequest;
 import com.cpadilla.petservice.model.PetRequest;
 import com.cpadilla.petservice.model.PetResponse;
 import com.cpadilla.petservice.service.PetService;
+import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,7 +39,7 @@ public class PetController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Integer> savePet(@RequestBody PetRequest pet) {
+    public ResponseEntity<Integer> savePet(@Valid @RequestBody PetRequest pet) {
         return new ResponseEntity<>(service.savePet(pet), HttpStatus.OK);
     }
 
