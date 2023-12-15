@@ -2,9 +2,7 @@
 $font-primary: 'VagRoundBold';
 $fw-light: 'VagRoundLight';
 $fw-black: 'VagRoundBlack';
-$white: #ffffff;
-$black: #000000;
-$very-light-pink: #c7c7c7;
+$grey-light: #c7c7c7;
 $text-input-field: #f7f7f7;
 $hospital-green: #acd9b2;
 $sm: 14px;
@@ -15,8 +13,14 @@ $color-primary-boton: #E1A26A;
 $color-hover-boton: rgb(250, 170, 100);
 $color-second-boton: #E9B88C;
 $color-letras-bold: #A77A23;
+$color-letraboldD: #7C5D42;
 $color-hipervinculos: #DCA644;
-$color-bolas: linear-gradient(-45deg, #c98c56 0%, #f18d36 100%);
+$color-figuras: linear-gradient(-45deg, #c98c56 0%, #f18d36 100%);
+$fondo-dashboard: #E9B88C;
+$dash-fondo: #F8EBD5;
+// $fondo-dashboard-light: #FDECD2;
+$fondo-dashboard-light: #FEF7E7;
+$color-dash: rgb(255, 177, 108);
 
 // $color-second-boton
 // $color-hover-boton
@@ -30,8 +34,11 @@ $letras-header: rgb(255, 255, 255);
 
 $fondo-dog: url(https://as2.ftcdn.net/v2/jpg/03/41/73/57/1000_F_341735787_46xjDjoh5T9dShls1sIudnJ08kHqcMRW.jpg);
 // $fondo-home: url();
-// $fondo-sections: #fdfbf7;
-$fondo-sections: #fffcfa;
+// $fondo-sections: #fdfbf7; El que e usado
+// $fondo-sections: #fffcfa;
+// $fondo-sections: #F8EBD5; me gusto
+$fondo-sections: #fdfbf7;
+$barra-busqueda: #FAF1E0;
 
 
 $color: #4e4e4e;

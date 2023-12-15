@@ -1,9 +1,19 @@
 @import "vars";
 
-section {
-    background-color: $fondo-sections;
-}
-
-.inicio-user-comun{
-    margin-top: 150px;
-}
+/* Estilos generales para la paginación */
+.MuiPagination-ul {
+    font-size: 1.5rem; /* Tamaño general de la paginación */
+  
+    /* Estilos específicos para los números de la paginación */
+    .MuiPaginationItem-page {
+      font-size: 1.1rem; /* Ajusta el tamaño de los números */
+    // letter-spacing: 0.1rem;
+    }
+  
+    /* Estilos específicos para las flechas de la paginación */
+    .MuiPaginationItem-icon {
+        font-size: 2.2rem; /* Ajusta el tamaño de las flechas */
+        margin: 0 0.7rem;
+    }
+  }
+  

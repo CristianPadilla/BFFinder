@@ -7,14 +7,14 @@ import PanelF from "containers/PanelFilters";
 import Ordering from "containers/Ordering";
 import logobff from "imgs/logo-bffinder-FINAL2.png";
 import Slider from '@mui/material/Slider'
-
+import PerfilMenu from '../containers/PerfilMenu';
 import Paper from '@mui/material/Paper';
 import SectionPosts from '../containers/SectionAllPosts';
 import NavHome from "../Components/NavHome";
 
-const Home = () => {
+const Ejemplo = () => {
 
-  const [sortType, setSortType] = useState("");
+  const [sortType, setSortType] = useState(""); // Ejemplo de estado, puedes ajustarlo según tus necesidades
 
   const handleSortChange = (type) => {
     // Haz lo que necesites con el tipo de ordenamiento (type)
@@ -24,7 +24,10 @@ const Home = () => {
     return (
         <div>
         <section id="content">
+          
+          {/* NAVBAR */}
           <NavHome/>
+          {/* NAVBAR */}
 
           {/* MAIN */}
           <main>
@@ -110,4 +113,4 @@ const Home = () => {
     );
   };
   
-  export default Home;
+  export default Ejemplo;

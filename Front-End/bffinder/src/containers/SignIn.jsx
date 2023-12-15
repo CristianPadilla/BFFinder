@@ -95,7 +95,7 @@ export default function SignIn() {
               Iniciar Sesión
             </button>
 
-            <p className="social-text">O Ingresa con Google</p>
+            <p className="social-text">O</p>
 
             <div className="social-media">
               <button type="button" className="googlebutton">

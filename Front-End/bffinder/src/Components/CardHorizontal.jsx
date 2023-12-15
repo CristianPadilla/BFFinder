@@ -28,9 +28,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 const HorizontalCard = ({ post }) => {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
-  const { petDetails, images, locationDetails, date } = post;
-  const { name, breedDetails, specie } = petDetails;
-  const { city } = locationDetails;
+  const { petPartialResponse, images, locationResponse, date } = post;
+  const { name, breedDetails, specie } = petPartialResponse;
+  const { city } = locationResponse;
 
   const publishDate = new Date(date);
   const currentDate = new Date();
@@ -51,7 +51,7 @@ const HorizontalCard = ({ post }) => {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', margin: '4% 0' }}>
-    <Card className='card-prepost'sx={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.28)', borderRadius: '18px', display: 'flex', justifyContent: 'center' }}>
+    <Card className='card-prepost'sx={{display: 'flex', justifyContent: 'center', borderRadius: '18px', }} elevation={4}>
       {/* Imagen en la parte izquierda */}
       <CardMedia
         component="img"
@@ -63,7 +63,7 @@ const HorizontalCard = ({ post }) => {
       {/* Contenido en la parte derecha */}
       <CardContent className='content-card'>
 
-        <Typography variant="h5" component="h2" className='title-card' sx={{ fontSize: '1.7rem', marginTop: '-6%' }}>
+        <Typography variant="h5" component="h2" sx={{ fontSize: '1.7rem', marginTop: '-6%' }}>
         {name}
         </Typography>
 

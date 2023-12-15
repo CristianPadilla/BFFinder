@@ -7,7 +7,9 @@ import PreHome from "pages/PreHome";
 import Home from "pages/Home";
 import NotFound from "pages/NotFound";
 import Perfil from "pages/Perfil";
-import Autenticacion from "../pages/Autenticacion";
+import Autenticacion from "pages/Autenticacion";
+import Ejemplo from "pages/Ejemplo";
+import Verpublicacion from "pages/ViewPost";
 
 const App = () => {
   return (
@@ -18,6 +20,8 @@ const App = () => {
 				<Route path="/login" element={<Autenticacion/>} />
 				<Route path="/perfil" element={<Perfil/>} />
 				<Route path="/home" element={<Home/>} />
+				<Route path="/ver-publicacion" element={<Verpublicacion/>} />
+				<Route path="/ejemplo" element={<Ejemplo/>} />
 				<Route path="/recovery-password" element={<RecoveryPassword/>} />
 				<Route path="*" element={<NotFound/>} />
 			</Routes>
