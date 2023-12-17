@@ -14,6 +14,7 @@ public class PostFilters {
 
     private String status;
     private String fromDate;
+    private String search;
     private boolean specificDate;
     private int cityId;
     private int departmentId;

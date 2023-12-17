@@ -145,6 +145,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .specificDate(true)
                 .status(tsFilters ? request.getFilters().getStatus() : null)
                 .userId(userId)
+                .search(request.getSearch())
                 .build();
 
         var petFilters = PetFilters.builder()
@@ -176,8 +177,8 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                             .petPartialResponse(petDetails)
                             .build();
                 })
-                .filter(post -> passesPetFilters(post.getPetPartialResponse(), petFilters))
-                .filter(post -> passesPostFilters(post, postFilters))
+                .filter(post -> passesFilters(post, post.getPetPartialResponse(), petFilters, postFilters))
+//                .filter(post -> passesPostFilters(post, postFilters))
                 .collect(Collectors.toList());
 
         var sortingField = request.getSorting() != null ? request.getSorting().getSort() : null;
@@ -255,12 +256,14 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .cityId(tsFilters ? request.getFilters().getCityId() : 0)
                 .fromDate(tsFilters ? request.getFilters().getFromDate() : null)
                 .status("A")
+                .search(request.getSearch())
                 .build();
 
         var petFilters = PetFilters.builder()
                 .breedId(tsFilters ? request.getFilters().getBreedId() : 0)
                 .specieId(tsFilters ? request.getFilters().getSpecieId() : 0)
                 .size(tsFilters ? request.getFilters().getSize() : null)
+                .search(request.getSearch())
                 .build();
 
         var specification =
@@ -280,6 +283,15 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                             .size(pet.getSize())
                             .build();
 
+                    var user = userService.getUserById(post.getUserId()).getBody();
+                    var userDetails = UserPartialsResponse.builder()
+                            .userId(user.getUserId())
+                            .name(user.getName())
+                            .email(user.getEmail())
+                            .phoneNumber(user.getPhoneNumber())
+                            .profileImageUrl(user.getProfileImageUrl())
+                            .build();
+
                     var locationResponse = locationService.getById(post.getAddressId()).getBody();
                     var locationDetails = LocationPartialResponse.builder()
                             .id(locationResponse.getId())
@@ -291,13 +303,13 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                     return AdoptionPostPartialsResponse.builder()
                             .id(post.getId())
                             .status(post.isStatus())
+                            .images(images)
                             .date(post.getDate())
                             .petPartialResponse(petDetails)
+                            .user(userDetails)
                             .locationResponse(locationDetails)
-                            .images(images)
                             .build();
-                }).filter(post -> passesPetFilters(post.getPetPartialResponse(), petFilters))// apply pet filters
-                .filter(post -> passesPostFilters(post, postFilters))// post filters
+                }).filter(post -> passesFilters(post, post.getPetPartialResponse(), petFilters, postFilters))// apply all filters
                 .collect(Collectors.toList());
 
         var sortingField = request.getSorting() != null ? request.getSorting().getSort() : null;
@@ -398,7 +410,6 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
 
     public boolean passesPetFilters(PetPartialResponse petDetails, PetFilters filter) {
-
         if (filter.getSize() != null && !filter.getSize().isEmpty()) {
             var sizeFilter = filter.getSize().toLowerCase();
             if (sizeFilter.equals("l") || sizeFilter.equals("s") || sizeFilter.equals("m")) {
@@ -423,6 +434,27 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 return false;
         }
         return true;
+    }
+
+    private boolean passesFilters(AdoptionPostPartialsResponse post, PetPartialResponse pet, PetFilters petFilters, PostFilters postFilters) {
+        return (passesPetFilters(pet, petFilters)
+                && passesPostFilters(post, postFilters)// if it is getPostsByUserIdFilter service, user will come null
+                && passesSearchFilter(post.getUser() != null ? post.getUser().getName() : null, pet.getName(), postFilters.getSearch()));
+    }
+
+    private boolean passesSearchFilter(String ownerName, String petName, String searchFilter) {// send ownerName if needed to filter only by petName
+        if (searchFilter != null && !searchFilter.isEmpty()) {
+            var ownerSearchValidation = ownerName == null || ownerName.toLowerCase().contains(searchFilter.toLowerCase());
+            var petSearchValidation = petName == null || petName.toLowerCase().contains(searchFilter.toLowerCase());
+
+            log.info("owner {}", ownerSearchValidation);
+            log.info("pet {}", petSearchValidation);
+            log.info("search {}", searchFilter);
+            return ownerName == null
+                    ? !searchFilter.isBlank() && (petSearchValidation)
+                    : !searchFilter.isBlank() && (petSearchValidation || ownerSearchValidation);
+        } else return true;
+
     }
 
 }
