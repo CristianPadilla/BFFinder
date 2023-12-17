@@ -20,5 +20,6 @@ public class AdoptionPostPartialsResponse {
     private Instant date;
     private PetPartialResponse petPartialResponse;
     private List<ImageResponse> images;
+    private UserPartialsResponse user;
     private LocationPartialResponse locationResponse;
 }

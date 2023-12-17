@@ -163,14 +163,20 @@ public class PetServiceImpl implements PetService {
     @Override
     public int savePet(PetRequest petRequest) {
         log.info("saving pet at SERVICE layer");
+        var owner = ownerService.getUserById(petRequest.getOwnerId()).getBody();
+        if (owner == null)
+            throw new CustomException("No exist user with id: " + petRequest.getOwnerId(), "USER_NOT_FOUND", HttpStatus.NOT_FOUND.value());
+        var breed = breedService.getBreedById(petRequest.getBreedId());
+        if (breed == null)
+            throw new CustomException("No breed exist with id: " + petRequest.getBreedId(), "BREED_NOT_FOUND", HttpStatus.NOT_FOUND.value());
+
         var petToSave = PetEntity.builder()
-                .id(petRequest.getId())
                 .name(petRequest.getName())
                 .weight(petRequest.getWeight())
                 .age(petRequest.getAge())
                 .vaccinated(petRequest.isVaccinated())
                 .dangerous(petRequest.isDangerous())
-                .size(petRequest.getSize())
+                .size(petRequest.getSize().charAt(0))
                 .sterilized(petRequest.isSterilized())
                 .dewormed(petRequest.isDewormed())
                 .status(true)
@@ -192,7 +198,7 @@ public class PetServiceImpl implements PetService {
         petToUpdate.setAge(petRequest.getAge());
         petToUpdate.setVaccinated(petRequest.isVaccinated());
         petToUpdate.setDangerous(petRequest.isDangerous());
-        petToUpdate.setSize(petRequest.getSize());
+        petToUpdate.setSize(petRequest.getSize().charAt(0));
         petToUpdate.setSterilized(petRequest.isSterilized());
         petToUpdate.setDewormed(petRequest.isDewormed());
 
