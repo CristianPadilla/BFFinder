@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -65,7 +67,7 @@ public class AdoptionPostController {
     }
 
     // Images managment
-    @PostMapping("/image/{postId}")
+    @PostMapping("/{postId}/image")
     public ResponseEntity<ImageResponse> saveAdoptionPostImage(@PathVariable("postId") int postId, @RequestBody MultipartFile image) {
         log.info("saving post image from CONTROLLER layer");
         return new ResponseEntity<>(service.savePostImage(postId, image), HttpStatus.OK);
