@@ -45,7 +45,8 @@ public class PetController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Integer> updatePet(@RequestBody PetRequest pet) {
+    public ResponseEntity<PetResponse> updatePet(@RequestBody PetRequest pet) {
+        log.info("updating pet with id: {} from controller layer", pet.getId());
         return new ResponseEntity<>(service.updatePet(pet), HttpStatus.OK);
     }
 

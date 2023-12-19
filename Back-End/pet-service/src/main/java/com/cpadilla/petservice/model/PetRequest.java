@@ -16,7 +16,6 @@ public class PetRequest {
 
     private int id;
     @NotNull(message = "name field is mandatory")
-
     @Size(min = 2, max = 15, message = "name must have between 2 and 15 characters")
     private String name;
     @Digits(integer = 3, fraction = 1, message = "just 1 decimal allowed")

@@ -16,7 +16,7 @@ public interface PetService {
 
     PetResponse savePet(PetRequest petRequest);
 
-    int updatePet(PetRequest petRequest);
+    PetResponse updatePet(PetRequest petRequest);
 
     void disablePet(int petId);
 

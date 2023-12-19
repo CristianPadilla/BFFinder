@@ -19,7 +19,7 @@ public class PetResponse {
     private boolean dangerous;
     private char size;
     private boolean sterilized;
-    private boolean status;
+//    private boolean status;
     private boolean dewormed;
     private boolean isPublished;
     private String profileImageUrl;

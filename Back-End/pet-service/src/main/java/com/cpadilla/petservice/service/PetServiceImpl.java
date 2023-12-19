@@ -48,7 +48,7 @@ public class PetServiceImpl implements PetService {
     @Autowired
     private PetFilterSpecification<PetEntity> filterSpecification;
 
-    public static final List<String> allowedImageFormats = Arrays.asList("jpg", "png","jpeg");
+    public static final List<String> allowedImageFormats = Arrays.asList("jpg", "png", "jpeg");
 
     @Override
     public PetResponse getPetById(int petId) {
@@ -56,7 +56,7 @@ public class PetServiceImpl implements PetService {
         var petEntity = repository.findByIdAndStatusTrue(petId)
                 .orElseThrow(() -> new CustomException("Pet not found with id: " + petId, "PET_NOT_FOUND", HttpStatus.NOT_FOUND.value()));
 
-       return buildPetFromPetEntity(petEntity);
+        return buildPetFromPetEntity(petEntity);
     }
 
     @Override
@@ -133,7 +133,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public int updatePet(PetRequest petRequest) {
+    public PetResponse updatePet(PetRequest petRequest) {
         log.info("updating pet with id {} at SERVICE layer", petRequest.getId());
 
         var petToUpdate = repository.findByIdAndStatusTrue(petRequest.getId())
@@ -148,7 +148,15 @@ public class PetServiceImpl implements PetService {
         petToUpdate.setSterilized(petRequest.isSterilized());
         petToUpdate.setDewormed(petRequest.isDewormed());
 
-        return repository.save(petToUpdate).getId();
+        if (petRequest.getBreedId() > 0) {
+            var newBreed = breedService.getBreedById(petRequest.getBreedId()).getBody();
+            if (newBreed == null)
+                throw new CustomException("Breed not found with id: " + petRequest.getBreedId(), "BREED_NOT_FOUND", HttpStatus.BAD_REQUEST.value());
+
+            petToUpdate.setBreedId(newBreed.getId());
+        }
+
+        return buildPetFromPetEntity(repository.save(petToUpdate));
     }
 
 
@@ -171,7 +179,6 @@ public class PetServiceImpl implements PetService {
                                         .dangerous(petEntity.getDangerous())
                                         .size(petEntity.getSize())
                                         .sterilized(petEntity.getSterilized())
-                                        .status(petEntity.getStatus())
                                         .dewormed(petEntity.getDewormed())
 //                                .breedDetails(pe)// still not implemented
                                         .build()
@@ -181,7 +188,6 @@ public class PetServiceImpl implements PetService {
     @Override
     public PetResponse updateProfileImage(int petId, MultipartFile image) {// if want to delete, just do not send an image
         log.info("updating profile photo for pet with id: {} from service layer", petId);
-
 
 
         var petEntity = repository.findByIdAndStatusTrue(petId)
@@ -242,7 +248,7 @@ public class PetServiceImpl implements PetService {
     }
 
 
-    public PetResponse buildPetFromPetEntity(PetEntity petEntity){
+    public PetResponse buildPetFromPetEntity(PetEntity petEntity) {
         var owner = ownerService.getUserById(petEntity.getOwnerId()).getBody();
         var ownerDetails = OwnerDetails.builder()
                 .userId(owner.getUserId())
