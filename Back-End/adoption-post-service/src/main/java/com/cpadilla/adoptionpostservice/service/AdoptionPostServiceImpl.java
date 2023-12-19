@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -55,7 +57,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     @Autowired
     private AdoptionPostFilterSpecification<AdoptionPostEntity> filterSpecification;
 
-    public static final List<String> allowedImageFormats = Arrays.asList("jpg", "png","jpeg");
+    public static final List<String> allowedImageFormats = Arrays.asList("jpg", "png", "jpeg");
 
 
     @Override
@@ -63,41 +65,11 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         var postEntity = repository.findById(postId)
                 .orElseThrow(() -> new CustomException("Adoption post not found with id: " + postId, "ADOPTION_POST_NOT_FOUND", HttpStatus.NOT_FOUND.value()));
 
-        var petResponse = petService.getById(postEntity.getPetId()).getBody();
-        var petDetails = PetResponse.builder()
-                .id(petResponse.getId())
-                .name(petResponse.getName())
-                .weight(petResponse.getWeight())
-                .age(petResponse.getAge())
-                .vaccinated(petResponse.isVaccinated())
-                .dangerous(petResponse.isDangerous())
-                .size(petResponse.getSize())
-                .sterilized(petResponse.isSterilized())
-                .dewormed(petResponse.isDewormed())
-                .userOwnerResponse(petResponse.getUserOwnerResponse())
-                .breedDetails(petResponse.getBreedDetails())
-                .build();
-
-        var locationResponse = locationService.getById(postEntity.getAddressId()).getBody();
-//        var locationDetails = LocationDetails.builder()
-//                .id(locationResponse.getId())
-//                .city(locationResponse.getCity())
-//                .build();
-
-        var images = findPostImages(postId);
-
-        return AdoptionPostResponse.builder()
-                .id(postEntity.getId())
-                .description(postEntity.getDescription())
-                .date(postEntity.getDate())
-                .petResponse(petDetails)
-                .locationResponse(locationResponse)
-                .images(images)
-                .build();
+        return buidPostFromEntity(postEntity);
     }
 
     @Override
-    public int savePost(PostRequest request) {
+    public AdoptionPostResponse savePost(PostRequest request) {
         var adoptionPostRequest = request.getAdoptionPostRequest();
         var petId = 0;
 
@@ -126,13 +98,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .build();
         var createdPost = repository.save(postEntity);
 
-        //todo  solicitar creacion de imagenes al microservicio
-
-
-        //todo registrar en la tabla intermedia
-
-
-        return createdPost.getId();
+        return buidPostFromEntity(createdPost);
     }
 
     @Override
@@ -417,6 +383,39 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
             throw new CustomException("No image related to post with id: " + postId, "POST_IMAGE_NOT_FOUND", HttpStatus.NOT_FOUND.value()); // delete portImage registry?
 
         imageService.deleteImageById(imageId);
+    }
+
+    public AdoptionPostResponse buidPostFromEntity(AdoptionPostEntity postEntity) {
+        var petResponse = petService.getById(postEntity.getPetId()).getBody();
+        var petDetails = PetResponse.builder()
+                .id(petResponse.getId())
+                .name(petResponse.getName())
+                .weight(petResponse.getWeight())
+                .age(petResponse.getAge())
+                .vaccinated(petResponse.isVaccinated())
+                .dangerous(petResponse.isDangerous())
+                .size(petResponse.getSize())
+                .sterilized(petResponse.isSterilized())
+                .dewormed(petResponse.isDewormed())
+                .userOwnerResponse(petResponse.getUserOwnerResponse())
+                .breedDetails(petResponse.getBreedDetails())
+                .build();
+
+        var locationResponse = locationService.getById(postEntity.getAddressId()).getBody();
+
+        var images = findPostImages(postEntity.getId());
+
+        var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = formatter.format(postEntity.getDate().atZone(ZoneId.of("UTC")));
+
+        return AdoptionPostResponse.builder()
+                .id(postEntity.getId())
+                .description(postEntity.getDescription())
+                .date(formattedDate)
+                .petResponse(petDetails)
+                .locationResponse(locationResponse)
+                .images(images)
+                .build();
     }
 
 

@@ -48,7 +48,7 @@ public class AdoptionPostController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Integer> saveAdoptionPost(@RequestBody PostRequest request) {
+    public ResponseEntity<AdoptionPostResponse> saveAdoptionPost(@Validated @RequestBody PostRequest request) {
         log.info("Creating post from CONTROLLER layer");
         return new ResponseEntity<>(service.savePost(request), HttpStatus.OK);
     }

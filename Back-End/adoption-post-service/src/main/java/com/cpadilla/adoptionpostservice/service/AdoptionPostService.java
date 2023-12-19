@@ -10,7 +10,7 @@ public interface AdoptionPostService {
 
     AdoptionPostResponse getAdoptionPostById(int postId);
 
-    int savePost(PostRequest request);
+    AdoptionPostResponse savePost(PostRequest request);
 
     ImageResponse savePostImage(int postId, MultipartFile image);
 

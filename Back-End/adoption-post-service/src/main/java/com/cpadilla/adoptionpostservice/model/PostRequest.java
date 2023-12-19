@@ -1,6 +1,8 @@
 package com.cpadilla.adoptionpostservice.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,8 +13,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class PostRequest {
-    @JsonProperty("user_id")
+
+    @Positive(message = "not valid value for user id")
     private int userId;
-    @JsonProperty("adoption_post_request")
+    @NotNull(message = "adoption post cannot be null")
     private AdoptionPostRequest adoptionPostRequest;
 }
