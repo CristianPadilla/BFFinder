@@ -3,8 +3,10 @@ package com.cpadilla.petservice.service;
 
 import com.cpadilla.petservice.entity.PetEntity;
 import com.cpadilla.petservice.exception.CustomException;
+import com.cpadilla.petservice.exception.UnsupportedFileException;
 import com.cpadilla.petservice.external.client.AdoptionPostService;
 import com.cpadilla.petservice.external.client.BreedService;
+import com.cpadilla.petservice.external.client.ImageService;
 import com.cpadilla.petservice.external.client.OwnerService;
 import com.cpadilla.petservice.model.*;
 import com.cpadilla.petservice.repository.PetRepository;
@@ -16,7 +18,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,52 +40,23 @@ public class PetServiceImpl implements PetService {
     private OwnerService ownerService;
 
     @Autowired
+    private ImageService imageService;
+
+    @Autowired
     private AdoptionPostService adoptionPostService;
 
     @Autowired
     private PetFilterSpecification<PetEntity> filterSpecification;
 
+    public static final List<String> allowedImageFormats = Arrays.asList("jpg", "png","jpeg");
 
     @Override
     public PetResponse getPetById(int petId) {
         log.info("Getting pet by id {} at SERVICE layer", petId);
-        var petEntity = repository.findById(petId)
+        var petEntity = repository.findByIdAndStatusTrue(petId)
                 .orElseThrow(() -> new CustomException("Pet not found with id: " + petId, "PET_NOT_FOUND", HttpStatus.NOT_FOUND.value()));
 
-        var owner = ownerService.getUserById(petEntity.getOwnerId()).getBody();
-        var ownerDetails = OwnerDetails.builder()
-                .userId(owner.getUserId())
-                .name(owner.getName())
-                .surname(owner.getSurname())
-                .phoneNumber(owner.getPhoneNumber())
-                .build();
-
-        var breed = breedService.getBreedById(petEntity.getBreedId()).getBody();
-        var breedDetails = BreedDetails.builder()
-                .id(breed.getId())
-                .name(breed.getName())
-                .specie(breed.getSpecie())
-                .build();
-
-        boolean isPublished =
-                adoptionPostService.checkPetIsPosted(petEntity.getId()).getBody() != null
-                        ? adoptionPostService.checkPetIsPosted(petEntity.getId()).getBody()
-                        : false;
-
-        return PetResponse.builder()
-                .id(petEntity.getId())
-                .name(petEntity.getName())
-                .weight(petEntity.getWeight())
-                .age(petEntity.getAge())
-                .vaccinated(petEntity.getVaccinated())
-                .dangerous(petEntity.getDangerous())
-                .size(petEntity.getSize())
-                .sterilized(petEntity.getSterilized() != null ? petEntity.getSterilized() : false)
-                .dewormed(petEntity.getDewormed() != null ? petEntity.getDewormed() : false)
-                .ownerDetails(ownerDetails)
-                .breedDetails(breedDetails)
-                .isPublished(isPublished)
-                .build();
+       return buildPetFromPetEntity(petEntity);
     }
 
     @Override
@@ -110,36 +85,7 @@ public class PetServiceImpl implements PetService {
         var petEntities = repository.findAll(specification, PageRequest.of(filters.getPage(), pagesize, sortingDetails));
 
         var filteredPets = petEntities.stream()
-                .map(petEntity -> {
-                    var owner = ownerService.getUserById(petEntity.getOwnerId()).getBody();
-                    var ownerDetails = OwnerDetails.builder()
-                            .userId(owner.getUserId())
-                            .name(owner.getName())
-                            .surname(owner.getSurname())
-                            .phoneNumber(owner.getPhoneNumber())
-                            .build();
-
-                    var breed = breedService.getBreedById(petEntity.getBreedId()).getBody();
-                    var breedDetails = BreedDetails.builder()
-                            .id(breed.getId())
-                            .name(breed.getName())
-                            .specie(breed.getSpecie())
-                            .build();
-
-                    return PetResponse.builder()
-                            .id(petEntity.getId())
-                            .name(petEntity.getName())
-                            .weight(petEntity.getWeight())
-                            .age(petEntity.getAge())
-                            .vaccinated(petEntity.getVaccinated())
-                            .dangerous(petEntity.getDangerous())
-                            .size(petEntity.getSize())
-                            .sterilized(petEntity.getSterilized() != null ? petEntity.getSterilized() : false)
-                            .dewormed(petEntity.getDewormed() != null ? petEntity.getDewormed() : false)
-                            .ownerDetails(ownerDetails)
-                            .breedDetails(breedDetails)
-                            .build();
-                }).collect(Collectors.toList());
+                .map(this::buildPetFromPetEntity).collect(Collectors.toList());
 
 //        var sortingDetails = Sort.by(Sort.Order.by("name"));
 //        if (filters.getSort() != null && !filters.getSort().isEmpty()) {
@@ -161,7 +107,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public int savePet(PetRequest petRequest) {
+    public PetResponse savePet(PetRequest petRequest) {
         log.info("saving pet at SERVICE layer");
         var owner = ownerService.getUserById(petRequest.getOwnerId()).getBody();
         if (owner == null)
@@ -183,14 +129,14 @@ public class PetServiceImpl implements PetService {
                 .breedId(petRequest.getBreedId())
                 .ownerId(petRequest.getOwnerId())
                 .build();
-        return repository.save(petToSave).getId();
+        return buildPetFromPetEntity(repository.save(petToSave));
     }
 
     @Override
     public int updatePet(PetRequest petRequest) {
         log.info("updating pet with id {} at SERVICE layer", petRequest.getId());
 
-        var petToUpdate = repository.findById(petRequest.getId())
+        var petToUpdate = repository.findByIdAndStatusTrue(petRequest.getId())
                 .orElseThrow(() -> new CustomException("Pet not found with id: " + petRequest.getId(), "PET_NOT_FOUND", HttpStatus.NOT_FOUND.value()));
 
         petToUpdate.setName(petRequest.getName());
@@ -232,6 +178,40 @@ public class PetServiceImpl implements PetService {
                 ).collect(Collectors.toList());
     }
 
+    @Override
+    public PetResponse updateProfileImage(int petId, MultipartFile image) {// if want to delete, just do not send an image
+        log.info("updating profile photo for pet with id: {} from service layer", petId);
+
+
+
+        var petEntity = repository.findByIdAndStatusTrue(petId)
+                .orElseThrow(() -> new CustomException("Pet not found with id: " + petId, "PET_NOT_FOUND", HttpStatus.NOT_FOUND.value()));
+
+        ImageResponse newImage;
+        if (image == null || image.isEmpty()) {
+            petEntity.setImageId(null);
+        } else {
+            var filename = image.getOriginalFilename();
+            var extension = filename.substring(filename.lastIndexOf(".") + 1);
+            if (!allowedImageFormats.contains(extension)) {
+                throw new UnsupportedFileException("The file type/extension is invalid, try a valid image file (png, jpg, jpeg)");
+            }
+
+
+            newImage =
+                    imageService.updatePetProfileImage(
+                            petId,
+                            image,
+                            petEntity.getImageId() != null && petEntity.getImageId() > 0 ? petEntity.getImageId() : 0
+                    ).getBody();
+            petEntity.setImageId(newImage.getImageId());
+        }
+        var updatedPet = repository.save(petEntity);
+
+        return buildPetFromPetEntity(updatedPet);
+
+    }
+
     public String validateSorting(String sortRequest) {
         var sort = "name";
         if (sortRequest != null && !sortRequest.isEmpty()) {
@@ -260,4 +240,49 @@ public class PetServiceImpl implements PetService {
         }
         return true;
     }
+
+
+    public PetResponse buildPetFromPetEntity(PetEntity petEntity){
+        var owner = ownerService.getUserById(petEntity.getOwnerId()).getBody();
+        var ownerDetails = OwnerDetails.builder()
+                .userId(owner.getUserId())
+                .name(owner.getName())
+                .surname(owner.getSurname())
+                .phoneNumber(owner.getPhoneNumber())
+                .build();
+
+        var breed = breedService.getBreedById(petEntity.getBreedId()).getBody();
+        var breedDetails = BreedDetails.builder()
+                .id(breed.getId())
+                .name(breed.getName())
+                .specie(breed.getSpecie())
+                .build();
+
+        var profileImageUrl =
+                petEntity.getImageId() != null
+                        ? imageService.getImageById(petEntity.getImageId()).getBody().getImageUrl()
+                        : null;
+
+        boolean isPublished =
+                adoptionPostService.checkPetIsPosted(petEntity.getId()).getBody() != null
+                        ? adoptionPostService.checkPetIsPosted(petEntity.getId()).getBody()
+                        : false;
+
+        return PetResponse.builder()
+                .id(petEntity.getId())
+                .name(petEntity.getName())
+                .weight(petEntity.getWeight())
+                .age(petEntity.getAge())
+                .vaccinated(petEntity.getVaccinated())
+                .dangerous(petEntity.getDangerous())
+                .size(petEntity.getSize())
+                .sterilized(petEntity.getSterilized() != null ? petEntity.getSterilized() : false)
+                .dewormed(petEntity.getDewormed() != null ? petEntity.getDewormed() : false)
+                .ownerDetails(ownerDetails)
+                .breedDetails(breedDetails)
+                .profileImageUrl(profileImageUrl)
+                .isPublished(isPublished)
+                .build();
+    }
+
 }

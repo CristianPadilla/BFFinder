@@ -1,6 +1,7 @@
 package com.cpadilla.userservice.service;
 
 import com.cpadilla.userservice.entity.UserEntity;
+import com.cpadilla.userservice.exception.UnsupportedFileException;
 import com.cpadilla.userservice.exception.UserServiceCustomException;
 import com.cpadilla.userservice.external.client.ImageService;
 import com.cpadilla.userservice.external.client.LocationService;
@@ -10,6 +11,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Log4j2
 @Service
@@ -24,6 +28,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private LocationService locationService;
+
+    public static final List<String> allowedImageFormats = Arrays.asList("jpg", "png","jpeg");
 
     @Override
     public UserResponse getUserById(long userId) {
@@ -107,8 +113,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse updateProfileImage(long userId, MultipartFile image) {// if want to delete, just do not send an image
-
         log.info("updating profile photo for user with id: {} from service layer", userId);
+
+        var filename = image.getOriginalFilename();
+        var extension = filename.substring(filename.lastIndexOf(".") + 1);
+        if (!allowedImageFormats.contains(extension)) {
+            throw new UnsupportedFileException("The file type/extension is invalid, try a valid image file (png, jpg, jpeg)");
+        }
+
         var userEntity = repository.findById(userId)
                 .orElseThrow(() -> new UserServiceCustomException("user with given id not found", "USER_NOT_FOUND"));
 
@@ -135,6 +147,7 @@ public class UserServiceImpl implements UserService {
                     .email(updatedUser.getEmail())
                     .phoneNumber(updatedUser.getPhoneNumber())
                     .profileImageUrl(newImage != null ? newImage.getImageUrl() : null)
+                    .role('s')
                     .build();
         } else if (updatedUser.getRole() == 's') {
             var location = locationService.getById(updatedUser.getAddressId()).getBody();
@@ -145,6 +158,7 @@ public class UserServiceImpl implements UserService {
                     .phoneNumber(updatedUser.getPhoneNumber())
                     .profileImageUrl(newImage != null ? newImage.getImageUrl() : null)
                     .location(location)
+                    .role('s')
                     .build();
         } else throw new UserServiceCustomException("user role is not valid", "ROLE_NOT_VALID");
     }

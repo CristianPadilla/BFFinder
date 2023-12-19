@@ -22,6 +22,12 @@ public class ImagesController {
         return ResponseEntity.ok(service.updateProfileImage(userId, image, previousImageId));
     }
 
+    @PostMapping("/pet/profile/{petId}/{previousImageId}")
+    public ResponseEntity<ImageResponse> updatePetProfileImage(@PathVariable("petId") long petId, @RequestBody MultipartFile image, @PathVariable("previousImageId") int previousImageId) {
+        log.info("updating profile image for pet with id: {} from controller layer", petId);
+        return ResponseEntity.ok(service.updatePetProfileImage(petId, image, previousImageId));
+    }
+
     @PostMapping("/post/{postId}")
     public ResponseEntity<ImageResponse> uploadPostImage(@PathVariable("postId") int postId, @RequestBody MultipartFile image) {
         log.info("uploading post image for post id: {} from controller layer", postId);

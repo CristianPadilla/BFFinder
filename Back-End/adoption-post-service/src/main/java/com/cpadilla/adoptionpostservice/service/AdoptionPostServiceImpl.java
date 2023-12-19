@@ -5,6 +5,7 @@ import com.cpadilla.adoptionpostservice.entity.PostImageEntity;
 import com.cpadilla.adoptionpostservice.exception.CustomException;
 import com.cpadilla.adoptionpostservice.exception.PetNotFoundException;
 import com.cpadilla.adoptionpostservice.exception.PostNotFoundException;
+import com.cpadilla.adoptionpostservice.exception.UnsupportedFileException;
 import com.cpadilla.adoptionpostservice.external.client.ImageService;
 import com.cpadilla.adoptionpostservice.external.client.LocationService;
 import com.cpadilla.adoptionpostservice.external.client.PetService;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -52,6 +54,8 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
     @Autowired
     private AdoptionPostFilterSpecification<AdoptionPostEntity> filterSpecification;
+
+    public static final List<String> allowedImageFormats = Arrays.asList("jpg", "png","jpeg");
 
 
     @Override
@@ -385,6 +389,13 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     @Override
     public ImageResponse savePostImage(int postId, MultipartFile image) {
         log.info("saving post image for post id {} from service layer", postId);
+
+        var filename = image.getOriginalFilename();
+        var extension = filename.substring(filename.lastIndexOf(".") + 1);
+        if (!allowedImageFormats.contains(extension)) {
+            throw new UnsupportedFileException("The file type/extension is invalid, try a valid image file (png, jpg, jpeg)");
+        }
+
         if (!repository.existsById(postId))
             throw new CustomException("Adoption post not found with id: " + postId, "ADOPTION_POST_NOT_FOUND", HttpStatus.NOT_FOUND.value());
 

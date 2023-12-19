@@ -33,6 +33,9 @@ public class GoogleCloudStorageImageService implements CloudStorageService {
     @Value("${app.google-cloud-profile-images-folder}")
     private String profileImagesPath;
 
+    @Value("${app.google-cloud-pet-profile-images-folder}")
+    private String petProfileImagesPath;
+
     @Value("${app.google-cloud-post-images-folder}")
     private String postImagesPath;
 
@@ -60,6 +63,20 @@ public class GoogleCloudStorageImageService implements CloudStorageService {
         log.info("uploading blob named {} from google cloud storage service ", blobName);
         try {
             Blob blob = bucket.create(imagesBasePath + profileImagesPath + blobName, image.getBytes(), "image/png");
+            var imageUrl = StorageBaseUrl + blob.getName();
+            log.info("created blob name: " + blob.getName() + " at url: " + imageUrl);
+            return imageUrl;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public String uploadPetProfileImage(String blobName, MultipartFile image) {
+        log.info("uploading blob named {} from google cloud storage service ", blobName);
+        try {
+            Blob blob = bucket.create(imagesBasePath + petProfileImagesPath + blobName, image.getBytes(), "image/png");
             var imageUrl = StorageBaseUrl + blob.getName();
             log.info("created blob name: " + blob.getName() + " at url: " + imageUrl);
             return imageUrl;

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -39,13 +40,19 @@ public class PetController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Integer> savePet(@Valid @RequestBody PetRequest pet) {
+    public ResponseEntity<PetResponse> savePet(@Valid @RequestBody PetRequest pet) {
         return new ResponseEntity<>(service.savePet(pet), HttpStatus.OK);
     }
 
     @PutMapping("/update")
     public ResponseEntity<Integer> updatePet(@RequestBody PetRequest pet) {
         return new ResponseEntity<>(service.updatePet(pet), HttpStatus.OK);
+    }
+
+    @PutMapping("/update/profile/{petId}")
+    public ResponseEntity<PetResponse> updateProfileImage(@PathVariable("petId") int petId, @RequestBody MultipartFile image) {
+        log.info("updating profile photo for pet with id: {} from controller layer", petId);
+        return new ResponseEntity<>(service.updateProfileImage(petId, image), HttpStatus.OK);
     }
 
 

@@ -9,6 +9,7 @@ import java.util.List;
 public interface ImageService {
 
     ImageResponse updateProfileImage(long userId, MultipartFile imag, int previousImageId);
+    ImageResponse updatePetProfileImage(long petId, MultipartFile imag, int previousImageId);
 
     ImageResponse uploadPostImage(int postId, MultipartFile image);
 

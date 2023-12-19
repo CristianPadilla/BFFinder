@@ -22,6 +22,7 @@ public class PetResponse {
     private boolean status;
     private boolean dewormed;
     private boolean isPublished;
+    private String profileImageUrl;
 
     private OwnerDetails ownerDetails;
     private BreedDetails breedDetails;

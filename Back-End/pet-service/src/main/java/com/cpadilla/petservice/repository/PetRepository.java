@@ -18,6 +18,8 @@ public interface PetRepository extends JpaRepository<PetEntity, Integer>, JpaSpe
 
     List<PetEntity> findAllByOwnerId(int ownerId);
 
+    Optional<PetEntity> findByIdAndStatusTrue(int petId);
+
     Page<PetEntity> findAll(Specification<PetEntity> specification, Pageable pageable);
 
 }
