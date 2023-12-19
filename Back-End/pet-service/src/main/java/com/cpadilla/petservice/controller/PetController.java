@@ -56,5 +56,11 @@ public class PetController {
         return new ResponseEntity<>(service.updateProfileImage(petId, image), HttpStatus.OK);
     }
 
+    @PutMapping("/{petId}/disable")
+    public ResponseEntity<Void> updatePet(@PathVariable("petId") int petId) {
+        log.info("changing status to inactive to pet with id: {} from controller layer", petId);
+        service.disablePet(petId);
+        return ResponseEntity.ok().build();
+    }
 
 }

@@ -162,28 +162,13 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public void disablePet(int petId) {
-
+        log.info("disabling pet with id {} at SERVICE layer", petId);
+        var petToDisable = repository.findByIdAndStatusTrue(petId)
+                .orElseThrow(() -> new CustomException("Pet not found with id: " + petId, "PET_NOT_FOUND", HttpStatus.NOT_FOUND.value()));
+        petToDisable.setStatus(false);
+        repository.save(petToDisable);
     }
 
-    @Override
-    public List<PetResponse> getAllByOwnerId(int ownerId) {
-        return repository.findAllByOwnerId(ownerId)
-                .stream()
-                .map(petEntity ->
-                                PetResponse.builder()
-                                        .id(petEntity.getId())
-                                        .name(petEntity.getName())
-                                        .weight(petEntity.getWeight())
-                                        .age(petEntity.getAge())
-                                        .vaccinated(petEntity.getVaccinated())
-                                        .dangerous(petEntity.getDangerous())
-                                        .size(petEntity.getSize())
-                                        .sterilized(petEntity.getSterilized())
-                                        .dewormed(petEntity.getDewormed())
-//                                .breedDetails(pe)// still not implemented
-                                        .build()
-                ).collect(Collectors.toList());
-    }
 
     @Override
     public PetResponse updateProfileImage(int petId, MultipartFile image) {// if want to delete, just do not send an image
@@ -228,6 +213,26 @@ public class PetServiceImpl implements PetService {
             };
         }
         return sort;
+    }
+
+    @Override
+    public List<PetResponse> getAllByOwnerId(int ownerId) {
+        return repository.findAllByOwnerId(ownerId)
+                .stream()
+                .map(petEntity ->
+                                PetResponse.builder()
+                                        .id(petEntity.getId())
+                                        .name(petEntity.getName())
+                                        .weight(petEntity.getWeight())
+                                        .age(petEntity.getAge())
+                                        .vaccinated(petEntity.getVaccinated())
+                                        .dangerous(petEntity.getDangerous())
+                                        .size(petEntity.getSize())
+                                        .sterilized(petEntity.getSterilized())
+                                        .dewormed(petEntity.getDewormed())
+//                                .breedDetails(pe)// still not implemented
+                                        .build()
+                ).collect(Collectors.toList());
     }
 
     public boolean petPassesFilters(PetResponse petResponse, PetsFilterRequest filter) {
