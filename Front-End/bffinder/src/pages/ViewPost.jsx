@@ -18,9 +18,13 @@ const ViewPost = () => {
                 <Breadcrumbs/>
             </div>
 
-          <div className="main-content">
-                <SectionPost/>
+          <div className="main-content-post">
+                <SectionPost  />
+{/* Definir que el otro elemento este dejabo de SectionPost */}
+              
           </div>
+          
+          
 
         </main>
       </section>

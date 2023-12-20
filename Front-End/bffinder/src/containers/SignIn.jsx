@@ -40,7 +40,7 @@ export default function SignIn() {
       );
 
       setToken(response.data.token);
-      navigate("/home");
+      navigate("/selecciona-especie");
     } catch (error) {
       if (error.response) {
         setError("Error en el inicio de sesión. Verifica tus credenciales.");

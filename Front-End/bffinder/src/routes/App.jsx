@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "containers/Layout";
 import RecoveryPassword from "containers/RecoveryPassword";
 import PreHome from "pages/PreHome";
+import SelectSpecie from "pages/SelectSpecie";
 import Home from "pages/Home";
 import NotFound from "pages/NotFound";
 import Perfil from "pages/Perfil";
@@ -19,6 +20,7 @@ const App = () => {
 				<Route path="/" element={<PreHome />} />
 				<Route path="/login" element={<Autenticacion/>} />
 				<Route path="/perfil" element={<Perfil/>} />
+				<Route path="/selecciona-especie" element={<SelectSpecie/>} />
 				<Route path="/home" element={<Home/>} />
 				<Route path="/ver-publicacion" element={<Verpublicacion/>} />
 				<Route path="/ejemplo" element={<Ejemplo/>} />
