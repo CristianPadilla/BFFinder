@@ -306,30 +306,27 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     }
 
     @Override
-    public int updatePost(AdoptionPostRequest request) {
+    public AdoptionPostResponse updatePostDescription(AdoptionPostRequest request) {
 
         var postToUpdate = repository.findById(request.getId())
                 .orElseThrow(() -> new PostNotFoundException("The adoption post not found for id " + request.getId()));
 
-        var currentLocationDetails = locationService.getById(postToUpdate.getAddressId()).getBody();
-
-
         if (!request.getDescription().equals(postToUpdate.getDescription()))
             postToUpdate.setDescription(request.getDescription());
 
-        if (request.getLocation().getCityId() != currentLocationDetails.getCity().getId()) // update city only
-            locationService.updateAddress(LocationRequest.builder()
-                    .id(currentLocationDetails.getId())
-                    .cityId(request.getLocation().getCityId())
-                    .build());
+//        var currentLocationDetails = locationService.getById(postToUpdate.getAddressId()).getBody();
+//        if (request.getLocation().getCityId() != currentLocationDetails.getCity().getId()) // update city only
+//            locationService.updateAddress(LocationRequest.builder()
+//                    .id(currentLocationDetails.getId())
+//                    .cityId(request.getLocation().getCityId())
+//                    .build());
 
-
-        return repository.save(postToUpdate).getId();
+        return buidPostFromEntity(repository.save(postToUpdate));
     }
 
     @Override
     public int cancelPost(int postId) {
-        AdoptionPostEntity postToUpdate = repository.findById(postId)
+        AdoptionPostEntity postToUpdate = repository.findByIdAndStatusIsTrue(postId)
                 .orElseThrow(() -> new PostNotFoundException("The adoption post not found for id " + postId));
 
         postToUpdate.setStatus(false);

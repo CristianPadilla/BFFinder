@@ -17,7 +17,7 @@ public interface AdoptionPostRepository extends JpaRepository<AdoptionPostEntity
 
     List<AdoptionPostEntity> findAllByPetId(int petId);
 
-    List<AdoptionPostEntity> findAllByUserIdAndStatusIsTrueOrderByDateDesc(int userId);
+    Optional<AdoptionPostEntity> findByIdAndStatusIsTrue(int userId);
 
 
     List<AdoptionPostEntity> findAllByStatusTrue(Sort sort);

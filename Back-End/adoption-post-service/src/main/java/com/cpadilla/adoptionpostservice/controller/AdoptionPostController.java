@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,10 +53,10 @@ public class AdoptionPostController {
     }
 
 
-    @PutMapping("/update")
-    public ResponseEntity<Integer> updateAdoptionPost(@RequestBody AdoptionPostRequest request) {
-        log.info("Updating post from CONTROLLER layer");
-        return new ResponseEntity<>(service.updatePost(request), HttpStatus.OK);
+    @PutMapping("/update/description/")
+    public ResponseEntity<AdoptionPostResponse> updateAdoptionPostDescription(@RequestBody AdoptionPostRequest request) {
+        log.info("Updating post description from CONTROLLER layer");
+        return new ResponseEntity<>(service.updatePostDescription(request), HttpStatus.OK);
     }
 
     @GetMapping("check/pet/{petId}")
@@ -78,6 +77,13 @@ public class AdoptionPostController {
         log.info("deleting post image from CONTROLLER layer");
         service.cancelPostImage(postId, imageId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/disable/{postId}")
+    public ResponseEntity<Void> disablePost(@PathVariable("postId") int postId) {
+        log.info("disabling post from CONTROLLER layer");
+        service.cancelPost(postId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

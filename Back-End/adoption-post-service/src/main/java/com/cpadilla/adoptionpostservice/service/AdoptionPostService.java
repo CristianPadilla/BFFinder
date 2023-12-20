@@ -22,7 +22,7 @@ public interface AdoptionPostService {
 
     Page<AdoptionPostPartialsResponse> getAllFilter(PostsRequest filterRequest);
 
-    int updatePost(AdoptionPostRequest request);
+    AdoptionPostResponse updatePostDescription(AdoptionPostRequest request);
 
     int cancelPost(int postId);
 
