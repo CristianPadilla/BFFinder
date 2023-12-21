@@ -10,7 +10,7 @@ public interface AdoptionPostService {
 
     AdoptionPostResponse getAdoptionPostById(int postId);
 
-    int savePost(PostRequest request);
+    AdoptionPostResponse savePost(PostRequest request);
 
     ImageResponse savePostImage(int postId, MultipartFile image);
 
@@ -22,7 +22,7 @@ public interface AdoptionPostService {
 
     Page<AdoptionPostPartialsResponse> getAllFilter(PostsRequest filterRequest);
 
-    int updatePost(AdoptionPostRequest request);
+    AdoptionPostResponse updatePostDescription(AdoptionPostRequest request);
 
     int cancelPost(int postId);
 

@@ -2,11 +2,14 @@ package com.cpadilla.imagesservice.service;
 
 import com.cpadilla.imagesservice.entity.ImageEntity;
 import com.cpadilla.imagesservice.exception.ImageServiceCustomException;
+import com.cpadilla.imagesservice.exception.UnsoportedFileException;
 import com.cpadilla.imagesservice.model.ImageResponse;
 import com.cpadilla.imagesservice.repository.ImageRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Date;
@@ -49,8 +52,44 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    public ImageResponse updatePetProfileImage(long petId, MultipartFile image, int previousImageId) {
+        log.info("updating profile image for pet id {} from image service ", petId);
+        var imageName = generateImageName(petId);
+        var blobname = "/" + petId + "/" + imageName; // image name must include user id folder
+        var createdBlobName = storageService.uploadPetProfileImage(blobname, image);
+
+        var imageEntity = ImageEntity.builder()
+                .name(createdBlobName)
+                .status(true)
+                .uploadDate(Instant.now())
+                .build();
+        var savedImage = repository.save(imageEntity);
+
+        if (previousImageId > 0) deleteImage(previousImageId);// disable previous image
+
+        return ImageResponse.builder()
+                .imageId(savedImage.getId())
+                .imageUrl(savedImage.getName())
+//                .uploadDate(savedImage.getUploadDate())
+                .build();
+    }
+
+    @Override
     public ImageResponse uploadPostImage(int postId, MultipartFile image) {
         log.info("uploading post image for post id {} from service layer", postId);
+
+//        var filename = image.getOriginalFilename();
+//        var extension = filename.substring(filename.lastIndexOf(".") + 1);
+//        log.info("extensionnn = {}", extension);
+//
+//        if (!extension.equals("jpg") && !extension.equals("png")) {
+////            var result = new BeanPropertyBindingResult(image, "image");
+////            result.rejectValue("image", "wrong.filetype", "The file type/extension is invalid, try a valid image file (png, jpg)");
+//
+//                throw new UnsoportedFileException("The file type/extension is invalid, try a valid image file (png, jpg)");
+//
+//        }
+
         var imageName = generateImageName(postId);
         var blobname = "/" + postId + "/" + imageName; // image name must include user id folder
         var createdBlobName = storageService.uploadPostImage(blobname, image);

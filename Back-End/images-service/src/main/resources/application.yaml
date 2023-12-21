@@ -25,4 +25,5 @@ app:
   google-cloud-base-url-path: https://storage.googleapis.com/bffinder-e5a52.appspot.com/
   google-cloud-images-folder-path: bffinder/images # do not put / at start of this path
   google-cloud-profile-images-folder: /profiles
+  google-cloud-pet-profile-images-folder: /pets
   google-cloud-post-images-folder: /posts

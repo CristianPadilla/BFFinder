@@ -32,6 +32,8 @@ public class PetEntity {
     private Integer ownerId;
     @Column(name = "breed_id")
     private Integer breedId;
+    @Column(name = "image_id")
+    private Integer imageId;
 
 
 
