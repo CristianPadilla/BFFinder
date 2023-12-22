@@ -18,7 +18,7 @@ public class RouteValidator {
             "/auth/register/shelter",
             "/auth/authenticate",
             "/eureka",
-            "/post/all"
+            "/post/all/sort/date/true"
 //            "/api-docts/",
     );
 

@@ -18,5 +18,8 @@ public class PetsFilters {
     private String size;
     private String search;
     private int ownerId;
+    private Boolean vaccinated;
+    private Boolean sterilized;
+    private Boolean dewormed;
 
 }

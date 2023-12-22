@@ -72,6 +72,9 @@ public class PetServiceImpl implements PetService {
                 .size(filters.getSize())
                 .age(filters.getAge())
                 .status("A")
+                .vaccinated(filters.getVaccinated())
+                .sterilized(filters.getSterilized())
+                .dewormed(filters.getDewormed())
                 .build();
 
         var specification =
