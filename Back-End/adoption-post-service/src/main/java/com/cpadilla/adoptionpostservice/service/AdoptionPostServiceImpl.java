@@ -126,8 +126,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         var specification =
                 filterSpecification.getSearchSpecification(postFilters); // apply post filters
 
-        var postEntities = repository
-                .findAll(specification, PageRequest.of(request.getPage(), pageSize));
+        var postEntities = repository.findAll(specification);
 
         List<AdoptionPostPartialsResponse> filteredPosts;
         filteredPosts = postEntities.stream()
@@ -215,11 +214,13 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
     @Override
     public Page<AdoptionPostPartialsResponse> getAllFilter(PostsRequest request) {
+        // TODO !important there is a optimization problem, when getting the posts it will get almost all witch is not optimal
+        // options could be to limit the number of posts, wit a limit, or a date limit, or implement filter from pets service  or something
         var pageSize = request.getPageSize() > 0 && request.getPageSize() <= 20
                 ? request.getPageSize()
                 : 10;
 
-        boolean tsFilters = request.getFilters() != null;// there is filters?
+        boolean tsFilters = request.getFilters() != null;// are there any filters?
 
         var postFilters = PostFilters.builder()
                 .departmentId(tsFilters ? request.getFilters().getDepartmentId() : 0)
@@ -239,7 +240,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         var specification =
                 filterSpecification.getSearchSpecification(postFilters); // apply post filters
         var postEntities =
-                repository.findAll(specification, PageRequest.of(request.getPage(), pageSize));
+                repository.findAll(specification);
 
         List<AdoptionPostPartialsResponse> filteredPosts;
 
