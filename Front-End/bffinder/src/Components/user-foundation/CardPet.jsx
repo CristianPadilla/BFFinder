@@ -9,7 +9,6 @@ import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import Avatar from '@mui/material/Avatar';
-
  const formatTimeDifference = (hours) => {
     const weeks = Math.floor(hours / (24 * 7));
     const remainingHours = hours % (24 * 7);
@@ -25,10 +24,12 @@ import Avatar from '@mui/material/Avatar';
     }
   };  
 
-const CardPost = ({ post }) => {
+const CardPet = ({ post }) => {
   const navigate = useNavigate();
   const { petPartialResponse, images, locationResponse, date, user, profileImageUrl } = post;
   const { name, breedDetails, specie } = petPartialResponse;
+
+
   const { city } = locationResponse;
 
   const publishDate = new Date(date);
@@ -53,29 +54,29 @@ const CardPost = ({ post }) => {
       >
         <div
           style={{
-            width: '30%', // Porción de la card ocupada por la imagen
-            height: '100%', // Altura total de la card
+            width: '30%',
+            height: '100%',
             overflow: 'hidden',
           }}
         >
           <Link to="/ver-publicacion">
-    <CardMedia
-      component="img"
-      sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
-      image={images && images.length > 0 ? images[0].imageUrl : imgdefault}
-      alt="Imagen"
-    />
-  </Link>
+            <CardMedia
+              component="img"
+              sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              image={images && images.length > 0 ? images[0].imageUrl : imgdefault}
+              alt="Imagen"
+            />
+          </Link>
         </div>
 
         <CardContent className="content-card" sx={{ width: '70%', padding: '0px', ':last-child': { paddingBottom: '0px' } }}>
           {/* Sección de la mascota */}
           <Grid container justifyContent="space-between" alignItems="center">
             <Grid item>
-            <Link to="/ver-publicacion" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <Typography variant="h5" component="h2" sx={{ fontSize: '1.7rem', marginTop: '-6%' }}>
-                {name}
-              </Typography>
+              <Link to="/ver-publicacion" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Typography variant="h5" component="h2" sx={{ fontSize: '1.7rem', marginTop: '-6%' }}>
+                  {name}
+                </Typography>
               </Link>
             </Grid>
 
@@ -99,50 +100,45 @@ const CardPost = ({ post }) => {
           <Typography
             variant="body2"
             color="text.secondary"
-            sx={{ fontSize: '.9rem', marginTop: '1rem' }}
+            sx={{ fontSize: '1rem', marginTop: '.9rem' }}
           >
-            <LocationOnIcon color="action" sx={{ fontSize: 15 }} /> {city.name}, {city.department.name}
+            <Favorite color="error" sx={{ fontSize: 20 }} /> 10 personas estan interesadas
           </Typography>
 
           <Typography
             variant="body2"
             color="text.secondary"
-            sx={{ fontSize: '.9rem', marginTop: '1rem' }}
+            sx={{ fontSize: '1rem', marginTop: '.9rem' }}
           >
-            {breedDetails.specie.name} - {breedDetails.name}
+            <QuestionAnswerIcon color="info" sx={{ fontSize: 20 }} /> 5 mensajes sin responder
           </Typography>
 
-          <Typography
+          {/* <Typography
             variant="body2"
             color="text.secondary"
             sx={{ fontSize: '.8rem', marginRight: '4rem' }}
           >
             Hace {formattedTimeDifference}
-          </Typography>
-
+          </Typography> */}
+          
           <CardActions sx={{ marginBottom: '-10px', marginTop: '9px'}}>
-          <Grid container spacing={1} alignItems="center" justifyContent="flex-end">
-            <Grid item>
-              <Typography variant="body2">2</Typography>
-            </Grid>
-            <Grid item>
-              <Checkbox
-                icon={<FavoriteBorder style={{ fontSize: 30 }} />}
-                checkedIcon={<Favorite style={{ fontSize: 30, color: 'red' }} />}
-                sx={{ paddingLeft: '0px' }}
-              />
-            </Grid>
+          <Grid container direction="row" spacing={1} alignItems="center" justifyContent="flex-end">
+          <Button variant="contained" size="small" sx={{ fontSize: '1rem' }} onClick={handleVerClick}>
+              Ya fue adoptado
+            </Button>
 
-            <Grid item>
-              <Typography variant="body2">4</Typography>
-            </Grid>
-            <Grid item>
-              <QuestionAnswerIcon sx={{ marginRight: '10px' }} />
-            </Grid>
-
-            {/* <Button variant="contained" size="small" sx={{ fontSize: '1rem' }} onClick={handleVerClick}>
+            <Grid container direction="column" alignItems="center" sx={{ backgroundColor: 'blanchedalmond', borderRadius: '18px' }}>
+              <Typography variant="body2">Publicación</Typography>
+              <Grid container direction="row" alignItems="center" >
+              <Button variant="contained" size="small" sx={{ fontSize: '1rem' }} onClick={handleVerClick}>
               Ver
-            </Button> */}
+            </Button>
+            <Button variant="contained" size="small" sx={{ fontSize: '1rem' }} onClick={handleVerClick}>
+              Modificar
+            </Button>
+              </Grid>
+            </Grid>
+           
           </Grid>
         </CardActions>
         </CardContent>
@@ -151,4 +147,4 @@ const CardPost = ({ post }) => {
   );
 };
 
-export default CardPost;
+export default CardPet;

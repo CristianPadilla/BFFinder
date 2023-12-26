@@ -7,9 +7,10 @@ import PanelF from "containers/PanelFilters";
 import Ordering from "containers/Ordering";
 import logobff from "imgs/logo-bffinder-FINAL2.png";
 import Slider from '@mui/material/Slider'
-
+import SearchIcon from '@mui/icons-material/Search';
 import Paper from '@mui/material/Paper';
 import SectionPosts from '../containers/SectionAllPosts';
+import SearchBar from '../Components/SearchBar';
 import NavHome from "../Components/NavHome";
 
 const Home = () => {
@@ -31,8 +32,8 @@ const Home = () => {
             <div className="head-title">
               <div className="left">
                 <h2>Mascotas Registradas</h2>
-                {/* ... (otros elementos) */}
-              </div>
+               
+              </div> <SearchBar />
               {/* <a href="#" className="btn-download">
                 <CloudDownload />
                 <span className="text">Download PDF</span>
@@ -45,11 +46,12 @@ const Home = () => {
 
             <div className='main-content'>
               <div className="column-filters">
-                <h4>Filtros</h4>
+                <h3>Filtros</h3>
                 <PanelF/>
               </div>
               <div className="main-content-scroll">
                 
+               
               <SectionPosts />
 
                 {/* <ul className="box-info">

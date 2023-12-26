@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import Grid from "@mui/material/Grid";
-import Cards from "../Components/CardHorizontal";
+import CardPet from "../Components/user-foundation/CardPet";
 import Cardv from "../Components/CardVertical";
 import CardPost from "../Components/post/CardPost";
 import Pagination from "@mui/material/Pagination";
@@ -23,7 +23,7 @@ const SectionAllPosts = () => {
   };
 
   const authToken =
-    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ3YWthbmRhQG1haWwuY29tIiwiaWF0IjoxNzAzMDE1ODY3LCJleHAiOjE3MDMxMDIyNjd9.BzZ845nRVe4XR1Z7Z0Drt6pyfNYv2T2rDOaEKH7YQDQ";
+    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ3YWthbmRhQG1haWwuY29tIiwiaWF0IjoxNzAzNTM5NTgzLCJleHAiOjE3MDM2MjU5ODN9.ltl4zL4S8IxOWBpqCm1BDweifaGQ8kIUAc_ReC-lDa0";
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:9090",
@@ -36,6 +36,7 @@ const SectionAllPosts = () => {
   useEffect(() => {
     axiosInstance
       .post("/post/all/filter", filters)
+      // .post("/pet/user/52/filter", filters)
       .then((response) => {
         console.log("Datos obtenidos:", response.data);
         setPostList(response.data.content);
@@ -71,10 +72,12 @@ const SectionAllPosts = () => {
       <section ref={sectionRef} className="inicio-user-comun">
       <Grid container className="grid-container">
         {currentPosts.map((post) => (
-          <Grid item xs={12} key={post.id}>
-            {/* <Cardv post={post} /> */}
-            <CardPost post={post}/>
-          </Grid>
+          <Grid item key={post.id} xs={12} sm={6} md={4} lg={4} xl={4} spacing={1}>
+          <Cardv post={post} />
+        </Grid>
+          // <Grid item xs={12} key={post.id}>
+          //   <CardPost post={post}/>
+          // </Grid>
         ))}
       </Grid>
 
