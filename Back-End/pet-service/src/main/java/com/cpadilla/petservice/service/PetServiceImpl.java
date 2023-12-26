@@ -87,7 +87,7 @@ public class PetServiceImpl implements PetService {
 
         var petEntities = repository.findAll(specification, PageRequest.of(filters.getPage(), pagesize, sortingDetails));
 
-        var filteredPets = petEntities.stream()
+        var responsePets = petEntities.stream()
                 .map(this::buildPetFromPetEntity).collect(Collectors.toList());
 
 //        var sortingDetails = Sort.by(Sort.Order.by("name"));
@@ -106,7 +106,7 @@ public class PetServiceImpl implements PetService {
 //                    : Sort.by(Sort.Order.by(sortingField));
 //        } else filteredPets.sort(Comparator.comparing(PetResponse::getAge));
 
-        return new PageImpl<>(filteredPets, PageRequest.of(filters.getPage(), pagesize, Sort.by(Sort.Order.by("name"))), filteredPets.size());
+        return new PageImpl<>(responsePets, petEntities.getPageable(), petEntities.getTotalElements());
     }
 
     @Override
