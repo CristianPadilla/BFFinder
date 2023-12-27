@@ -9,7 +9,7 @@ import logobff from "imgs/logo-bffinder-FINAL2.png";
 import Slider from '@mui/material/Slider'
 
 import Paper from '@mui/material/Paper';
-import SectionPosts from '../containers/SectionAllPosts';
+import SectionFilterPost from '../containers/SectionFilterPost';
 import NavHome from "../Components/NavHome";
 
 const Home = () => {
@@ -50,7 +50,7 @@ const Home = () => {
               </div>
               <div className="main-content-scroll">
                 
-              <SectionPosts />
+              <SectionFilterPost />
 
                 {/* <ul className="box-info">
                   <li>

@@ -1,13 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './routes/App.jsx';
+import { Provider } from 'react-redux';
+import { store } from './store';
 
-/*const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+// ReactDOM.createRoot(document.getElementById('root')).render(
+//   <React.StrictMode>
+//     <App />
+//   </React.StrictMode>
+// );
+
+
+ReactDOM.render(
+
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>
-);*/
-
-ReactDOM.render(<App />, document.getElementById('app'));
+  , document.getElementById('app'));
 

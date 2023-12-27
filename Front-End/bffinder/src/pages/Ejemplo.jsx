@@ -9,7 +9,7 @@ import logobff from "imgs/logo-bffinder-FINAL2.png";
 import Slider from '@mui/material/Slider'
 import PerfilMenu from '../containers/PerfilMenu';
 import Paper from '@mui/material/Paper';
-import SectionPosts from '../containers/SectionAllPosts';
+import SectionPosts from '../containers/SectionFilterPost';
 import NavHome from "../Components/NavHome";
 
 const Ejemplo = () => {
