@@ -11,48 +11,53 @@ import Slider from '@mui/material/Slider'
 import Paper from '@mui/material/Paper';
 import SectionFilterPost from '../containers/SectionFilterPost';
 import NavHome from "../Components/NavHome";
+import { FormControl, MenuItem, Select, Stack, Typography } from '@mui/material';
 
 const Home = () => {
 
   const [sortType, setSortType] = useState("");
-
   const handleSortChange = (type) => {
     // Haz lo que necesites con el tipo de ordenamiento (type)
     setSortType(type);
   };
 
-    return (
-        <div>
-        <section id="content">
-          <NavHome/>
 
-          {/* MAIN */}
-          <main>
-            <div className="head-title">
-              <div className="left">
-                <h2>Mascotas Registradas</h2>
-                {/* ... (otros elementos) */}
-              </div>
-              {/* <a href="#" className="btn-download">
+  // const [age, setAge] = React.useState('');
+  // const handleChange = (event) => {
+  //   setAge(event.target.value);
+  // };
+
+  return (
+    <div>
+      <section id="content">
+        <NavHome />
+
+        {/* MAIN */}
+        <main>
+          <div className="head-title">
+            <div className="left">
+              <h2>Mascotas Registradas</h2>
+              {/* ... (otros elementos) */}
+            </div>
+            {/* <a href="#" className="btn-download">
                 <CloudDownload />
                 <span className="text">Download PDF</span>
               </a> */}
-              <div>
-                <Ordering onSortChange={handleSortChange}/>
-              </div>
+            <div>
+              <Ordering onSortChange={handleSortChange} />
             </div>
+          </div>
 
+          <div className='main-content'>
+            <div className="column-filters">
+              <h4>Filtros</h4>
+              <PanelF />
+            </div>
+            <div className="main-content-scroll">
 
-            <div className='main-content'>
-              <div className="column-filters">
-                <h4>Filtros</h4>
-                <PanelF/>
-              </div>
-              <div className="main-content-scroll">
-                
               <SectionFilterPost />
 
-                {/* <ul className="box-info">
+              {/* <ul className="box-info">
                   <li>
                     <span className="text">
                       <h3>1020</h3>
@@ -97,17 +102,17 @@ const Home = () => {
                   </div>
                 </div> */}
 
-              </div>
-                
             </div>
-            
-            
-          </main>
-          {/* MAIN */}
 
-        </section>
-      </div>
-    );
-  };
-  
-  export default Home;
+          </div>
+
+
+        </main>
+        {/* MAIN */}
+
+      </section>
+    </div>
+  );
+};
+
+export default Home;

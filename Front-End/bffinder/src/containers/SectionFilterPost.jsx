@@ -10,13 +10,14 @@ import axios from "axios";
 import "styles/Home.scss";
 import { postApi } from "../api/postApi";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPosts } from "../store/slices/post";
+import { fetchPosts } from "../store/post";
 
 const SectionFilterPost = () => {
+  const dispatch = useDispatch();
   const { posts = [], pageable, loading } = useSelector(state => state.posts);
   const sectionRef = useRef(null);
 
-  const request = {
+  const postsRequest = {
     search: "",
     filters: {
       // from_date: "2020-05-01",
@@ -34,10 +35,9 @@ const SectionFilterPost = () => {
     page_size: 5,
   };
 
-  const dispatch = useDispatch();
   useEffect(() => {
-
-    dispatch(fetchPosts());
+    console.log('holaaaa', postsRequest);
+    dispatch(fetchPosts(0, postsRequest));
 
   }, []
     // [postList]
@@ -45,8 +45,7 @@ const SectionFilterPost = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 5; // Cantidad de posts por página
-
-  // Cambia la página                 
+              
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
     sectionRef.current.scrollIntoView({ top: 0, behavior: 'smooth' });
@@ -73,7 +72,7 @@ const SectionFilterPost = () => {
         >
           <Stack spacing={2}>
             <Pagination
-              count={Math.ceil(posts.length / postsPerPage)}
+              count={pageable.totalPages}
               color="warning"
               className="pagination-custom"
               page={pageable.pageNumber}

@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { TextInputComponent } from "../Components/TextInputComponent";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import "../styles/Card.scss";
 import { CheckboxInputComponent } from "../Components/CheckboxInputComponent";
 import TextInputPassword from "../Components/form/TextInputPassword";
-import { Snackbar, Alert } from "@mui/material";
+import { Snackbar, Alert, Grid } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { startRegisterUser } from "../store/auth";
 
 const formFields = {
   name: "",
@@ -21,57 +24,45 @@ const formFields = {
 };
 
 export function RegisterFoundationPage() {
-  const [reloadPage, setReloadPage] = useState(false);
-  const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+  const { status, errorMessage } = useSelector(state => state.auth);
+  const isCheckingAuth = useMemo(() => status === 'checking', [status]);
+  const [openConfirmationAlert, setOpenConfirmationAlert] = useState(false);
+  const navigate = useNavigate();
 
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
+  useEffect(() => {
+    if (status === 'authenticated') {
+      setOpenConfirmationAlert(true);
+      setTimeout(() => {
+        setOpenConfirmationAlert(false);
+        navigate("/home");
+      }, 2000);
     }
+  }, [status]);
 
-    setOpen(false);
+  const handleRegistration = async (values) => {
 
-    if (reloadPage) {
-      window.location.reload();
-    }
-  };
-
-  const handleRegistration = async (values, { setSubmitting, setErrors }) => {
-    try {
-      console.log("Submitting values:", values);
-      const response = await axios.post(
-        "http://localhost:9090/auth/register/shelter",
-        {
-          name: values.name,
-          email: values.email,
-          nit: values.nit,
-          commercial_registration_number:
-          values.commercial_registration_number !== ""
+    const user = {
+      name: values.name,
+      email: values.email,
+      password: values.password,
+      nit: values.nit,
+      commercial_registration_number:
+        values.commercial_registration_number !== ""
           ? values.commercial_registration_number
           : null,
-          password: values.password,
-        }
-      );
-
-      console.log("Response:", response.data);
-      setOpen(true);
-      setReloadPage(true);
-
-    } catch (error) {
-      console.error("Error:", error);
-      setErrors({
-        general: "Hubo un error en el registro. Inténtalo de nuevo.",
-      });
-    } finally {
-      setSubmitting(false);
+      type: 's'
     }
+    console.log("user from componenttt ", user);
+    dispatch(startRegisterUser(user))
+
   };
 
   return (
     <>
-    <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
+      <Snackbar open={openConfirmationAlert} autoHideDuration={2000} >
         <Alert
-          onClose={handleClose}
+          // onClose={handleClose}
           severity="success"
           sx={{ width: "100%", backgroundColor: "#FFCF9F" }}
           icon={
@@ -110,10 +101,10 @@ export function RegisterFoundationPage() {
             )
             .required("Por favor confirma tu contraseña"),
           nit: Yup.string()
-          .required("El nit es obligatorio")
-          .matches(/^\d{9}$/, "El número debe tener exactamente 9 dígitos"),
+            .required("El nit es obligatorio")
+            .matches(/^\d{9}$/, "El número debe tener exactamente 9 dígitos"),
           commercial_registration_number: Yup.string()
-          .matches(/^\d{11}$/, "El número debe tener exactamente 11 dígitos"),
+            .matches(/^\d{11}$/, "El número debe tener exactamente 11 dígitos"),
           terms: Yup.boolean().oneOf(
             [true],
             "Debes aceptar los términos y condiciones"
@@ -126,7 +117,6 @@ export function RegisterFoundationPage() {
               {formik.errors.general && (
                 <div className="error-message">{formik.errors.general}</div>
               )}
-              {console.log(formik.values)}
               <TextInputComponent
                 required
                 type="text"
@@ -150,7 +140,7 @@ export function RegisterFoundationPage() {
                 label="No. de Matrícula Mercantil (Cámara de Comercio)"
                 name="commercial_registration_number"
                 placeholder="12345678900"
-                value={formik.values.commercial_registration_number  || ""}
+                value={formik.values.commercial_registration_number || ""}
                 onChange={formik.handleChange}
               />
               <TextInputComponent
@@ -180,14 +170,14 @@ export function RegisterFoundationPage() {
                 onChange={formik.handleChange}
               />
               <TextInputPassword
-                  required
-                  label="Confirma la contraseña"
-                  name="password2"
-                  placeholder="Escribe tu contraseña"
-                  value={formik.values.password2}
-                  onChange={formik.handleChange}
-                  // helperText="Some important text"
-                />
+                required
+                label="Confirma la contraseña"
+                name="password2"
+                placeholder="Escribe tu contraseña"
+                value={formik.values.password2}
+                onChange={formik.handleChange}
+              // helperText="Some important text"
+              />
               <CheckboxInputComponent
                 required
                 label="Términos y condiciones"
@@ -196,7 +186,10 @@ export function RegisterFoundationPage() {
                 labelClassName="switch"
                 spanClassName="slider round"
               />
-              <button type="submit" className="btn">
+              <Grid item xs={12} display={!!errorMessage ? '' : 'none'}>
+                <Alert severity="error">{errorMessage}</Alert>
+              </Grid>
+              <button type="submit" className="btn" disabled={isCheckingAuth}>
                 Registrarse
               </button>
               <p className="social-text">O</p>

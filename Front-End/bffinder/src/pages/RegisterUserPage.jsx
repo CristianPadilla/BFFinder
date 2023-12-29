@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "../styles/login.scss";
 import "../styles/Card.scss";
 import { Formik, Form } from "formik";
@@ -7,9 +7,14 @@ import { TextInputComponent } from "../Components/TextInputComponent";
 import { SelectInputComponent } from "../Components/SelectInputComponent";
 import { CheckboxInputComponent } from "../Components/CheckboxInputComponent";
 import TextInputPassword from "../Components/form/TextInputPassword";
-import { Snackbar, Alert } from "@mui/material";
+import { Snackbar, Alert, Grid } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import axios from "axios";
+import { authApi } from "../api/authApi";
+import { useDispatch, useSelector } from "react-redux";
+import { startRegisterUser } from "../store/auth";
+import { Redirect, useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const formFields = {
   firstname: "",
@@ -24,52 +29,44 @@ const formFields = {
 };
 
 export function RegisterUserPage() {
-  const [reloadPage, setReloadPage] = useState(false);
-  const [open, setOpen] = useState(false);
 
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
+  const dispatch = useDispatch();
+  const { status, errorMessage } = useSelector(state => state.auth);
+  const isCheckingAuth = useMemo(() => status === 'checking', [status]);
+  const [openConfirmationAlert, setOpenConfirmationAlert] = useState(false);
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      setOpenConfirmationAlert(true);
+      setTimeout(() => {
+        setOpenConfirmationAlert(false);
+        navigate("/home");
+      }, 2000);
     }
+  }, [status]);
 
-    setOpen(false);
+  const handleRegistration = (values) => {
+    console.log("from componenttt ", values);
 
-    if (reloadPage) {
-      window.location.reload();
+    const user = {
+      firstname: values.firstname,
+      lastname: values.lastname,
+      phone: values.phone.trim() !== "" ? values.phone : null,
+      email: values.email,
+      password: values.password,
+      type: 'u',
     }
-  };
-
-  const handleRegistration = async (values, { setSubmitting, setErrors }) => {
-    try {
-
-      const response = await axios.post("http://localhost:9090/auth/register", {
-        firstname: values.firstname,
-        lastname: values.lastname,
-        email: values.email,
-        phone: values.phone.trim() !== "" ? values.phone : null,
-        password: values.password,
-      });
-      // console.log("Respuesta exitosa:", response.data);
-
-      setOpen(true);
-      setReloadPage(true);
-    } catch (error) {
-      console.error("Error en la solicitud de registro:", error);
-
-      setErrors({
-        general: "Hubo un error en el registro. Inténtalo de nuevo.",
-      });
-    } finally {
-      console.log("Finalizando...");
-      setSubmitting(false);
-    }
+    console.log("user from componenttt ", user);
+    dispatch(startRegisterUser(user))
   };
 
   return (
     <>
-      <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
+      <Snackbar open={openConfirmationAlert} autoHideDuration={2000}
+      >
         <Alert
-          onClose={handleClose}
           severity="success"
           sx={{ width: "100%", backgroundColor: "#4CAF50", color: "#fff" }}
           icon={
@@ -108,18 +105,6 @@ export function RegisterUserPage() {
             .email("El email no es valido")
             .oneOf([Yup.ref("email"), null], "Los correos no coinciden")
             .required("El email es obligatorio"),
-          // date: Yup.date()
-          //   .max(new Date(), "La fecha no puede ser mayor a la fecha actual")
-          //   .required("La fecha de nacimiento es obligatorio")
-          //   .transform(function (value, originalValue) {
-          //     if (this.isType(value)) {
-          //       return value;
-          //     }
-          //     const result = parse(originalValue, "dd.MM.yyyy", new Date());
-          //     return result;
-          //   })
-          //   .typeError("please enter a valid date")
-          //   .min("1910-01-01", "Seleccione una fecha valida"),
 
           password: Yup.string()
             .min(8, "La contraseña debe tener al menos 8 caracteres")
@@ -140,7 +125,6 @@ export function RegisterUserPage() {
         {(formik) => (
           <div className="register-form-container">
             <Form className="sign-up-form register-form" id="sign-up-form">
-              {console.log(formik.values)}
               <div className="form-container">
                 <TextInputComponent
                   required
@@ -160,14 +144,6 @@ export function RegisterUserPage() {
                   value={formik.values.lastname}
                   onChange={formik.handleChange}
                 />
-                {/* <TextInputComponent
-              type="date"
-              label="Fecha de Nacimiento"
-              name="date"
-              className="form-datepicker"
-              value={formik.values.date}
-              onChange={formik.handleChange}
-            /> */}
                 <TextInputComponent
                   required
                   type="email"
@@ -193,7 +169,6 @@ export function RegisterUserPage() {
                   placeholder="Escribe tu contraseña"
                   value={formik.values.password}
                   onChange={formik.handleChange}
-                  // helperText="Some important text"
                 />
                 <TextInputPassword
                   required
@@ -202,10 +177,9 @@ export function RegisterUserPage() {
                   placeholder="Escribe tu contraseña"
                   value={formik.values.password2}
                   onChange={formik.handleChange}
-                  // helperText="Some important text"
                 />
                 <TextInputComponent
-                  type="number"
+                  type="text"
                   label="Número de telefono"
                   name="phone"
                   placeholder="322000550"
@@ -221,13 +195,13 @@ export function RegisterUserPage() {
                   name="terms"
                   className="slider round"
                   labelClassName="switch"
+                  onChange={formik.handleChange}
                   spanClassName="slider round"
-                  // value={terms}
-                  // onChange={(e)=> onInputChange(e,'checkbox')}
-                  // value={formik.values.terms}
-                  // onChange={formik.handleChange}
                 />
-                <button id="sign-up-btn" type="submit" className="btn">
+                <Grid item xs={12} display={!!errorMessage ? '' : 'none'}>
+                  <Alert severity="error">{errorMessage}</Alert>
+                </Grid>
+                <button disabled={isCheckingAuth} id="sign-up-btn" type="submit" className="btn">
                   Registrarse
                 </button>
                 <p className="social-text">O</p>
@@ -239,7 +213,6 @@ export function RegisterUserPage() {
                 {formik.errors.general && (
                   <div className="error-message">{formik.errors.general}</div>
                 )}{" "}
-                {/* PARECE QUE NO SALE */}
               </div>
             </Form>
           </div>

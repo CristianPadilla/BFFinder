@@ -22,17 +22,17 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody UserRegisterRequest userRegisterRequest) {
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody UserRegisterRequest userRegisterRequest) {
         log.info("saving user from auth service CONTROLLER");
-        service.register(userRegisterRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+//        service.register(userRegisterRequest);
+        return new ResponseEntity<>(service.register(userRegisterRequest), HttpStatus.CREATED);
     }
 
     @PostMapping("/register/shelter")
-    public ResponseEntity<Void> registerShelter(@RequestBody ShelterRegisterRequest userRegisterRequest) {
+    public ResponseEntity<AuthenticationResponse> registerShelter(@RequestBody ShelterRegisterRequest userRegisterRequest) {
         log.info("saving shelter user from auth service CONTROLLER");
-        service.registerShelter(userRegisterRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+//        service.registerShelter(userRegisterRequest);
+        return new ResponseEntity<>(service.registerShelter(userRegisterRequest), HttpStatus.CREATED);
     }
 
     @PostMapping("/authenticate")

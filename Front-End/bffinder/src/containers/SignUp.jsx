@@ -59,12 +59,12 @@ export default function SignUp() {
         </Box>
 
         <CustomTabPanel value={value} index={0}>
-        <h2 className="titulo-r">Registrarse</h2>
+          <h2 className="titulo-r">Registrarse</h2>
           <RegisterUserPage />
         </CustomTabPanel>
 
         <CustomTabPanel value={value} index={1}>
-        <h2 className="titulo-r">Registrarse</h2>
+          <h2 className="titulo-r">Registrarse</h2>
           <RegisterFoundationPage />
         </CustomTabPanel>
       </CardContent>

@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private LocationService locationService;
 
-    public static final List<String> allowedImageFormats = Arrays.asList("jpg", "png","jpeg");
+    public static final List<String> allowedImageFormats = Arrays.asList("jpg", "png", "jpeg");
 
     @Override
     public UserResponse getUserById(long userId) {
@@ -42,7 +42,9 @@ public class UserServiceImpl implements UserService {
                         ? imageService.getImageById(userEntity.getImageId()).getBody()
                         : null;
 
-        var location = locationService.getById(userEntity.getAddressId()).getBody();
+        var location = userEntity.getAddressId() != null
+                ? locationService.getById(userEntity.getAddressId()).getBody()
+                : null;
         if (userEntity.getRole() == 'u') {
             return UserProfileResponse.builder()
                     .userId(userEntity.getUserId())

@@ -309,7 +309,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         int intoElements = Math.min(fromElement + pageSize, filteredPosts.size());
         var pageElements = filteredPosts.subList(fromElement, intoElements);
 
-        return new PageImpl<>(pageElements, PageRequest.of(request.getPage(), pageSize), filteredPosts.size());
+        return new PageImpl<>(pageElements, PageRequest.of(request.getPage(), pageSize, sortingDetails), filteredPosts.size());
     }
 
     @Override

@@ -5,31 +5,34 @@ import TextInputPassword from "../Components/form/TextInputPassword";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { checkingAuthentication, startGoogleSignIn } from "../store/auth";
 
 const formFields = {
-    email: "",
-    password: "",
-  };
+  email: "",
+  password: "",
+};
 
 export default function SignIn() {
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [token, setToken] = useState("");
   const [error, setError] = useState(null);
 
-  //login
+  const onGoogleSignIn = () => {
+    console.log("Google Sign In");
+
+    dispatch(startGoogleSignIn())
+  };
+
   const handleLogin = async (values) => {
+      dispatch(checkingAuthentication());
+
     if (!values.email || !values.password) {
-      console.log("Correo ", values.email);
-      console.log("pass ", values.password);
       setError("Ambos campos son obligatorios.");
       return; // Sale de la función para evitar la solicitud si hay campos vacíos
     }
-
-    console.log("Email:", values.email);
-    console.log("Password:", values.password);
-
-    console.log("Enviando solicitud de inicio de sesión...");
-
     try {
       const response = await axios.post(
         "http://localhost:9090/auth/authenticate",
@@ -44,12 +47,10 @@ export default function SignIn() {
     } catch (error) {
       if (error.response) {
         setError("Error en el inicio de sesión. Verifica tus credenciales.");
-        console.error(error.response.data); 
       } else {
         setError(
           "Se produjo un error al intentar iniciar sesión. Inténtalo de nuevo más tarde."
         );
-        console.error(error);
       }
     }
   };
@@ -64,7 +65,7 @@ export default function SignIn() {
             .email("Correo no válido")
             .required("El correo es obligatorio"),
           password: Yup.string()
-            .min(4, "La contraseña debe tener al menos 4 caracteres") //COONSULTAAAAAA
+            .min(4, "La contraseña debe tener al menos 4 caracteres")
             .max(15, "La contraseña debe tener 15 caracteres o menos")
             .required("La contraseña es obligatoria"),
         })}
@@ -98,7 +99,7 @@ export default function SignIn() {
             <p className="social-text">O</p>
 
             <div className="social-media">
-              <button type="button" className="googlebutton">
+              <button type="button" className="googlebutton" onClick={onGoogleSignIn}>
                 Iniciar sesión con Google
               </button>
             </div>

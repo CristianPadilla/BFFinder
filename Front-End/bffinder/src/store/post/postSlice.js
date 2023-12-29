@@ -16,9 +16,7 @@ export const postSlice = createSlice({
                 sort: '',
                 desc: false,
             },
-            
         },
-
         posts: [],
         loading: false,
     },
@@ -28,10 +26,10 @@ export const postSlice = createSlice({
             // state.error = null;
         },
         fetchPostsSuccess(state, action) {
+            console.log("payload from slice: ", action.payload);
             state.loading = false;
             state.pageable.pageNumber = action.payload.number;
             state.posts = action.payload.posts;
-            console.log("action: ", action.payload);
             // console.log("state: ", state);
         }
     },
