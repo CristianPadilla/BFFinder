@@ -19,6 +19,7 @@ export default function SignIn() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [openConfirmationAlert, setOpenConfirmationAlert] = useState(false);
   const { status, errorMessage } = useSelector(state => state.auth);
   const isCheckingAuth = useMemo(() => status === 'checking', [status]);
 
