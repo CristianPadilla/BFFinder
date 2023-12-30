@@ -16,23 +16,10 @@ export const startRegisterUser = (us) =>
             console.log("1111111111 ", us)
 
             const type = us.type;
-            // const userRegisterReq = type === 'u'
-            //     ? { firstname: us.firstname, lastname: us.lastname, phone: us.phone, email: us.email, password: us.password }
-            //     : { name: us.name, email: us.email, password: us.password, nit: us.nit, commercial_registration_number: us.commercial_registration_number };
             const userRegisterReq = us;
 
-            // const us = {
-            //     name,
-            //     email,
-            //     password,
-            //     nit,
-            //     commercial_registration_number
-            // };
-
-            console.log("holaquetallc ", type)
             dispatch(checkingCredentials())
             const url = "/register" + (type === 's' ? "/shelter" : "");
-            console.log("url ", url)
             const { status, data } = await authApi.post(url, userRegisterReq)
             if (!status === HttpStatusCode.Created) return dispatch(logout())
 
@@ -55,6 +42,35 @@ export const startRegisterUser = (us) =>
         }
 
 
+    }
+
+//create a for login
+export const startLogin = ({ email, password }) =>
+    async (dispatch, getState) => {
+
+        console.log("en el thunkkk ", email, password)
+        dispatch(checkingCredentials())
+        try {
+            const { status, data } = await authApi.post("/authenticate", { username: email, password })
+            if (!status === HttpStatusCode.Ok) return dispatch(logout({ errorMessage: data.message }))
+
+            console.log("data ", status, data)
+            const { user } = data
+            const sent = {
+                token: data.token,
+                userId: user.userId,
+                name: user.name,
+                lastname: user.lastname || null,
+                email: user.email,
+                photoUrl: user.photoUrl,
+                role: user.role
+            }
+            dispatch(login(sent))
+
+        } catch (error) {
+            const errorMessage = error.response.data.message
+            dispatch(logout({ errorMessage }))
+        }
     }
 
 

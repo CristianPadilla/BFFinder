@@ -36,7 +36,6 @@ const SectionFilterPost = () => {
   };
 
   useEffect(() => {
-    console.log('holaaaa', postsRequest);
     dispatch(fetchPosts(0, postsRequest));
 
   }, []

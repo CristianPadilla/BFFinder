@@ -156,6 +156,7 @@ public class AuthenticationService {
                         .name(userDetails.getName())
                         .lastname(user.getSurname())
                         .photoUrl(userDetails.getProfileImageUrl())
+                        .email(userDetails.getEmail())
                         .role(userDetails.getRole())
                         .build();
                 return AuthenticationResponse.builder()
