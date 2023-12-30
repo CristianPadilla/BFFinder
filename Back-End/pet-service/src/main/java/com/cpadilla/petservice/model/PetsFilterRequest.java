@@ -1,6 +1,7 @@
 package com.cpadilla.petservice.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,9 +19,13 @@ public class PetsFilterRequest {
     @JsonProperty("breed_id")
     private int breedId;
     private String search;
+    @Positive
     private int age;
     private String sort;
     private boolean desc;
+    private Boolean vaccinated;
+    private Boolean sterilized;
+    private Boolean dewormed;
     private int page;
     @JsonProperty("page_size")
     private int pageSize;

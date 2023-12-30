@@ -1,57 +1,75 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TextInputComponent } from "../Components/TextInputComponent";
 import TextInputPassword from "../Components/form/TextInputPassword";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { checkingAuthentication, startGoogleSignIn, startLogin } from "../store/auth";
+import { start } from "@popperjs/core";
+import { Alert, Grid } from "@mui/material";
 
 const formFields = {
-    email: "",
-    password: "",
-  };
+  email: "",
+  password: "",
+};
 
 export default function SignIn() {
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { status, errorMessage } = useSelector(state => state.auth);
+  const isCheckingAuth = useMemo(() => status === 'checking', [status]);
+
+
   const [token, setToken] = useState("");
   const [error, setError] = useState(null);
 
-  //login
-  const handleLogin = async (values) => {
-    if (!values.email || !values.password) {
-      console.log("Correo ", values.email);
-      console.log("pass ", values.password);
-      setError("Ambos campos son obligatorios.");
-      return; // Sale de la función para evitar la solicitud si hay campos vacíos
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      setOpenConfirmationAlert(true);
+      setTimeout(() => {
+        setOpenConfirmationAlert(false);
+        navigate("/home");
+      }, 2000);
     }
+  }, [status]);
 
-    console.log("Email:", values.email);
-    console.log("Password:", values.password);
+  const onGoogleSignIn = () => {
+    console.log("Google Sign In");
 
-    console.log("Enviando solicitud de inicio de sesión...");
+    dispatch(startGoogleSignIn())
+  };
 
-    try {
-      const response = await axios.post(
-        "http://localhost:9090/auth/authenticate",
-        {
-          username: values.email,
-          password: values.password,
-        }
-      );
+  const handleLogin = async ({ email, password }) => {
+    dispatch(startLogin({ email, password }));
 
-      setToken(response.data.token);
-      navigate("/selecciona-especie");
-    } catch (error) {
-      if (error.response) {
-        setError("Error en el inicio de sesión. Verifica tus credenciales.");
-        console.error(error.response.data); 
-      } else {
-        setError(
-          "Se produjo un error al intentar iniciar sesión. Inténtalo de nuevo más tarde."
-        );
-        console.error(error);
-      }
-    }
+    // if (!values.email || !values.password) {
+    //   setError("Ambos campos son obligatorios.");
+    //   return; // Sale de la función para evitar la solicitud si hay campos vacíos
+    // }
+    // // try {
+    // const response = await axios.post(
+    //   "http://localhost:9090/auth/authenticate",
+    //   {
+    //     username: values.email,
+    //     password: values.password,
+    //   }
+    // );
+
+    // setToken(response.data.token);
+    // navigate("/selecciona-especie");
+    // } catch (error) {
+    //   if (error.response) {
+    //     setError("Error en el inicio de sesión. Verifica tus credenciales.");
+    //   } else {
+    //     setError(
+    //       "Se produjo un error al intentar iniciar sesión. Inténtalo de nuevo más tarde."
+    //     );
+    //   }
+    // }
   };
 
   return (
@@ -64,7 +82,7 @@ export default function SignIn() {
             .email("Correo no válido")
             .required("El correo es obligatorio"),
           password: Yup.string()
-            .min(4, "La contraseña debe tener al menos 4 caracteres") //COONSULTAAAAAA
+            .min(4, "La contraseña debe tener al menos 4 caracteres")
             .max(15, "La contraseña debe tener 15 caracteres o menos")
             .required("La contraseña es obligatoria"),
         })}
@@ -90,15 +108,19 @@ export default function SignIn() {
               value={formik.values.password}
               onChange={formik.handleChange}
             />
-
-            <button id="sign-in-btn" type="submit" className="btn">
-              Iniciar Sesión
-            </button>
-
+            <Grid item xs={12} display={!!errorMessage ? '' : 'none'}>
+              <Alert severity="error">{errorMessage}</Alert>
+            </Grid>
+            <Grid container spacing={2} sx={{ mb: 2, mt: 1 }} justifyContent={"center"}>
+              <Grid item xs={12} sm={6}>
+                <button id="sign-in-btn" type="submit" className="btn">
+                  Iniciar Sesión
+                </button>
+              </Grid>
+            </Grid>
             <p className="social-text">O</p>
-
             <div className="social-media">
-              <button type="button" className="googlebutton">
+              <button type="button" className="googlebutton" onClick={onGoogleSignIn}>
                 Iniciar sesión con Google
               </button>
             </div>

@@ -5,6 +5,7 @@ import com.cpadilla.authservice.exception.BadRegistrationRequestException;
 import com.cpadilla.authservice.exception.UserAlreadyExistException;
 import com.cpadilla.authservice.exception.InvalidCredentialsException;
 import com.cpadilla.authservice.external.client.LocationService;
+import com.cpadilla.authservice.external.client.UserService;
 import com.cpadilla.authservice.model.*;
 import com.cpadilla.authservice.repository.UserCredentialsRepository;
 import lombok.extern.log4j.Log4j2;
@@ -38,10 +39,13 @@ public class AuthenticationService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private LocationService locationService;
 
 
-    public void register(UserRegisterRequest request) {
+    public AuthenticationResponse register(UserRegisterRequest request) {
 
         if (request == null // provitional validation
                 || request.getEmail() == null || request.getEmail().isBlank() || request.getEmail().isEmpty()
@@ -62,10 +66,31 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
 
-        repository.save(user);
+        user = repository.save(user);
+
+        var userDetails = userService.getUserById(user.getId()).getBody();
+
+        var userCredentials = UserCredentialsResponse.builder()
+                .userId(userDetails.getUserId())
+                .name(userDetails.getName())
+                .lastname(user.getSurname())
+                .email(userDetails.getEmail())
+                .photoUrl(userDetails.getProfileImageUrl())
+                .role(userDetails.getRole())
+                .build();
+
+        var jwtToken = jwtService.generateToken(CustomUserDetails.builder()
+                .username(user.getEmail())
+                .password(user.getPassword())
+                .build());
+
+        return AuthenticationResponse.builder()
+                .user(userCredentials)
+                .token(jwtToken)
+                .build();
     }
 
-    public void registerShelter(ShelterRegisterRequest request) {
+    public AuthenticationResponse registerShelter(ShelterRegisterRequest request) {
 
         if (request == null // provitional validation
                 || request.getEmail() == null || request.getEmail().isBlank() || request.getEmail().isEmpty()
@@ -86,7 +111,27 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
 
-        repository.save(user);
+        user = repository.save(user);
+
+        var userDetails = userService.getUserById(user.getId()).getBody();
+
+        var userCredentials = UserCredentialsResponse.builder()
+                .userId(userDetails.getUserId())
+                .name(userDetails.getName())
+                .email(userDetails.getEmail())
+                .photoUrl(userDetails.getProfileImageUrl())
+                .role(userDetails.getRole())
+                .build();
+
+        var jwtToken = jwtService.generateToken(CustomUserDetails.builder()
+                .username(user.getEmail())
+                .password(user.getPassword())
+                .build());
+
+        return AuthenticationResponse.builder()
+                .user(userCredentials)
+                .token(jwtToken)
+                .build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -99,11 +144,23 @@ public class AuthenticationService {
                 var user = repository.findByEmail(
                                 request.getUsername())
                         .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + request.getUsername()));
+
                 var jwtToken = jwtService.generateToken(CustomUserDetails.builder()
                         .username(user.getEmail())
                         .password(user.getPassword())
                         .build());
+                var userDetails = userService.getUserById(user.getId()).getBody();
+
+                var userCredentials = UserCredentialsResponse.builder()
+                        .userId(userDetails.getUserId())
+                        .name(userDetails.getName())
+                        .lastname(user.getSurname())
+                        .photoUrl(userDetails.getProfileImageUrl())
+                        .email(userDetails.getEmail())
+                        .role(userDetails.getRole())
+                        .build();
                 return AuthenticationResponse.builder()
+                        .user(userCredentials)
                         .token(jwtToken)
                         .build();
             } else {

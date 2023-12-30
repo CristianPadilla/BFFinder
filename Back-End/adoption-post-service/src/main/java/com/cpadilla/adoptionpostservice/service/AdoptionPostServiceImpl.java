@@ -15,6 +15,7 @@ import com.cpadilla.adoptionpostservice.repository.AdoptionPostRepository;
 import com.cpadilla.adoptionpostservice.repository.PostImageRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -26,10 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -126,8 +124,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         var specification =
                 filterSpecification.getSearchSpecification(postFilters); // apply post filters
 
-        var postEntities = repository
-                .findAll(specification, PageRequest.of(request.getPage(), pageSize));
+        var postEntities = repository.findAll(specification);
 
         List<AdoptionPostPartialsResponse> filteredPosts;
         filteredPosts = postEntities.stream()
@@ -173,7 +170,11 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
         } else filteredPosts.sort(Comparator.comparing(AdoptionPostPartialsResponse::getDate).reversed());
 
-        return new PageImpl<>(filteredPosts, PageRequest.of(request.getPage(), pageSize, sortingDetails), filteredPosts.size());
+        int fromElement = request.getPage() * pageSize;
+        int intoElements = Math.min(fromElement + pageSize, filteredPosts.size());
+        var pageElements = filteredPosts.subList(fromElement, intoElements);
+
+        return new PageImpl<>(pageElements, PageRequest.of(request.getPage(), pageSize, sortingDetails), filteredPosts.size());
     }
 
     @Override
@@ -215,11 +216,13 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
     @Override
     public Page<AdoptionPostPartialsResponse> getAllFilter(PostsRequest request) {
+        // TODO !important there is a optimization problem, when getting the posts it will get almost all witch is not optimal
+        // options could be to limit the number of posts, wit a limit, or a date limit, or implement filter from pets service  or something
         var pageSize = request.getPageSize() > 0 && request.getPageSize() <= 20
                 ? request.getPageSize()
                 : 10;
 
-        boolean tsFilters = request.getFilters() != null;// there is filters?
+        boolean tsFilters = request.getFilters() != null;// are there any filters?
 
         var postFilters = PostFilters.builder()
                 .departmentId(tsFilters ? request.getFilters().getDepartmentId() : 0)
@@ -239,7 +242,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         var specification =
                 filterSpecification.getSearchSpecification(postFilters); // apply post filters
         var postEntities =
-                repository.findAll(specification, PageRequest.of(request.getPage(), pageSize));
+                repository.findAll(specification);
 
         List<AdoptionPostPartialsResponse> filteredPosts;
 
@@ -302,7 +305,11 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
             filteredPosts.sort(comparator);
         } else filteredPosts.sort(Comparator.comparing(AdoptionPostPartialsResponse::getDate).reversed());
 
-        return new PageImpl<>(filteredPosts, PageRequest.of(request.getPage(), pageSize, sortingDetails), filteredPosts.size());
+        int fromElement = request.getPage() * pageSize;
+        int intoElements = Math.min(fromElement + pageSize, filteredPosts.size());
+        var pageElements = filteredPosts.subList(fromElement, intoElements);
+
+        return new PageImpl<>(pageElements, PageRequest.of(request.getPage(), pageSize, sortingDetails), filteredPosts.size());
     }
 
     @Override

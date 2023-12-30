@@ -16,9 +16,12 @@ import CheckIcon from '@mui/icons-material/Check';
 import ToggleButton from '@mui/material/ToggleButton';
 import PetsIcon from '@mui/icons-material/Pets';
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { logout } from '../store/auth';
 
 const PerfilMenu = () => {
-    const [anchorEl, setAnchorEl] = React.useState(null);
+  const dispatch = useDispatch();
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -54,12 +57,12 @@ const PerfilMenu = () => {
     color: "#BA8C63",
     mr: '1rem',
   };
-  
+
   const selectedButtonStyles = {
     backgroundColor: "#BA8C63", // Cambia el color cuando el botón está seleccionado
     color: "white", // Cambia el color del texto cuando el botón está seleccionado
     border: "1px solid white",
-    fontWeight: "bold", 
+    fontWeight: "bold",
     "&:hover": {
       backgroundColor: "#BA8C63",
       color: "white",
@@ -67,19 +70,16 @@ const PerfilMenu = () => {
   };
 
   const handleLogout = () => {
-    // Aquí puedes realizar las acciones necesarias para cerrar la sesión
-    // Por ejemplo, podrías limpiar el token de autenticación, etc.
-
-    // Después, redirige al usuario a la página de inicio de sesión
+    dispatch(logout());
     navigate('/login');
-    
+
     // Cierra el menú (si es necesario)
     handleClose();
   };
 
-    return (
-        <div>
-           <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+  return (
+    <div>
+      <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         {/* <Typography sx={{ minWidth: 100 }}>Contact</Typography>
         <Typography sx={{ minWidth: 100 }}>Profile</Typography>
         <IconButton aria-label="" size="large">
@@ -89,33 +89,33 @@ const PerfilMenu = () => {
 
         </Button> */}
         <Tooltip title={<span style={{ fontSize: '16px' }}>Adoptar</span>} arrow>
-           <ToggleButton
+          <ToggleButton
             value="check"
-             selected={selected2}
-             onChange={handleToggle2}
-          sx={{
-            ...commonButtonStyles,
-            "&.Mui-selected": selectedButtonStyles,
-          }}
-        >
-          <PetsIcon /> <Typography sx={{ minWidth: 100 }}>Adoptar</Typography>
-        </ToggleButton>
+            selected={selected2}
+            onChange={handleToggle2}
+            sx={{
+              ...commonButtonStyles,
+              "&.Mui-selected": selectedButtonStyles,
+            }}
+          >
+            <PetsIcon /> <Typography sx={{ minWidth: 100 }}>Adoptar</Typography>
+          </ToggleButton>
         </Tooltip>
 
         <Tooltip title={<span style={{ fontSize: '16px' }}>Favoritos</span>} arrow>
-        <ToggleButton
-          value="check"
-          selected={selected}
-          // style={buttonStyle}
-          onChange={handleToggle1}
-          sx={{
-            ...commonButtonStyles,
-            "&.Mui-selected": selectedButtonStyles,
-          }}
-        >
-          <FavoriteIcon /> <Typography sx={{ minWidth: 100 }}>Favoritos</Typography>
-        </ToggleButton>
-        </Tooltip>   
+          <ToggleButton
+            value="check"
+            selected={selected}
+            // style={buttonStyle}
+            onChange={handleToggle1}
+            sx={{
+              ...commonButtonStyles,
+              "&.Mui-selected": selectedButtonStyles,
+            }}
+          >
+            <FavoriteIcon /> <Typography sx={{ minWidth: 100 }}>Favoritos</Typography>
+          </ToggleButton>
+        </Tooltip>
 
         <Tooltip title={<span style={{ fontSize: '16px' }}>Perfil</span>} arrow>
           <IconButton
@@ -190,9 +190,9 @@ const PerfilMenu = () => {
           </ListItemIcon>
           Cerrar Sesión
         </MenuItem>
-      </Menu> 
-        </div>
-    );
+      </Menu>
+    </div>
+  );
 };
 
 export default PerfilMenu;

@@ -11,26 +11,37 @@ import Perfil from "pages/Perfil";
 import Autenticacion from "pages/Autenticacion";
 import Ejemplo from "pages/Ejemplo";
 import Verpublicacion from "pages/ViewPost";
+import { useSelector } from "react-redux";
+import { Check } from "@mui/icons-material";
+import { CheckingAuth } from "../pages/auth/CheckingAuth";
 
 const App = () => {
-  return (
-	<BrowserRouter>
-		<Layout areClass={'Layout'} css = {style.css} >
-			<Routes>
-				<Route path="/" element={<PreHome />} />
-				<Route path="/login" element={<Autenticacion/>} />
-				<Route path="/perfil" element={<Perfil/>} />
-				<Route path="/selecciona-especie" element={<SelectSpecie/>} />
-				<Route path="/home" element={<Home/>} />
-				<Route path="/ver-publicacion" element={<Verpublicacion/>} />
-				<Route path="/ejemplo" element={<Ejemplo/>} />
-				<Route path="/recovery-password" element={<RecoveryPassword/>} />
-				<Route path="*" element={<NotFound/>} />
-			</Routes>
-		</Layout>
-	</BrowserRouter>
-  );
-}; 
+
+	// const { status } = useSelector(state => state.auth);
+
+	// if (status === 'checking') {
+	// 	return <CheckingAuth />
+	// }
+
+
+	return (
+		<BrowserRouter>
+			<Layout areClass={'Layout'} css={style.css} >
+				<Routes>
+					<Route path="/" element={<PreHome />} />
+					<Route path="/login" element={<Autenticacion />} />
+					<Route path="/perfil" element={<Perfil />} />
+					<Route path="/selecciona-especie" element={<SelectSpecie />} />
+					<Route path="/home" element={<Home />} />
+					<Route path="/ver-publicacion" element={<Verpublicacion />} />
+					<Route path="/ejemplo" element={<Ejemplo />} />
+					<Route path="/recovery-password" element={<RecoveryPassword />} />
+					<Route path="*" element={<NotFound />} />
+				</Routes>
+			</Layout>
+		</BrowserRouter>
+	);
+};
 
 const style = {
 	css: {

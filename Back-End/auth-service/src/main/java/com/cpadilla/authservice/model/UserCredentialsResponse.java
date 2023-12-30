@@ -9,14 +9,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRegisterRequest {
+public class UserCredentialsResponse {
 
-
-    private String firstname;
+    private long userId;
+    private String name;
     private String lastname;
     private String email;
     private String password;
-    private String phone;
-//    private String dateOfBirth;
-//    private LocationRequest location;
+    private String photoUrl;
+    private char role;
+
 }

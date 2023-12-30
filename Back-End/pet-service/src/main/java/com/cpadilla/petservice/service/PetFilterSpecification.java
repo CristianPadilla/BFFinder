@@ -91,6 +91,15 @@ public class PetFilterSpecification<T> {
                 predicates.add(criteriaBuilder.like(root.get("name"), "%" + nameFilter + "%"));
             }
 
+            if (filters.getVaccinated() != null)
+                predicates.add(criteriaBuilder.equal(root.get("vaccinated"), filters.getVaccinated()));
+
+            if (filters.getSterilized() != null)
+                predicates.add(criteriaBuilder.equal(root.get("sterilized"), filters.getSterilized()));
+
+            if (filters.getDewormed() != null)
+                predicates.add(criteriaBuilder.equal(root.get("dewormed"), filters.getDewormed()));
+
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
 
