@@ -43,11 +43,10 @@ public class AuthController {
     }
 
 
-//    @GetMapping("/validate")
-//    public String validateToken(@RequestParam("token") String token) {
-//        service.validateToken(token);
-//        return "Token is valid";
-//    }
+    @GetMapping("/validate")
+    public ResponseEntity<AuthenticationResponse> validateToken(@RequestHeader("Authorization") String token) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.validateToken(token));
+    }
 
 
 }

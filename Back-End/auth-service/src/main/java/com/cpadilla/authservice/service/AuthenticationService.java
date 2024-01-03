@@ -172,5 +172,33 @@ public class AuthenticationService {
         }
     }
 
+    public AuthenticationResponse validateToken(String token) {
+        var tokenToValidate = token.substring(7);
+
+        jwtService.validateToken(tokenToValidate);
+        var email = jwtService.extractUsername(tokenToValidate);
+        log.info("emailll " + email);
+
+        var user = repository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+
+        var userDetails = userService.getUserById(user.getId()).getBody();
+
+        var userCredentials = UserCredentialsResponse.builder()
+                .userId(userDetails.getUserId())
+                .name(userDetails.getName())
+                .lastname(user.getSurname())
+                .photoUrl(userDetails.getProfileImageUrl())
+                .email(userDetails.getEmail())
+                .role(userDetails.getRole())
+                .build();
+        return AuthenticationResponse.builder()
+                .user(userCredentials)
+                .token(tokenToValidate)
+                .build();
+
+
+    }
+
 
 }
