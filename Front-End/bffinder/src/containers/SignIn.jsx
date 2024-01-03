@@ -18,58 +18,30 @@ const formFields = {
 export default function SignIn() {
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { status, errorMessage } = useSelector(state => state.auth);
+  const { status, errorMessage } = useSelector(state => state.auth.auth);
   const isCheckingAuth = useMemo(() => status === 'checking', [status]);
 
-
-  const [token, setToken] = useState("");
   const [error, setError] = useState(null);
 
 
-  useEffect(() => {
-    if (status === 'authenticated') {
-      setOpenConfirmationAlert(true);
-      setTimeout(() => {
-        setOpenConfirmationAlert(false);
-        navigate("/home");
-      }, 2000);
-    }
-  }, [status]);
+  // useEffect(() => {
+  //   console.log("usefect  from sign in", status);
+  //   if (status === 'authenticated') {
+  //     // setOpenConfirmationAlert(true);
+  //     setTimeout(() => {
+  //       // setOpenConfirmationAlert(false);
+  //       navigate("/home");
+  //     }, 2000);
+  //   }
+  // }, [status]);
 
   const onGoogleSignIn = () => {
     console.log("Google Sign In");
-
-    dispatch(startGoogleSignIn())
+    // dispatch(startGoogleSignIn())
   };
 
   const handleLogin = async ({ email, password }) => {
     dispatch(startLogin({ email, password }));
-
-    // if (!values.email || !values.password) {
-    //   setError("Ambos campos son obligatorios.");
-    //   return; // Sale de la función para evitar la solicitud si hay campos vacíos
-    // }
-    // // try {
-    // const response = await axios.post(
-    //   "http://localhost:9090/auth/authenticate",
-    //   {
-    //     username: values.email,
-    //     password: values.password,
-    //   }
-    // );
-
-    // setToken(response.data.token);
-    // navigate("/selecciona-especie");
-    // } catch (error) {
-    //   if (error.response) {
-    //     setError("Error en el inicio de sesión. Verifica tus credenciales.");
-    //   } else {
-    //     setError(
-    //       "Se produjo un error al intentar iniciar sesión. Inténtalo de nuevo más tarde."
-    //     );
-    //   }
-    // }
   };
 
   return (
@@ -113,14 +85,14 @@ export default function SignIn() {
             </Grid>
             <Grid container spacing={2} sx={{ mb: 2, mt: 1 }} justifyContent={"center"}>
               <Grid item xs={12} sm={6}>
-                <button id="sign-in-btn" type="submit" className="btn">
+                <button disabled={isCheckingAuth} id="sign-in-btn" type="submit" className="btn">
                   Iniciar Sesión
                 </button>
               </Grid>
             </Grid>
             <p className="social-text">O</p>
             <div className="social-media">
-              <button type="button" className="googlebutton" onClick={onGoogleSignIn}>
+              <button disabled={isCheckingAuth} type="button" className="googlebutton" onClick={onGoogleSignIn}>
                 Iniciar sesión con Google
               </button>
             </div>

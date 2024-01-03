@@ -53,7 +53,6 @@ export function RegisterFoundationPage() {
           : null,
       type: 's'
     }
-    console.log("user from componenttt ", user);
     dispatch(startRegisterUser(user))
 
   };

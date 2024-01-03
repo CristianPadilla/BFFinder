@@ -29,8 +29,8 @@ export const authSlice = createSlice({
         logout(state, { payload }) {
             state.status = 'not-authenticated';
             state.isAuthenticated = false;
-            token: null,
-                state.userId = null;
+            state.token = null;
+            state.userId = null;
             state.email = null;
             state.name = null;
             state.photoUrl = null;
