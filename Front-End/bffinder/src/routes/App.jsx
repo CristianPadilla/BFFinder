@@ -23,7 +23,8 @@ const App = () => {
 
 
 	useEffect(() => {
-		if (status === 'authenticated') dispatch(validateAuth({ tokenToValidate: token }));
+		console.log('app.jsx ======= ', token);
+		if (status === 'authenticated' || status === 'checking') dispatch(validateAuth({ tokenToValidate: token }));
 	}, []);
 
 	if (status === 'checking') {
