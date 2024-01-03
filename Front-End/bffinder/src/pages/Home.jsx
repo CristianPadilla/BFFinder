@@ -53,7 +53,7 @@ const Home = () => {
               <h4>Filtros</h4>
               <PanelF />
             </div>
-            <div className="main-content-scroll">
+            <div className="main-content-scroll animate__animated animate__fadeIn animate__faster">
 
               <SectionFilterPost />
 

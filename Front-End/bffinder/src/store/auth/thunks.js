@@ -91,7 +91,6 @@ export const validateAuth = ({ tokenToValidate }) =>
     async (dispatch, getState) => {
         dispatch(checkingCredentials())
         try {
-            console.log("tokenToValidate from thunk", tokenToValidate)
             if (tokenToValidate === null) return dispatch(logout())
             const { status, data } = await authApi.get("/validate", { headers: { Authorization: `Bearer ${tokenToValidate}` } })
             if (!status === HttpStatusCode.Ok) return dispatch(logout({ errorMessage: data.message }))

@@ -23,21 +23,21 @@ export default function SignIn() {
 
   const [error, setError] = useState(null);
 
-
+  
   // useEffect(() => {
   //   console.log("usefect  from sign in", status);
   //   if (status === 'authenticated') {
-  //     // setOpenConfirmationAlert(true);
-  //     setTimeout(() => {
-  //       // setOpenConfirmationAlert(false);
-  //       navigate("/home");
-  //     }, 2000);
-  //   }
+      //     // setOpenConfirmationAlert(true);
+      //     setTimeout(() => {
+        //       // setOpenConfirmationAlert(false);
+        //       navigate("/home");
+      //     }, 2000);
+    //   }
   // }, [status]);
 
   const onGoogleSignIn = () => {
     console.log("Google Sign In");
-    // dispatch(startGoogleSignIn())
+// dispatch(startGoogleSignIn())
   };
 
   const handleLogin = async ({ email, password }) => {
@@ -60,7 +60,7 @@ export default function SignIn() {
         })}
       >
         {(formik) => (
-          <Form className="sign-in-form">
+          <Form className="sign-in-form animate__animated animate__fadeIn ">
             <h2 className="titulo">Iniciar Sesión</h2>
             {error && <div className="error-message">{error}</div>}
             <TextInputComponent
