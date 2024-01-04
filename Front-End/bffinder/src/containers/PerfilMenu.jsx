@@ -70,7 +70,7 @@ const PerfilMenu = () => {
   };
 
   const handleLogout = () => {
-    dispatch(startLogout());
+    dispatch(startLogout({}));
     // navigate('/login');
 
     // Cierra el menú (si es necesario)

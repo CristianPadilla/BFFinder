@@ -15,10 +15,8 @@ import { FormControl, MenuItem, Select, Stack, Typography } from '@mui/material'
 
 const Home = () => {
 
-  const [sortType, setSortType] = useState("");
   const handleSortChange = (type) => {
-    // Haz lo que necesites con el tipo de ordenamiento (type)
-    setSortType(type);
+    
   };
 
 
