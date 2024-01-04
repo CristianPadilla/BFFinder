@@ -23,14 +23,11 @@ export const postSlice = createSlice({
     reducers: {
         fetchPostsStart(state) {
             state.loading = true;
-            // state.error = null;
         },
         fetchPostsSuccess(state, action) {
-            console.log("payload from slice: ", action.payload);
             state.loading = false;
             state.pageable.pageNumber = action.payload.number;
             state.posts = action.payload.posts;
-            // console.log("state: ", state);
         }
     },
 });

@@ -3,7 +3,7 @@ import { fetchPostsStart, fetchPostsSuccess } from "./postSlice";
 
 
 export const fetchPosts = (page = 0, request = {}) => async (dispatch, getState) => {
-    // try {
+    try {
     const { filters } = request;
     dispatch(fetchPostsStart());
     const { data } = await postApi.post("/all/filter", request);
@@ -26,7 +26,8 @@ export const fetchPosts = (page = 0, request = {}) => async (dispatch, getState)
             },
         }
     }));
-    // } catch (error) {
-    //     dispatch(fetchPostsFailure(error.message));
-    // }
+    } catch (error) {
+        console.log(error);
+        // dispatch(fetchPostsFailure(error.message));
+    }
 };

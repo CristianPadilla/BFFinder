@@ -124,7 +124,7 @@ export function RegisterUserPage() {
       >
         {(formik) => (
           <div className="register-form-container">
-            <Form className="sign-up-form register-form" id="sign-up-form">
+            <Form className="sign-up-form register-form animate__animated animate__fadeIn" id="sign-up-form">
               <div className="form-container">
                 <TextInputComponent
                   required

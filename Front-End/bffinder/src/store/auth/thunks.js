@@ -13,7 +13,6 @@ export const startRegisterUser = (us) =>
     async (dispatch, getState) => {
 
         try {
-            console.log("1111111111 ", us)
 
             const type = us.type;
             const userRegisterReq = us;
@@ -44,17 +43,15 @@ export const startRegisterUser = (us) =>
 
     }
 
-//create a for login
+
 export const startLogin = ({ email, password }) =>
     async (dispatch, getState) => {
 
-        console.log("en el thunkkk ", email, password)
         dispatch(checkingCredentials())
         try {
             const { status, data } = await authApi.post("/authenticate", { username: email, password })
             if (!status === HttpStatusCode.Ok) return dispatch(logout({ errorMessage: data.message }))
 
-            console.log("data ", status, data)
             const { user } = data
             const sent = {
                 token: data.token,
@@ -77,5 +74,33 @@ export const startLogin = ({ email, password }) =>
 export const startGoogleSignIn = () =>
     async (dispatch, getState) => {
         dispatch(checkingCredentials())
+
+    }
+
+export const startLogout = (error) =>
+    async (dispatch, getState) => {
+        dispatch(checkingCredentials())
+        setTimeout(() => {
+            dispatch(logout(error?.message))
+
+        }, 1000);
+    }
+
+
+export const validateAuth = ({ tokenToValidate }) =>
+    async (dispatch, getState) => {
+        dispatch(checkingCredentials())
+        try {
+            if (tokenToValidate === null) return dispatch(logout())
+            const { status, data } = await authApi.get("/validate", { headers: { Authorization: `Bearer ${tokenToValidate}` } })
+            if (!status === HttpStatusCode.Ok) return dispatch(logout({ errorMessage: data.message }))
+
+            const { userId, name, lastname, email, photoUrl, role } = data.user
+            dispatch(login({ token: tokenToValidate, userId, name, lastname, email, photoUrl, role }))
+
+        } catch (error) {
+            const errorMessage = error.response.data.message
+            dispatch(logout({ errorMessage }))
+        }
 
     }

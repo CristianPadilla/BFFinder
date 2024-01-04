@@ -17,7 +17,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import PetsIcon from '@mui/icons-material/Pets';
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
-import { logout } from '../store/auth';
+import { logout, startLogout } from '../store/auth';
 
 const PerfilMenu = () => {
   const dispatch = useDispatch();
@@ -70,8 +70,8 @@ const PerfilMenu = () => {
   };
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate('/login');
+    dispatch(startLogout());
+    // navigate('/login');
 
     // Cierra el menú (si es necesario)
     handleClose();
