@@ -1,17 +1,16 @@
 import React from 'react';
 import 'styles/dash.css';
-import '../hooks/dashh';
 
 const Ejemplo = () => {
     return (
-        <div>
-<head>
-	{/* <!-- Boxicons -->
-	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-	<!-- My CSS -->
-	<link rel="stylesheet" href="style.css"> */}
-</head>
-<body>
+//         <div>
+// <head>
+// 	{/* <!-- Boxicons -->
+// 	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+// 	<!-- My CSS -->
+// 	<link rel="stylesheet" href="style.css"> */}
+// </head>
+// <body>
 
 	<div>
   {/* SIDEBAR */}
@@ -230,8 +229,8 @@ const Ejemplo = () => {
 </div>
 
 	{/* <script src="script.js"></script> */}
-</body>
-        </div>
+// </body>
+//         </div>
     );
 };
 

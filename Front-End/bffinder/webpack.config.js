@@ -13,7 +13,7 @@ module.exports = {
     resolve: { // extensión de archivos a tomar en cuenta
         extensions: ['.js', '.jsx'],
         alias: {
-            'components': path.resolve(__dirname, 'src/components/'),
+            'Components': path.resolve(__dirname, 'src/Components/'),
             'containers': path.resolve(__dirname, 'src/containers/'),
             'pages': path.resolve(__dirname, 'src/pages/'),
             'styles': path.resolve(__dirname, 'src/styles/'),

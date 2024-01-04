@@ -1,28 +1,41 @@
-import React, { useEffect, useRef, useState } from 'react';
-import 'styles/dash.scss';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Menu, Search, CloudDownload, Add, FilterList } from '@mui/icons-material/';
+import React, { useEffect, useRef, useState } from "react";
+import "styles/dash.scss";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import {
+  Menu,
+  Search,
+  CloudDownload,
+  Add,
+  FilterList,
+} from "@mui/icons-material/";
 import PanelF from "containers/PanelFilters";
 import Ordering from "containers/Ordering";
 import logobff from "imgs/logo-bffinder-FINAL2.png";
-import Slider from '@mui/material/Slider'
-import SearchIcon from '@mui/icons-material/Search';
-import Paper from '@mui/material/Paper';
-import SectionPosts from '../containers/SectionAllPosts';
-import SearchBar from '../Components/SearchBar';
-import SectionFilterPost from '../containers/SectionFilterPost';
+import Slider from "@mui/material/Slider";
+import SearchIcon from "@mui/icons-material/Search";
+import Paper from "@mui/material/Paper";
+import SectionPosts from "../containers/SectionAllPosts";
+import SearchBar from "../Components/SearchBar";
+import SectionFilterPost from "../containers/SectionFilterPost";
+// import SectionFilterPet from "../containers/SectionFilterPet";
 import NavHome from "../Components/NavHome";
-import { FormControl, MenuItem, Select, Stack, Typography } from '@mui/material';
+import { SectionFilterPet } from "../containers/SectionFilterPet";
+import {
+  FormControl,
+  MenuItem,
+  Select,
+  Stack,
+  Typography,
+} from "@mui/material";
+import MainContent from "../containers/MainContent";
 
 const Home = () => {
-
   const [sortType, setSortType] = useState("");
   const handleSortChange = (type) => {
     // Haz lo que necesites con el tipo de ordenamiento (type)
     setSortType(type);
   };
-
 
   // const [age, setAge] = React.useState('');
   // const handleChange = (event) => {
@@ -39,8 +52,8 @@ const Home = () => {
           <div className="head-title">
             <div className="left">
               <h2>Mascotas Registradas</h2>
-              <SearchBar />
             </div>
+            <SearchBar />
             {/* <a href="#" className="btn-download">
                 <CloudDownload />
                 <span className="text">Download PDF</span>
@@ -50,14 +63,14 @@ const Home = () => {
             </div>
           </div>
 
-          <div className='main-content'>
+          <div className="main-content">
             <div className="column-filters">
               <h4>Filtros</h4>
               <PanelF />
             </div>
             <div className="main-content-scroll animate__animated animate__fadeIn animate__faster">
-
-              <SectionFilterPost />
+              {/* <SectionFilterPost /> */}
+              <MainContent />
 
               {/* <ul className="box-info">
                   <li>
@@ -103,15 +116,10 @@ const Home = () => {
 
                   </div>
                 </div> */}
-
             </div>
-
           </div>
-
-
         </main>
         {/* MAIN */}
-
       </section>
     </div>
   );

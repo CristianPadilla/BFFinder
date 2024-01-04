@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TextInputComponent } from "../Components/TextInputComponent";
+import { TextInputComponent } from "../Components/form/TextInputComponent";
 import TextInputPassword from "../Components/form/TextInputPassword";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";

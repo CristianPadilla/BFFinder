@@ -1,17 +1,13 @@
 import React from "react";
 import SlidersImages from "../Components/post/SlidersImages";
-import TablePet from "../Components/post/TablePet";
+import PetDetails from "../Components/post/PetDetails";
 import CardInfoFundation from "../Components/post/CardInfoFundation";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
-import Checkbox from "@mui/material/Checkbox";
+import { Typography,
+Grid,
+Checkbox,
+} from "@mui/material";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
-import Stack from "@mui/material/Stack";
-
-const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 const images = [
   {
@@ -32,26 +28,23 @@ const SectionPost = () => {
   return (
     <div>
       <Grid container spacing={2} sx={{ height: "100vh" }}>
-        {/* Primera columna */}
         <Grid item xs={12} md={5}>
           <div style={{ width: "100%", height: "300px" }}>
             <SlidersImages images={images} />
           </div>
         </Grid>
 
-        {/* Segunda columna */}
         <Grid item xs={12} md={4}>
           <div>
             <Grid container alignItems="center">
               <Grid item xs={6}>
-                {/* Nombre en la esquina izquierda */}
-                <Typography variant="h4">Name~</Typography>
+                <Typography variant="body2" sx={{ fontSize: ".8rem", margin: ".8rem"}}>Hace 3 horas</Typography>
+                <Typography variant="h4" sx={{ margin: ".8rem" }}>Name~</Typography>
               </Grid>
               <Grid item xs={6}>
-                {/* Checkbox en la esquina derecha inferior con texto al lado */}
                 <Grid
                   container
-                  alignItems="center" // Centrar verticalmente
+                  alignItems="center"
                   justifyContent="flex-end"
                   spacing={1}
                 >
@@ -74,29 +67,7 @@ const SectionPost = () => {
             <Typography
               variant="body2"
               color="text.secondary"
-              sx={{ fontSize: ".9rem" }}
-            >
-              {/* {breedDetails.specie.name} - {breedDetails.name} */}
-              Especie - Raza
-            </Typography>
-
-            {/* <TextField
-              id="outlined-multiline-static"
-              label="Descripción"
-              multiline
-              rows={4}
-              defaultValue="Descripción de la mascota..."
-              InputProps={{
-                readOnly: true,
-              }}
-              variant="outlined"
-              fullWidth
-            /> */}
-
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ whiteSpace: "normal", textAlign: "justify" }}
+              sx={{ whiteSpace: "normal", textAlign: "justify", margin: ".8rem" }}
             >
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci,
               ex impedit pariatur minima porro, eius, corrupti possimus ea
@@ -104,7 +75,7 @@ const SectionPost = () => {
               rerum ut optio adipisci itaque.
             </Typography>
 
-            <TablePet />
+            <PetDetails />
           </div>
         </Grid>
 

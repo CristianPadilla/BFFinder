@@ -6,6 +6,7 @@ import storage from 'redux-persist/lib/storage';
 import { persistReducer } from 'redux-persist';
 import { combineReducers } from '@reduxjs/toolkit';
 import { thunk } from 'redux-thunk';
+import { petSlice } from './pet';
 
 
 const persistConfig = {
@@ -23,8 +24,10 @@ const authPersistedReducer = persistReducer(persistConfig, rootReducer)
 export const store = configureStore({
     reducer: {
         posts: postSlice.reducer,
+        pets: petSlice.reducer,
         // auth: authSlice.reducer,
         auth: authPersistedReducer,
+
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }).concat(thunk)
 });

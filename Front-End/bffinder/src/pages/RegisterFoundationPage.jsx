@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { TextInputComponent } from "../Components/TextInputComponent";
+import { TextInputComponent } from "../Components/form/TextInputComponent";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import "../styles/Card.scss";
-import { CheckboxInputComponent } from "../Components/CheckboxInputComponent";
+import { CheckboxInputComponent } from "../Components/form/CheckboxInputComponent";
 import TextInputPassword from "../Components/form/TextInputPassword";
 import { Snackbar, Alert, Grid } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";

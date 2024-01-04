@@ -3,9 +3,9 @@ import "../styles/login.scss";
 import "../styles/Card.scss";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { TextInputComponent } from "../Components/TextInputComponent";
-import { SelectInputComponent } from "../Components/SelectInputComponent";
-import { CheckboxInputComponent } from "../Components/CheckboxInputComponent";
+import { TextInputComponent } from "../Components/form/TextInputComponent";
+import { SelectInputComponent } from "../Components/form/SelectInputComponent";
+import { CheckboxInputComponent } from "../Components/form/CheckboxInputComponent";
 import TextInputPassword from "../Components/form/TextInputPassword";
 import { Snackbar, Alert, Grid } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -115,7 +115,7 @@ export function RegisterUserPage() {
               [Yup.ref("password"), null],
               "Las contraseñas deben coincidir"
             )
-            .required("La confirmacion de contraseña es requerida"),
+            .required("La confirmacion de contraseña es obligatoria"),
           terms: Yup.boolean().oneOf(
             [true],
             "Debes aceptar los terminos y condiciones"
