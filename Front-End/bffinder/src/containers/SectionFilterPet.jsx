@@ -11,10 +11,10 @@ export const SectionFilterPet = () => {
   const dispatch = useDispatch();
   const { pets = [], loading } = useSelector((state) => state.pets);
 
-  console.log("pets from component aaaaaaaaaaaaaa", pets);
+  // console.log("pets from component aaaaaaaaaaaaaa", pets);
   useEffect(
     () => {
-      console.log("useEffect from componenet");
+      // console.log("useEffect from componenet");
       dispatch(fetchPets(0, {}));
     },
     []

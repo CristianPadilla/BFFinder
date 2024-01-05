@@ -42,7 +42,7 @@ export const CheckboxInputComponent = ({ label, ...props }) => {
         name={props.name}
         component="span"
         className={props.errorClassName}
-        style={{ fontSize: '.7rem' }}
+        style={{ fontSize: '.7rem', color: 'red' }}
       />
       </div>
     </>

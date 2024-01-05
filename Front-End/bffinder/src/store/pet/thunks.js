@@ -2,7 +2,7 @@ import { petApi } from "../../api/petApi";
 import { fetchPetsStart, fetchPetsSuccess } from "./petSlice";
 
 export const fetchPets = (page = 0, request = {}) => async (dispatch, getState) => {
-    console.log("fetchPets thunk");
+    // console.log("fetchPets thunk");
     // try {
     const request = {
         search: "", // search por nombre mascota

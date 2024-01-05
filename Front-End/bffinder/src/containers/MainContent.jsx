@@ -46,7 +46,7 @@ const MainContent = () => {
       <section ref={sectionRef} className="inicio-user-comun">
         <Grid container spacing={1} className="grid-container">
           {/* <SectionFilterPost /> */}
-          {console.log("sectionnnnnnnnnnnnnnnn ")}
+          {/* {console.log("sectionnnnnnnnnnnnnnnn ")} */}
           <SectionFilterPet />
         </Grid>
 

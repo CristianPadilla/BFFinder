@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Typography, Button, IconButton } from "@mui/material";
+import { Typography, Button, IconButton, Paper } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { ErrorMessage, useField } from "formik";
 
 const StyledDrag = styled.div`
   .center {
@@ -72,25 +73,62 @@ const StyledDrag = styled.div`
   }
 `;
 
-const DragAndDrop = (props) => {
-  const [ImageSelectedPrevious, setImageSelectedPrevious] = useState(null);
-  const { value, name, onChange } = props;
+const DragAndDrop = ({ label, name, errorClassName, ...props }) => {
+  const [imageSelectedPrevious, setImageSelectedPrevious] = useState(null);
+  const [field, meta, helpers] = useField(name);
+
   const changeImage = (e) => {
     if (e.target.files[0] !== undefined) {
+      const file = e.target.files[0];
+      const allowedFormats = ["jpg", "jpeg", "png"];
+      const extension = file.name.split(".").pop().toLowerCase();
+
+      if (!allowedFormats.includes(extension)) {
+        helpers.setError("Formato no permitido");
+        return;
+      }
+
       const reader = new FileReader();
-      reader.readAsDataURL(e.target.files[0]);
+      reader.readAsDataURL(file);
+
       reader.onload = (e) => {
         e.preventDefault();
         setImageSelectedPrevious(e.target.result);
+
+        // Limpiar el mensaje de error
+        helpers.setError("");
+        // Establecer el valor del campo
+        helpers.setValue(e.target.result);
       };
+    } else {
+      // Limpiar el mensaje de error si no se selecciona ninguna imagen
+      helpers.setError("");
+      setImageSelectedPrevious(null);
+      // Limpiar el valor del campo
+      helpers.setValue(null);
     }
   };
 
   const deleteImage = () => {
     setImageSelectedPrevious(null);
+    // Limpiar el mensaje de error
+    helpers.setError("");
+    // Limpiar el valor del campo
+    helpers.setValue(null);
   };
 
   return (
+    <>
+    <Paper
+    elevation={0}
+    variant="outlined"
+    sx={{
+      margin: ".5rem",
+      padding: ".1rem",
+      borderRadius: "",
+      alignItems: "center",
+    }}
+  >
     <StyledDrag>
       <div className="file-upload-wrap">
         <input
@@ -104,7 +142,7 @@ const DragAndDrop = (props) => {
         />
         <div className="text-information">
           <Typography variant="h6">
-            Arrastre su imagen dentro de esta área
+            {label || "Arrastre su imagen dentro de esta área"}
             <br />o haga clic&nbsp;
             <a href="#" onClick={() => console.log("Clickeado")}>
               aquí
@@ -113,10 +151,10 @@ const DragAndDrop = (props) => {
         </div>
       </div>
 
-      {ImageSelectedPrevious && (
+      {imageSelectedPrevious && (
         <div className="image-container">
           <div className="center">
-            <img src={ImageSelectedPrevious} alt="" />
+            <img src={imageSelectedPrevious} alt="" />
           </div>
           <Button
             className="delete-button"
@@ -133,6 +171,23 @@ const DragAndDrop = (props) => {
         </div>
       )}
     </StyledDrag>
+    {/* <div style={{ textAlign: "center", marginTop: "-6px" }}>
+      {meta.touched && meta.error && (
+        <span className={errorClassName} style={{ fontSize: ".8rem" }}>
+          {meta.error}
+        </span>
+      )}
+    </div> */}
+  </Paper>
+    <div style={{ textAlign: "center", marginTop: "-6px" }}>
+    <ErrorMessage
+      name={name}
+      component="span"
+      className={errorClassName}
+      style={{ fontSize: ".8rem", color: "red" }}
+    />
+  </div>
+  </>
   );
 };
 

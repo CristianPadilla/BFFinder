@@ -127,7 +127,6 @@ export function RegisterUserPage() {
             <Form className="sign-up-form register-form animate__animated animate__fadeIn" id="sign-up-form">
               <div className="form-container">
                 <TextInputComponent
-                  required
                   type="text"
                   label="Nombres"
                   name="firstname"
@@ -136,7 +135,6 @@ export function RegisterUserPage() {
                   onChange={formik.handleChange}
                 />
                 <TextInputComponent
-                  required
                   type="text"
                   label="Apellido"
                   name="lastname"
@@ -145,7 +143,6 @@ export function RegisterUserPage() {
                   onChange={formik.handleChange}
                 />
                 <TextInputComponent
-                  required
                   type="email"
                   label="Correo electrónico"
                   name="email"
@@ -154,7 +151,6 @@ export function RegisterUserPage() {
                   onChange={formik.handleChange}
                 />
                 <TextInputComponent
-                  required
                   type="email"
                   label="Confirma tu correo"
                   name="email2"
@@ -163,7 +159,6 @@ export function RegisterUserPage() {
                   onChange={formik.handleChange}
                 />
                 <TextInputPassword
-                  required
                   label="Contraseña"
                   name="password"
                   placeholder="Escribe tu contraseña"
@@ -171,7 +166,6 @@ export function RegisterUserPage() {
                   onChange={formik.handleChange}
                 />
                 <TextInputPassword
-                  required
                   label="Confirma la contraseña"
                   name="password2"
                   placeholder="Escribe tu contraseña"
@@ -190,7 +184,6 @@ export function RegisterUserPage() {
                   }}
                 />
                 <CheckboxInputComponent
-                  required
                   label="Términos y condiciones"
                   name="terms"
                   className="slider round"

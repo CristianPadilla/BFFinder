@@ -11,12 +11,12 @@ import { ErrorMessage, useField } from "formik";
 const RadioGroupComponent = (props) => {
   const { label, name, row, value, onChange, options, className, errorClassName, ...otherProps } = props;
 
-  console.log("Opciones del grupo de radio:", options);
+  // console.log("Opciones del grupo de radio:", options);
 
   return (
-    <FormGroup sx={{ width: '27ch', margin: '.5rem' }} required>
+    <FormGroup sx={{ width: '27ch', margin: '.5rem', padding: '.6rem 0 0 0' }}>
       <FormLabel id={`${name}-label`}>
-        {label}:<span style={{ color: 'red' }}>*</span>
+        {label}
       </FormLabel>
       <MuiRadioGroup
         row={row}
@@ -36,12 +36,12 @@ const RadioGroupComponent = (props) => {
           />
         ))}
       </MuiRadioGroup>
-      <div style={{ textAlign: 'center' }}>
+      <div style={{ textAlign: "center", marginTop: "-6px" }}>
         <ErrorMessage
           name={name}
           component="span"
           className={errorClassName}
-          style={{ fontSize: '.7rem' }}
+          style={{ fontSize: ".8rem", color: "red"  }}
         />
       </div>
     </FormGroup>

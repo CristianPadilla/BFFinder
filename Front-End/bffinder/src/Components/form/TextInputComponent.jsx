@@ -1,6 +1,7 @@
 import { ErrorMessage, useField } from "formik";
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
+import InputAdornment from "@mui/material/InputAdornment";
 import React from "react";
 
 export const TextInputComponent = ({
@@ -11,10 +12,11 @@ export const TextInputComponent = ({
   errorClassName,
   className,
   placeholder,
+  endAdornment,
   ...props
 }) => {
-  // const [field, meta] = useField(props);
-  console.log("props araaaaaaaaaaaaaaaaaaaaaa", value);
+  const [field, meta] = useField(name);
+  // console.log("props araaaaaaaaaaaaaaaaaaaaaa", value);
   return (
     <>
       {/* <label htmlFor={props.id || props.name}>{label}</label>
@@ -31,19 +33,26 @@ export const TextInputComponent = ({
           onChange={onChange}
           name={name}
           className={className}
-          {...props}
           placeholder={placeholder}
           variant="outlined"
+          error={meta.touched && !!meta.error}
+          helperText={meta.touched ? meta.error : ''}
+          InputProps={{
+            endAdornment: endAdornment && (
+              <InputAdornment position="end">{endAdornment}</InputAdornment>
+            ),
+          }}
+          {...props}
         />
       </FormControl>
-      <div style={{ textAlign: "center" }}>
+      {/* <div style={{ textAlign: "center", marginTop: "-6px" }}>
         <ErrorMessage
           name={name}
           component="span"
           className={errorClassName}
-          style={{ fontSize: ".7rem" }}
+          style={{ fontSize: ".8rem"  }}
         />
-      </div>
+      </div> */}
     </>
   );
 };

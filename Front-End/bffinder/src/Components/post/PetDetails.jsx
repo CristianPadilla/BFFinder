@@ -166,8 +166,8 @@ const PetDetails = ({ editing }) => {
               {formik.errors.general && (
                 <div className="error-message">{formik.errors.general}</div>
               )}
-              {console.log("Valores de formik:", formik.values)}
-              {console.log("Valor de formik.values.gender:", formik.values.gender)}
+              {/* {console.log("Valores de formik:", formik.values)}
+              {console.log("Valor de formik.values.gender:", formik.values.gender)} */}
               <Divider variant="middle" sx={{ marginTop: 1, marginBottom: 2 }}>
                 Caracteristicas
               </Divider>
@@ -336,7 +336,7 @@ const PetDetails = ({ editing }) => {
               {formik.errors.general && (
                 <div className="error-message">{formik.errors.general}</div>
               )}
-              {console.log(formik.values)}
+              {/* {console.log(formik.values)} */}
               <Divider variant="middle" sx={{ marginTop: 1, marginBottom: 2 }}>
                 Salud
               </Divider>

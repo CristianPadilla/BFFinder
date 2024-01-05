@@ -29,7 +29,7 @@ const CardVertical = ({ pet }) => {
     images,
     dangerous,
    } = pet;
-  console.log("log: ", pet);
+  // console.log("log: ", pet);
 
   const navigate = useNavigate();
   
@@ -122,7 +122,7 @@ const CardVertical = ({ pet }) => {
                   color="text.secondary"
                   sx={{ fontSize: ".9rem", marginBottom: "1rem" }}
                 >
-                  {console.log("Valor de vaccinated:", vaccinated)}
+                  {/* {console.log("Valor de vaccinated:", vaccinated)} */}
                   Vacunado:{" "}
                   {vaccinated ? (
                     <CheckIcon color="success" sx={{ fontSize: 15 }} />

@@ -64,7 +64,6 @@ export default function SignIn() {
             <h2 className="titulo">Iniciar Sesión</h2>
             {error && <div className="error-message">{error}</div>}
             <TextInputComponent
-              required
               type="text"
               label="Correo Electronico"
               name="email"
@@ -73,7 +72,6 @@ export default function SignIn() {
               onChange={formik.handleChange}
             />
             <TextInputPassword
-              required
               label="Contraseña"
               name="password"
               placeholder="Escribe tu contraseña"
