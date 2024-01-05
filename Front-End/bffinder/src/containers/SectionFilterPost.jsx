@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
-import Grid from "@mui/material/Grid";
 import Cards from "../Components/CardHorizontal";
 import Cardv from "../Components/CardVertical";
 import CardPost from "../Components/post/CardPost";
-import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import { Fab, Tooltip, Grid, Pagination } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import ModalAddPet from "../Components/user-foundation/ModalAddPet";
 import "styles/SectionAllPosts.scss";
 import axios from "axios";
 import "styles/Home.scss";
@@ -14,7 +15,7 @@ import { fetchPosts } from "../store/post";
 
 const SectionFilterPost = () => {
   const dispatch = useDispatch();
-  const { posts = [], pageable, loading } = useSelector(state => state.posts);
+  const { posts = [], loading } = useSelector((state) => state.posts);
   const sectionRef = useRef(null);
 
   const postsRequest = {
@@ -29,58 +30,72 @@ const SectionFilterPost = () => {
     },
     sorting: {
       //  sort: "date",
-      //   desc: true 
+      //   desc: true
     },
     page: 0,
     page_size: 5,
   };
 
-  useEffect(() => {
-    dispatch(fetchPosts(0, postsRequest));
-
-  }, []
+  useEffect(
+    () => {
+      dispatch(fetchPosts(0, postsRequest));
+    },
+    []
     // [postList]
   );
 
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 5; // Cantidad de posts por página
-              
+
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
-    sectionRef.current.scrollIntoView({ top: 0, behavior: 'smooth' });
+    sectionRef.current.scrollIntoView({ top: 0, behavior: "smooth" });
+  };
+
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleAddPet = () => {
+    // Lógica para agregar la mascota, si es necesario
+    handleCloseDialog();
   };
 
   return (
-    <div className="layout-container">
-      <span >Loading:{loading ? 'True' : 'False'}</span>
-      {!loading && <section ref={sectionRef} className="inicio-user-comun">
-        <Grid container className="grid-container">
-          {posts.map((post) => (
-            <Grid item xs={12} key={post.id}>
-              {/* <Cardv post={post} /> */}
-              <CardPost post={post} />
-            </Grid>
-          ))}
+    <div>
+      <span>Loading:{loading ? "True" : "False"}</span>
+      {posts.map((post) => (
+        <Grid item xs={12} key={post.id}>
+          <CardPost post={post} />
         </Grid>
+      ))}
 
-        <Grid
-          container
-          className="grid-container"
-          justifyContent="center"
-          alignItems="center"
+      <Tooltip
+        title={<span style={{ fontSize: "16px" }}>Crear Publicación</span>}
+        arrow
+        placement="left"
+      >
+        <Fab
+          color="primary"
+          aria-label="add"
+          onClick={handleOpenDialog}
+          sx={{ position: "fixed", bottom: "16px", right: "25px" }}
         >
-          <Stack spacing={2}>
-            <Pagination
-              count={pageable.totalPages}
-              color="warning"
-              className="pagination-custom"
-              page={pageable.pageNumber}
-              onChange={handlePageChange}
-            />
-          </Stack>
-        </Grid>
-      </section>}
+          <AddIcon />
+        </Fab>
+      </Tooltip>
 
+      <ModalAddPet
+        open={openDialog}
+        onClose={handleCloseDialog}
+        onAdd={handleAddPet}
+      />
     </div>
   );
 };

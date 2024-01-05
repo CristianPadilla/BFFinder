@@ -1,19 +1,32 @@
 import { ErrorMessage, Field, useField } from "formik";
-import React from "react";
+import React, {useState, useEffect} from "react";
 
 export const CheckboxInputComponent = ({ label, ...props }) => {
   const [field, meta] = useField({ ...props, type: "checkbox" });
-  // console.log(field);
+// console.log(field);
+  const [isChecked, setIsChecked] = useState(props.checked || false);
+
+  useEffect(() => {
+    setIsChecked(props.checked || false);
+  }, [props.checked]);
+
+  const handleInputChange = (e) => {
+    // Actualiza el estado local y llama a la función proporcionada
+    setIsChecked(e.target.checked);
+
+    if (props.onInputChange) {
+      props.onInputChange(e);
+    }
+  };
   return (
     <>
  <label className={props.labelClassName} style={{ display: 'flex', alignItems: 'center' }}>
-  <span className={props.spanClassName} style={{ order: -1 }}>{/* Estilo para el span (checkbox) */}
-    {/* Contenido del checkbox */}
-  </span>
+  <span className={props.spanClassName} style={{ order: -1 }}></span>
   <input
     name={props.name}
     onChange={props.onInputChange}
-    checked={props.value}
+    // checked={props.value}
+    checked={isChecked}
     type="checkbox"
     className={props.className}
     style={{ margin: 0, padding: 0 }}
@@ -29,7 +42,7 @@ export const CheckboxInputComponent = ({ label, ...props }) => {
         name={props.name}
         component="span"
         className={props.errorClassName}
-        style={{ fontSize: '.7rem' }}
+        style={{ fontSize: '.7rem', color: 'red' }}
       />
       </div>
     </>

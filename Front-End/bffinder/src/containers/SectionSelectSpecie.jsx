@@ -12,13 +12,12 @@ import chickenPNG from "imgs/Pets/dog_png.png";
 import hamsterPNG from "imgs/Pets/dog_png.png";
 
 const speciesData = [
-    { name: "Perros", image: dogPNG, link: "/home" },
-    { name: "Gatos", image: catPNG, link: "/gatos" },
-    { name: "Hamsters", image: hamsterPNG, link: "/hamsters" },
-    { name: "Aves", image: birdPNG, link: "/aves" },
-    { name: "Ratas", image: ratPNG, link: "/ratas" },
-    { name: "Peces", image: fishPNG, link: "/peces" },
-    { name: "Gallinas", image: chickenPNG, link: "/gallinas" },
+  { name: "Perros", image: dogPNG, link: "/home" },
+  { name: "Gatos", image: catPNG, link: "/gatos" },
+  { name: "Hamsters y Ratas", image: hamsterPNG, link: "/hamsters" },
+  { name: "Aves", image: birdPNG, link: "/aves" },
+  { name: "Peces", image: fishPNG, link: "/peces" },
+  { name: "Gallinas", image: chickenPNG, link: "/gallinas" },
   ];
   
   const SectionSelectSpecie = () => {

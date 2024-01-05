@@ -7,9 +7,9 @@ import PanelF from "containers/PanelFilters";
 import Ordering from "containers/Ordering";
 import logobff from "imgs/logo-bffinder-FINAL2.png";
 import Slider from '@mui/material/Slider'
-import PerfilMenu from '../containers/PerfilMenu';
+
 import Paper from '@mui/material/Paper';
-import SectionPosts from '../containers/SectionFilterPost';
+import SectionPosts from '../containers/MainContent';
 import NavHome from "../Components/NavHome";
 
 const Ejemplo = () => {
@@ -24,10 +24,7 @@ const Ejemplo = () => {
     return (
         <div>
         <section id="content">
-          
-          {/* NAVBAR */}
           <NavHome/>
-          {/* NAVBAR */}
 
           {/* MAIN */}
           <main>

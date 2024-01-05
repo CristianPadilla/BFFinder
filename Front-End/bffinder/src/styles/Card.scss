@@ -21,6 +21,19 @@
   position: absolute;
 }
 
+.card-post {
+  display: flex;
+  // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.687);
+  // border-radius: 80px; 
+  width: 32rem;;
+  // flex-direction: row;
+  // align-items: center;
+}
+
+.card-click{
+  cursor: pointer;
+}
+
 .parrafo-card {
   // margin-top: 15%;
   // margin-bottom: -20%;

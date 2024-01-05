@@ -19,7 +19,7 @@ const TextInputPassword = ({ label, ...props }) => {
 
   return (
     <>
-    <FormControl sx={{ m: 1, width: '27ch' }} variant="filled">
+    <FormControl sx={{ m: 1, width: '27ch' }} variant="filled" margin="normal">
       <InputLabel
         htmlFor={props.id || props.name}
         shrink={true}>
@@ -31,6 +31,8 @@ const TextInputPassword = ({ label, ...props }) => {
         type={showPassword ? 'text' : 'password'}
         placeholder={props.placeholder}
         className={props.className}
+        error={meta.touched && !!meta.error}
+        helperText={meta.touched ? meta.error : ''}
         endAdornment={
           <InputAdornment position="end">
             <IconButton
@@ -46,9 +48,14 @@ const TextInputPassword = ({ label, ...props }) => {
       />
       </FormControl>
 
-      <div style={{ textAlign: 'center' }}>
-        <ErrorMessage name={props.name} component="span" className={props.errorClassName} style={{ fontSize: '.7rem', marginTop: '0' }}/>
-      </div>
+      {/* <div style={{ textAlign: "center", marginTop: "-7px" }}>
+        <ErrorMessage
+          name={props.name}
+          component="span"
+          className={props.errorClassName}
+          style={{ fontSize: ".8rem"  }}
+        />
+      </div> */}
 
     </>
   );

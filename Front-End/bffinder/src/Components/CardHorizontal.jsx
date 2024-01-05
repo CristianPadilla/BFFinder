@@ -3,12 +3,19 @@ import { useNavigate } from "react-router-dom";
 import imgdefault from "imgs/logo-bffinder.png";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import 'styles/CardPrePost.scss';
-import { Card, CardContent, CardMedia, Typography, CardActions, Button } from '@mui/material';
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import { Card, 
+  CardContent, 
+  CardMedia, 
+  Typography, 
+  CardActions, 
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  CardActionArea,
+} from '@mui/material';
 
  const formatTimeDifference = (hours) => {
     const weeks = Math.floor(hours / (24 * 7));
@@ -52,7 +59,7 @@ const HorizontalCard = ({ post }) => {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', margin: '4% 0' }}>
     <Card className='card-prepost'sx={{display: 'flex', justifyContent: 'center', borderRadius: '18px', }} elevation={4}>
-      {/* Imagen en la parte izquierda */}
+    <CardActionArea>
       <CardMedia
         component="img"
         sx={{ width: 200, height: 200, objectFit: 'cover' }}
@@ -60,7 +67,6 @@ const HorizontalCard = ({ post }) => {
         alt="Imagen"
       />
       
-      {/* Contenido en la parte derecha */}
       <CardContent className='content-card'>
 
         <Typography variant="h5" component="h2" sx={{ fontSize: '1.7rem', marginTop: '-6%' }}>
@@ -86,6 +92,7 @@ const HorizontalCard = ({ post }) => {
       </CardActions>
 
       </CardContent>
+      </ CardActionArea>
     </Card>
     <Dialog open={open} onClose={handleModalClose}>
                 <DialogTitle><b>Atención</b></DialogTitle>

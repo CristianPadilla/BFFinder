@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Typography, Box, IconButton } from '@mui/material';
+import { Grid, Box, IconButton } from '@mui/material';
 import Cardh from '../Components/CardHorizontal';
-import Cardv from '../Components/CardVertical';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import 'styles/CardPrePost.scss';

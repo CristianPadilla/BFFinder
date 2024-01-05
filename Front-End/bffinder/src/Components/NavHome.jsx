@@ -14,14 +14,14 @@ const NavHome = () => {
           <a href="#" className="brand">
             <img src={logobff} className="logobff" alt="imglog" />
           </a>
-            <form action="#">
+            {/* <form action="#">
               <div className="form-input">
                 <input type="search" placeholder="Buscar..." style={{ width: '300px' }}/>
                 <button type="submit" className="search-btn">
                   <Search />
                 </button>
               </div>
-            </form>
+            </form> */}
             <div className="nav-menu">
                 <PerfilMenu/>
               {/* <a href="#" className="notification">

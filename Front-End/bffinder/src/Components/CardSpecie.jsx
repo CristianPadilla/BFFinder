@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
+import { Card,
+CardActionArea,
+CardContent,
+CardMedia,
+Typography,
+} from '@mui/material';
 
 const CardSpecie = ({ speciesName, imagePet, linkTo }) => {
   const [hovered, setHovered] = useState(false);
@@ -19,6 +21,7 @@ const CardSpecie = ({ speciesName, imagePet, linkTo }) => {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', margin: '4% 0' }}>
       <Card elevation={3} sx={{ borderRadius: '18px', width: '300px', height: '350px' }}>
+      <CardActionArea>
         <Link
           to={linkTo}
           style={{
@@ -62,6 +65,7 @@ const CardSpecie = ({ speciesName, imagePet, linkTo }) => {
             </Typography>
           </Link>
         </CardContent>
+        </ CardActionArea>
       </Card>
     </div>
   );

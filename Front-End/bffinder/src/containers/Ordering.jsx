@@ -80,6 +80,8 @@ const Ordering = ({ onSortChange }) => {
         <MenuItem value={20}>Mas antiguos</MenuItem>
         <MenuItem value={30}>Edad: Menor a Mayor</MenuItem>
         <MenuItem value={40}>Edad: Mayor a Menor</MenuItem>
+        <MenuItem value={50}>Nombre: A - Z</MenuItem>
+        <MenuItem value={60}>Nombre: Z - A</MenuItem>
       </Select>
     </FormControl>
       </Stack>

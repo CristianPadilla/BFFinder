@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { TextInputComponent } from "../Components/TextInputComponent";
+import { TextInputComponent } from "../Components/form/TextInputComponent";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import "../styles/Card.scss";
-import { CheckboxInputComponent } from "../Components/CheckboxInputComponent";
+import { CheckboxInputComponent } from "../Components/form/CheckboxInputComponent";
 import TextInputPassword from "../Components/form/TextInputPassword";
 import { Snackbar, Alert, Grid } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -117,7 +117,6 @@ export function RegisterFoundationPage() {
                 <div className="error-message">{formik.errors.general}</div>
               )}
               <TextInputComponent
-                required
                 type="text"
                 label="Nombre de la organización"
                 name="name"
@@ -126,7 +125,6 @@ export function RegisterFoundationPage() {
                 onChange={formik.handleChange}
               />
               <TextInputComponent
-                required
                 type="number"
                 label="No. de Identificación Tributaria (Nit)"
                 name="nit"
@@ -143,7 +141,6 @@ export function RegisterFoundationPage() {
                 onChange={formik.handleChange}
               />
               <TextInputComponent
-                required
                 type="email"
                 label="Correo electrónico"
                 name="email"
@@ -152,7 +149,6 @@ export function RegisterFoundationPage() {
                 onChange={formik.handleChange}
               />
               <TextInputComponent
-                required
                 type="email"
                 label="Confirma tu correo"
                 name="email2"
@@ -161,7 +157,6 @@ export function RegisterFoundationPage() {
                 onChange={formik.handleChange}
               />
               <TextInputPassword
-                required
                 label="Contraseña"
                 name="password"
                 placeholder="Escribe tu contraseña"
@@ -169,16 +164,13 @@ export function RegisterFoundationPage() {
                 onChange={formik.handleChange}
               />
               <TextInputPassword
-                required
                 label="Confirma la contraseña"
                 name="password2"
                 placeholder="Escribe tu contraseña"
                 value={formik.values.password2}
                 onChange={formik.handleChange}
-              // helperText="Some important text"
               />
               <CheckboxInputComponent
-                required
                 label="Términos y condiciones"
                 name="terms"
                 className="slider round"

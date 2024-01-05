@@ -1,4 +1,4 @@
 
 export const authToken =
-"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ3YWthbmRhQG1haWwuY29tIiwiaWF0IjoxNzA0MjA1MjQ5LCJleHAiOjE3MDQyOTE2NDl9.c25yIv_ZCqWS64hakvpV3m1I9ipVDx63VsNmTx04ZH4";
+"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ3YWthbmRhQG1haWwuY29tIiwiaWF0IjoxNzA0MzcyOTQ0LCJleHAiOjE3MDQ0NTkzNDR9.lBlnhSCyfDVnJfNKgIK0Nl434VLCnnnwmoArpxkiTVU";
 
