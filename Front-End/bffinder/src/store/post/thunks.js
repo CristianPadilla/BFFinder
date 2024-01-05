@@ -2,32 +2,33 @@ import { postApi } from "../../api/postApi";
 import { fetchPostsStart, fetchPostsSuccess } from "./postSlice";
 
 
-export const fetchPosts = (page = 0, request = {}) => async (dispatch, getState) => {
+export const fetchPosts = (page = 0, filtersRequest = {}) => async (dispatch, getState) => {
     try {
-    const { filters } = request;
-    dispatch(fetchPostsStart());
-    const { data } = await postApi.post("/all/filter", request);
+        const { filters } = filtersRequest;
+        dispatch(fetchPostsStart());
+        const { data } = await postApi.post("/all/filter", filtersRequest);
+        const { page, request } = data;
+        console.log("fetchPosts=== ", request);
+        dispatch(fetchPostsSuccess({
 
-    dispatch(fetchPostsSuccess({
-
-        posts: data.content,
-        pageable: {
-            pageNumber: data.number,
-            pageSize: data.size,
-            numberOfElements: data.numberOfElements,
-            totalPages: data.totalPages,
-            totalElements: data.totalElements,
-            offset: data.pageable.offset,
-            last: data.last,
-            first: data.first,
-            sort: {
-                sort: data.sort.property,
-                desc: data.sort.descending,
-            },
-        }
-    }));
+            posts: page.content,
+            pageable: {
+                pageNumber: page.number,
+                pageSize: page.size,
+                numberOfElements: page.numberOfElements,
+                totalPages: page.totalPages,
+                totalElements: page.totalElements,
+                offset: page.pageable.offset,
+                last: page.last,
+                first: page.first,
+                sort: {
+                    sort: page.sort.property,
+                    desc: page.sort.descending,
+                },
+            }
+        }));
     } catch (error) {
         console.log(error);
-        // dispatch(fetchPostsFailure(error.message));
+        throw new Error(error);
     }
 };

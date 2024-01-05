@@ -7,11 +7,12 @@ import { useField, ErrorMessage } from 'formik';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
+import { FormHelperText } from '@mui/material';
 
-const TextInputPassword = ({ label, ...props }) => {
+const TextInputPassword = (props) => {
   const [showPassword, setShowPassword] = React.useState(false);
-  const [field, meta] = useField(props.name);
-
+  const [field, meta] = useField(props);
+  const error = meta.touched && !!meta.error;
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -19,33 +20,34 @@ const TextInputPassword = ({ label, ...props }) => {
 
   return (
     <>
-    <FormControl sx={{ m: 1, width: '27ch' }} variant="filled" margin="normal">
-      <InputLabel
-        htmlFor={props.id || props.name}
-        shrink={true}>
-        {label}
-      </InputLabel>
-      <OutlinedInput
-        {...field}
-        {...props}
-        type={showPassword ? 'text' : 'password'}
-        placeholder={props.placeholder}
-        className={props.className}
-        error={meta.touched && !!meta.error}
-        helperText={meta.touched ? meta.error : ''}
-        endAdornment={
-          <InputAdornment position="end">
-            <IconButton
-              aria-label="toggle password visibility"
-              onClick={handleClickShowPassword}
-              onMouseDown={handleMouseDownPassword}
-              edge="end"
-            >
-              {showPassword ? <VisibilityOff /> : <Visibility />}
-            </IconButton>
-          </InputAdornment>
-        }
-      />
+      <FormControl sx={{ m: 1, width: '27ch' }} variant="filled" margin="normal" error={error}>
+        <InputLabel
+          htmlFor={props.id || props.name}
+          shrink={true}>
+          {props.label}
+        </InputLabel>
+        <OutlinedInput
+          {...field}
+          {...props}
+          type={showPassword ? 'text' : 'password'}
+          placeholder={props.placeholder}
+          className={props.className}
+          error={meta.touched && !!meta.error}
+
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          }
+        />
+        {error && <FormHelperText id="my-input-error-text">{meta.touched ? meta.error : ''}</FormHelperText>}
       </FormControl>
 
       {/* <div style={{ textAlign: "center", marginTop: "-7px" }}>

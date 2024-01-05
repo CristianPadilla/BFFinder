@@ -4,18 +4,35 @@ import CardVertical from "../Components/CardVertical";
 import ModalAddPet from "../Components/user-foundation/ModalAddPet";
 import AddIcon from "@mui/icons-material/Add";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPets } from "../store/pet";
+import { fetchPets, startFetchPets } from "../store/pet";
 
 export const SectionFilterPet = () => {
   //   const pets = [];
   const dispatch = useDispatch();
-  const { pets = [], loading } = useSelector((state) => state.pets);
+  const { page, loading } = useSelector((state) => state.pets);
+  const { pets } = page;
+  const petsRequest = {
+    search: "",
+    size: "",
+    specie_id: 0,
+    breed_id: 0,
+    age: 0,
+    gender: "",
+    vaccinated: null,
+    sterilized: null,
+    dewormed: null,
+    posted: null,
+    sort: "",
+    desc: false,
+    page: 0,
+    page_size: 10,
+  };
 
   // console.log("pets from component aaaaaaaaaaaaaa", pets);
   useEffect(
     () => {
       // console.log("useEffect from componenet");
-      dispatch(fetchPets(0, {}));
+      dispatch(startFetchPets(petsRequest));
     },
     []
     // [postList]

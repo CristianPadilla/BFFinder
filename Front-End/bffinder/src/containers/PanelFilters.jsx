@@ -15,6 +15,7 @@ import {
   Typography,
   Tooltip,
 } from "@mui/material";
+import { useSelector } from "react-redux";
 
 function ValueLabel(props) {
   const { children, open, value } = props;
@@ -57,12 +58,16 @@ const marks = [
   { value: 11 },
 ];
 
-const PanelFilters = () => {
+const PanelFilters = ({ module }) => {
   const [selectedFilter, setSelectedFilter] = React.useState("");
+
+  const { role } = useSelector(state => state.auth.auth);
 
   const handleFilterChange = (event) => {
     setSelectedFilter(event.target.value);
   };
+
+  console.log("active module", module);
 
   return (
     <div>
@@ -159,7 +164,7 @@ const PanelFilters = () => {
           <MenuItem value="otros">Otros</MenuItem>
         </Select>
       </FormControl>
-      
+
       {/* <FormLabel component="legend">Raza</FormLabel> */}
       <FormControl className="filter-container" fullWidth id="margin-normal" margin="normal">
         <InputLabel id="filter-label" sx={{ fontSize: "1.3rem"}}>Seleccione una raza</InputLabel>

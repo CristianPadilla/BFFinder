@@ -17,6 +17,7 @@ import { SectionFilterPet } from "./SectionFilterPet";
 
 const MainContent = () => {
   const sectionRef = useRef(null);
+  const [activeModule, setActiveModule] = useState('posts');
   const { pageable } = useSelector((state) => state.posts);
 
   // const postsRequest = {
@@ -47,6 +48,7 @@ const MainContent = () => {
         <Grid container spacing={1} className="grid-container">
           {/* <SectionFilterPost /> */}
           {/* {console.log("sectionnnnnnnnnnnnnnnn ")} */}
+          {/* {module === 'posts'?  <SectionFilterPost /> : <div>mascotas</div>} */}
           <SectionFilterPet />
         </Grid>
 

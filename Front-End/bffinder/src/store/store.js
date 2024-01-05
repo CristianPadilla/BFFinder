@@ -27,7 +27,6 @@ export const store = configureStore({
         pets: petSlice.reducer,
         // auth: authSlice.reducer,
         auth: authPersistedReducer,
-
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }).concat(thunk)
 });

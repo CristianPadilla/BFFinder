@@ -33,7 +33,7 @@ import MainContent from "../containers/MainContent";
 const Home = () => {
   const [sortType, setSortType] = useState("");
   const handleSortChange = (type) => {
-    
+
   };
 
   // const [age, setAge] = React.useState('');

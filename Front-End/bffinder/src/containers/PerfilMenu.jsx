@@ -16,13 +16,43 @@ import CheckIcon from '@mui/icons-material/Check';
 import ToggleButton from '@mui/material/ToggleButton';
 import PetsIcon from '@mui/icons-material/Pets';
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout, startLogout } from '../store/auth';
+import { startAddNewPet, startFetchPets } from '../store/pet/thunks';
+import { useEffect } from 'react';
 
 const PerfilMenu = () => {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
+  const [selected, setSelected] = React.useState(false);
+  const [selected2, setSelected2] = React.useState(false);
+
+  const { page } = useSelector(state => state.pets);
+  const petsRequest = {
+    search: "",
+    size: "",
+    specie_id: 0,
+    breed_id: 0,
+    age: 0,
+    gender: "",
+    vaccinated: null,
+    sterilized: null,
+    dewormed: null,
+    posted: null,
+    sort: "",
+    desc: false,
+    page: 0,
+    page_size: 10,
+  };
+  useEffect(() => {// para consultar la pagina
+    dispatch(startFetchPets(petsRequest));
+
+  }, []
+    // [postList]
+  );
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -30,24 +60,38 @@ const PerfilMenu = () => {
     setAnchorEl(null);
   };
 
-  const navigate = useNavigate();
-  const [selected, setSelected] = React.useState(false);
-  const [selected2, setSelected2] = React.useState(false);
 
-  const handleToggle1 = () => {
-    setSelected(true);
-    setSelected2(false);
-    if (!selected) {
-      navigate("/ejemplo");
+  const { isSaving, active } = useSelector(state => state.pets);
+  const handleToggle1 = async () => { // para crear una nueva mascota
+    const newPet = {
+      name: "Tesoro",
+      weight: 20.0,
+      age: 6,
+      vaccinated: true,
+      dangerous: false,
+      size: "l",
+      sterilized: true,
+      dewormed: true,
+      ownerId: userId,
+      breedId: 2
     }
+    await dispatch(startAddNewPet(newPet));
+    dispatch(startFetchPets(petsRequest));
+    // setSelected(true);
+    // setSelected2(false);
+    // if (!selected) {
+    //   navigate("/ejemplo");
+    // }
   };
 
   const handleToggle2 = () => {
-    setSelected(false);
-    setSelected2(true);
-    if (!selected2) {
-      navigate("/ejemplo");
-    }
+
+
+    // setSelected(false);
+    // setSelected2(true);
+    // if (!selected2) {
+    //   navigate("/ejemplo");
+    // }
   };
 
   const commonButtonStyles = {
@@ -88,6 +132,16 @@ const PerfilMenu = () => {
         {/* <Button variant="outlined" startIcon={<FavoriteIcon />}>
 
         </Button> */}
+        {
+          (!!active)
+            ? console.log("mostrando modal de detalle de mascota", active)
+            : console.log("no mostrar modal de detalle de mascota")
+        }
+        {
+
+          console.log("mostrando cada mascota ", page.pets)
+
+        }
         <Tooltip title={<span style={{ fontSize: '16px' }}>Adoptar</span>} arrow>
           <ToggleButton
             value="check"
@@ -108,6 +162,7 @@ const PerfilMenu = () => {
             selected={selected}
             // style={buttonStyle}
             onChange={handleToggle1}
+            disabled={isSaving}
             sx={{
               ...commonButtonStyles,
               "&.Mui-selected": selectedButtonStyles,

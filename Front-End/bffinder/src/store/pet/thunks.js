@@ -1,50 +1,61 @@
+import { HttpStatusCode } from "axios";
 import { petApi } from "../../api/petApi";
-import { fetchPetsStart, fetchPetsSuccess } from "./petSlice";
+import { savingNewPet, setActivePet, setErrorMessage, setPetsPage } from "./petSlice";
 
-export const fetchPets = (page = 0, request = {}) => async (dispatch, getState) => {
-    // console.log("fetchPets thunk");
-    // try {
-    const request = {
-        search: "", // search por nombre mascota
-        //"size": "s", // l, m , s
-        //"specie_id": 1,
-        //"breed_id": 1,
-        //"age": 5,
-        //"vaccinated": false,
-        //"sterilized": null,
-        //"dewormed": true,
-        //"posted": true, //
-        //"sort": "name", // name, age,
-        //"desc": true,
-        //"gender": 'f',
-
-        page: 0,
-        page_size: 10
-    };
-    dispatch(fetchPetsStart());
+export const startFetchPets = (petsRequest) => async (dispatch, getState) => {
     try {
-        const { data } = await petApi.post("/user/52/filter", request);
+        console.log("startFetchPets from thunk ", petsRequest);
+        const { userId } = getState().auth.auth;
+        if (!userId) throw new Error("No user id exists");
+        const { data } = await petApi.post("/user/" + userId + "/filter", petsRequest);
+        const { page, filters } = data;
 
-        dispatch(fetchPetsSuccess({
+        dispatch(setPetsPage({
 
-            pets: data.content,
-            pageable: {
-                pageNumber: data.number,
-                pageSize: data.size,
-                numberOfElements: data.numberOfElements,
-                totalPages: data.totalPages,
+            page: {
+                pageNumber: page.number,
+                pageSize: page.size,
+                numberOfElements: page.numberOfElements,
+                totalPages: page.totalPages,
                 totalElements: data.totalElements,
-                offset: data.pageable.offset,
-                last: data.last,
-                first: data.first,
-                sort: {
-                    sort: data.sort.property,
-                    desc: data.sort.descending,
-                },
+                offset: page.pageable.offset,
+                last: page.last,
+                first: page.first,
+                sort: page.sort[0].property,
+                desc: page.sort[0].descending,
+                pets: page.content,
             }
-        }));
+        }
+
+        ));
     } catch (error) {
-        console.log("error: ", error);  
-        // dispatch(fetchPostsFailure(error.message));
+        console.log(error);
+        throw new Error(error);
     }
+
+    // console.log("finish from thunk ", data);
+};
+
+
+export const startAddNewPet = () => async (dispatch, getState) => {
+
+    dispatch(savingNewPet())
+    const { userId } = getState().auth.auth;
+    console.log("startNewPet from thunk ", userId);
+
+
+
+
+    const { data, status } = await petApi.post("/save", newPet);
+    console.log(data, status);
+    if (status !== HttpStatusCode.Created) dispatch(setErrorMessage(data));
+    dispatch(startFetchPets());
+    dispatch(setActivePet(data)); // no concluido
+};
+
+export const startGetPetById = (id) => async (dispatch) => {
+    const { data, status } = await petApi.get("/pet/" + id);
+    console.log("startGetPetById", data, status);
+    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+    dispatch(setActivePet(data));// no concluido
 };

@@ -23,21 +23,21 @@ export default function SignIn() {
 
   const [error, setError] = useState(null);
 
-  
+
   // useEffect(() => {
   //   console.log("usefect  from sign in", status);
   //   if (status === 'authenticated') {
-      //     // setOpenConfirmationAlert(true);
-      //     setTimeout(() => {
-        //       // setOpenConfirmationAlert(false);
-        //       navigate("/home");
-      //     }, 2000);
-    //   }
+  //     // setOpenConfirmationAlert(true);
+  //     setTimeout(() => {
+  //       // setOpenConfirmationAlert(false);
+  //       navigate("/home");
+  //     }, 2000);
+  //   }
   // }, [status]);
 
   const onGoogleSignIn = () => {
     console.log("Google Sign In");
-// dispatch(startGoogleSignIn())
+    // dispatch(startGoogleSignIn())
   };
 
   const handleLogin = async ({ email, password }) => {
@@ -56,7 +56,7 @@ export default function SignIn() {
           password: Yup.string()
             .min(4, "La contraseña debe tener al menos 4 caracteres")
             .max(15, "La contraseña debe tener 15 caracteres o menos")
-            .required("La contraseña es obligatoria"),
+            .required("Ingrese su contraseña"),
         })}
       >
         {(formik) => (
