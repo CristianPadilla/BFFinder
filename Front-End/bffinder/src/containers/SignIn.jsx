@@ -18,7 +18,7 @@ const formFields = {
 export default function SignIn() {
 
   const dispatch = useDispatch();
-  const { status, errorMessage } = useSelector(state => state.auth.auth);
+  const { status, errorMessage } = useSelector(state => state.persisted.auth);
   const isCheckingAuth = useMemo(() => status === 'checking', [status]);
 
   const [error, setError] = useState(null);

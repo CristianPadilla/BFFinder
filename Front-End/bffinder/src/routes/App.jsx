@@ -17,7 +17,7 @@ import { logout, validateAuth } from "../store/auth";
 
 const App = () => {
 
-	const { status, token } = useSelector(state => state.auth.auth);
+	const { status, token } = useSelector(state => state.persisted.auth);
 	const dispatch = useDispatch();
 
 

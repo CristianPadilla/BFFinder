@@ -20,80 +20,42 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout, startLogout } from '../store/auth';
 import { startAddNewPet, startFetchPets } from '../store/pet/thunks';
 import { useEffect } from 'react';
+import { changeActiveModule } from '../store/global';
+import { act } from 'react-dom/test-utils';
 
 const PerfilMenu = () => {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
-  const [selected, setSelected] = React.useState(false);
-  const [selected2, setSelected2] = React.useState(false);
 
   const { page } = useSelector(state => state.pets);
-  const petsRequest = {
-    search: "",
-    size: "",
-    specie_id: 0,
-    breed_id: 0,
-    age: 0,
-    gender: "",
-    vaccinated: null,
-    sterilized: null,
-    dewormed: null,
-    posted: null,
-    sort: "",
-    desc: false,
-    page: 0,
-    page_size: 10,
-  };
-  useEffect(() => {// para consultar la pagina
-    dispatch(startFetchPets(petsRequest));
+  const { activeModule } = useSelector(state => state.persisted.global);
+  const { role } = useSelector(state => state.persisted.auth);
 
-  }, []
-    // [postList]
-  );
+  const postsModuleTitle = role === 'u' ? "Adoptar" : "Mis publicaciones";
+  // const petsRequest = {
+  //   search: "",
+  //   size: "",
+  //   specie_id: 0,
+  //   breed_id: 0,
+  //   age: 0,
+  //   gender: "",
+  //   vaccinated: null,
+  //   sterilized: null,
+  //   dewormed: null,
+  //   posted: null,
+  //   sort: "",
+  //   desc: false,
+  //   page: 0,
+  //   page_size: 10,
+  // };
+  // useEffect(() => {// para consultar la pagina
+  //   dispatch(startFetchPets(petsRequest));
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-
-  const { isSaving, active } = useSelector(state => state.pets);
-  const handleToggle1 = async () => { // para crear una nueva mascota
-    const newPet = {
-      name: "Tesoro",
-      weight: 20.0,
-      age: 6,
-      vaccinated: true,
-      dangerous: false,
-      size: "l",
-      sterilized: true,
-      dewormed: true,
-      ownerId: userId,
-      breedId: 2
-    }
-    await dispatch(startAddNewPet(newPet));
-    dispatch(startFetchPets(petsRequest));
-    // setSelected(true);
-    // setSelected2(false);
-    // if (!selected) {
-    //   navigate("/ejemplo");
-    // }
-  };
-
-  const handleToggle2 = () => {
-
-
-    // setSelected(false);
-    // setSelected2(true);
-    // if (!selected2) {
-    //   navigate("/ejemplo");
-    // }
-  };
-
+  // }, []
+  //   // [postList]
+  // );
   const commonButtonStyles = {
     borderRadius: '16px',
     // color: "#A0A0A0",
@@ -113,64 +75,58 @@ const PerfilMenu = () => {
     },
   };
 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+
+  const handleChangeModule = (module) => {
+    console.log("Valor del botón:", module);
+    dispatch(changeActiveModule({ module }))
+  };
+
   const handleLogout = () => {
     dispatch(startLogout({}));
-    // navigate('/login');
-
-    // Cierra el menú (si es necesario)
-    handleClose();
   };
 
   return (
     <div>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-        {/* <Typography sx={{ minWidth: 100 }}>Contact</Typography>
-        <Typography sx={{ minWidth: 100 }}>Profile</Typography>
-        <IconButton aria-label="" size="large">
-        <FavoriteIcon />
-        </IconButton> */}
-        {/* <Button variant="outlined" startIcon={<FavoriteIcon />}>
 
-        </Button> */}
-        {
-          (!!active)
-            ? console.log("mostrando modal de detalle de mascota", active)
-            : console.log("no mostrar modal de detalle de mascota")
-        }
-        {
-
-          console.log("mostrando cada mascota ", page.pets)
-
-        }
-        <Tooltip title={<span style={{ fontSize: '16px' }}>Adoptar</span>} arrow>
+        <Tooltip title={<span style={{ fontSize: '16px' }}>{postsModuleTitle}</span>} arrow>
           <ToggleButton
-            value="check"
-            selected={selected2}
-            onChange={handleToggle2}
+            value="posts"
+            selected={activeModule === "posts" ? true : false}
+            onClick={() => handleChangeModule("posts")}
             sx={{
               ...commonButtonStyles,
               "&.Mui-selected": selectedButtonStyles,
             }}
           >
-            <PetsIcon /> <Typography sx={{ minWidth: 100 }}>Adoptar</Typography>
+            <PetsIcon /> <Typography sx={{ minWidth: 100 }}>{postsModuleTitle}</Typography>
           </ToggleButton>
         </Tooltip>
 
-        <Tooltip title={<span style={{ fontSize: '16px' }}>Favoritos</span>} arrow>
+        {role === 's' && <Tooltip title={<span style={{ fontSize: '16px' }}>Mascotas</span>} arrow>
           <ToggleButton
-            value="check"
-            selected={selected}
+            value="pets"
+            selected={activeModule === "pets" ? true : false}
             // style={buttonStyle}
-            onChange={handleToggle1}
-            disabled={isSaving}
+            onClick={() => handleChangeModule("pets")}
+            disabled={false}
             sx={{
               ...commonButtonStyles,
               "&.Mui-selected": selectedButtonStyles,
             }}
           >
-            <FavoriteIcon /> <Typography sx={{ minWidth: 100 }}>Favoritos</Typography>
+            <FavoriteIcon /> <Typography sx={{ minWidth: 100 }}>Mascotas</Typography>
           </ToggleButton>
-        </Tooltip>
+        </Tooltip>}
+
 
         <Tooltip title={<span style={{ fontSize: '16px' }}>Perfil</span>} arrow>
           <IconButton

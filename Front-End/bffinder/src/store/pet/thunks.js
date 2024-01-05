@@ -5,7 +5,7 @@ import { savingNewPet, setActivePet, setErrorMessage, setPetsPage } from "./petS
 export const startFetchPets = (petsRequest) => async (dispatch, getState) => {
     try {
         console.log("startFetchPets from thunk ", petsRequest);
-        const { userId } = getState().auth.auth;
+        const { userId } = getState().persisted.auth;
         if (!userId) throw new Error("No user id exists");
         const { data } = await petApi.post("/user/" + userId + "/filter", petsRequest);
         const { page, filters } = data;
@@ -40,7 +40,7 @@ export const startFetchPets = (petsRequest) => async (dispatch, getState) => {
 export const startAddNewPet = () => async (dispatch, getState) => {
 
     dispatch(savingNewPet())
-    const { userId } = getState().auth.auth;
+    const { userId } = getState().persisted.auth;
     console.log("startNewPet from thunk ", userId);
 
 

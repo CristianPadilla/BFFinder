@@ -61,13 +61,13 @@ const marks = [
 const PanelFilters = ({ module }) => {
   const [selectedFilter, setSelectedFilter] = React.useState("");
 
-  const { role } = useSelector(state => state.auth.auth);
+  const { role } = useSelector(state => state.persisted.auth);
 
   const handleFilterChange = (event) => {
     setSelectedFilter(event.target.value);
   };
 
-  console.log("active module", module);
+  console.log("active module ", module, " role ", role);
 
   return (
     <div>

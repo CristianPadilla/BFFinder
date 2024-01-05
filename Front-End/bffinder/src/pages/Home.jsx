@@ -68,7 +68,7 @@ const Home = () => {
               <PanelF />
             </div>
             <div className="main-content-scroll animate__animated animate__fadeIn animate__faster">
-              {/* <SectionFilterPost /> */}
+
               <MainContent />
 
               {/* <ul className="box-info">

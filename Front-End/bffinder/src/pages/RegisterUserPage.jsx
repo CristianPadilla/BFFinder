@@ -31,7 +31,7 @@ const formFields = {
 export function RegisterUserPage() {
 
   const dispatch = useDispatch();
-  const { status, errorMessage } = useSelector(state => state.auth);
+  const { status, errorMessage } = useSelector(state => state.persisted.auth);
   const isCheckingAuth = useMemo(() => status === 'checking', [status]);
   const [openConfirmationAlert, setOpenConfirmationAlert] = useState(false);
   const navigate = useNavigate();
@@ -93,6 +93,7 @@ export function RegisterUserPage() {
             .required("El apellido es obligatorio"),
           phone: Yup.string()
             .nullable()
+            .required("El número de telefono es obligatorio")
             .test(
               "len",
               "El número telefono debe tener 10 caracteres",
@@ -173,7 +174,7 @@ export function RegisterUserPage() {
                   onChange={formik.handleChange}
                 />
                 <TextInputComponent
-                  type="text"
+                  type="number"
                   label="Número de telefono"
                   name="phone"
                   placeholder="322000550"
