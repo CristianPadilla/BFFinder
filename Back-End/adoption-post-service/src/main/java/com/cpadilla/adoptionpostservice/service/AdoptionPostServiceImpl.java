@@ -100,7 +100,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     }
 
     @Override
-    public Page<AdoptionPostPartialsResponse> getPostsByUserIdFilter(int userId, PostsRequest request) {
+    public PostsFilteredPageResponse getPostsByUserIdFilter(int userId, PostsRequest request) {
 
         var pageSize = request.getPageSize() > 0 && request.getPageSize() <= 20
                 ? request.getPageSize()
@@ -174,7 +174,8 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         int intoElements = Math.min(fromElement + pageSize, filteredPosts.size());
         var pageElements = filteredPosts.subList(fromElement, intoElements);
 
-        return new PageImpl<>(pageElements, PageRequest.of(request.getPage(), pageSize, sortingDetails), filteredPosts.size());
+        var page = new PageImpl<>(pageElements, PageRequest.of(request.getPage(), pageSize, sortingDetails), filteredPosts.size());
+        return PostsFilteredPageResponse.builder().page(page).request(request).build();
     }
 
     @Override
@@ -215,7 +216,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     }
 
     @Override
-    public Page<AdoptionPostPartialsResponse> getAllFilter(PostsRequest request) {
+    public PostsFilteredPageResponse getAllFilter(PostsRequest request) {
         // TODO !important there is a optimization problem, when getting the posts it will get almost all witch is not optimal
         // options could be to limit the number of posts, wit a limit, or a date limit, or implement filter from pets service  or something
         var pageSize = request.getPageSize() > 0 && request.getPageSize() <= 20
@@ -309,7 +310,8 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         int intoElements = Math.min(fromElement + pageSize, filteredPosts.size());
         var pageElements = filteredPosts.subList(fromElement, intoElements);
 
-        return new PageImpl<>(pageElements, PageRequest.of(request.getPage(), pageSize, sortingDetails), filteredPosts.size());
+        var page = new PageImpl<>(pageElements, PageRequest.of(request.getPage(), pageSize, sortingDetails), filteredPosts.size());
+        return PostsFilteredPageResponse.builder().page(page).request(request).build();
     }
 
     @Override

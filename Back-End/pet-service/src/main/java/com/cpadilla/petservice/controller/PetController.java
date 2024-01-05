@@ -3,6 +3,7 @@ package com.cpadilla.petservice.controller;
 import com.cpadilla.petservice.model.PetsFilterRequest;
 import com.cpadilla.petservice.model.PetRequest;
 import com.cpadilla.petservice.model.PetResponse;
+import com.cpadilla.petservice.model.PetsFilteredPageResponse;
 import com.cpadilla.petservice.service.PetService;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
@@ -29,7 +30,7 @@ public class PetController {
     }
 
     @PostMapping("/user/{userId}/filter")
-    public ResponseEntity<Page<PetResponse>> getByUserFilter(@PathVariable("userId") int userId, @RequestBody PetsFilterRequest filtersRequest) {
+    public ResponseEntity<PetsFilteredPageResponse> getByUserFilter(@PathVariable("userId") int userId, @RequestBody PetsFilterRequest filtersRequest) {
         return new ResponseEntity<>(service.getByUserFilter(userId, filtersRequest), HttpStatus.OK);
     }
 
@@ -41,7 +42,7 @@ public class PetController {
 
     @PostMapping("/save")
     public ResponseEntity<PetResponse> savePet(@Valid @RequestBody PetRequest pet) {
-        return new ResponseEntity<>(service.savePet(pet), HttpStatus.OK);
+        return new ResponseEntity<>(service.savePet(pet), HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
