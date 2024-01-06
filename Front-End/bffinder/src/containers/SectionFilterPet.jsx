@@ -56,7 +56,7 @@ export const SectionFilterPet = () => {
   return (
     <>
       {pets.map((pet) => (
-        <Grid key={pet.id} item xs={12} sm={6} md={4} lg={4} xl={4}>
+        <Grid key={pet.id} item xs={5} sm={3} md={3} lg={4} xl={4}>
           <CardVertical pet={pet} />
         </Grid>
       ))}

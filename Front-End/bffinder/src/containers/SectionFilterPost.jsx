@@ -68,7 +68,7 @@ const SectionFilterPost = () => {
   };
 
   return (
-    <div>
+    <>
       <span>Loading:{loading ? "True" : "False"}</span>
       {posts.map((post) => (
         <Grid item xs={12} key={post.id}>
@@ -96,7 +96,7 @@ const SectionFilterPost = () => {
         onClose={handleCloseDialog}
         onAdd={handleAddPet}
       />
-    </div>
+    </>
   );
 };
 

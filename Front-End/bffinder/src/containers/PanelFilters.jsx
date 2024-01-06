@@ -1,32 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   FormLabel,
   Divider,
-  Radio,
-  RadioGroup,
   Box,
   Slider,
   Typography,
   Tooltip,
+  ListItem,
+  Chip,
 } from "@mui/material";
 import { useSelector } from "react-redux";
+import SelectComponent from "../Components/form/SelectComponent";
+import RadioComponent from "../Components/form/RadioComponent";
+// import styled from "styled-components";
+import { styled } from "@mui/material/styles";
+import TagFacesIcon from "@mui/icons-material/TagFaces";
 
 function ValueLabel(props) {
   const { children, open, value } = props;
 
   const labelText =
     value === 0
-      ? 'Todas\nlas edades'
+      ? "Todas\nlas edades"
       : value === 1
-      ? 'Hasta\n1 año'
+      ? "Hasta\n1 año"
       : value === 11
-      ? '10 años+'
+      ? "10 años+"
       : `Hasta\n${value} años`;
 
   return (
@@ -35,8 +35,12 @@ function ValueLabel(props) {
       disableTouchListener
       enterTouchDelay={0}
       placement="bottom"
-      title={<Typography sx={{ fontSize: '.8rem', whiteSpace: 'pre-line' }}>{labelText}</Typography>}
-      sx={{ borderRadius: '5px' }}
+      title={
+        <Typography sx={{ fontSize: ".8rem", whiteSpace: "pre-line" }}>
+          {labelText}
+        </Typography>
+      }
+      sx={{ borderRadius: "5px" }}
     >
       {children}
     </Tooltip>
@@ -60,8 +64,12 @@ const marks = [
 
 const PanelFilters = ({ module }) => {
   const [selectedFilter, setSelectedFilter] = React.useState("");
+  const [selectedSize, setSelectedSize] = useState("");
+  const { role } = useSelector((state) => state.persisted.auth);
 
-  const { role } = useSelector(state => state.persisted.auth);
+  const handleSizeChange = (event) => {
+    setSelectedSize(event.target.value);
+  };
 
   const handleFilterChange = (event) => {
     setSelectedFilter(event.target.value);
@@ -69,185 +77,267 @@ const PanelFilters = ({ module }) => {
 
   console.log("active module ", module, " role ", role);
 
+  // ChipsFiltros
+  const ListItem = styled("li")(({ theme }) => ({
+    margin: theme.spacing(0.5),
+  }));
+  const [chipData, setChipData] = React.useState([
+    { key: 0, label: "Angular" },
+    { key: 1, label: "jQuery" },
+    { key: 2, label: "Polymer" },
+    { key: 3, label: "Vue.js" },
+    { key: 4, label: "JavaScript" },
+    { key: 5, label: "Ember" },
+    { key: 6, label: "Backbone.js" },
+    { key: 7, label: "exam" },
+    { key: 8, label: "exampl" },
+    { key: 9, label: "example" },
+    { key: 10, label: "exam" },
+    { key: 11, label: "exampl" },
+    { key: 12, label: "example" },
+    { key: 13, label: "exam" },
+    { key: 14, label: "exampl" },
+    { key: 15, label: "example" },
+  ]);
+
+  const handleDelete = (chipToDelete) => () => {
+    setChipData((chips) =>
+      chips.filter((chip) => chip.key !== chipToDelete.key)
+    );
+  };
+
   return (
-    <div>
+    <>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          flexWrap: "wrap",
+          margin: "1.7rem 1rem .1rem 1rem",
+        }}
+      >
+        {chipData.map((data) => {
+          let icon;
 
-<FormControl sx={{ marginTop: "25px" }} className="filter-container" fullWidth id="margin-normal" margin="normal" >
-        <InputLabel id="filter-label">Estado</InputLabel>
-        <Select
-          label="Estado"
-          id="filter"
-          value={selectedFilter}
-          onChange={handleFilterChange}
-        >
-          <MenuItem value="todos">Todos</MenuItem>
-          <MenuItem value="publicado">Publicado</MenuItem>
-          <MenuItem value="sin publicar">Sin publicar</MenuItem>
-        </Select>
-      </FormControl>
+          // if (data.label === "React") {
+          //   icon = <TagFacesIcon />;
+          // }
 
-<Divider sx={{ marginTop: 3, marginBottom: 1, color: "#A77A23", fontWeight: "600" }} >Ubicación</Divider>
+          return (
+            <ListItem key={data.key}>
+              <Chip
+                icon={icon}
+                label={data.label}
+                onDelete={
+                  data.label === "React" ? undefined : handleDelete(data)
+                }
+              />
+            </ListItem>
+          );
+        })}
+      </div>
 
-{/* <FormLabel component="legend">Departamento</FormLabel> */}
-<FormControl className="filter-container" fullWidth id="margin-normal" margin="normal" >
-        <InputLabel id="filter-label">Selecciona un departamento</InputLabel>
-        <Select
-          label="Selecciona un departamento"
-          id="filter"
-          value={selectedFilter}
-          onChange={handleFilterChange}
-        >
-          <MenuItem value="valledelcauca">Valle del Cauca</MenuItem>
-          <MenuItem value="vaupes">Vaupés</MenuItem>
-          <MenuItem value="vichada">Vichada</MenuItem>
-        </Select>
-      </FormControl>
+      <SelectComponent
+        fullWidth
+        label="Estado"
+        name="state"
+        onChange={handleFilterChange}
+        value={selectedFilter}
+        options={[
+          { label: "Todos", value: 1 },
+          { label: "Publicado", value: 2 },
+          { label: "Sin publicar", value: 3 },
+        ]}
+        style={{ marginTop: "10px" }}
+      />
 
-      {/* <FormLabel component="legend">Ciudad</FormLabel> */}
-      <FormControl className="filter-container" fullWidth id="margin-normal" margin="normal">
-        <InputLabel id="filter-label">Seleccione una ciudad</InputLabel>
-        <Select
-          label="Seleccione una ciudad"
-          id="filter"
-          value={selectedFilter}
-          onChange={handleFilterChange}
-        >
-          <MenuItem value="cali">Cali</MenuItem>
-          <MenuItem value="buga">Buga</MenuItem>
-          <MenuItem value="buenaventura">Buenaventura</MenuItem>
-        </Select>
-      </FormControl>
-      <Divider sx={{ marginTop: 1, marginBottom: 2 }} ></Divider>
+      <Divider
+        sx={{
+          marginTop: 3,
+          marginBottom: 1,
+          color: "#A77A23",
+          fontWeight: "600",
+        }}
+      >
+        Ubicación
+      </Divider>
 
-      <Divider sx={{ marginTop: 3, marginBottom: 1, color: "#A77A23", fontWeight: "600" }}>Caracteristicas</Divider>
+      <SelectComponent
+        fullWidth
+        label="Selecciona un departamento"
+        name="department"
+        onChange={handleFilterChange}
+        value={selectedFilter}
+        options={[
+          { label: "Valle del Cauca", value: 1 },
+          { label: "Vaupés", value: 2 },
+          { label: "Vichada", value: 3 },
+        ]}
+        // style={{ marginTop: "25px" }}
+      />
+
+      <SelectComponent
+        label="Seleccione una ciudad"
+        name="city"
+        onChange={handleFilterChange}
+        value={selectedFilter}
+        options={[
+          { label: "Cali", value: 1 },
+          { label: "Buga", value: 2 },
+          { label: "Buenaventura", value: 3 },
+        ]}
+      />
+      <Divider sx={{ marginTop: 1, marginBottom: 2 }}></Divider>
+
+      <Divider
+        sx={{
+          marginTop: 3,
+          marginBottom: 1,
+          color: "#A77A23",
+          fontWeight: "600",
+        }}
+      >
+        Caracteristicas
+      </Divider>
 
       <FormGroup sx={{ marginTop: "12px" }}>
-      <FormLabel sx={{ marginTop: 1}}>Edad:</FormLabel>
-      <Box sx={{ width: 260, margin: 'auto' }}>
-      <Slider
-        aria-label="Edad"
-        defaultValue={0}
-        valueLabelDisplay="on"
-        color="warning"
-        step={null}
-        max={11}
-        marks={marks}
-        components={{ ValueLabel }}
-      />
-    </Box>
-    </FormGroup>
-
-      <FormGroup sx={{ marginTop: 8, marginBottom: 1}}>
-      <FormLabel id="demo-row-radio-buttons-group-label">Tamaño:</FormLabel>
-      <RadioGroup
-        aria-labelledby="demo-row-radio-buttons-group-label"
-        name="row-radio-buttons-group"
-      >
-        <FormControlLabel value="pequeño" control={<Radio />} label="Pequeño" />
-        <FormControlLabel value="mediano" control={<Radio />} label="Mediano" />
-        <FormControlLabel value="grande" control={<Radio />} label="Grande" />
-      </RadioGroup>      
+        <FormLabel sx={{ marginTop: 1 }}>Edad:</FormLabel>
+        <Box sx={{ width: 260, margin: "auto" }}>
+          <Slider
+            aria-label="Edad"
+            defaultValue={0}
+            valueLabelDisplay="auto"
+            color="warning"
+            step={null}
+            max={11}
+            marks={marks}
+            components={{ ValueLabel }}
+          />
+        </Box>
       </FormGroup>
 
-      {/* <FormLabel component="legend">Especie</FormLabel> */}
-      <FormControl className="filter-container" fullWidth id="margin-normal" margin="normal" >
-        <InputLabel id="filter-label">Seleccione una especie</InputLabel>
-        <Select
-          labelId="filter-label"
-          label="Seleccione una especie"
-          id="filter"
-          value={selectedFilter}
-          onChange={handleFilterChange}
-        >
-          <MenuItem value="gatos">Gatos</MenuItem>
-          <MenuItem value="perros">Perros</MenuItem>
-          <MenuItem value="otros">Otros</MenuItem>
-        </Select>
-      </FormControl>
+      <RadioComponent
+        label="Tamaño:"
+        name="size"
+        value={selectedSize}
+        onChange={handleSizeChange}
+        options={[
+          { label: "Pequeño", value: "pequeño" },
+          { label: "Mediano", value: "mediano" },
+          { label: "Grande", value: "grande" },
+        ]}
+        style={{ marginTop: "2.8rem", marginBottom: "10px" }}
+      />
 
-      {/* <FormLabel component="legend">Raza</FormLabel> */}
-      <FormControl className="filter-container" fullWidth id="margin-normal" margin="normal">
-        <InputLabel id="filter-label" sx={{ fontSize: "1.3rem"}}>Seleccione una raza</InputLabel>
+      <SelectComponent
+        label="Seleccione una especie"
+        name="specie"
+        onChange={handleFilterChange}
+        value={selectedFilter}
+        options={[
+          { label: "Gatos", value: 1 },
+          { label: "Perros", value: 2 },
+          { label: "Otros", value: 3 },
+        ]}
+      />
+
+      <SelectComponent
+        label="Seleccione una raza"
+        name="breed"
+        onChange={handleFilterChange}
+        value={selectedFilter}
+        options={[
+          { label: "Pitbull", value: 1 },
+          { label: "Siamese", value: 2 },
+          { label: "Otros", value: 3 },
+        ]}
+      />
+      {/* <FormLabel component="legend">Raza</FormLabel>
+      <FormControl
+        className="filter-container"
+        fullWidth
+        id="margin-normal"
+        margin="normal"
+      >
+        <InputLabel id="filter-label" sx={{ fontSize: "1.3rem" }}>
+          Seleccione una raza
+        </InputLabel>
         <Select
           labelId="filter-label"
-          id="filter"         
+          id="filter"
           label="Seleccione una raza"
           value={selectedFilter}
           onChange={handleFilterChange}
-          sx={{ "& label": { fontSize: "1.3rem !important"} }}
+          sx={{ "& label": { fontSize: "1.3rem !important" } }}
         >
           <MenuItem value="gatos">Gatos</MenuItem>
           <MenuItem value="perros">Perros</MenuItem>
           <MenuItem value="otros">Otros</MenuItem>
         </Select>
-      </FormControl>
+      </FormControl> */}
 
-      <FormGroup sx={{ marginTop: "12px" }}>
-      <FormLabel id="demo-row-radio-buttons-group-label">Genero:</FormLabel>
-      <RadioGroup
-      row
-        aria-labelledby="demo-row-radio-buttons-group-label"
-        name="row-radio-buttons-group"
-      >
-        <FormControlLabel value="macho" control={<Radio />} label="Macho" />
-        <FormControlLabel value="hembra" control={<Radio />} label="Hembra" />
-        {/* <FormControlLabel value="Todos" control={<Radio />} label="Todos" /> */}
-      </RadioGroup>      
-      </FormGroup>
-
+      <RadioComponent
+        row
+        label="Genero:"
+        name="gender"
+        value={selectedSize}
+        onChange={handleSizeChange}
+        options={[
+          { label: "Macho", value: "m" },
+          { label: "Hembra", value: "f" },
+        ]}
+        style={{ marginBottom: "10px" }}
+      />
       <Divider sx={{ marginTop: 1, marginBottom: 2 }}></Divider>
 
-      <Divider sx={{ marginTop: 3, marginBottom: 1, color: "#A77A23", fontWeight: "600" }}>Salud</Divider> 
-        {/* <FormLabel component="legend">Especie</FormLabel> */}
-        <FormControl className="filter-container" fullWidth id="margin-normal" margin="normal" >
-        <InputLabel id="filter-label">Vacunación</InputLabel>
-        <Select
-          labelId="filter-label"
-          label="Vacunacion"
-          id="filter"
-          value={selectedFilter}
-          onChange={handleFilterChange}
-        >
-          <MenuItem value="vacunados y sin vacunar">Vacunados y sin vacunar</MenuItem>
-          <MenuItem value="vacunado">Vacunado</MenuItem>
-          <MenuItem value="sin vacunar">Sin vacunar (no se sabe)</MenuItem>
-        </Select>
-      </FormControl>
+      <Divider
+        sx={{
+          marginTop: 3,
+          marginBottom: 1,
+          color: "#A77A23",
+          fontWeight: "600",
+        }}
+      >
+        Salud
+      </Divider>
 
-      <FormControl className="filter-container" fullWidth id="margin-normal" margin="normal" >
-      {/* <FormLabel id="demo-row-radio-buttons-group-label">Esterilizado:</FormLabel> */}
-      <InputLabel id="filter-label" >Esterilización</InputLabel>
-        <Select
-          labelId="filter-label"
-          id="filter"         
-          label="Esterilizacion"
-          value={selectedFilter}
-          onChange={handleFilterChange}
-        >
-          <MenuItem value="con y sin esterilizacion">Con y sin esterilización</MenuItem>
-          <MenuItem value="esterilizado">Esterilizado</MenuItem>
-          <MenuItem value="sin esterilizar">Sin esterilizar (no se sabe)</MenuItem>
-        </Select>    
-      </FormControl>
+      <SelectComponent
+        label="Vacunación"
+        name="vaccinated"
+        onChange={handleFilterChange}
+        value={selectedFilter}
+        options={[
+          { label: "Vacunados y sin vacunar", value: 1 },
+          { label: "Vacunado", value: 2 },
+          { label: "Sin vacunar (no se sabe)", value: 3 },
+        ]}
+      />
 
-      <FormControl className="filter-container" fullWidth id="margin-normal" margin="normal" >
-      {/* <FormLabel id="demo-row-radio-buttons-group-label">Desparasitado:</FormLabel> */}
-      <InputLabel id="filter-label" >Desparasitación</InputLabel>
-        <Select
-          labelId="filter-label"
-          id="filter"         
-          label="Desparasitacion"
-          value={selectedFilter}
-          onChange={handleFilterChange}
-        >
-          <MenuItem value="con y sin desparasitación">Con y sin desparasitación</MenuItem>
-          <MenuItem value="desparasitado">Desparasitado</MenuItem>
-          <MenuItem value="sin desparasitar">Sin desparasitar (no se sabe)</MenuItem>
-        </Select>    
-      </FormControl>
+      <SelectComponent
+        label="Esterilización"
+        name="sterilized"
+        onChange={handleFilterChange}
+        value={selectedFilter}
+        options={[
+          { label: "Con y sin esterilización", value: 1 },
+          { label: "Esterilizado", value: 2 },
+          { label: "Sin esterilizar (no se sabe)", value: 3 },
+        ]}
+      />
 
-      <Divider sx={{ marginTop: 1, marginBottom: 2 }} ></Divider>
-    </div>
+      <SelectComponent
+        label="Desparasitación"
+        name="dewormed"
+        onChange={handleFilterChange}
+        value={selectedFilter}
+        options={[
+          { label: "Con y sin desparasitación", value: 1 },
+          { label: "Desparasitado", value: 2 },
+          { label: "Sin desparasitar (no se sabe)", value: 3 },
+        ]}
+      />
+      <Divider sx={{ marginTop: 1, marginBottom: 2 }}></Divider>
+    </>
   );
 };
 

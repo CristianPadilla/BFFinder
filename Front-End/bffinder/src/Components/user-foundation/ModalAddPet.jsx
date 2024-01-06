@@ -32,14 +32,14 @@ const ModalAddPet = ({ open, onClose, onAdd }) => {
         <Button variant="contained" color="error" onClick={onClose}>
           Cancelar
         </Button>
-        <Button
+        {/* <Button
           variant="contained"
           color="success"
           type="submit"
           onClick={onAdd}
         >
           Agregar
-        </Button>
+        </Button> */}
       </DialogActions>
     </Dialog>
   );
