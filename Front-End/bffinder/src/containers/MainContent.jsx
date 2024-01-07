@@ -45,7 +45,7 @@ const MainContent = () => {
   return (
     <div className="layout-container">
       <section ref={sectionRef} className="inicio-user-comun">
-        <Grid container spacing={1} className="grid-container">
+        <Grid container spacing={2} className="grid-container">
           {/* <SectionFilterPost /> */}
           {/* {console.log("sectionnnnnnnnnnnnnnnn ")} */}
           {activeModule === 'posts' ? <SectionFilterPost /> : <SectionFilterPet />}
