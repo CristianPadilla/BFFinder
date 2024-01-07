@@ -15,37 +15,17 @@ import { fetchPosts } from "../store/post";
 
 const SectionFilterPost = () => {
   const dispatch = useDispatch();
-  const { posts = [], loading } = useSelector((state) => state.posts);
+  const { posts } = useSelector((state) => state.posts.page);
+  // const { role } = useSelector((state) => state.persisted.auth);
   const sectionRef = useRef(null);
-
-  const postsRequest = {
-    search: "",
-    filters: {
-      // from_date: "2020-05-01",
-      // specie_id: 0,
-      // breed_id: 0,
-      // size: '',
-      // department_id: 0,
-      // city_id: 0
-    },
-    sorting: {
-      //  sort: "date",
-      //   desc: true
-    },
-    page: 0,
-    page_size: 5,
-  };
 
   useEffect(
     () => {
-      dispatch(fetchPosts(0, postsRequest));
+      !posts && dispatch(fetchPosts());
     },
     []
     // [postList]
   );
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const postsPerPage = 5; // Cantidad de posts por página
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
@@ -63,14 +43,12 @@ const SectionFilterPost = () => {
   };
 
   const handleAddPet = () => {
-    // Lógica para agregar la mascota, si es necesario
     handleCloseDialog();
   };
 
   return (
     <div>
-      <span>Loading:{loading ? "True" : "False"}</span>
-      {posts.map((post) => (
+      {posts && posts.map((post) => (
         <Grid item xs={12} key={post.id}>
           <CardPost post={post} />
         </Grid>

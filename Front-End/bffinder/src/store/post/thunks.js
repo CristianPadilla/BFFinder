@@ -1,18 +1,22 @@
 import { postApi } from "../../api/postApi";
-import { fetchPostsStart, fetchPostsSuccess } from "./postSlice";
+import { fetchPostsStart, fetchPostsSuccess, setPostsRequest } from "./postSlice";
 
 
-export const fetchPosts = (page = 0, filtersRequest = {}) => async (dispatch, getState) => {
+export const fetchPosts = () => async (dispatch, getState) => {
     try {
-        const { filters } = filtersRequest;
+        console.log("fetchinggg Posts from thunk ");
         dispatch(fetchPostsStart());
-        const { data } = await postApi.post("/all/filter", filtersRequest);
+        const { userId, role } = getState().persisted.auth;
+        const postsRequest = getState().posts.postRequest;
+        const url = role === "u"
+            ? "/all/filter"
+            : `/user/${userId}/filter`;
+        console.log("REQUERSTTTTT ", postsRequest);
+        const { data } = await postApi.post(url, postsRequest);
         const { page, request } = data;
-        console.log("fetchPosts=== ", request);
         dispatch(fetchPostsSuccess({
 
-            posts: page.content,
-            pageable: {
+            page: {
                 pageNumber: page.number,
                 pageSize: page.size,
                 numberOfElements: page.numberOfElements,
@@ -21,14 +25,22 @@ export const fetchPosts = (page = 0, filtersRequest = {}) => async (dispatch, ge
                 offset: page.pageable.offset,
                 last: page.last,
                 first: page.first,
-                sort: {
-                    sort: page.sort.property,
-                    desc: page.sort.descending,
-                },
+                sort: page.sort.property,
+                desc: page.sort.descending,
+                posts: page.content,
+
             }
         }));
     } catch (error) {
         console.log(error);
         throw new Error(error);
     }
+};
+
+export const changePostsRequest = (filter) => async (dispatch, getState) => {
+    console.log("changePostsRequest from thunk ", filter);
+    // dispatch(setLoadingTrue())
+    dispatch(setPostsRequest(filter));
+    dispatch(fetchPosts());
+
 };

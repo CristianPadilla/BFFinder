@@ -9,6 +9,8 @@ import com.cpadilla.locationservice.model.CityResponse;
 import com.cpadilla.locationservice.model.DepartmentResponse;
 import com.cpadilla.locationservice.repository.AddressRepository;
 import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ public class LocationServiceImpl implements LocationService {
     @Autowired
     private ColombiaService colombiaService;
 
+    private static final Logger logger = LoggerFactory.getLogger(LocationServiceImpl.class);
 
     @Override
     public LocationResponse getAddressById(int id) {
@@ -42,17 +45,25 @@ public class LocationServiceImpl implements LocationService {
 //                .id(addressEntity.getCityId())
 //                .name(addressEntity.getCity().getName())
 //                .department(department)
-//                .build();
-        var city = colombiaService.getCityById(addressEntity.getCityId()).getBody();
+//            try==    .build();
+        long startTime = System.currentTimeMillis();
+        try {
+
+            var city = colombiaService.getCityById(addressEntity.getCityId()).getBody();
 
 
-        return LocationResponse.builder()
-                .id(addressEntity.getId())
-                .address(addressEntity.getAddress())
-                .neighborhood(addressEntity.getNeighborhood())
-                .moreInfo(addressEntity.getMoreInfo())
-                .city(city)
-                .build();
+            return LocationResponse.builder()
+                    .id(addressEntity.getId())
+                    .address(addressEntity.getAddress())
+                    .neighborhood(addressEntity.getNeighborhood())
+                    .moreInfo(addressEntity.getMoreInfo())
+                    .city(city)
+                    .build();
+        } catch (Exception e) {
+            long endTime = System.currentTimeMillis();
+            logger.error("La petición falló después de " + (endTime - startTime) + " milisegundos", e);
+            throw e;
+        }
     }
 
     @Override

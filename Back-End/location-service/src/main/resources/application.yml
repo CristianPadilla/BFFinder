@@ -2,6 +2,7 @@
 server:
   port: 8083
 
+
 spring:
   application:
     name: LOCATION-SERVICE
@@ -10,7 +11,7 @@ spring:
   datasource:
     url: jdbc:mysql://${DB_HOST:localhost}:3306/bffinder
     username: root
-    password: root
+    password: cpadilla
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -21,3 +22,10 @@ spring:
         format_sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
+  cloud:
+    openfeign:
+      client:
+        config:
+            default:
+                connectTimeout: 5000
+                readTimeout: 5000

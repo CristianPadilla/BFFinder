@@ -7,36 +7,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchPets, startFetchPets } from "../store/pet";
 
 export const SectionFilterPet = () => {
-  //   const pets = [];
   const dispatch = useDispatch();
-  const { page, loading } = useSelector((state) => state.pets);
+  const { page, petsRequest, loading } = useSelector((state) => state.pets);
+  // const { role } = useSelector((state) => state.persisted.auth);
   const { pets } = page;
-  const petsRequest = {
-    search: "",
-    size: "",
-    specie_id: 0,
-    breed_id: 0,
-    age: 0,
-    gender: "",
-    vaccinated: null,
-    sterilized: null,
-    dewormed: null,
-    posted: null,
-    sort: "",
-    desc: false,
-    page: 0,
-    page_size: 10,
-  };
 
-  // console.log("pets from component aaaaaaaaaaaaaa", pets);
-  useEffect(
-    () => {
-      // console.log("useEffect from componenet");
-      dispatch(startFetchPets(petsRequest));
-    },
-    []
-    // [postList]
-  );
+  useEffect(() => {
+    // console.log("useEffect de consultar mascotas ", petsRequest);
+    if (!pets) dispatch(startFetchPets());
+    // dispatch(startFetchPets(petsRequest));
+  },
+    []);
 
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -55,7 +36,7 @@ export const SectionFilterPet = () => {
 
   return (
     <>
-      {pets.map((pet) => (
+      {pets && pets.map((pet) => (
         <Grid key={pet.id} item xs={12} sm={6} md={4} lg={4} xl={4}>
           <CardVertical pet={pet} />
         </Grid>

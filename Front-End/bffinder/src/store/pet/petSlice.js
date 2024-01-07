@@ -4,7 +4,7 @@ export const petSlice = createSlice({
     name: 'pets',
     initialState: {
         isSaving: false,
-        // loading: false,
+        loading: false,
         messageSaved: '',
         page: {
             pageNumber: 0,
@@ -17,9 +17,25 @@ export const petSlice = createSlice({
             first: true,
             sort: '',
             desc: false,
-            pets: [],
+            pets: null,
         },
         active: null,
+        petsRequest: {
+            search: "",
+            size: "",
+            specie_id: 0,
+            breed_id: 0,
+            age: 0,
+            gender: "",
+            vaccinated: null,
+            sterilized: null,
+            dewormed: null,
+            posted: null,
+            sort: "",
+            desc: false,
+            page: 0,
+            page_size: 2,
+        },
         // active: {
         //     id: null,
         //     name: null,
@@ -59,6 +75,7 @@ export const petSlice = createSlice({
         setPetsPage(state, { payload }) {
             // console.log("========== setPetsPage from slice ", payload);
             state.page = payload.page;
+            state.loading = false;
         },
         setSavingPet(state, { payload }) {
         },
@@ -66,8 +83,14 @@ export const petSlice = createSlice({
         },
         deletePetById(state, { payload }) {
         },
-        setErrorMessage(state, { payload }) {
-            state.messageSaved = payload;
+        setLoadingTrue(state, { payload }) {
+            state.loading = true;
+        },
+        setPetsRequest(state, { payload }) {
+            const filter = Object.keys(payload)[0];
+            const value = Object.values(payload)[0];
+            console.log("==== setPetsRequest from slice ", filter, value);
+            state.petsRequest[filter] = value;
         },
     },
 });
@@ -80,4 +103,6 @@ export const {
     updatePet,
     deletePetById,
     setErrorMessage,
+    setPetsRequest,
+    setLoadingTrue,
 } = petSlice.actions;

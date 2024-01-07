@@ -15,6 +15,8 @@ import {
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
+import { useSelector } from "react-redux";
+import { t } from "i18next";
 
 const formatTimeDifference = (hours) => {
   const weeks = Math.floor(hours / (24 * 7));
@@ -32,17 +34,20 @@ const formatTimeDifference = (hours) => {
 };
 
 const CardPost = ({ post }) => {
+  const { role } = useSelector(state => state.persisted.auth);
+
+
   const navigate = useNavigate();
   const {
     petPartialResponse,
     images,
-    locationResponse,
     date,
-    user,
     profileImageUrl,
   } = post;
   const { name, breedDetails, specie } = petPartialResponse;
-  const { city } = locationResponse;
+
+  const locationResponse = role === 'u' ? post.locationResponse : "";
+  const user = role === 'u' ? post.user : "";
 
   const publishDate = new Date(date);
   const currentDate = new Date();
@@ -93,7 +98,6 @@ const CardPost = ({ post }) => {
             ":last-child": { paddingBottom: "0px" },
           }}
         >
-          {/* Sección de la mascota */}
           <Grid container justifyContent="space-between" alignItems="center">
             <Grid item>
               <Link
@@ -110,8 +114,7 @@ const CardPost = ({ post }) => {
               </Link>
             </Grid>
 
-            {/* Sección del perfil de la fundación -gainsboro-*/}
-            {user && (
+            {role === "u" && (
               <Grid item>
                 <Grid
                   container
@@ -136,21 +139,22 @@ const CardPost = ({ post }) => {
             )}
           </Grid>
 
-          <Typography
+          {role === 'u' && (<Typography
             variant="body2"
             color="text.secondary"
             sx={{ fontSize: ".9rem", marginTop: "1rem" }}
           >
             <LocationOnIcon color="action" sx={{ fontSize: 15 }} /> {city.name},{" "}
             {city.department.name}
-          </Typography>
+          </Typography>)}
+
 
           <Typography
             variant="body2"
             color="text.secondary"
             sx={{ fontSize: ".9rem", marginTop: "1rem" }}
           >
-            {breedDetails.specie.name} - {breedDetails.name}
+            {t(`species.${breedDetails.specie.name}`)} - {t(`breeds.${breedDetails.name}`)}
           </Typography>
 
           <Typography
