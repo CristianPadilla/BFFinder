@@ -12,6 +12,7 @@ import "styles/Home.scss";
 import { postApi } from "../api/postApi";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts } from "../store/post";
+import CardPostShelter from "../Components/user-foundation/CardPostShelter";
 
 const SectionFilterPost = () => {
   const dispatch = useDispatch();
@@ -47,10 +48,21 @@ const SectionFilterPost = () => {
   };
 
   return (
-    <div>
+    <>
       {posts && posts.map((post) => (
-        <Grid item xs={12} key={post.id}>
-          <CardPost post={post} />
+        //  {/* <Grid item xs={12} key={post.id}>
+        //    <CardPost post={post} />
+        //  </Grid> */}
+
+        <Grid
+          item
+          key={post.id}
+          xs={12}
+          sm={6}
+          md={4}
+          style={{ display: "flex" }}
+        >
+          <CardPostShelter post={post} style={{ flex: "1 0 auto" }} />
         </Grid>
       ))}
 
@@ -74,7 +86,7 @@ const SectionFilterPost = () => {
         onClose={handleCloseDialog}
         onAdd={handleAddPet}
       />
-    </div>
+    </>
   );
 };
 

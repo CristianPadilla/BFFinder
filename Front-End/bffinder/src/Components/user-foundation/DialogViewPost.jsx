@@ -15,7 +15,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import imgdefault from "imgs/logo-bffinder.png";
 import FormAddPet from "../post/FormAddPet";
 
-const DialogViewPet = ({ open, onClose }) => {
+const DialogViewPost = ({ open, onClose }) => {
   const [profileImageUrl] = useState("");
   const [editing, setEditing] = useState(false);
 
@@ -187,4 +187,4 @@ const DialogViewPet = ({ open, onClose }) => {
   );
 };
 
-export default DialogViewPet;
+export default DialogViewPost;
