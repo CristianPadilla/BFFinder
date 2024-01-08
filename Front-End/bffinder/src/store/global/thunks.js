@@ -1,11 +1,9 @@
 import { get } from "react-scroll/modules/mixins/scroller"
-import { setActiveModule } from "./globalSlice"
+import { setActiveModule, startContentLoading } from "./globalSlice"
 
 export const changeActiveModule = ({ module }) =>
     async (dispatch, getState) => {
-        console.log("changeActiveModule", module)
-        module === getState().persisted.global.activeModule
-            ? console.log("module already active")
-            : dispatch(setActiveModule({ module }))
+        if (module === getState().persisted.global.activeModule) return
+        dispatch(setActiveModule({ module }))
 
     }

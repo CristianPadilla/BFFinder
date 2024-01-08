@@ -1,23 +1,13 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 import { Fab, Tooltip, Grid, Pagination } from "@mui/material";
 import CardVertical from "../Components/CardVertical";
 import ModalAddPet from "../Components/user-foundation/ModalAddPet";
 import AddIcon from "@mui/icons-material/Add";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchPets, startFetchPets } from "../store/pet";
+import { useSelector } from "react-redux";
 
 export const SectionFilterPet = () => {
-  const dispatch = useDispatch();
-  const { page, petsRequest, loading } = useSelector((state) => state.pets);
-  // const { role } = useSelector((state) => state.persisted.auth);
-  const { pets } = page;
+  const { pets } = useSelector((state) => state.pets.page);
 
-  useEffect(() => {
-    // console.log("useEffect de consultar mascotas ", petsRequest);
-    if (!pets) dispatch(startFetchPets());
-    // dispatch(startFetchPets(petsRequest));
-  },
-    []);
 
   const [openDialog, setOpenDialog] = useState(false);
 

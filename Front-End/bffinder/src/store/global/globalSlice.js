@@ -4,15 +4,29 @@ import { createSlice } from '@reduxjs/toolkit';
 export const globalSlice = createSlice({
     name: 'global',
     initialState: {
-        activeModule: 'posts'
+        activeModule: 'posts',
+        contentLoading: true,
     },
     reducers: {
         setActiveModule(state, { payload }) {
-            console.log("setActiveModule from slice ", payload.module);
             state.activeModule = payload.module;
+        },
+        clearGlobalLogout(state) {
+            state.contentLoading = true;
+        },
+        startContentLoading(state) {
+            state.contentLoading = true;
+        },
+        stopContentLoading(state) {
+            state.contentLoading = false;
         },
     },
 });
 
-export const { setActiveModule } = globalSlice.actions;
+export const {
+    setActiveModule,
+    clearGlobalLogout,
+    startContentLoading,
+    stopContentLoading
+} = globalSlice.actions;
 

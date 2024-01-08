@@ -1,20 +1,20 @@
 import { HttpStatusCode } from "axios";
 import { petApi } from "../../api/petApi";
 import { savingNewPet, setActivePet, setErrorMessage, setLoadingTrue, setPetsPage, setPetsRequest } from "./petSlice";
+import { startContentLoading, stopContentLoading } from "../global";
 
 export const startFetchPets = () => async (dispatch, getState) => {
     try {
-        dispatch(setLoadingTrue());
+        dispatch(startContentLoading())
         const petsRequest = getState().pets.petsRequest;
-        console.log("startFetchPets from thunk ", petsRequest);
         const { userId } = getState().persisted.auth;
         if (!userId) throw new Error("No user id exists");
-
+        
         const { data } = await petApi.post("/user/" + userId + "/filter", petsRequest);
         const { page, filters } = data;
-
+        
         dispatch(setPetsPage({
-
+            
             page: {
                 pageNumber: page.number,
                 pageSize: page.size,
@@ -29,13 +29,14 @@ export const startFetchPets = () => async (dispatch, getState) => {
                 pets: page.content,
             }
         }
-
+        
         ));
+        dispatch(stopContentLoading())
     } catch (error) {
         console.log(error);
         throw new Error(error);
     }
-
+    
 };
 
 

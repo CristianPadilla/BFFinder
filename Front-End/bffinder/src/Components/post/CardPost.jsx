@@ -43,11 +43,11 @@ const CardPost = ({ post }) => {
     images,
     date,
     profileImageUrl,
+    locationResponse,
+    user,
   } = post;
   const { name, breedDetails, specie } = petPartialResponse;
-
-  const locationResponse = role === 'u' ? post.locationResponse : "";
-  const user = role === 'u' ? post.user : "";
+  const { city } = locationResponse;
 
   const publishDate = new Date(date);
   const currentDate = new Date();
@@ -114,39 +114,39 @@ const CardPost = ({ post }) => {
               </Link>
             </Grid>
 
-            {role === "u" && (
-              <Grid item>
-                <Grid
-                  container
-                  direction="row"
-                  alignItems="center"
-                  sx={{
-                    backgroundColor: "blanchedalmond",
-                    padding: "0 0 0 10px",
-                    borderRadius: "18px",
-                  }}
+
+            <Grid item>
+              <Grid
+                container
+                direction="row"
+                alignItems="center"
+                sx={{
+                  backgroundColor: "blanchedalmond",
+                  padding: "0 0 0 10px",
+                  borderRadius: "18px",
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ fontSize: "1rem", marginRight: "0.5rem" }}
                 >
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ fontSize: "1rem", marginRight: "0.5rem" }}
-                  >
-                    {user.name}
-                  </Typography>
-                  <Avatar alt="Fundación" src={user.profileImageUrl} />
-                </Grid>
+                  {user.name}
+                </Typography>
+                <Avatar alt="Fundación" src={user.profileImageUrl} />
               </Grid>
-            )}
+            </Grid>
+
           </Grid>
 
-          {role === 'u' && (<Typography
+          <Typography
             variant="body2"
             color="text.secondary"
             sx={{ fontSize: ".9rem", marginTop: "1rem" }}
           >
             <LocationOnIcon color="action" sx={{ fontSize: 15 }} /> {city.name},{" "}
             {city.department.name}
-          </Typography>)}
+          </Typography>
 
 
           <Typography

@@ -27,7 +27,7 @@ export const authSlice = createSlice({
             state.errorMessage = null;
         },
         logout(state, { payload }) {
-            state.status = 'not-authenticated'; 
+            state.status = 'not-authenticated';
             state.isAuthenticated = false;
             state.token = null;
             state.userId = null;
@@ -42,7 +42,7 @@ export const authSlice = createSlice({
         },
         registerUser(state, { payload }) {
             state.isAuthenticated = true;
-            state.user = action.payload;  
+            state.user = action.payload;
         }
     },
 });

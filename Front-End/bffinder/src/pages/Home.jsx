@@ -1,45 +1,35 @@
 import React, { useEffect, useRef, useState } from "react";
 import "styles/dash.scss";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import {
-  Menu,
-  Search,
-  CloudDownload,
-  Add,
-  FilterList,
-} from "@mui/icons-material/";
 import PanelF from "containers/PanelFilters";
 import Ordering from "containers/Ordering";
-import logobff from "imgs/logo-bffinder-FINAL2.png";
-import Slider from "@mui/material/Slider";
-import SearchIcon from "@mui/icons-material/Search";
-import Paper from "@mui/material/Paper";
-import SectionPosts from "../containers/SectionAllPosts";
 import SearchBar from "../Components/SearchBar";
-import SectionFilterPost from "../containers/SectionFilterPost";
-// import SectionFilterPet from "../containers/SectionFilterPet";
 import NavHome from "../Components/NavHome";
-import { SectionFilterPet } from "../containers/SectionFilterPet";
-import {
-  FormControl,
-  MenuItem,
-  Select,
-  Stack,
-  Typography,
-} from "@mui/material";
 import MainContent from "../containers/MainContent";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPosts } from "../store/post";
+import { startFetchPets } from "../store/pet";
 
 const Home = () => {
-  const [sortType, setSortType] = useState("");
-  const handleSortChange = (type) => {
 
-  };
+  const dispatch = useDispatch();
+  const { activeModule, contentLoading } = useSelector((state) => state.persisted.global);
+  const { page: pets } = useSelector((state) => state.pets);
+  const { page: posts } = useSelector((state) => state.posts);
 
-  // const [age, setAge] = React.useState('');
-  // const handleChange = (event) => {
-  //   setAge(event.target.value);
-  // };
+  console.log('Active module:', activeModule, contentLoading);
+
+  useEffect(() => {
+    if (activeModule === "posts") {
+      !posts && dispatch(fetchPosts())
+    }
+    else {
+      !pets && dispatch(startFetchPets())
+    }
+
+  })
+
+  const content = !contentLoading &&
+    (activeModule === "posts" ? posts : pets);
 
   return (
     <div>
@@ -58,7 +48,7 @@ const Home = () => {
                 <span className="text">Download PDF</span>
               </a> */}
             <div>
-              <Ordering onSortChange={handleSortChange} />
+              <Ordering  />
             </div>
           </div>
 
@@ -68,8 +58,8 @@ const Home = () => {
               <PanelF />
             </div>
             <div className="main-content-scroll animate__animated animate__fadeIn animate__faster">
+              {!content ? <h2>loading...</h2> : <MainContent />}
 
-              <MainContent />
 
               {/* <ul className="box-info">
                   <li>

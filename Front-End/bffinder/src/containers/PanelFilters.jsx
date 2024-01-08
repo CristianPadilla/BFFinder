@@ -75,8 +75,6 @@ const PanelFilters = ({ module }) => {
     setSelectedFilter(event.target.value);
   };
 
-  console.log("active module ", module, " role ", role);
-
   // ChipsFiltros
   const ListItem = styled("li")(({ theme }) => ({
     margin: theme.spacing(0.5),
@@ -87,17 +85,6 @@ const PanelFilters = ({ module }) => {
     { key: 2, label: "Polymer" },
     { key: 3, label: "Vue.js" },
     { key: 4, label: "JavaScript" },
-    { key: 5, label: "Ember" },
-    { key: 6, label: "Backbone.js" },
-    { key: 7, label: "exam" },
-    { key: 8, label: "exampl" },
-    { key: 9, label: "example" },
-    { key: 10, label: "exam" },
-    { key: 11, label: "exampl" },
-    { key: 12, label: "example" },
-    { key: 13, label: "exam" },
-    { key: 14, label: "exampl" },
-    { key: 15, label: "example" },
   ]);
 
   const handleDelete = (chipToDelete) => () => {
