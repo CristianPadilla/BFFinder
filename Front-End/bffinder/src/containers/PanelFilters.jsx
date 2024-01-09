@@ -9,13 +9,17 @@ import {
   Tooltip,
   ListItem,
   Chip,
+  Button,
 } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import SelectComponent from "../Components/form/SelectComponent";
 import RadioComponent from "../Components/form/RadioComponent";
 // import styled from "styled-components";
 import { styled } from "@mui/material/styles";
 import TagFacesIcon from "@mui/icons-material/TagFaces";
+import { act } from "react-dom/test-utils";
+import { changePostsRequest } from "../store/post";
+import { changePetsRequest } from "../store/pet";
 
 function ValueLabel(props) {
   const { children, open, value } = props;
@@ -24,10 +28,10 @@ function ValueLabel(props) {
     value === 0
       ? "Todas\nlas edades"
       : value === 1
-      ? "Hasta\n1 año"
-      : value === 11
-      ? "10 años+"
-      : `Hasta\n${value} años`;
+        ? "Hasta\n1 año"
+        : value === 11
+          ? "10 años+"
+          : `Hasta\n${value} años`;
 
   return (
     <Tooltip
@@ -65,15 +69,43 @@ const marks = [
 const PanelFilters = ({ module }) => {
   const [selectedFilter, setSelectedFilter] = React.useState("");
   const [selectedSize, setSelectedSize] = useState("");
+  const dispatch = useDispatch();
   const { role } = useSelector((state) => state.persisted.auth);
+  const { activeModule } = useSelector((state) => state.persisted.global);
 
+  const filters =
+    activeModule === "posts"
+      ? useSelector((state) => state.posts.postRequest.filters)
+      : useSelector((state) => state.pets.petsRequest)
+
+
+
+  const activeModuleIsPosts = activeModule === "posts" ? true : false;
+  const statusSelectOptions = [
+    { label: activeModuleIsPosts ? "Activas" : "Publicados", value: activeModuleIsPosts ? "A" : true },
+    { label: activeModuleIsPosts ? "Inactivas" : "Sin publicar", value: activeModuleIsPosts ? "I" : false },
+  ]
+  console.log('========filters:', filters);
+  console.log('========selecttt :', statusSelectOptions);
+  const valuedr = activeModuleIsPosts ? filters.status || '' : filters.posted;
+
+  console.log('========valuedr:', valuedr);
+  console.log('========active option :', statusSelectOptions.find((option) => option.value === valuedr));
   const handleSizeChange = (event) => {
     setSelectedSize(event.target.value);
   };
 
   const handleFilterChange = (event) => {
+    console.log('event === : ', event);
+    const { name, value } = event.target;
+    const filterObjet = { [name]: value };
+    console.log("aplicfandooo ", filterObjet)
+    activeModuleIsPosts
+      ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
     setSelectedFilter(event.target.value);
   };
+
 
   // ChipsFiltros
   const ListItem = styled("li")(({ theme }) => ({
@@ -82,9 +114,6 @@ const PanelFilters = ({ module }) => {
   const [chipData, setChipData] = React.useState([
     { key: 0, label: "Angular" },
     { key: 1, label: "jQuery" },
-    { key: 2, label: "Polymer" },
-    { key: 3, label: "Vue.js" },
-    { key: 4, label: "JavaScript" },
   ]);
 
   const handleDelete = (chipToDelete) => () => {
@@ -92,6 +121,10 @@ const PanelFilters = ({ module }) => {
       chips.filter((chip) => chip.key !== chipToDelete.key)
     );
   };
+
+  const selectedValue = statusSelectOptions.find((option) => option.value === valuedr);
+  
+  console.log('========selectedValue:', selectedValue);
 
   return (
     <>
@@ -123,20 +156,18 @@ const PanelFilters = ({ module }) => {
           );
         })}
       </div>
+      {role === "s" &&
+        <SelectComponent
+          fullWidth
+          label={activeModuleIsPosts ? "Estado" : "Publicado"}
+          name={activeModuleIsPosts ? "status" : "posted"}
+          onChange={handleFilterChange}
+          value={selectedValue}
+          options={statusSelectOptions}
+          style={{ marginTop: "10px" }}
+        />
+      }
 
-      <SelectComponent
-        fullWidth
-        label="Estado"
-        name="state"
-        onChange={handleFilterChange}
-        value={selectedFilter}
-        options={[
-          { label: "Todos", value: 1 },
-          { label: "Publicado", value: 2 },
-          { label: "Sin publicar", value: 3 },
-        ]}
-        style={{ marginTop: "10px" }}
-      />
 
       <Divider
         sx={{
@@ -149,7 +180,7 @@ const PanelFilters = ({ module }) => {
         Ubicación
       </Divider>
 
-      <SelectComponent
+      {/* <SelectComponent
         fullWidth
         label="Selecciona un departamento"
         name="department"
@@ -160,10 +191,10 @@ const PanelFilters = ({ module }) => {
           { label: "Vaupés", value: 2 },
           { label: "Vichada", value: 3 },
         ]}
-        // style={{ marginTop: "25px" }}
-      />
+      // style={{ marginTop: "25px" }}
+      /> */}
 
-      <SelectComponent
+      {/* <SelectComponent
         label="Seleccione una ciudad"
         name="city"
         onChange={handleFilterChange}
@@ -173,7 +204,7 @@ const PanelFilters = ({ module }) => {
           { label: "Buga", value: 2 },
           { label: "Buenaventura", value: 3 },
         ]}
-      />
+      /> */}
       <Divider sx={{ marginTop: 1, marginBottom: 2 }}></Divider>
 
       <Divider
@@ -216,7 +247,7 @@ const PanelFilters = ({ module }) => {
         style={{ marginTop: "2.8rem", marginBottom: "10px" }}
       />
 
-      <SelectComponent
+      {/* <SelectComponent
         label="Seleccione una especie"
         name="specie"
         onChange={handleFilterChange}
@@ -226,9 +257,9 @@ const PanelFilters = ({ module }) => {
           { label: "Perros", value: 2 },
           { label: "Otros", value: 3 },
         ]}
-      />
+      /> */}
 
-      <SelectComponent
+      {/* <SelectComponent
         label="Seleccione una raza"
         name="breed"
         onChange={handleFilterChange}
@@ -238,7 +269,7 @@ const PanelFilters = ({ module }) => {
           { label: "Siamese", value: 2 },
           { label: "Otros", value: 3 },
         ]}
-      />
+      /> */}
       {/* <FormLabel component="legend">Raza</FormLabel>
       <FormControl
         className="filter-container"
@@ -288,7 +319,7 @@ const PanelFilters = ({ module }) => {
         Salud
       </Divider>
 
-      <SelectComponent
+      {/* <SelectComponent
         label="Vacunación"
         name="vaccinated"
         onChange={handleFilterChange}
@@ -322,7 +353,7 @@ const PanelFilters = ({ module }) => {
           { label: "Desparasitado", value: 2 },
           { label: "Sin desparasitar (no se sabe)", value: 3 },
         ]}
-      />
+      /> */}
       <Divider sx={{ marginTop: 1, marginBottom: 2 }}></Divider>
     </>
   );

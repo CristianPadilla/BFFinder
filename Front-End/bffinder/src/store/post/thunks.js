@@ -11,15 +11,16 @@ export const fetchPosts = () => async (dispatch, getState) => {
         const url = role === "u"
             ? "/all/filter"
             : `/user/${userId}/filter`;
-            const { data } = await postApi.post(url, postsRequest);
-            const { page, request } = data;
-            dispatch(fetchPostsSuccess({
-                
-                page: {
-                    pageNumber: page.number,
-                    pageSize: page.size,
-                    numberOfElements: page.numberOfElements,
-                    totalPages: page.totalPages,
+        const { data } = await postApi.post(url, postsRequest);
+        const { page, request } = data;
+        console.log("fetchPosts from thunk ", data);
+        dispatch(fetchPostsSuccess({
+
+            page: {
+                pageNumber: page.number,
+                pageSize: page.size,
+                numberOfElements: page.numberOfElements,
+                totalPages: page.totalPages,
                 totalElements: page.totalElements,
                 offset: page.pageable.offset,
                 last: page.last,
@@ -27,8 +28,27 @@ export const fetchPosts = () => async (dispatch, getState) => {
                 sort: page.sort.property,
                 desc: page.sort.descending,
                 posts: page.content,
-                
+
+            },
+            postRequest: {
+                search: request.search,
+                filters: {
+                    from_date: request.filters.from_date,
+                    specie_id: request.filters.specie_id,
+                    breed_id: request.filters.breed_id,
+                    size: request.filters.size,
+                    department_id: request.filters.department_id,
+                    city_id: request.filters.city_id,
+                    status: request.filters.status,
+                },
+                sorting: {
+                    sort: request.sorting.sort,
+                    desc: request.sorting.desc
+                },
+                page: request.page,
+                page_size: request.page_size,
             }
+
         }));
         dispatch(stopContentLoading())
     } catch (error) {
@@ -37,9 +57,11 @@ export const fetchPosts = () => async (dispatch, getState) => {
     }
 };
 
-export const changePostsRequest = (filter) => async (dispatch, getState) => {
-    console.log("changePostsRequest from thunk ", filter);
-    dispatch(setPostsRequest(filter));
+export const changePostsRequest = (filters) => async (dispatch, getState) => {
+    filters.forEach(filter => {
+        console.log("aplicando filtro ", filter);
+        dispatch(setPostsRequest(filter));
+    });
     dispatch(fetchPosts());
 
 };

@@ -61,6 +61,7 @@ export const petSlice = createSlice({
         },
         setPetsPage(state, { payload }) {
             state.page = payload.page;
+            state.petsRequest = payload.petsRequest;
         },
         setSavingPet(state, { payload }) {
         },

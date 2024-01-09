@@ -29,4 +29,5 @@ public class PetsFilterRequest {
     private int page;
     @JsonProperty("page_size")
     private int pageSize;
+    private Boolean posted;
 }

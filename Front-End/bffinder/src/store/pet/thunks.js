@@ -9,12 +9,12 @@ export const startFetchPets = () => async (dispatch, getState) => {
         const petsRequest = getState().pets.petsRequest;
         const { userId } = getState().persisted.auth;
         if (!userId) throw new Error("No user id exists");
-        
+
         const { data } = await petApi.post("/user/" + userId + "/filter", petsRequest);
         const { page, filters } = data;
-        
+        console.log("startFetchPets from thunk ", data);
         dispatch(setPetsPage({
-            
+
             page: {
                 pageNumber: page.number,
                 pageSize: page.size,
@@ -27,24 +27,41 @@ export const startFetchPets = () => async (dispatch, getState) => {
                 sort: page.sort[0].property,
                 desc: page.sort[0].descending,
                 pets: page.content,
-            }
+            },
+            petsRequest: {
+                search: filters.search,
+                size: filters.size,
+                specie_id: filters.specie_id,
+                breed_id: filters.breed_id,
+                age: filters.age,
+                gender: filters.gender,
+                vaccinated: filters.vaccinated,
+                sterilized: filters.sterilized,
+                dewormed: filters.dewormed,
+                posted: filters.posted,
+                sort: filters.sort,
+                desc: filters.desc,
+                page: filters.page,
+                page_size: filters.page_size,
+            },
         }
-        
+
         ));
         dispatch(stopContentLoading())
     } catch (error) {
         console.log(error);
         throw new Error(error);
     }
-    
+
 };
 
 
-export const changePetsRequest = (filter) => async (dispatch, getState) => {
-    console.log("changePetsRequest from thunk ", filter);
-    dispatch(setPetsRequest(filter));
+export const changePetsRequest = (filters) => async (dispatch, getState) => {
+    filters.forEach(filter => {
+        console.log("aplicando filtro ", filter);
+        dispatch(setPetsRequest(filter));
+    });
     dispatch(startFetchPets());
-
 };
 
 export const startAddNewPet = () => async (dispatch, getState) => {

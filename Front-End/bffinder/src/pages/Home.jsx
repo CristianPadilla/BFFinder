@@ -48,7 +48,7 @@ const Home = () => {
                 <span className="text">Download PDF</span>
               </a> */}
             <div>
-              <Ordering  />
+              <Ordering />
             </div>
           </div>
 

@@ -59,7 +59,7 @@ public class AdoptionPostController {
         return new ResponseEntity<>(service.updatePostDescription(request), HttpStatus.OK);
     }
 
-    @GetMapping("check/pet/{petId}")
+    @GetMapping("/check/pet/{petId}")
     public ResponseEntity<Boolean> checkPetIsPosted(@PathVariable("petId") int petId) {
         log.info("Checking if post already exist with petId id {} from CONTROLLER layer", petId);
         return new ResponseEntity<>(service.checkPetIsPosted(petId), HttpStatus.OK);

@@ -20,9 +20,10 @@ const MainContent = () => {
 
 
   const handlePageChange = (event, value) => {
+    if (value === pageNumber + 1) return;
     activeModule === "posts"
-      ? dispatch(changePostsRequest({ page: value - 1 }))
-      : dispatch(changePetsRequest({ page: value - 1 }));
+      ? dispatch(changePostsRequest([{ page: value - 1 }]))
+      : dispatch(changePetsRequest([{ page: value - 1 }]));
     // sectionRef.current.scrollIntoView({ top: 0, behavior: "smooth" });
   };
 
