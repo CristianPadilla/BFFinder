@@ -1,7 +1,9 @@
 import { HttpStatusCode } from "axios";
 import { petApi } from "../../api/petApi";
-import { savingNewPet, setActivePet, setErrorMessage, setLoadingTrue, setPetsPage, setPetsRequest } from "./petSlice";
+import { savingNewPet, setActivePet, setBreeds, setErrorMessage, setLoadingTrue, setPetsPage, setPetsRequest, setSpecies } from "./petSlice";
 import { startContentLoading, stopContentLoading } from "../global";
+import { specieApi } from "../../api/specieApi";
+import { breedApi } from "../../api/breedApi";
 
 export const startFetchPets = () => async (dispatch, getState) => {
     try {
@@ -82,3 +84,19 @@ export const startGetPetById = (id) => async (dispatch) => {
     if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
     dispatch(setActivePet(data));// no concluido
 };
+
+export const startGetSpecies = () => async (dispatch) => {
+    const { data, status } = await specieApi.get("/all");
+    console.log("startGetSpecies", data, status);
+    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+    dispatch(setSpecies(data));
+};
+
+export const startGetBreedsBySpecieId = (specieId) => async (dispatch) => {
+    const { data, status } = await breedApi.get("/specie/" + specieId);
+    console.log("startGetBreedsBySpecieId", data, status);
+    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+    dispatch(setBreeds(data));
+};
+
+

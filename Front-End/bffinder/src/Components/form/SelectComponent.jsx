@@ -5,7 +5,7 @@ import { Button } from "@mui/base";
 
 const SelectComponent = (props) => {
   // const [field, meta] = useField(props);
-  console.log("=---------------- :", props);
+  // console.log("=---------------- :", props);
 
   return (
     <>
@@ -18,15 +18,20 @@ const SelectComponent = (props) => {
             // console.log("option :", option);
             return option.label;
           }}
-          // onChange={props.onChange}
-          onChange={(event, newValue) => {
-            return props.onChange({
-              target: {
-                name: props.name,
-                value: newValue ? newValue.value : null,
-              },
-            });
-          }}
+          // isOptionEqualToValue={(option, value) => {
+          //   // console.log("option :", option);
+          //   // console.log("value :", value);
+          //   return option.value === value.value;
+          // }}
+          onChange={props.onChange}
+          // onChange={(event, newValue) => {
+          //   return props.onChange({
+          //     target: {
+          //       name: props.name,
+          //       value: newValue ? newValue.value : null,
+          //     },
+          //   });
+          // }}
           style={props.style}
           renderInput={(params) => (
             <TextField

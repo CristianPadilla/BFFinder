@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/specie")
 @Log4j2
@@ -26,6 +28,11 @@ public class SpecieController {
         log.info("Getting specie info with id: {} from CONTROLLER layer", specieId);
         var specie = service.getSpecieById(specieId);
         return new ResponseEntity<>(specie, HttpStatus.OK);
+    }
+    @GetMapping("/all")
+    ResponseEntity<List<SpecieResponse>> getSpecieById() {
+        log.info("Getting list specie from CONTROLLER layer");
+        return new ResponseEntity<>(service.getSpecies(), HttpStatus.OK);
     }
 
 }

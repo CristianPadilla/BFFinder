@@ -1,6 +1,8 @@
+import { HttpStatusCode } from "axios";
+import { locationApi } from "../../api/locationApi";
 import { postApi } from "../../api/postApi";
 import { startContentLoading, stopContentLoading } from "../global";
-import { fetchPostsStart, fetchPostsSuccess, setPostsRequest } from "./postSlice";
+import { fetchPostsStart, fetchPostsSuccess, setCities, setDepartments, setPostsRequest } from "./postSlice";
 
 
 export const fetchPosts = () => async (dispatch, getState) => {
@@ -64,4 +66,18 @@ export const changePostsRequest = (filters) => async (dispatch, getState) => {
     });
     dispatch(fetchPosts());
 
+};
+
+export const startGetDepartments = () => async (dispatch) => {
+    const { data, status } = await locationApi.get("/department/all");
+    console.log("startGetDepartments", data, status);
+    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+    dispatch(setDepartments(data));
+};
+
+export const startGetCitiesByDepartmentId = (departmentId) => async (dispatch) => {
+    const { data, status } = await locationApi.get("/department/" + departmentId + "/cities");
+    console.log("startGetCitiesByDepartmentId", data, status);
+    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+    dispatch(setCities(data));
 };

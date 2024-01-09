@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FormGroup from "@mui/material/FormGroup";
 import {
   FormLabel,
@@ -18,8 +18,9 @@ import RadioComponent from "../Components/form/RadioComponent";
 import { styled } from "@mui/material/styles";
 import TagFacesIcon from "@mui/icons-material/TagFaces";
 import { act } from "react-dom/test-utils";
-import { changePostsRequest } from "../store/post";
-import { changePetsRequest } from "../store/pet";
+import { changePostsRequest, setCities, startGetCitiesByDepartmentId, startGetDepartments } from "../store/post";
+import { changePetsRequest, startGetBreedsBySpecieId, startGetSpecies } from "../store/pet";
+import { t, use } from "i18next";
 
 function ValueLabel(props) {
   const { children, open, value } = props;
@@ -78,35 +79,131 @@ const PanelFilters = ({ module }) => {
       ? useSelector((state) => state.posts.postRequest.filters)
       : useSelector((state) => state.pets.petsRequest)
 
-
+  const { species, breeds } = useSelector((state) => state.pets);
+  const { departments, cities } = useSelector((state) => state.posts);
 
   const activeModuleIsPosts = activeModule === "posts" ? true : false;
-  const statusSelectOptions = [
-    { label: activeModuleIsPosts ? "Activas" : "Publicados", value: activeModuleIsPosts ? "A" : true },
-    { label: activeModuleIsPosts ? "Inactivas" : "Sin publicar", value: activeModuleIsPosts ? "I" : false },
-  ]
-  console.log('========filters:', filters);
-  console.log('========selecttt :', statusSelectOptions);
-  const valuedr = activeModuleIsPosts ? filters.status || '' : filters.posted;
 
-  console.log('========valuedr:', valuedr);
-  console.log('========active option :', statusSelectOptions.find((option) => option.value === valuedr));
+
+  useEffect(() => {
+    dispatch(startGetSpecies())
+    dispatch(startGetDepartments())
+    console.log('consultando especies == ', species);
+  }, []);
+
+
+  // ESTADOS
+  const statusSelectOptions = [
+    { label: "Activas", value: "A" },
+    { label: "Inactivas", value: "I" },
+  ]
+  const postedSelectOptions = [
+    { label: "Publicados", value: true },
+    { label: "Sin publicar", value: false },
+  ]
+  const statusFilter = activeModuleIsPosts ? filters.status : filters.posted;
+
+  const statusFilterSelectedValue = statusFilter
+    ? statusSelectOptions.find((option) => option.value === statusFilter)
+    : { label: "Todos", value: null };
+  const postedFilterSelectedValue = statusFilter != null
+    ? postedSelectOptions.find((option) => option.value === statusFilter)
+    : { label: "Todos", value: null };
+
+  // ESPECIES y RAZAS
+  const speciesOptions = species.map((specie) => {
+    return { label: t(`pluralSpecies.${specie.name}`), value: specie.id }
+  })
+  const specieOptionSelectedValue = filters.specie_id != null && filters.specie_id != 0
+    ? speciesOptions.find((option) => option.value === filters.specie_id)
+    : { label: "", value: null };
+
+  const breedsOptions = breeds.map((breed) => {
+    return { label: t(`breeds.${breed.name}`), value: breed.id }
+  })
+
+  const breedOptionSelectedValue = filters.breed_id != null && filters.breed_id != 0
+    ? breedsOptions.find((option) => option.value === filters.breed_id)
+    : { label: "", value: null };
+
+  // DEPARTAMENTOS y CIUDADES
+  const departmentsOptions = departments.map((department) => {
+    return { label: department.name, value: department.id }
+  })
+
+  const departmentOptionSelectedValue = filters.department_id != null && filters.department_id != 0
+    ? departmentsOptions.find((option) => option.value === filters.department_id)
+    : { label: "", value: 0 };
+
+  const citiesOptions = cities.map((city) => {
+    return { label: city.name, value: city.id }
+  })
+
+  const cityOptionSelectedValue = filters.city_id != null && filters.city_id != 0
+    ? citiesOptions.find((option) => option.value === filters.city_id)
+    : { label: "", value: 0 };
+
+  console.log('FILTROS ACTUALES== ', filters);
   const handleSizeChange = (event) => {
     setSelectedSize(event.target.value);
   };
 
-  const handleFilterChange = (event) => {
-    console.log('event === : ', event);
-    const { name, value } = event.target;
-    const filterObjet = { [name]: value };
-    console.log("aplicfandooo ", filterObjet)
-    activeModuleIsPosts
-      ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
-      : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
-    setSelectedFilter(event.target.value);
+
+
+  const handleStatusFilterChange = (event, newValue) => {
+    // console.log('handleStatusFilterChange==  : ', newValue);
+    const filterObjet = { ["status"]: newValue ? newValue.value : null };
+    dispatch(changePostsRequest([filterObjet, { page: 0 }]))
+  };
+  const handlePostedFilterChange = (event, newValue) => {
+    // console.log('handlePostedFilterChange==  : ', newValue);
+    const filterObjet = { ["posted"]: newValue != null ? newValue.value : null };
+    dispatch(changePetsRequest([filterObjet, { page: 0 }]))
   };
 
+  const handleSpecieSelectChange = (event, newValue) => {
+    // console.log('handleSpecieSelectChange==  : ', newValue);
+    const filterObjet = { ["specie_id"]: newValue ? newValue.value : 0 };
+    activeModuleIsPosts
+      ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([filterObjet, { page: 0 }]))
 
+    dispatch(startGetBreedsBySpecieId(newValue ? newValue.value : 0))
+    handleBreedSelectChange(null, 0)
+  };
+
+  const handleBreedSelectChange = (event, newValue) => {
+    // console.log('handleBreedSelectChange==  : ', newValue);
+    const filterObjet = { ["breed_id"]: newValue ? newValue.value : 0 };
+    activeModuleIsPosts
+      ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([filterObjet, { page: 0 }]))
+  };
+  const handleDepartmentSelectChange = (event, newValue) => {
+    console.log('handleDepartmentSelectChange==  : ', newValue);
+    const filterObjet = { ["department_id"]: newValue ? newValue.value : 0 };
+    activeModuleIsPosts
+      ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([filterObjet, { page: 0 }]))
+
+    if (!newValue || newValue.value === 0) {
+      dispatch(setCities([]))
+      return
+    }
+    dispatch(startGetCitiesByDepartmentId(newValue.value))
+
+    // handleCitySelectChange(null, 0)
+  };
+
+  const handleCitySelectChange = (event, newValue) => {
+    console.log('handleCitySelectChange==  : ', newValue);
+    const filterObjet = { ["city_id"]: newValue ? newValue.value : 0 };
+    activeModuleIsPosts
+      ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([filterObjet, { page: 0 }]))
+  };
+
+  console.log('ciudades  == ', cities);
   // ChipsFiltros
   const ListItem = styled("li")(({ theme }) => ({
     margin: theme.spacing(0.5),
@@ -122,9 +219,7 @@ const PanelFilters = ({ module }) => {
     );
   };
 
-  const selectedValue = statusSelectOptions.find((option) => option.value === valuedr);
-  
-  console.log('========selectedValue:', selectedValue);
+
 
   return (
     <>
@@ -156,14 +251,25 @@ const PanelFilters = ({ module }) => {
           );
         })}
       </div>
-      {role === "s" &&
+      {(role === "s" && activeModule == "posts") &&
         <SelectComponent
           fullWidth
-          label={activeModuleIsPosts ? "Estado" : "Publicado"}
-          name={activeModuleIsPosts ? "status" : "posted"}
-          onChange={handleFilterChange}
-          value={selectedValue}
+          label={"Estado"}
+          name={"status"}
+          onChange={handleStatusFilterChange}
+          value={statusFilterSelectedValue}
           options={statusSelectOptions}
+          style={{ marginTop: "10px" }}
+        />
+      }
+      {(role === "s" && activeModule == "pets") &&
+        <SelectComponent
+          fullWidth
+          label={"Publicación"}
+          name={"posted"}
+          onChange={handlePostedFilterChange}
+          value={postedFilterSelectedValue}
+          options={postedSelectOptions}
           style={{ marginTop: "10px" }}
         />
       }
@@ -180,31 +286,29 @@ const PanelFilters = ({ module }) => {
         Ubicación
       </Divider>
 
-      {/* <SelectComponent
-        fullWidth
-        label="Selecciona un departamento"
-        name="department"
-        onChange={handleFilterChange}
-        value={selectedFilter}
-        options={[
-          { label: "Valle del Cauca", value: 1 },
-          { label: "Vaupés", value: 2 },
-          { label: "Vichada", value: 3 },
-        ]}
-      // style={{ marginTop: "25px" }}
-      /> */}
+      {(role === "u" && activeModule == "posts") &&
 
-      {/* <SelectComponent
-        label="Seleccione una ciudad"
-        name="city"
-        onChange={handleFilterChange}
-        value={selectedFilter}
-        options={[
-          { label: "Cali", value: 1 },
-          { label: "Buga", value: 2 },
-          { label: "Buenaventura", value: 3 },
-        ]}
-      /> */}
+        <SelectComponent
+          fullWidth
+          label="Departamento"
+          name="department"
+          onChange={handleDepartmentSelectChange}
+          value={departmentOptionSelectedValue}
+          options={departmentsOptions}
+        // style={{ marginTop: "25px" }}
+        />
+      }
+      {(role === "u" && activeModule == "posts") &&
+
+        <SelectComponent
+          label="Municipio"
+          name="city"
+          onChange={handleCitySelectChange}
+          value={cityOptionSelectedValue}
+          options={citiesOptions}
+        />
+      }
+
       <Divider sx={{ marginTop: 1, marginBottom: 2 }}></Divider>
 
       <Divider
@@ -247,29 +351,21 @@ const PanelFilters = ({ module }) => {
         style={{ marginTop: "2.8rem", marginBottom: "10px" }}
       />
 
-      {/* <SelectComponent
-        label="Seleccione una especie"
+      <SelectComponent
+        label="Especie"
         name="specie"
-        onChange={handleFilterChange}
-        value={selectedFilter}
-        options={[
-          { label: "Gatos", value: 1 },
-          { label: "Perros", value: 2 },
-          { label: "Otros", value: 3 },
-        ]}
-      /> */}
+        onChange={handleSpecieSelectChange}
+        value={specieOptionSelectedValue}
+        options={speciesOptions}
+      />
 
-      {/* <SelectComponent
-        label="Seleccione una raza"
+      <SelectComponent
+        label="Raza"
         name="breed"
-        onChange={handleFilterChange}
-        value={selectedFilter}
-        options={[
-          { label: "Pitbull", value: 1 },
-          { label: "Siamese", value: 2 },
-          { label: "Otros", value: 3 },
-        ]}
-      /> */}
+        onChange={handleBreedSelectChange}
+        value={breedOptionSelectedValue}
+        options={breedsOptions}
+      />
       {/* <FormLabel component="legend">Raza</FormLabel>
       <FormControl
         className="filter-container"

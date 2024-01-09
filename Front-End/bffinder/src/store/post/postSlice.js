@@ -23,6 +23,8 @@ const initialState = {
         page: 0,
         page_size: 2,
     },
+    departments: [],
+    cities: [],
 }
 
 export const postSlice = createSlice({
@@ -57,6 +59,12 @@ export const postSlice = createSlice({
             state.postRequest = initialState.postRequest;
 
         },
+        setDepartments(state, { payload }) {
+            state.departments = payload;
+        },
+        setCities(state, { payload }) {
+            state.cities = payload;
+        }
     },
 });
 
@@ -65,4 +73,6 @@ export const {
     fetchPostsSuccess,
     setPostsRequest,
     clearPostsLogout,
+    setDepartments,
+    setCities,
 } = postSlice.actions;

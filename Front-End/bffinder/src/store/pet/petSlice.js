@@ -21,6 +21,8 @@ const initialState = {
         page: 0,
         page_size: 2,
     },
+    species: [],
+    breeds: [],
     // active: {
     //     id: null,
     //     name: null,
@@ -82,6 +84,12 @@ export const petSlice = createSlice({
             state.petsRequest = initialState.petsRequest;
 
         },
+        setSpecies(state, { payload }) {
+            state.species = payload;
+        },
+        setBreeds(state, { payload }) {
+            state.breeds = payload;
+        },
     },
 });
 
@@ -95,4 +103,6 @@ export const {
     setErrorMessage,
     setPetsRequest,
     clearPetsLogout,
+    setSpecies,
+    setBreeds,
 } = petSlice.actions;
