@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import FormAddPet from "../post/FormAddPet";
+import FormAddPost from "./FormAddPost";
 
 const ModalAddPet = ({ open, onClose, onAdd }) => {
   return (
@@ -26,7 +27,8 @@ const ModalAddPet = ({ open, onClose, onAdd }) => {
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <FormAddPet />
+        {/* <FormAddPet /> */}
+        <FormAddPost />
       </DialogContent>
       <DialogActions>
         <Button variant="contained" color="error" onClick={onClose}>

@@ -1,15 +1,12 @@
 import React from "react";
 import 'styles/FooterPreHome.scss';
 import { IconButton, Link, Typography } from "@mui/material";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import InstagramIcon from "@mui/icons-material/Instagram";
+import { Facebook, Twitter, Instagram } from "@mui/icons-material";
 
 const FooterPreHome = () => {   
   return (
     <div>
       <div className="footer">
-        {/* Primera fila */}
         <div className="social-icons">
           <IconButton
             component={Link}
@@ -18,7 +15,7 @@ const FooterPreHome = () => {
             rel="noopener"
             aria-label="Facebook"
           >
-            <FacebookIcon />
+            <Facebook />
           </IconButton>
           <IconButton
             component={Link}
@@ -27,7 +24,7 @@ const FooterPreHome = () => {
             rel="noopener"
             aria-label="Twitter"
           >
-            <TwitterIcon />
+            <Twitter />
           </IconButton>
           <IconButton
             component={Link}
@@ -36,11 +33,10 @@ const FooterPreHome = () => {
             rel="noopener"
             aria-label="Instagram"
           >
-            <InstagramIcon />
+            <Instagram />
           </IconButton>
         </div>
 
-        {/* Segunda fila */}
         <Typography variant="body2" color="textSecondary" className="rights-text">
           © <Link color="inherit" href="#">
               BFFinder

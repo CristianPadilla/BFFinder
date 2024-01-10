@@ -1,12 +1,12 @@
 import React from 'react';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { InputAdornment,
+IconButton,
+OutlinedInput,
+InputLabel,
+FormControl,
+} from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useField, ErrorMessage } from 'formik';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
 import { FormHelperText } from '@mui/material';
 
 const TextInputPassword = (props) => {

@@ -9,7 +9,6 @@ import Home from "pages/Home";
 import NotFound from "pages/NotFound";
 import Perfil from "pages/Perfil";
 import Autenticacion from "pages/Autenticacion";
-import Ejemplo from "pages/Ejemplo";
 import Verpublicacion from "pages/ViewPost";
 import { useDispatch, useSelector } from "react-redux";
 import { CheckingAuth } from "../pages/auth/CheckingAuth";
@@ -45,7 +44,6 @@ const App = () => {
 									<Route path="/perfil" element={<Perfil />} />
 									<Route path="/selecciona-especie" element={<SelectSpecie />} />
 									<Route path="/ver-publicacion" element={<Verpublicacion />} />
-									<Route path="/ejemplo" element={<Ejemplo />} />
 
 								</Routes>
 							} />

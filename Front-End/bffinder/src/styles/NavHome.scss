@@ -5,6 +5,39 @@
     padding: 0;
 }
 
+#content nav {
+	height: 56px;
+	background: $fondo-sections;
+	padding: 0 24px;
+	display: flex;
+	align-items: center;
+	grid-gap: 24px;
+	position: sticky;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+	width: 100%; /* Ajustado para que ocupe todo el ancho */
+}
+
+#content nav a {
+	// color: var(--dark);
+}
+#content nav .bx.bx-menu {
+	cursor: pointer;
+	color: $color-letraboldD;
+}
+#content nav .nav-link {
+	font-size: 16px;
+	transition: 0.3s ease;
+}
+#content nav .nav-link:hover {
+	// color: var(--blue);
+}
+
+#content nav .nav-menu {
+	margin-left: auto;
+}
+
 .logobff {
     width: 145px;
     height: 60px;
@@ -29,11 +62,11 @@
      
 }
 
-.nav-h {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+// .nav-h {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+// }
 
 .header-home ul {
     position: relative;

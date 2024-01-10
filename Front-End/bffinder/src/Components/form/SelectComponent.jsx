@@ -23,7 +23,7 @@ const SelectComponent = (props) => {
               },
             });
           }}
-          freeSolo
+          // freeSolo
           style={props.style}
           renderInput={(params) => (
             <TextField

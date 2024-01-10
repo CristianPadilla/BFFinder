@@ -8,19 +8,21 @@ import {
   Grid,
   Stack,
 } from "@mui/material";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import PhoneIcon from "@mui/icons-material/Phone";
-import FacebookIcon from '@mui/icons-material/Facebook';
-import YouTubeIcon from '@mui/icons-material/YouTube';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import LanguageIcon from '@mui/icons-material/Language';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import {
+  LocationOn,
+  Phone,
+  Facebook,
+  YouTube,
+  Instagram,
+  Twitter,
+  Language,
+  WhatsApp,
+} from "@mui/icons-material";
 
 const CardInfoFundation = () => {
   return (
     <div>
-      <Card elevation={3} sx={{borderRadius: '18px' }}>
+      <Card elevation={3} sx={{ borderRadius: "18px" }}>
         <CardHeader
           avatar={<Avatar aria-label="avatar">A</Avatar>}
           title={
@@ -30,9 +32,16 @@ const CardInfoFundation = () => {
           }
           subheader={
             <Stack direction="row" alignItems="center">
-            <LocationOnIcon fontSize="small" style={{ fontSize: 15, marginBottom: "4px", marginRight: ".3rem" }}/>
-            <Typography variant="body2"> Valle del Cauca / Cali</Typography>
-          </Stack>
+              <LocationOn
+                fontSize="small"
+                style={{
+                  fontSize: 15,
+                  marginBottom: "4px",
+                  marginRight: ".3rem",
+                }}
+              />
+              <Typography variant="body2"> Valle del Cauca / Cali</Typography>
+            </Stack>
           }
         />
         <CardContent>
@@ -49,21 +58,34 @@ const CardInfoFundation = () => {
             </Grid>
             <Grid item xs={12}>
               <Typography variant="subtitle1">
-                <PhoneIcon fontSize="small" style={{ marginBottom: "-3px", marginRight: ".3rem" }}/> Número Cel: (123) 456-7890
+                <Phone
+                  fontSize="small"
+                  style={{ marginBottom: "-3px", marginRight: ".3rem" }}
+                />{" "}
+                Número Cel: (123) 456-7890
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="subtitle1">
-                <WhatsAppIcon fontSize="small" style={{ marginBottom: "-3px", marginRight: ".3rem" }}/> Whatsapp: (123) 456-7890
+                <WhatsApp
+                  fontSize="small"
+                  style={{ marginBottom: "-3px", marginRight: ".3rem" }}
+                />{" "}
+                Whatsapp: (123) 456-7890
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="subtitle1">
-              <LanguageIcon fontSize="small" style={{ marginBottom: "-4px", marginRight: ".3rem" }}/> Página web: www.ejemplo.com
+                <Language
+                  fontSize="small"
+                  style={{ marginBottom: "-4px", marginRight: ".3rem" }}
+                />{" "}
+                Página web: www.ejemplo.com
               </Typography>
             </Grid>
             <Grid item xs={12}>
-            <FacebookIcon fontSize="large"/>  <YouTubeIcon fontSize="large"/>  <InstagramIcon fontSize="large"/>  <TwitterIcon fontSize="large"/>
+              <Facebook fontSize="large" /> <YouTube fontSize="large" />{" "}
+              <Instagram fontSize="large" /> <Twitter fontSize="large" />
             </Grid>
           </Grid>
         </CardContent>

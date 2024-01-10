@@ -74,8 +74,7 @@ const SectionFilterPost = () => {
       {posts.map((post) => (
         //  {/* <Grid item xs={12} key={post.id}>
         //    <CardPost post={post} />
-        //  </Grid> */}
-        
+        //  </Grid> */}     
          <Grid
            item
            key={post.id}

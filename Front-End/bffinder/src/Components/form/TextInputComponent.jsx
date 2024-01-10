@@ -1,18 +1,20 @@
-import { ErrorMessage, useField } from "formik";
-import TextField from "@mui/material/TextField";
-import FormControl from "@mui/material/FormControl";
-import InputAdornment from "@mui/material/InputAdornment";
 import React from "react";
+import { ErrorMessage, useField } from "formik";
+import { TextField, FormControl, InputAdornment } from "@mui/material";
 
 export const TextInputComponent = ({
+  sx,
   label,
   onChange,
   value,
   name,
   errorClassName,
   className,
+  multiline,
+  maxRows,
   placeholder,
   endAdornment,
+  inputStyle,
   ...props
 }) => {
   const [field, meta] = useField(name);
@@ -26,13 +28,15 @@ export const TextInputComponent = ({
       </div>
       <ErrorMessage name={props.name} component="span" className={props.errorClassName} /> */}
 
-      <FormControl sx={{ width: "27ch" }} margin="normal">
+      <FormControl sx={sx} margin="normal">
         <TextField
           label={label}
           value={value}
           onChange={onChange}
           name={name}
           className={className}
+          multiline={multiline}
+          maxRows={maxRows}
           placeholder={placeholder}
           variant="outlined"
           error={meta.touched && !!meta.error}
@@ -41,6 +45,7 @@ export const TextInputComponent = ({
             endAdornment: endAdornment && (
               <InputAdornment position="end">{endAdornment}</InputAdornment>
             ),
+            style: inputStyle,
           }}
           {...props}
         />

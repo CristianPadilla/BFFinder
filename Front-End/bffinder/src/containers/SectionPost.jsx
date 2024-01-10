@@ -2,10 +2,7 @@ import React from "react";
 import SlidersImages from "../Components/post/SlidersImages";
 import PetDetails from "../Components/post/PetDetails";
 import CardInfoFundation from "../Components/post/CardInfoFundation";
-import { Typography,
-Grid,
-Checkbox,
-} from "@mui/material";
+import { Typography, Grid, Checkbox } from "@mui/material";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
 
@@ -30,7 +27,11 @@ const SectionPost = () => {
       <Grid container spacing={2} sx={{ height: "100vh" }}>
         <Grid item xs={12} md={5}>
           <div style={{ width: "100%", height: "300px" }}>
-            <SlidersImages images={images} />
+            <SlidersImages
+              images={images}
+              showBullets={true}
+              showPlayButton={false}
+            />
           </div>
         </Grid>
 
@@ -38,8 +39,15 @@ const SectionPost = () => {
           <div>
             <Grid container alignItems="center">
               <Grid item xs={6}>
-                <Typography variant="body2" sx={{ fontSize: ".8rem", margin: ".8rem"}}>Hace 3 horas</Typography>
-                <Typography variant="h4" sx={{ margin: ".8rem" }}>Name~</Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ fontSize: ".8rem", margin: ".8rem" }}
+                >
+                  Hace 3 horas
+                </Typography>
+                <Typography variant="h4" sx={{ margin: ".8rem" }}>
+                  Name~
+                </Typography>
               </Grid>
               <Grid item xs={6}>
                 <Grid
@@ -67,7 +75,11 @@ const SectionPost = () => {
             <Typography
               variant="body2"
               color="text.secondary"
-              sx={{ whiteSpace: "normal", textAlign: "justify", margin: ".8rem" }}
+              sx={{
+                whiteSpace: "normal",
+                textAlign: "justify",
+                margin: ".8rem",
+              }}
             >
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci,
               ex impedit pariatur minima porro, eius, corrupti possimus ea

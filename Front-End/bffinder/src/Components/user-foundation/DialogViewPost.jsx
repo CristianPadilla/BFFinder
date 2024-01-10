@@ -13,7 +13,25 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import imgdefault from "imgs/logo-bffinder.png";
-import FormAddPet from "../post/FormAddPet";
+import FormAddPost from "./FormAddPost";
+import DragAndDrop from "../form/DragandDrop";
+import SlidersImages from "../post/SlidersImages";
+import CardInfoPet from "./CardInfoPet";
+
+const images = [
+    {
+      original: "https://picsum.photos/id/1018/1000/600/",
+      thumbnail: "https://picsum.photos/id/1018/250/150/",
+    },
+    {
+      original: "https://picsum.photos/id/1015/1000/600/",
+      thumbnail: "https://picsum.photos/id/1015/250/150/",
+    },
+    {
+      original: "https://picsum.photos/id/1019/1000/600/",
+      thumbnail: "https://picsum.photos/id/1019/250/150/",
+    },
+  ];
 
 const DialogViewPost = ({ open, onClose }) => {
   const [profileImageUrl] = useState("");
@@ -21,70 +39,55 @@ const DialogViewPost = ({ open, onClose }) => {
 
   const renderInformationSection = () => (
     <>
-      <Paper
-        elevation={0}
-        variant="outlined"
-        sx={{ margin: "1rem", borderRadius: "" }}
-      >
-        <Divider variant="middle" sx={{ marginTop: 1, marginBottom: 2 }}>
+      {/* <Divider variant="middle" sx={{ marginTop: 1, marginBottom: 2 }}>
           Caracteristicas
-        </Divider>
-        <Grid
-          container
-          spacing={1}
-          sx={{ display: "flex", justifyContent: "center", margin: "1rem" }}
-        >
-          <Grid item xs={6} sx={{ textAlign: "justify" }}>
-            {/* <Typography sx={{ margin: '.2rem'}}>{breedDetails.specie.name} / {breedDetails.name}</Typography>
-      <Typography sx={{ margin: '.2rem'}}>Genero: {gender}</Typography> */}
-            <Typography sx={{ margin: ".2rem" }}>Especie / Raza</Typography>
-            <Typography sx={{ margin: ".2rem" }}>Genero: Macho</Typography>
-            <Typography sx={{ margin: ".2rem" }}>
-              Caracter: {"dangerous"}
-            </Typography>
-          </Grid>
-          <Grid item xs={6} sx={{ textAlign: "justify" }}>
-            <Typography sx={{ margin: ".2rem" }}>Tamaño: {"size"}</Typography>
-            <Typography sx={{ margin: ".2rem" }}>Peso: {"weight"}</Typography>
-            <Typography sx={{ margin: ".2rem" }}>Edad: {"age"}</Typography>
-          </Grid>
-        </Grid>
-        <Divider
-          variant="middle"
-          sx={{ marginTop: 1, marginBottom: 2 }}
-        ></Divider>
-      </Paper>
+        </Divider> */}
+<Grid
+  container
+  spacing={1}
+  sx={{ display: "flex", justifyContent: "center", margin: ".1rem" }}
+>
+  <Grid item xs={12} sx={{ margin: ".5rem", display: "flex", flexDirection: "column" }}>
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      sx={{
+        whiteSpace: "normal",
+        textAlign: "justify",
+      }}
+    >
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci, ex
+      impedit pariatur minima porro, eius, corrupti possimus ea magnam
+      accusantium aspernatur! Officiis ipsa, facilis consequuntur rerum ut optio
+      adipisci itaque.
+    </Typography>
 
-      <Paper
-        elevation={0}
-        variant="outlined"
-        sx={{ margin: "1rem", borderRadius: "" }}
-      >
-        <Divider variant="middle" sx={{ marginTop: 1, marginBottom: 2 }}>
-          Salud
-        </Divider>
-        <Grid
-          container
-          spacing={1}
-          sx={{ display: "flex", justifyContent: "left", margin: "1rem" }}
+    <Grid container justifyContent="space-between" marginTop="1rem">
+      <Grid item>
+        <Typography variant="body2" color="text.secondary">
+          Fecha de publicación: 23423432
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Hora de publicación: 23423432
+        </Typography>
+      </Grid>
+
+      <Grid item>
+        <Button
+          variant="contained"
+          color="info"
+          onClick={handleEditClick}
         >
-          <Grid item xs={6} sx={{ textAlign: "justify" }}>
-            <Typography sx={{ margin: ".2rem" }}>
-              Vacunado: {"vaccinated"}
-            </Typography>
-            <Typography sx={{ margin: ".2rem" }}>
-              Esterilizado: {"sterilized"}
-            </Typography>
-            <Typography sx={{ margin: ".2rem" }}>
-              Desparasitado: {"dewormed"}
-            </Typography>
-          </Grid>
-        </Grid>
-        <Divider
+          Editar
+        </Button>
+      </Grid>
+    </Grid>
+  </Grid>
+</Grid>
+      {/* <Divider
           variant="middle"
           sx={{ marginTop: 1, marginBottom: 2 }}
-        ></Divider>
-      </Paper>
+        ></Divider> */}
     </>
   );
 
@@ -113,57 +116,45 @@ const DialogViewPost = ({ open, onClose }) => {
         }}
       >
         {editing
-          ? "Modificar información de la mascota"
-          : "Información de la mascota"}
+          ? "Modificar información de la publicación"
+          : "Información de la publicación"}
         <IconButton color="inherit" onClick={onClose} aria-label="close">
           <CloseIcon />
         </IconButton>
       </DialogTitle>
       <DialogContent>
         {editing ? (
-          <FormAddPet />
+          <FormAddPost />
         ) : (
           <>
             <Grid container spacing={2}>
               {/* <Grid container spacing={2} sx={{ height: "100vh" }}> */}
               <Grid item xs={12} md={5}>
-                <div style={{ width: "100%", height: "300px" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: "400px",
-                    }}
-                  >
-                    <img
-                      src={profileImageUrl ? profileImageUrl : imgdefault}
-                      alt=""
-                      height="400px"
-                      style={{ width: "auto" }}
-                    />
-                  </div>
-                </div>
+                <SlidersImages images={images}
+                showBullets={false}
+                showPlayButton={false}
+                thumbnailPosition="left"
+                showNav={false}
+                />
               </Grid>
 
               <Grid item xs={12} md={7}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
-                    <Typography variant="h5" sx={{ margin: ".8rem" }}>
-                      {name}
-                    </Typography>
                     {renderInformationSection()}
                   </Grid>
                 </Grid>
               </Grid>
+              <CardInfoPet />
             </Grid>
+            
           </>
         )}
       </DialogContent>
       <DialogActions>
         {/* <Button variant="contained" color="info">Editar</Button>
         <Button variant="contained" color="success">Guardar Cambios</Button>
-        <Button variant="contained" color="error">Borrar mascota</Button> */}
+        <Button variant="contained" color="error">Borrar publicación</Button> */}
         {editing ? (
           <>
             {/* <Button variant="contained" color="success" onClick={handleSaveClick}>
@@ -179,7 +170,7 @@ const DialogViewPost = ({ open, onClose }) => {
           </>
         ) : (
           <Button variant="contained" color="info" onClick={handleEditClick}>
-            Editar
+            QUITARR
           </Button>
         )}
       </DialogActions>
