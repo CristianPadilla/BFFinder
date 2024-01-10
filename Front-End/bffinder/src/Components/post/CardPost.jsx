@@ -15,6 +15,8 @@ import {
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
+import { useSelector } from "react-redux";
+import { t } from "i18next";
 
 const formatTimeDifference = (hours) => {
   const weeks = Math.floor(hours / (24 * 7));
@@ -32,14 +34,17 @@ const formatTimeDifference = (hours) => {
 };
 
 const CardPost = ({ post }) => {
+  const { role } = useSelector(state => state.persisted.auth);
+
+
   const navigate = useNavigate();
   const {
     petPartialResponse,
     images,
-    locationResponse,
     date,
-    user,
     profileImageUrl,
+    locationResponse,
+    user,
   } = post;
   const { name, breedDetails, specie } = petPartialResponse;
   const { city } = locationResponse;
@@ -93,7 +98,6 @@ const CardPost = ({ post }) => {
             ":last-child": { paddingBottom: "0px" },
           }}
         >
-          {/* Sección de la mascota */}
           <Grid container justifyContent="space-between" alignItems="center">
             <Grid item>
               <Link
@@ -110,30 +114,29 @@ const CardPost = ({ post }) => {
               </Link>
             </Grid>
 
-            {/* Sección del perfil de la fundación -gainsboro-*/}
-            {user && (
-              <Grid item>
-                <Grid
-                  container
-                  direction="row"
-                  alignItems="center"
-                  sx={{
-                    backgroundColor: "blanchedalmond",
-                    padding: "0 0 0 10px",
-                    borderRadius: "18px",
-                  }}
+
+            <Grid item>
+              <Grid
+                container
+                direction="row"
+                alignItems="center"
+                sx={{
+                  backgroundColor: "blanchedalmond",
+                  padding: "0 0 0 10px",
+                  borderRadius: "18px",
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ fontSize: "1rem", marginRight: "0.5rem" }}
                 >
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ fontSize: "1rem", marginRight: "0.5rem" }}
-                  >
-                    {user.name}
-                  </Typography>
-                  <Avatar alt="Fundación" src={user.profileImageUrl} />
-                </Grid>
+                  {user.name}
+                </Typography>
+                <Avatar alt="Fundación" src={user.profileImageUrl} />
               </Grid>
-            )}
+            </Grid>
+
           </Grid>
 
           <Typography
@@ -145,12 +148,13 @@ const CardPost = ({ post }) => {
             {city.department.name}
           </Typography>
 
+
           <Typography
             variant="body2"
             color="text.secondary"
             sx={{ fontSize: ".9rem", marginTop: "1rem" }}
           >
-            {breedDetails.specie.name} - {breedDetails.name}
+            {t(`species.${breedDetails.specie.name}`)} - {t(`breeds.${breedDetails.name}`)}
           </Typography>
 
           <Typography

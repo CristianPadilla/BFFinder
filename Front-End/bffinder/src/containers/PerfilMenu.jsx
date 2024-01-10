@@ -13,12 +13,9 @@ import {
 } from "@mui/material";
 import { Settings, Logout, Favorite, Pets } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { logout, startLogout } from "../store/auth";
-import { startAddNewPet, startFetchPets } from "../store/pet/thunks";
-import { useEffect } from "react";
-import { changeActiveModule } from "../store/global";
-import { act } from "react-dom/test-utils";
+import { useDispatch, useSelector } from 'react-redux';
+import { startLogout } from '../store/auth';
+import { changeActiveModule } from '../store/global';
 
 const PerfilMenu = () => {
   const dispatch = useDispatch();
@@ -30,29 +27,8 @@ const PerfilMenu = () => {
   const { activeModule } = useSelector((state) => state.persisted.global);
   const { role } = useSelector((state) => state.persisted.auth);
 
-  const postsModuleTitle = role === "u" ? "Adoptar" : " Mis publicaciones ";
-  // const petsRequest = {
-  //   search: "",
-  //   size: "",
-  //   specie_id: 0,
-  //   breed_id: 0,
-  //   age: 0,
-  //   gender: "",
-  //   vaccinated: null,
-  //   sterilized: null,
-  //   dewormed: null,
-  //   posted: null,
-  //   sort: "",
-  //   desc: false,
-  //   page: 0,
-  //   page_size: 10,
-  // };
-  // useEffect(() => {// para consultar la pagina
-  //   dispatch(startFetchPets(petsRequest));
-
-  // }, []
-  //   // [postList]
-  // );
+  const postsModuleTitle = role === 'u' ? "Adoptar" : "Mis publicaciones";
+  
   const commonButtonStyles = {
     borderRadius: "16px",
     // color: "#A0A0A0",
@@ -81,8 +57,7 @@ const PerfilMenu = () => {
   };
 
   const handleChangeModule = (module) => {
-    console.log("Valor del botón:", module);
-    dispatch(changeActiveModule({ module }));
+    dispatch(changeActiveModule({ module }))
   };
 
   const handleLogout = () => {

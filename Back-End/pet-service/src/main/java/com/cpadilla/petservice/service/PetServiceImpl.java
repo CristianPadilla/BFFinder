@@ -12,6 +12,7 @@ import com.cpadilla.petservice.model.*;
 import com.cpadilla.petservice.repository.PetRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -19,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -82,11 +84,34 @@ public class PetServiceImpl implements PetService {
         var sortingDetails = filters.isDesc()
                 ? Sort.by(Sort.Order.desc(sortingField))
                 : Sort.by(Sort.Order.by(sortingField));
+        log.info("filtroooo", filters.getPosted());
 
-        var petEntities = repository.findAll(specification, PageRequest.of(filters.getPage(), pagesize, sortingDetails));
+        var page = new PageImpl<>(new ArrayList<PetResponse>(), PageRequest.of(filters.getPage(), pagesize, sortingDetails), 0);
+        if (filters.getPosted() != null) {
+            var petEntities = repository.findAll(specification);
+//            log.info("responsePets00: {} con pagesize {}", petEntities, pagesize);
+            var responsePets = petEntities.stream()
+                    .map(this::buildPetFromPetEntity)
+                    .collect(Collectors.toList());
 
-        var responsePets = petEntities.stream()
-                .map(this::buildPetFromPetEntity).collect(Collectors.toList());
+            responsePets = responsePets.stream()
+                    .filter(petResponse -> adoptionPostService.checkPetIsPosted(petResponse.getId()).getBody() == filters.getPosted())
+                    .collect(Collectors.toList());
+            log.info("responsePets22: {}", responsePets);
+
+            int fromElement = filters.getPage() * pagesize;
+            int intoElements = Math.min(fromElement + pagesize, responsePets.size());
+            var pageElements = responsePets.subList(fromElement, intoElements);
+
+            page = new PageImpl<>(pageElements, PageRequest.of(filters.getPage(), pagesize, sortingDetails), responsePets.size());
+        } else {
+            var petEntities = repository.findAll(specification, PageRequest.of(filters.getPage(), pagesize, sortingDetails));
+            var responsePets = petEntities.stream()
+                    .map(this::buildPetFromPetEntity)
+                    .collect(Collectors.toList());
+            page = new PageImpl<>(responsePets, petEntities.getPageable(), petEntities.getTotalElements());
+        }
+
 
 //        var sortingDetails = Sort.by(Sort.Order.by("name"));
 //        if (filters.getSort() != null && !filters.getSort().isEmpty()) {
@@ -103,7 +128,6 @@ public class PetServiceImpl implements PetService {
 //                    ? Sort.by(Sort.Order.desc(sortingField))
 //                    : Sort.by(Sort.Order.by(sortingField));
 //        } else filteredPets.sort(Comparator.comparing(PetResponse::getAge));
-        var page = new PageImpl<>(responsePets, petEntities.getPageable(), petEntities.getTotalElements());
         return PetsFilteredPageResponse.builder()
                 .page(page)
                 .filters(filters)

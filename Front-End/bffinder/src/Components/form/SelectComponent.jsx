@@ -1,29 +1,37 @@
 import React, { useState, useEffect } from "react";
 // import { useField } from "formik";
 import { Autocomplete, FormControl, TextField } from "@mui/material";
+import { Button } from "@mui/base";
 
 const SelectComponent = (props) => {
   // const [field, meta] = useField(props);
-//   console.log("SelectComponent props:", props);
+  // console.log("=---------------- :", props);
 
   return (
     <>
-    {/* <FormLabel component="legend">Departamento</FormLabel> */}
+      {/* <FormLabel component="legend">Departamento</FormLabel> */}
       <FormControl sx={{ width: "27ch" }} margin="normal" fullWidth={props.fullWidth} className="filter-container">
         <Autocomplete
+          value={props.value}
           options={props.options}
           getOptionLabel={(option) => {
+            // console.log("option :", option);
             return option.label;
           }}
-          onChange={(event, newValue) => {
-            return props.onChange({
-              target: {
-                name: props.name,
-                value: newValue ? newValue.value : "",
-              },
-            });
-          }}
-          // freeSolo
+          // isOptionEqualToValue={(option, value) => {
+          //   // console.log("option :", option);
+          //   // console.log("value :", value);
+          //   return option.value === value.value;
+          // }}
+          onChange={props.onChange}
+          // onChange={(event, newValue) => {
+          //   return props.onChange({
+          //     target: {
+          //       name: props.name,
+          //       value: newValue ? newValue.value : null,
+          //     },
+          //   });
+          // }}
           style={props.style}
           renderInput={(params) => (
             <TextField
@@ -31,8 +39,8 @@ const SelectComponent = (props) => {
               name={props.name}
               label={props.label}
               variant="outlined"
-              // error={meta.touched && !!meta.error}
-              // helperText={meta.touched ? meta.error : ""}
+            // error={meta.touched && !!meta.error}
+            // helperText={meta.touched ? meta.error : ""}
             />
           )}
         />

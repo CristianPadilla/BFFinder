@@ -8,6 +8,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Log4j2
 public class SpecieServiceImpl implements SpecieService {
@@ -33,6 +36,21 @@ public class SpecieServiceImpl implements SpecieService {
                 .name(specieEntity.getName())
                 .description(specieEntity.getDescription())
                 .build();
+    }
+
+    @Override
+    public List<SpecieResponse> getSpecies() {
+        log.info("Getting list of species from SERVICE layer");
+        var specieEntities = repository.findAll();
+
+        return specieEntities.stream().map(specieEntity ->
+                SpecieResponse.builder()
+                        .id(specieEntity.getId())
+                        .name(specieEntity.getName())
+                        .description(specieEntity.getDescription())
+                        .build()).collect(Collectors.toList());
+
+
     }
 
     @Override

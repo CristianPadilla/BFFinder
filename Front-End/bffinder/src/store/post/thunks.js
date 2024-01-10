@@ -1,18 +1,24 @@
+import { HttpStatusCode } from "axios";
+import { locationApi } from "../../api/locationApi";
 import { postApi } from "../../api/postApi";
-import { fetchPostsStart, fetchPostsSuccess } from "./postSlice";
+import { startContentLoading, stopContentLoading } from "../global";
+import { fetchPostsStart, fetchPostsSuccess, setCities, setDepartments, setPostsRequest } from "./postSlice";
 
 
-export const fetchPosts = (page = 0, filtersRequest = {}) => async (dispatch, getState) => {
+export const fetchPosts = () => async (dispatch, getState) => {
     try {
-        const { filters } = filtersRequest;
-        dispatch(fetchPostsStart());
-        const { data } = await postApi.post("/all/filter", filtersRequest);
+        dispatch(startContentLoading())
+        const { userId, role } = getState().persisted.auth;
+        const postsRequest = getState().posts.postRequest;
+        const url = role === "u"
+            ? "/all/filter"
+            : `/user/${userId}/filter`;
+        const { data } = await postApi.post(url, postsRequest);
         const { page, request } = data;
-        console.log("fetchPosts=== ", request);
+        console.log("fetchPosts from thunk ", data);
         dispatch(fetchPostsSuccess({
 
-            posts: page.content,
-            pageable: {
+            page: {
                 pageNumber: page.number,
                 pageSize: page.size,
                 numberOfElements: page.numberOfElements,
@@ -21,14 +27,57 @@ export const fetchPosts = (page = 0, filtersRequest = {}) => async (dispatch, ge
                 offset: page.pageable.offset,
                 last: page.last,
                 first: page.first,
-                sort: {
-                    sort: page.sort.property,
-                    desc: page.sort.descending,
+                sort: page.sort.property,
+                desc: page.sort.descending,
+                posts: page.content,
+
+            },
+            postRequest: {
+                search: request.search,
+                filters: {
+                    from_date: request.filters.from_date,
+                    specie_id: request.filters.specie_id,
+                    breed_id: request.filters.breed_id,
+                    size: request.filters.size,
+                    department_id: request.filters.department_id,
+                    city_id: request.filters.city_id,
+                    status: request.filters.status,
                 },
+                sorting: {
+                    sort: request.sorting.sort,
+                    desc: request.sorting.desc
+                },
+                page: request.page,
+                page_size: request.page_size,
             }
+
         }));
+        dispatch(stopContentLoading())
     } catch (error) {
         console.log(error);
         throw new Error(error);
     }
+};
+
+export const changePostsRequest = (filters) => async (dispatch, getState) => {
+    filters.forEach(filter => {
+        console.log("aplicando filtro ", filter);
+        dispatch(setPostsRequest(filter));
+    });
+    dispatch(fetchPosts());
+
+};
+
+export const startGetDepartments = () => async (dispatch) => {
+    const { data, status } = await locationApi.get("/department/all");
+    console.log("startGetDepartments", data, status);
+    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+    dispatch(setDepartments(data));
+};
+
+export const startGetCitiesByDepartmentId = (departmentId) => async (dispatch) => {
+    const { data, status } = await locationApi.get("/department/" + departmentId + "/cities");
+    console.log("startGetCitiesByDepartmentId", data, status);
+    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+    dispatch(setCities(data));
 };

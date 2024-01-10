@@ -1,0 +1,15 @@
+{
+  "species": {
+    "cat": "Cat",
+    "dog": "Dog"
+  },
+  "breeds": {
+    "siamese": "Siamese",
+    "persian": "Persian",
+    "labrador": "Labrador",
+    "poodle": "Poodle",
+    "pitbull": "Pitbull",
+    "british shorthair": "British Shorthair",
+    "pug": "Pug"
+  }
+}

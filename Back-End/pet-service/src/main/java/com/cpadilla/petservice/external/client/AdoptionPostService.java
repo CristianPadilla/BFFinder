@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "ADOPTION-POST-SERVICE/post")
 public interface AdoptionPostService {
 
-    @GetMapping("check/pet/{petId}")
-    public ResponseEntity<Boolean> checkPetIsPosted(@PathVariable("petId") int petId);
+    @GetMapping("/check/pet/{petId}")
+    ResponseEntity<Boolean> checkPetIsPosted(@PathVariable("petId") int petId);
 
 }

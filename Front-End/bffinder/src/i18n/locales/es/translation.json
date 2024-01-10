@@ -1,0 +1,19 @@
+{
+  "species": {
+    "cat": "Gato",
+    "dog": "Perro"
+  },
+  "pluralSpecies": {
+    "cat": "Gatos",
+    "dog": "Perros"
+  },
+  "breeds": {
+    "siamese": "Siamés",
+    "persian": "Persa",
+    "labrador": "Labrador",
+    "poodle": "Caniche",
+    "pitbull": "Pitbull",
+    "british shorthair": "Británico",
+    "pug": "Pug"
+  }
+}

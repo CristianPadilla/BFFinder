@@ -2,6 +2,7 @@
 server:
   port: 8083
 
+
 spring:
   application:
     name: LOCATION-SERVICE
@@ -21,3 +22,10 @@ spring:
         format_sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
+  cloud:
+    openfeign:
+      client:
+        config:
+            default:
+                connectTimeout: 5000
+                readTimeout: 5000

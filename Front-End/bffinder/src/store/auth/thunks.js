@@ -2,6 +2,9 @@ import { Http } from "@mui/icons-material"
 import { authApi } from "../../api/authApi"
 import { checkingCredentials, login, logout } from "./"
 import { HttpStatusCode } from "axios"
+import { clearPostsLogout } from "../post"
+import { clearGlobalLogout, setActiveModule } from "../global"
+import { clearPetsLogout } from "../pet"
 
 export const checkingAuthentication = (email, password) =>
     async (dispatch, getState) => {
@@ -62,6 +65,7 @@ export const startLogin = ({ email, password }) =>
                 photoUrl: user.photoUrl,
                 role: user.role
             }
+            dispatch(setActiveModule({ module: user.role === "u" ? "posts" : "pets" }))
             dispatch(login(sent))
 
         } catch (error) {
@@ -81,6 +85,9 @@ export const startLogout = (error) =>
     async (dispatch, getState) => {
         dispatch(checkingCredentials())
         setTimeout(() => {
+            dispatch(clearPostsLogout())
+            dispatch(clearPetsLogout())
+            dispatch(clearGlobalLogout())
             dispatch(logout(error?.message))
 
         }, 1000);
