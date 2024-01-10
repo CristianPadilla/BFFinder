@@ -15,6 +15,7 @@ const initialState = {
         vaccinated: null,
         sterilized: null,
         dewormed: null,
+        gender: "",
         posted: null,
         sort: "",
         desc: false,

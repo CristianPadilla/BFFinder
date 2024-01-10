@@ -14,6 +14,7 @@ const initialState = {
             size: '',
             department_id: 0,
             city_id: 0,
+            gender: "",
             status: '',
         },
         sorting: {

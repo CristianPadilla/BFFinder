@@ -31,6 +31,7 @@ import {
 } from "../store/pet";
 import { t, use } from "i18next";
 import DateInputComponent from "../Components/form/DateInputComponent";
+import { date } from "yup";
 
 function ValueLabel(props) {
   const { children, open, value } = props;
@@ -39,10 +40,10 @@ function ValueLabel(props) {
     value === 0
       ? "Todas\nlas edades"
       : value === 1
-      ? "Hasta\n1 año"
-      : value === 11
-      ? "10 años+"
-      : `Hasta\n${value} años`;
+        ? "Hasta\n1 año"
+        : value === 11
+          ? "10 años+"
+          : `Hasta\n${value} años`;
 
   return (
     <Tooltip
@@ -148,9 +149,8 @@ const PanelFilters = ({ module }) => {
   const departmentOptionSelectedValue =
     filters.department_id != null && filters.department_id != 0
       ? departmentsOptions.find(
-          (option) => option.value === filters.department_id
-        )
-      : { label: "", value: 0 };
+        (option) => option.value === filters.department_id
+      ) : { label: "", value: 0 };
 
   const citiesOptions = cities.map((city) => {
     return { label: city.name, value: city.id };
@@ -160,6 +160,42 @@ const PanelFilters = ({ module }) => {
     filters.city_id != null && filters.city_id != 0
       ? citiesOptions.find((option) => option.value === filters.city_id)
       : { label: "", value: 0 };
+
+  // FECHA
+  const getDateSelectOptionValues = () => {
+    const today = new Date();
+    const lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+    const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+    const lastYear = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+
+    return {
+      today: today.toISOString().split('T')[0], // Formato: YYYY-MM-DD
+      lastWeek: lastWeek.toISOString().split('T')[0],
+      lastMonth: lastMonth.toISOString().split('T')[0],
+      lastYear: lastYear.toISOString().split('T')[0],
+    };
+  };
+
+  const dateSelectValues = (role === "u" && activeModule == "posts") ? getDateSelectOptionValues() : null;
+  const dateSelectOptions = (role === "u" && activeModule == "posts")
+    ? [
+      { label: "Hoy", value: dateSelectValues.today },
+      { label: "Semana actual", value: dateSelectValues.lastWeek },
+      { label: "Mes actual", value: dateSelectValues.lastMonth },
+      { label: "Año actual", value: dateSelectValues.lastYear },]
+    : null;
+
+  const dateSelectOptionSelectedValue =
+    ((role === "u" && activeModule == "posts") && filters.from_date != null && filters.from_date != "")
+      ? dateSelectOptions.find((option) => option.value === filters.from_date)
+      : { label: "", value: "" };
+
+
+  //GENDER
+  const genderCurrentValue = ""
+
+
+
 
   console.log("FILTROS ACTUALES== ", filters);
   const handleSizeChange = (event) => {
@@ -197,7 +233,7 @@ const PanelFilters = ({ module }) => {
       : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
   };
   const handleDepartmentSelectChange = (event, newValue) => {
-    console.log("handleDepartmentSelectChange==  : ", newValue);
+    // console.log("handleDepartmentSelectChange==  : ", newValue);
     const filterObjet = { ["department_id"]: newValue ? newValue.value : 0 };
     activeModuleIsPosts
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
@@ -210,15 +246,34 @@ const PanelFilters = ({ module }) => {
     dispatch(startGetCitiesByDepartmentId(newValue.value));
   };
   const handleCitySelectChange = (event, newValue) => {
-    console.log("handleCitySelectChange==  : ", newValue);
+    // console.log("handleCitySelectChange==  : ", newValue);
     const filterObjet = { ["city_id"]: newValue ? newValue.value : 0 };
     activeModuleIsPosts
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
       : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
   };
+  const handleDateSelectFilterChange = (event, newValue) => {
+    // console.log("handledateSelectFilterChange==  : ", newValue);
+    const filterObjet = { ["from_date"]: newValue ? newValue.value : "" };
+    activeModuleIsPosts
+      ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
+  };
+  const handleDatePickerChange = ({ target }) => {
+    // console.log("handleDatePickerChange==  : ", target.value);
+    const filterObjet = { ["from_date"]: target.value };
+    activeModuleIsPosts
+      ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
+  };
+
   const handleAgeSliceChange = (event) => {
     console.log("handleAgeSliceChange==  : ", event.target.value);
   };
+  const handleGenderChange = (event) => {
+    console.log("===handleAgeSliceChange ", event.target.value)
+
+  }
 
   console.log("ciudades  == ", cities);
   // ChipsFiltros
@@ -288,22 +343,28 @@ const PanelFilters = ({ module }) => {
           style={{ marginTop: "10px" }}
         />
       )}
-      <SelectComponent
-        fullWidth
-        label="Fecha de subida"
-        name="date"
-        // onChange={handleFilterChange}
-        // value={selectedFilter}
-        options={[
-          { label: "Hoy", value: 1 },
-          { label: "Semana actual", value: 2 },
-          { label: "Mes actual", value: 3 },
-          { label: "Año actual", value: 4 },
-        ]}
-        style={{ marginTop: "5px", marginBottom: "18px" }}
-      />
 
-      <DateInputComponent label="Fecha" />
+      {
+        role === "u" && activeModule == "posts" && (
+          <SelectComponent
+            fullWidth
+            label="Fecha de publicación"
+            name="date"
+            onChange={handleDateSelectFilterChange}
+            value={dateSelectOptionSelectedValue}
+            options={dateSelectOptions}
+            style={{ marginTop: "5px", marginBottom: "18px" }}
+          />
+        )
+      }
+
+      {role === "s" && activeModule == "posts" &&
+        <DateInputComponent
+          onChange={handleDatePickerChange}
+          label="Fecha de publicación"
+          value={filters.from_date ? filters.from_date : ""}
+        />
+      }
 
       {role === "u" && activeModule == "posts" && (
         <Divider
@@ -325,7 +386,7 @@ const PanelFilters = ({ module }) => {
           onChange={handleDepartmentSelectChange}
           value={departmentOptionSelectedValue}
           options={departmentsOptions}
-          // style={{ marginTop: "25px" }}
+        // style={{ marginTop: "25px" }}
         />
       )}
       {role === "u" && activeModule == "posts" && (
@@ -422,18 +483,21 @@ const PanelFilters = ({ module }) => {
         </Select>
       </FormControl> */}
 
-      <RadioComponent
-        row
-        label="Genero:"
-        name="gender"
-        value={selectedSize}
-        onChange={handleSizeChange}
-        options={[
-          { label: "Macho", value: "m" },
-          { label: "Hembra", value: "f" },
-        ]}
-        style={{ marginBottom: "10px" }}
-      />
+      {
+        ((role === "u" && activeModule == "posts") || (role === "s" && activeModule === "pets")) &&
+
+        <RadioComponent
+          row
+          label="Sexo"
+          value={genderCurrentValue}
+          onChange={handleGenderChange}
+          options={[
+            { label: "Macho", value: "m" },
+            { label: "Hembra", value: "f" },
+          ]}
+          style={{ marginBottom: "10px" }}
+        />
+      }
       <Divider sx={{ marginTop: 1, marginBottom: 2 }}></Divider>
 
       <Divider

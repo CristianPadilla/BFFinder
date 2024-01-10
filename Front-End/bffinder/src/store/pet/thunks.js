@@ -42,6 +42,7 @@ export const startFetchPets = () => async (dispatch, getState) => {
                 sterilized: filters.sterilized,
                 dewormed: filters.dewormed,
                 posted: filters.posted,
+                gender : "",
                 sort: filters.sort,
                 desc: filters.desc,
                 page: filters.page,
