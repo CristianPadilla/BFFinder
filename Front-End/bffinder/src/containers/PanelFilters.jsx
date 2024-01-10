@@ -73,23 +73,26 @@ const PanelFilters = ({ module }) => {
   const dispatch = useDispatch();
   const { role } = useSelector((state) => state.persisted.auth);
   const { activeModule } = useSelector((state) => state.persisted.global);
+  const activeModuleIsPosts = activeModule === "posts" ? true : false;
 
   const filters =
     activeModule === "posts"
       ? useSelector((state) => state.posts.postRequest.filters)
       : useSelector((state) => state.pets.petsRequest)
 
-  const { species, breeds } = useSelector((state) => state.pets);
+  const { species, breeds } = activeModuleIsPosts
+    ? useSelector((state) => state.posts)
+    : useSelector((state) => state.pets);
+
   const { departments, cities } = useSelector((state) => state.posts);
 
-  const activeModuleIsPosts = activeModule === "posts" ? true : false;
 
 
   useEffect(() => {
-    dispatch(startGetSpecies())
-    dispatch(startGetDepartments())
     console.log('consultando especies == ', species);
-  }, []);
+    if (!species || species.length === 0) dispatch(startGetSpecies())
+    if (!departments || departments.length === 0) dispatch(startGetDepartments())
+  }, [activeModule]);
 
 
   // ESTADOS
@@ -160,7 +163,6 @@ const PanelFilters = ({ module }) => {
     const filterObjet = { ["posted"]: newValue != null ? newValue.value : null };
     dispatch(changePetsRequest([filterObjet, { page: 0 }]))
   };
-
   const handleSpecieSelectChange = (event, newValue) => {
     // console.log('handleSpecieSelectChange==  : ', newValue);
     const filterObjet = { ["specie_id"]: newValue ? newValue.value : 0 };
@@ -168,10 +170,10 @@ const PanelFilters = ({ module }) => {
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
       : dispatch(changePetsRequest([filterObjet, { page: 0 }]))
 
+    // activeModuleIsPosts?
     dispatch(startGetBreedsBySpecieId(newValue ? newValue.value : 0))
     handleBreedSelectChange(null, 0)
   };
-
   const handleBreedSelectChange = (event, newValue) => {
     // console.log('handleBreedSelectChange==  : ', newValue);
     const filterObjet = { ["breed_id"]: newValue ? newValue.value : 0 };
@@ -191,16 +193,16 @@ const PanelFilters = ({ module }) => {
       return
     }
     dispatch(startGetCitiesByDepartmentId(newValue.value))
-
-    // handleCitySelectChange(null, 0)
   };
-
   const handleCitySelectChange = (event, newValue) => {
     console.log('handleCitySelectChange==  : ', newValue);
     const filterObjet = { ["city_id"]: newValue ? newValue.value : 0 };
     activeModuleIsPosts
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
       : dispatch(changePetsRequest([filterObjet, { page: 0 }]))
+  };
+  const handleAgeSliceChange = (event) => {
+    console.log('handleAgeSliceChange==  : ', event.target.value);
   };
 
   console.log('ciudades  == ', cities);
@@ -330,6 +332,7 @@ const PanelFilters = ({ module }) => {
             defaultValue={0}
             valueLabelDisplay="auto"
             color="warning"
+            onChange={handleAgeSliceChange}
             step={null}
             max={11}
             marks={marks}

@@ -4,6 +4,7 @@ import { savingNewPet, setActivePet, setBreeds, setErrorMessage, setLoadingTrue,
 import { startContentLoading, stopContentLoading } from "../global";
 import { specieApi } from "../../api/specieApi";
 import { breedApi } from "../../api/breedApi";
+import { setBreedsP, setSpeciesP } from "../post";
 
 export const startFetchPets = () => async (dispatch, getState) => {
     try {
@@ -85,18 +86,26 @@ export const startGetPetById = (id) => async (dispatch) => {
     dispatch(setActivePet(data));// no concluido
 };
 
-export const startGetSpecies = () => async (dispatch) => {
+export const startGetSpecies = () => async (dispatch, getState) => {
+    const { activeModule } = getState().persisted.global
+    console.log("JJJJJJJJJJJJJJJJ ", activeModule);
+
     const { data, status } = await specieApi.get("/all");
     console.log("startGetSpecies", data, status);
     if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
-    dispatch(setSpecies(data));
+    activeModule === "posts"
+        ? dispatch(setSpeciesP(data))
+        : dispatch(setSpecies(data));
 };
 
-export const startGetBreedsBySpecieId = (specieId) => async (dispatch) => {
+export const startGetBreedsBySpecieId = (specieId,) => async (dispatch, getState) => {
+    const { activeModule } = getState().persisted.global
     const { data, status } = await breedApi.get("/specie/" + specieId);
     console.log("startGetBreedsBySpecieId", data, status);
     if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
-    dispatch(setBreeds(data));
+    activeModule === "posts"
+        ? dispatch(setBreedsP(data))
+        : dispatch(setBreeds(data));
 };
 
 

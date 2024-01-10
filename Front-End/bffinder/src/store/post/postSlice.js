@@ -23,6 +23,8 @@ const initialState = {
         page: 0,
         page_size: 2,
     },
+    species: [],
+    breeds: [],
     departments: [],
     cities: [],
 }
@@ -59,6 +61,12 @@ export const postSlice = createSlice({
             state.postRequest = initialState.postRequest;
 
         },
+        setSpeciesP(state, { payload }) {
+            state.species = payload;
+        },
+        setBreedsP(state, { payload }) {
+            state.breeds = payload;
+        },
         setDepartments(state, { payload }) {
             state.departments = payload;
         },
@@ -75,4 +83,6 @@ export const {
     clearPostsLogout,
     setDepartments,
     setCities,
+    setSpeciesP, 
+    setBreedsP,
 } = postSlice.actions;
