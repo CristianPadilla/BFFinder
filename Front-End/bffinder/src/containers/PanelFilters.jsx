@@ -18,9 +18,19 @@ import RadioComponent from "../Components/form/RadioComponent";
 import { styled } from "@mui/material/styles";
 import TagFacesIcon from "@mui/icons-material/TagFaces";
 import { act } from "react-dom/test-utils";
-import { changePostsRequest, setCities, startGetCitiesByDepartmentId, startGetDepartments } from "../store/post";
-import { changePetsRequest, startGetBreedsBySpecieId, startGetSpecies } from "../store/pet";
+import {
+  changePostsRequest,
+  setCities,
+  startGetCitiesByDepartmentId,
+  startGetDepartments,
+} from "../store/post";
+import {
+  changePetsRequest,
+  startGetBreedsBySpecieId,
+  startGetSpecies,
+} from "../store/pet";
 import { t, use } from "i18next";
+import DateInputComponent from "../Components/form/DateInputComponent";
 
 function ValueLabel(props) {
   const { children, open, value } = props;
@@ -29,10 +39,10 @@ function ValueLabel(props) {
     value === 0
       ? "Todas\nlas edades"
       : value === 1
-        ? "Hasta\n1 año"
-        : value === 11
-          ? "10 años+"
-          : `Hasta\n${value} años`;
+      ? "Hasta\n1 año"
+      : value === 11
+      ? "10 años+"
+      : `Hasta\n${value} años`;
 
   return (
     <Tooltip
@@ -78,7 +88,7 @@ const PanelFilters = ({ module }) => {
   const filters =
     activeModule === "posts"
       ? useSelector((state) => state.posts.postRequest.filters)
-      : useSelector((state) => state.pets.petsRequest)
+      : useSelector((state) => state.pets.petsRequest);
 
   const { species, breeds } = activeModuleIsPosts
     ? useSelector((state) => state.posts)
@@ -86,126 +96,131 @@ const PanelFilters = ({ module }) => {
 
   const { departments, cities } = useSelector((state) => state.posts);
 
-
-
   useEffect(() => {
-    console.log('consultando especies == ', species);
-    if (!species || species.length === 0) dispatch(startGetSpecies())
-    if (!departments || departments.length === 0) dispatch(startGetDepartments())
+    console.log("consultando especies == ", species);
+    if (!species || species.length === 0) dispatch(startGetSpecies());
+    if (!departments || departments.length === 0)
+      dispatch(startGetDepartments());
   }, [activeModule]);
-
 
   // ESTADOS
   const statusSelectOptions = [
     { label: "Activas", value: "A" },
     { label: "Inactivas", value: "I" },
-  ]
+  ];
   const postedSelectOptions = [
     { label: "Publicados", value: true },
     { label: "Sin publicar", value: false },
-  ]
+  ];
   const statusFilter = activeModuleIsPosts ? filters.status : filters.posted;
 
   const statusFilterSelectedValue = statusFilter
     ? statusSelectOptions.find((option) => option.value === statusFilter)
     : { label: "Todos", value: null };
-  const postedFilterSelectedValue = statusFilter != null
-    ? postedSelectOptions.find((option) => option.value === statusFilter)
-    : { label: "Todos", value: null };
+  const postedFilterSelectedValue =
+    statusFilter != null
+      ? postedSelectOptions.find((option) => option.value === statusFilter)
+      : { label: "Todos", value: null };
 
   // ESPECIES y RAZAS
   const speciesOptions = species.map((specie) => {
-    return { label: t(`pluralSpecies.${specie.name}`), value: specie.id }
-  })
-  const specieOptionSelectedValue = filters.specie_id != null && filters.specie_id != 0
-    ? speciesOptions.find((option) => option.value === filters.specie_id)
-    : { label: "", value: null };
+    return { label: t(`pluralSpecies.${specie.name}`), value: specie.id };
+  });
+  const specieOptionSelectedValue =
+    filters.specie_id != null && filters.specie_id != 0
+      ? speciesOptions.find((option) => option.value === filters.specie_id)
+      : { label: "", value: null };
 
   const breedsOptions = breeds.map((breed) => {
-    return { label: t(`breeds.${breed.name}`), value: breed.id }
-  })
+    return { label: t(`breeds.${breed.name}`), value: breed.id };
+  });
 
-  const breedOptionSelectedValue = filters.breed_id != null && filters.breed_id != 0
-    ? breedsOptions.find((option) => option.value === filters.breed_id)
-    : { label: "", value: null };
+  const breedOptionSelectedValue =
+    filters.breed_id != null && filters.breed_id != 0
+      ? breedsOptions.find((option) => option.value === filters.breed_id)
+      : { label: "", value: null };
 
   // DEPARTAMENTOS y CIUDADES
   const departmentsOptions = departments.map((department) => {
-    return { label: department.name, value: department.id }
-  })
+    return { label: department.name, value: department.id };
+  });
 
-  const departmentOptionSelectedValue = filters.department_id != null && filters.department_id != 0
-    ? departmentsOptions.find((option) => option.value === filters.department_id)
-    : { label: "", value: 0 };
+  const departmentOptionSelectedValue =
+    filters.department_id != null && filters.department_id != 0
+      ? departmentsOptions.find(
+          (option) => option.value === filters.department_id
+        )
+      : { label: "", value: 0 };
 
   const citiesOptions = cities.map((city) => {
-    return { label: city.name, value: city.id }
-  })
+    return { label: city.name, value: city.id };
+  });
 
-  const cityOptionSelectedValue = filters.city_id != null && filters.city_id != 0
-    ? citiesOptions.find((option) => option.value === filters.city_id)
-    : { label: "", value: 0 };
+  const cityOptionSelectedValue =
+    filters.city_id != null && filters.city_id != 0
+      ? citiesOptions.find((option) => option.value === filters.city_id)
+      : { label: "", value: 0 };
 
-  console.log('FILTROS ACTUALES== ', filters);
+  console.log("FILTROS ACTUALES== ", filters);
   const handleSizeChange = (event) => {
     setSelectedSize(event.target.value);
   };
 
-
-
   const handleStatusFilterChange = (event, newValue) => {
     // console.log('handleStatusFilterChange==  : ', newValue);
     const filterObjet = { ["status"]: newValue ? newValue.value : null };
-    dispatch(changePostsRequest([filterObjet, { page: 0 }]))
+    dispatch(changePostsRequest([filterObjet, { page: 0 }]));
   };
   const handlePostedFilterChange = (event, newValue) => {
     // console.log('handlePostedFilterChange==  : ', newValue);
-    const filterObjet = { ["posted"]: newValue != null ? newValue.value : null };
-    dispatch(changePetsRequest([filterObjet, { page: 0 }]))
+    const filterObjet = {
+      ["posted"]: newValue != null ? newValue.value : null,
+    };
+    dispatch(changePetsRequest([filterObjet, { page: 0 }]));
   };
   const handleSpecieSelectChange = (event, newValue) => {
     // console.log('handleSpecieSelectChange==  : ', newValue);
     const filterObjet = { ["specie_id"]: newValue ? newValue.value : 0 };
     activeModuleIsPosts
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
-      : dispatch(changePetsRequest([filterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
 
     // activeModuleIsPosts?
-    dispatch(startGetBreedsBySpecieId(newValue ? newValue.value : 0))
-    handleBreedSelectChange(null, 0)
+    dispatch(startGetBreedsBySpecieId(newValue ? newValue.value : 0));
+    handleBreedSelectChange(null, 0);
   };
   const handleBreedSelectChange = (event, newValue) => {
     // console.log('handleBreedSelectChange==  : ', newValue);
     const filterObjet = { ["breed_id"]: newValue ? newValue.value : 0 };
     activeModuleIsPosts
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
-      : dispatch(changePetsRequest([filterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
   };
   const handleDepartmentSelectChange = (event, newValue) => {
-    console.log('handleDepartmentSelectChange==  : ', newValue);
+    console.log("handleDepartmentSelectChange==  : ", newValue);
     const filterObjet = { ["department_id"]: newValue ? newValue.value : 0 };
     activeModuleIsPosts
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
-      : dispatch(changePetsRequest([filterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
 
     if (!newValue || newValue.value === 0) {
-      dispatch(setCities([]))
-      return
+      dispatch(setCities([]));
+      return;
     }
-    dispatch(startGetCitiesByDepartmentId(newValue.value))
+    dispatch(startGetCitiesByDepartmentId(newValue.value));
   };
   const handleCitySelectChange = (event, newValue) => {
-    console.log('handleCitySelectChange==  : ', newValue);
+    console.log("handleCitySelectChange==  : ", newValue);
     const filterObjet = { ["city_id"]: newValue ? newValue.value : 0 };
     activeModuleIsPosts
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
-      : dispatch(changePetsRequest([filterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
   };
   const handleAgeSliceChange = (event) => {
-    console.log('handleAgeSliceChange==  : ', event.target.value);
+    console.log("handleAgeSliceChange==  : ", event.target.value);
   };
 
-  console.log('ciudades  == ', cities);
+  console.log("ciudades  == ", cities);
   // ChipsFiltros
   const ListItem = styled("li")(({ theme }) => ({
     margin: theme.spacing(0.5),
@@ -220,8 +235,6 @@ const PanelFilters = ({ module }) => {
       chips.filter((chip) => chip.key !== chipToDelete.key)
     );
   };
-
-
 
   return (
     <>
@@ -253,7 +266,7 @@ const PanelFilters = ({ module }) => {
           );
         })}
       </div>
-      {(role === "s" && activeModule == "posts") &&
+      {role === "s" && activeModule == "posts" && (
         <SelectComponent
           fullWidth
           label={"Estado"}
@@ -263,8 +276,8 @@ const PanelFilters = ({ module }) => {
           options={statusSelectOptions}
           style={{ marginTop: "10px" }}
         />
-      }
-      {(role === "s" && activeModule == "pets") &&
+      )}
+      {role === "s" && activeModule == "pets" && (
         <SelectComponent
           fullWidth
           label={"Publicación"}
@@ -274,22 +287,37 @@ const PanelFilters = ({ module }) => {
           options={postedSelectOptions}
           style={{ marginTop: "10px" }}
         />
-      }
+      )}
+      <SelectComponent
+        fullWidth
+        label="Fecha de subida"
+        name="date"
+        // onChange={handleFilterChange}
+        // value={selectedFilter}
+        options={[
+          { label: "Hoy", value: 1 },
+          { label: "Semana actual", value: 2 },
+          { label: "Mes actual", value: 3 },
+          { label: "Año actual", value: 4 },
+        ]}
+        style={{ marginTop: "5px", marginBottom: "18px" }}
+      />
 
+      <DateInputComponent label="Fecha" />
 
-      <Divider
-        sx={{
-          marginTop: 3,
-          marginBottom: 1,
-          color: "#A77A23",
-          fontWeight: "600",
-        }}
-      >
-        Ubicación
-      </Divider>
-
-      {(role === "u" && activeModule == "posts") &&
-
+      {role === "u" && activeModule == "posts" && (
+        <Divider
+          sx={{
+            marginTop: 3,
+            marginBottom: 1,
+            color: "#A77A23",
+            fontWeight: "600",
+          }}
+        >
+          Ubicación
+        </Divider>
+      )}
+      {role === "u" && activeModule == "posts" && (
         <SelectComponent
           fullWidth
           label="Departamento"
@@ -297,11 +325,10 @@ const PanelFilters = ({ module }) => {
           onChange={handleDepartmentSelectChange}
           value={departmentOptionSelectedValue}
           options={departmentsOptions}
-        // style={{ marginTop: "25px" }}
+          // style={{ marginTop: "25px" }}
         />
-      }
-      {(role === "u" && activeModule == "posts") &&
-
+      )}
+      {role === "u" && activeModule == "posts" && (
         <SelectComponent
           label="Municipio"
           name="city"
@@ -309,9 +336,11 @@ const PanelFilters = ({ module }) => {
           value={cityOptionSelectedValue}
           options={citiesOptions}
         />
-      }
+      )}
 
-      <Divider sx={{ marginTop: 1, marginBottom: 2 }}></Divider>
+      {role === "u" && activeModule == "posts" && (
+        <Divider sx={{ marginTop: 1, marginBottom: 2 }}></Divider>
+      )}
 
       <Divider
         sx={{

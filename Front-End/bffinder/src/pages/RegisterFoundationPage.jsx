@@ -123,6 +123,7 @@ export function RegisterFoundationPage() {
                 placeholder="Fundacion animalitos del mundo"
                 value={formik.values.name}
                 onChange={formik.handleChange}
+                sx={{ width: "27ch" }}
               />
               <TextInputComponent
                 type="number"
@@ -131,6 +132,7 @@ export function RegisterFoundationPage() {
                 placeholder="123456789"
                 value={formik.values.nit}
                 onChange={formik.handleChange}
+                sx={{ width: "27ch" }}
               />
               <TextInputComponent
                 type="number"
@@ -139,6 +141,7 @@ export function RegisterFoundationPage() {
                 placeholder="12345678900"
                 value={formik.values.commercial_registration_number || ""}
                 onChange={formik.handleChange}
+                sx={{ width: "27ch" }}
               />
               <TextInputComponent
                 type="email"
@@ -147,6 +150,7 @@ export function RegisterFoundationPage() {
                 placeholder="ejemplo@email.com"
                 value={formik.values.email}
                 onChange={formik.handleChange}
+                sx={{ width: "27ch" }}
               />
               <TextInputComponent
                 type="email"
@@ -155,6 +159,7 @@ export function RegisterFoundationPage() {
                 placeholder="repite tu correo electrónico"
                 value={formik.values.email2}
                 onChange={formik.handleChange}
+                sx={{ width: "27ch" }}
               />
               <TextInputPassword
                 label="Contraseña"

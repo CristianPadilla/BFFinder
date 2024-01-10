@@ -136,6 +136,7 @@ const FormAddPet = () => {
                               name="name"
                               value={formik.values.name}
                               onChange={formik.handleChange}
+                              sx={{ width: "27ch" }}
                               // helperText={formik.errors.name}
                             />
                             <SelecInputComponent
@@ -195,6 +196,7 @@ const FormAddPet = () => {
                                   kg
                                 </InputAdornment>
                               }
+                              sx={{ width: "27ch" }}
                             />
                             <SelecInputComponent
                               label="Seleccione la edad*"

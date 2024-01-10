@@ -3,6 +3,10 @@
     "cat": "Cat",
     "dog": "Dog"
   },
+  "pluralSpecies": {
+    "cat": "Cats",
+    "dog": "Dogs"
+  },
   "breeds": {
     "siamese": "Siamese",
     "persian": "Persian",

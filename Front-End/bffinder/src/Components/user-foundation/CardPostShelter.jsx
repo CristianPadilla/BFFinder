@@ -12,6 +12,7 @@ import {
   Checkbox,
   Avatar,
   CardActionArea,
+  Button,
 } from "@mui/material";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
@@ -19,7 +20,7 @@ import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import DialogViewPost from "./DialogViewPost";
 
 const CardPostShelter = ({ post }) => {
-  const { petPartialResponse, images, date, user } = post;
+  const { petPartialResponse, images, date, user, status } = post;
   const { name, breedDetails, specie } = petPartialResponse;
 
   const parsedDate = new Date(date);
@@ -138,6 +139,69 @@ const handleCloseDialog = () => {
                 <Typography variant="caption">
                   4 personas preguntaron
                 </Typography>
+              </Grid>
+              <Grid item container direction="row" alignItems="center" justifyContent="center">
+                {console.log("Estado:::",status)}
+                {status ? (
+                  <>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{
+                        padding: ".6rem",
+                        backgroundColor: "lightgreen",
+                        borderRadius: "4px",
+                        letterSpacing: "1px",
+                        fontWeight: "600",
+                        marginLeft: "8px",
+                      }}
+                    >
+                      Activo
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      // onClick={handleDeactivateClick}
+                      sx={{
+                        marginLeft: "8px",
+                        letterSpacing: "1px",
+                      }}
+                    >
+                      Desactivar
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{
+                        padding: ".5rem",
+                        backgroundColor: "lightcoral",
+                        color: "white",
+                        borderRadius: "4px",
+                        fontWeight: "600",
+                        letterSpacing: "1px",
+                        marginLeft: "8px",
+                        // width: "178px",
+                        textAlign: "center",
+                      }}
+                    >
+                      Inactivo
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      // onClick={handleActivateClick}
+                      sx={{
+                        marginLeft: "8px",
+                        letterSpacing: "1px",
+                      }}
+                    >
+                      Activar
+                    </Button>
+                  </>
+                )}
               </Grid>
             </Grid>
           </Grid>

@@ -134,6 +134,7 @@ export function RegisterUserPage() {
                   placeholder="Pedro"
                   value={formik.values.firstname}
                   onChange={formik.handleChange}
+                  sx={{ width: "27ch" }}
                 />
                 <TextInputComponent
                   type="text"
@@ -142,6 +143,7 @@ export function RegisterUserPage() {
                   placeholder="Pérez"
                   value={formik.values.lastname}
                   onChange={formik.handleChange}
+                  sx={{ width: "27ch" }}
                 />
                 <TextInputComponent
                   type="email"
@@ -150,6 +152,7 @@ export function RegisterUserPage() {
                   placeholder="ejemplo@mail.com"
                   value={formik.values.email}
                   onChange={formik.handleChange}
+                  sx={{ width: "27ch" }}
                 />
                 <TextInputComponent
                   type="email"
@@ -158,6 +161,7 @@ export function RegisterUserPage() {
                   placeholder="repite tu correo electrónico"
                   value={formik.values.email2}
                   onChange={formik.handleChange}
+                  sx={{ width: "27ch" }}
                 />
                 <TextInputPassword
                   label="Contraseña"
@@ -183,6 +187,7 @@ export function RegisterUserPage() {
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  sx={{ width: "27ch" }}
                 />
                 <CheckboxInputComponent
                   label="Términos y condiciones"
