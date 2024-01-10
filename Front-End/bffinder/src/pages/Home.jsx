@@ -8,28 +8,49 @@ import MainContent from "../containers/MainContent";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts } from "../store/post";
 import { startFetchPets } from "../store/pet";
+import { use } from "i18next";
 
 const Home = () => {
-
+  console.log('WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW ')
   const dispatch = useDispatch();
   const { activeModule, contentLoading } = useSelector((state) => state.persisted.global);
-  const { page: pets } = useSelector((state) => state.pets);
-  const { page: posts } = useSelector((state) => state.posts);
+  const { page: petsPage } = useSelector((state) => state.pets);
+  const { page: postsPage } = useSelector((state) => state.posts);
 
   console.log('Active module:', activeModule, contentLoading);
 
   useEffect(() => {
     if (activeModule === "posts") {
-      !posts && dispatch(fetchPosts())
+      !postsPage && dispatch(fetchPosts())
     }
     else {
-      !pets && dispatch(startFetchPets())
+      !petsPage && dispatch(startFetchPets())
     }
 
   })
 
+  let noContent = false;
+
   const content = !contentLoading &&
-    (activeModule === "posts" ? posts : pets);
+    (activeModule === "posts" ? postsPage : petsPage);
+
+
+  const currentPage = activeModule === "posts" ? postsPage : petsPage
+  if (currentPage !== null) {
+    const currentPageElements = activeModule === "posts" ? currentPage.posts : currentPage.pets
+    if (currentPageElements !== null) {
+      if (currentPageElements.length === 0) {
+        noContent = true;
+      }
+
+    }
+  }
+
+  // const content = !contentLoading &&
+  // (activeModule === "posts" ? postsPage : petsPage);
+
+
+
 
   return (
     <div>
@@ -58,8 +79,10 @@ const Home = () => {
               <PanelF />
             </div>
             <div className="main-content-scroll animate__animated animate__fadeIn animate__faster">
-              {!content ? <h2>loading...</h2> : <MainContent />}
 
+              {noContent ? <h2>No hay contenido</h2> : (!content ? <h2>loading...</h2> : <MainContent />)}
+
+              {/* {!content ? <h2>loading...</h2> : <MainContent />} */}
 
               {/* <ul className="box-info">
                   <li>
