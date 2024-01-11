@@ -15,6 +15,7 @@ const RadioComponent = (props) => {
     value,
     onChange,
     options,
+    onClick,
     className,
     style,
     ...otherProps
@@ -47,8 +48,10 @@ const RadioComponent = (props) => {
         row={row}
         aria-labelledby={`${name}-label`}
         name={name}
-        value={value ? value.toString() : ""} // Asegúrate de que value no sea undefined ni null
-        onChange={onChange}
+        value={value} // Asegúrate de que value no sea undefined ni null
+        // onChange={onChange}
+        onClick={onChange}
+        
       >
         {options.map((option) => (
           <FormControlLabel

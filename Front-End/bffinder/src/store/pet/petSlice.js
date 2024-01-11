@@ -76,6 +76,7 @@ export const petSlice = createSlice({
             const filter = Object.keys(payload)[0];
             const value = Object.values(payload)[0];
             state.petsRequest[filter] = value;
+            console.log("filtro aplicado", filter, value);
         },
         clearPetsLogout(state) {
             state.isSaving = false;

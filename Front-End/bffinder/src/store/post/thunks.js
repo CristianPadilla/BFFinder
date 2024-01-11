@@ -41,7 +41,7 @@ export const fetchPosts = () => async (dispatch, getState) => {
                     size: request.filters.size,
                     department_id: request.filters.department_id,
                     city_id: request.filters.city_id,
-                    gender : "",
+                    gender: request.filters.gender,
                     status: request.filters.status,
                 },
                 sorting: {

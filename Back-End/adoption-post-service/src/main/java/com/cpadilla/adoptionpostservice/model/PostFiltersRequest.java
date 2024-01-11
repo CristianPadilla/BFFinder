@@ -23,5 +23,6 @@ public class PostFiltersRequest {
     @JsonProperty("department_id")
     private int departmentId;
     private String size;
+    private String gender;
     private String status;
 }

@@ -134,7 +134,9 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                             .id(pet.getId())
                             .name(pet.getName())
                             .age(pet.getAge())
+                            .age(pet.getAge())
                             .size(pet.getSize())
+                            .gender(pet.getGender())
                             .breedDetails(pet.getBreedDetails())
                             .build();
                     return AdoptionPostPartialsResponse.builder()
@@ -191,6 +193,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                         var petDetails = PetPartialResponse.builder()
                                 .id(pet.getId())
                                 .name(pet.getName())
+                                .gender(pet.getGender())
                                 .breedDetails(pet.getBreedDetails())
                                 .build();
 
@@ -237,6 +240,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .breedId(tsFilters ? request.getFilters().getBreedId() : 0)
                 .specieId(tsFilters ? request.getFilters().getSpecieId() : 0)
                 .size(tsFilters ? request.getFilters().getSize() : null)
+                .gender(tsFilters ? request.getFilters().getGender() : null)
                 .search(request.getSearch())
                 .build();
 
@@ -252,6 +256,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                     var petDetails = PetPartialResponse.builder()
                             .id(pet.getId())
                             .name(pet.getName())
+                            .gender(pet.getGender())
                             .age(pet.getAge())
                             .breedDetails(pet.getBreedDetails())
                             .size(pet.getSize())
@@ -430,6 +435,13 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
             var sizeFilter = filter.getSize().toLowerCase();
             if (sizeFilter.equals("l") || sizeFilter.equals("s") || sizeFilter.equals("m")) {
                 if (sizeFilter.charAt(0) != petDetails.getSize()) return false;
+            } else
+                throw new CustomException("Filter 'size' is not valid", "FILTER_NOT_VALID", HttpStatus.BAD_REQUEST.value());
+        }
+        if (filter.getGender() != null && !filter.getGender().isEmpty()) {
+            var genderFilter = filter.getGender().toLowerCase();
+            if (genderFilter.equals("f") || genderFilter.equals("m")) {
+                if (genderFilter.charAt(0) != petDetails.getGender()) return false;
             } else
                 throw new CustomException("Filter 'size' is not valid", "FILTER_NOT_VALID", HttpStatus.BAD_REQUEST.value());
         }

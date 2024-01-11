@@ -61,6 +61,16 @@ public class PetFilterSpecification<T> {
                     throw new CustomException("Filter 'size' is not valid", "FILTER_NOT_VALID", HttpStatus.NOT_FOUND.value());
             }
 
+            log.info("filtro de generoooo {}", filters.getGender());
+            if (filters.getGender() != null && !filters.getGender().isEmpty()) { // size filter
+                var genderFilter = filters.getGender().toLowerCase().charAt(0);
+                if (genderFilter == 'f' || genderFilter == 'm') {
+                    log.info("applying filter of gender in pet query");
+                    predicates.add(criteriaBuilder.equal(root.get("gender"), genderFilter));
+                } else
+                    throw new CustomException("Filter 'gender' is not valid", "FILTER_NOT_VALID", HttpStatus.NOT_FOUND.value());
+            }
+
             if (filters.getSpecieId() != 0) {// specie & breed filters
                 log.info("applying filter of specie id: {} in pet query", filters.getSpecieId());
                 var filteredBreeds = breedService.getAllBreedsBySpecieId(filters.getSpecieId()).getBody();

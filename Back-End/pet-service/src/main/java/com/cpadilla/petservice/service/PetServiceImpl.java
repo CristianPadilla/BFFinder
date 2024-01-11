@@ -71,6 +71,7 @@ public class PetServiceImpl implements PetService {
                 .breedId(filters.getBreedId())
                 .size(filters.getSize())
                 .age(filters.getAge())
+                .gender(filters.getGender())
                 .status("A")
                 .vaccinated(filters.getVaccinated())
                 .sterilized(filters.getSterilized())
@@ -84,7 +85,7 @@ public class PetServiceImpl implements PetService {
         var sortingDetails = filters.isDesc()
                 ? Sort.by(Sort.Order.desc(sortingField))
                 : Sort.by(Sort.Order.by(sortingField));
-        log.info("filtroooo", filters.getPosted());
+        log.info("filtroooo", filters);
 
         var page = new PageImpl<>(new ArrayList<PetResponse>(), PageRequest.of(filters.getPage(), pagesize, sortingDetails), 0);
         if (filters.getPosted() != null) {
@@ -153,6 +154,7 @@ public class PetServiceImpl implements PetService {
                 .size(petRequest.getSize().charAt(0))
                 .sterilized(petRequest.isSterilized())
                 .dewormed(petRequest.isDewormed())
+                .gender(petRequest.getGender().charAt(0))
                 .status(true)
                 .breedId(petRequest.getBreedId())
                 .ownerId(petRequest.getOwnerId())
@@ -162,7 +164,7 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public PetResponse updatePet(PetRequest petRequest) {
-        log.info("updating pet with id {} at SERVICE layer", petRequest.getId());
+        log.info("updating pet with id {} at SERVICE layer", petRequest);
 
         var petToUpdate = repository.findByIdAndStatusTrue(petRequest.getId())
                 .orElseThrow(() -> new CustomException("Pet not found with id: " + petRequest.getId(), "PET_NOT_FOUND", HttpStatus.NOT_FOUND.value()));
@@ -170,6 +172,7 @@ public class PetServiceImpl implements PetService {
         petToUpdate.setName(petRequest.getName());
         petToUpdate.setWeight(petRequest.getWeight());
         petToUpdate.setAge(petRequest.getAge());
+        petToUpdate.setGender(petRequest.getGender().charAt(0));
         petToUpdate.setVaccinated(petRequest.isVaccinated());
         petToUpdate.setDangerous(petRequest.isDangerous());
         petToUpdate.setSize(petRequest.getSize().charAt(0));
@@ -318,6 +321,7 @@ public class PetServiceImpl implements PetService {
                 .sterilized(petEntity.getSterilized() != null ? petEntity.getSterilized() : false)
                 .dewormed(petEntity.getDewormed() != null ? petEntity.getDewormed() : false)
                 .ownerDetails(ownerDetails)
+                .gender(petEntity.getGender())
                 .breedDetails(breedDetails)
                 .profileImageUrl(profileImageUrl)
                 .isPublished(isPublished)

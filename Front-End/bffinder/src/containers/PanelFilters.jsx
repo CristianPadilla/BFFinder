@@ -192,7 +192,7 @@ const PanelFilters = ({ module }) => {
 
 
   //GENDER
-  const genderCurrentValue = ""
+  const genderCurrentValue = filters.gender
 
 
 
@@ -270,8 +270,15 @@ const PanelFilters = ({ module }) => {
   const handleAgeSliceChange = (event) => {
     console.log("handleAgeSliceChange==  : ", event.target.value);
   };
-  const handleGenderChange = (event) => {
-    console.log("===handleAgeSliceChange ", event.target.value)
+  const handleGenderChange = ({ target }) => {
+    const { value } = target;
+    if (value === undefined) return;
+    // console.log("===handleGenderChange ", value)
+
+    const filterObjet = { ["gender"]: value === genderCurrentValue ? "" : value };
+    activeModuleIsPosts
+      ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
 
   }
 
@@ -491,6 +498,7 @@ const PanelFilters = ({ module }) => {
           label="Sexo"
           value={genderCurrentValue}
           onChange={handleGenderChange}
+          // onClick={handleGenderChange}
           options={[
             { label: "Macho", value: "m" },
             { label: "Hembra", value: "f" },
