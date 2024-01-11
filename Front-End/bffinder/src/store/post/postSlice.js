@@ -44,8 +44,8 @@ export const postSlice = createSlice({
         setPostsRequest(state, { payload }) {
             const filter = Object.keys(payload)[0];
             const value = Object.values(payload)[0];
-            if (filter === 'page') {
-                console.log("aplicando filtro de page", filter, value);
+            if (filter === 'page' || filter === 'search') {
+                console.log("aplicando filtro de page o search", filter, value);
                 state.postRequest[filter] = value;
             } else if (filter === 'sort' || filter === 'desc') {
                 console.log("aplicando filtro de sorting", filter, value);
