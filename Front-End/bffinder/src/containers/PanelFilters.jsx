@@ -21,6 +21,7 @@ import { act } from "react-dom/test-utils";
 import {
   changePostsRequest,
   setCities,
+  startCleanCities,
   startGetCitiesByDepartmentId,
   startGetDepartments,
 } from "../store/post";
@@ -79,8 +80,6 @@ const marks = [
 ];
 
 const PanelFilters = ({ module }) => {
-  const [selectedFilter, setSelectedFilter] = React.useState("");
-  const [selectedSize, setSelectedSize] = useState("");
   const dispatch = useDispatch();
   const { role } = useSelector((state) => state.persisted.auth);
   const { activeModule } = useSelector((state) => state.persisted.global);
@@ -113,11 +112,26 @@ const PanelFilters = ({ module }) => {
     { label: "Publicados", value: true },
     { label: "Sin publicar", value: false },
   ];
+  const vaccinesSelectOptions = [
+    { label: "Vacunados", value: true },
+    { label: "Sin vacunar / No sabe", value: false },
+  ]
+  const sterilizedSelectOptions = [
+    { label: "Esterilizados", value: true },
+    { label: "Sin esterilizar / No sabe", value: false },
+  ]
+  const dewormedSelectOptions = [
+    { label: "Desparasitado", value: true },
+    { label: "Sin desparasitar / No sabe", value: false },
+  ]
+
+  // STATUS
   const statusFilter = activeModuleIsPosts ? filters.status : filters.posted;
 
   const statusFilterSelectedValue = statusFilter
     ? statusSelectOptions.find((option) => option.value === statusFilter)
     : { label: "Todos", value: null };
+
   const postedFilterSelectedValue =
     statusFilter != null
       ? postedSelectOptions.find((option) => option.value === statusFilter)
@@ -193,29 +207,46 @@ const PanelFilters = ({ module }) => {
 
   //GENDER
   const genderCurrentValue = filters.gender
+  const sizeCurrentValue = filters.size
+
+  // VACUNACION, ESTERILIZACION, DESPARASITACION
+  const vaccinatedFilter = filters.vaccinated;
+  const sterilizedFilter = filters.sterilized;
+  const dewormedFilter = filters.dewormed;
+
+  const vaccinedSelectSelectedValue = vaccinatedFilter != null
+    ? vaccinesSelectOptions.find((option) => option.value === vaccinatedFilter)
+    : { label: "", value: null };
+  const sterilizedSelectSelectedValue = sterilizedFilter != null
+    ? sterilizedSelectOptions.find((option) => option.value === sterilizedFilter)
+    : { label: "", value: null };
+  const dewormedSelectSelectedValue = dewormedFilter != null
+    ? dewormedSelectOptions.find((option) => option.value === dewormedFilter)
+    : { label: "", value: null };
 
 
 
 
   console.log("FILTROS ACTUALES== ", filters);
-  const handleSizeChange = (event) => {
-    setSelectedSize(event.target.value);
-  };
+
 
   const handleStatusFilterChange = (event, newValue) => {
     // console.log('handleStatusFilterChange==  : ', newValue);
+    if (newValue === null && (filters.status === "" || filters.status === null)) return;
     const filterObjet = { ["status"]: newValue ? newValue.value : null };
     dispatch(changePostsRequest([filterObjet, { page: 0 }]));
   };
   const handlePostedFilterChange = (event, newValue) => {
     // console.log('handlePostedFilterChange==  : ', newValue);
+    if (newValue === null && filters.posted === null) return;
     const filterObjet = {
       ["posted"]: newValue != null ? newValue.value : null,
     };
     dispatch(changePetsRequest([filterObjet, { page: 0 }]));
   };
   const handleSpecieSelectChange = (event, newValue) => {
-    // console.log('handleSpecieSelectChange==  : ', newValue);
+    console.log('handleSpecieSelectChange==  : ', newValue);
+    if (newValue === null && filters.specie_id === 0) return;
     const filterObjet = { ["specie_id"]: newValue ? newValue.value : 0 };
     activeModuleIsPosts
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
@@ -227,6 +258,7 @@ const PanelFilters = ({ module }) => {
   };
   const handleBreedSelectChange = (event, newValue) => {
     // console.log('handleBreedSelectChange==  : ', newValue);
+    if (newValue === null && filters.breed_id === 0) return;
     const filterObjet = { ["breed_id"]: newValue ? newValue.value : 0 };
     activeModuleIsPosts
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
@@ -234,19 +266,19 @@ const PanelFilters = ({ module }) => {
   };
   const handleDepartmentSelectChange = (event, newValue) => {
     // console.log("handleDepartmentSelectChange==  : ", newValue);
+    if (newValue === null && filters.department_id === 0) return;
     const filterObjet = { ["department_id"]: newValue ? newValue.value : 0 };
+    dispatch(startCleanCities());
     activeModuleIsPosts
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
       : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
 
-    if (!newValue || newValue.value === 0) {
-      dispatch(setCities([]));
-      return;
-    }
-    dispatch(startGetCitiesByDepartmentId(newValue.value));
+    console.log("falla aquii  : ", newValue);
+    newValue != null && dispatch(startGetCitiesByDepartmentId(newValue.value));
   };
   const handleCitySelectChange = (event, newValue) => {
-    // console.log("handleCitySelectChange==  : ", newValue);
+    console.log("handleCitySelectChange==  : ", newValue);
+    if (!newValue && filters.city_id === 0) return;
     const filterObjet = { ["city_id"]: newValue ? newValue.value : 0 };
     activeModuleIsPosts
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
@@ -254,6 +286,7 @@ const PanelFilters = ({ module }) => {
   };
   const handleDateSelectFilterChange = (event, newValue) => {
     // console.log("handledateSelectFilterChange==  : ", newValue);
+    if (!newValue && (filters.from_date === "")) return;
     const filterObjet = { ["from_date"]: newValue ? newValue.value : "" };
     activeModuleIsPosts
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
@@ -261,14 +294,23 @@ const PanelFilters = ({ module }) => {
   };
   const handleDatePickerChange = ({ target }) => {
     // console.log("handleDatePickerChange==  : ", target.value);
+
     const filterObjet = { ["from_date"]: target.value };
     activeModuleIsPosts
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
       : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
   };
+  const handleAgeSliceChange = ({ target }) => {
+    const { value } = target;
+    console.log("handleAgeSliceChange==  : ", value);
 
-  const handleAgeSliceChange = (event) => {
-    console.log("handleAgeSliceChange==  : ", event.target.value);
+    // value > 10 && 
+    const filterObjet = { ["age"]: value > 10 ? 50 : value };// 50 años como edad maxima
+    activeModuleIsPosts
+      ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
+
+
   };
   const handleGenderChange = ({ target }) => {
     const { value } = target;
@@ -281,8 +323,42 @@ const PanelFilters = ({ module }) => {
       : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
 
   }
+  const handleSizeChange = ({ target }) => {
+    const { value } = target;
+    if (value === undefined) return;
+    // console.log("===handleSizeChange ", value)
 
-  console.log("ciudades  == ", cities);
+    const filterObjet = { ["size"]: value === sizeCurrentValue ? '' : value };
+    activeModuleIsPosts
+      ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
+  };
+  const handleVaccinatedSelectChange = (event, newValue) => {
+    // console.log("===handleVaccinatedSelectChange ", newValue)
+    if (newValue === null && filters.vaccinated === null) return;
+    const filterObjet = {
+      ["vaccinated"]: newValue != null ? newValue.value : null,
+    };
+    dispatch(changePetsRequest([filterObjet, { page: 0 }]));
+  }
+  const handleSterilizedSelectChange = (event, newValue) => {
+    // console.log("===handleSterilizedSelectChange ", newValue)
+    if (newValue === null && filters.sterilized === null) return;
+    const filterObjet = {
+      ["sterilized"]: newValue != null ? newValue.value : null,
+    };
+    dispatch(changePetsRequest([filterObjet, { page: 0 }]));
+  }
+  const handleDewormedSelectChange = (event, newValue) => {
+    // console.log("===handleDewormedSelectChange ", newValue)
+    if (newValue === null && filters.dewormed === null) return;
+    const filterObjet = {
+      ["dewormed"]: newValue != null ? newValue.value : null,
+    };
+    dispatch(changePetsRequest([filterObjet, { page: 0 }]));
+  }
+
+
   // ChipsFiltros
   const ListItem = styled("li")(({ theme }) => ({
     margin: theme.spacing(0.5),
@@ -421,35 +497,41 @@ const PanelFilters = ({ module }) => {
         Caracteristicas
       </Divider>
 
-      <FormGroup sx={{ marginTop: "12px" }}>
-        <FormLabel sx={{ marginTop: 1 }}>Edad:</FormLabel>
-        <Box sx={{ width: 260, margin: "auto" }}>
-          <Slider
-            aria-label="Edad"
-            defaultValue={0}
-            valueLabelDisplay="auto"
-            color="warning"
-            onChange={handleAgeSliceChange}
-            step={null}
-            max={11}
-            marks={marks}
-            components={{ ValueLabel }}
+      {((role === "u" && activeModule === "posts") || (role === "s" && activeModule === "pets")) && (
+        <>
+          <FormGroup sx={{ marginTop: "12px" }}>
+            <FormLabel sx={{ marginTop: 1 }}>Edad:</FormLabel>
+            <Box sx={{ width: 260, margin: "auto" }}>
+              <Slider
+                aria-label="Edad"
+                defaultValue={0}
+                value={filters.age}
+                valueLabelDisplay="auto"
+                color="warning"
+                onChange={handleAgeSliceChange}
+                step={null}
+                max={11}
+                marks={marks}
+                components={{ ValueLabel }}
+              />
+            </Box>
+          </FormGroup>
+          <RadioComponent
+            label="Talla"
+            name="size"
+            value={sizeCurrentValue}
+            onChange={handleSizeChange}
+            options={[
+              { label: "Pequeño", value: "s" },
+              { label: "Mediano", value: "m" },
+              { label: "Grande", value: "l" },
+            ]}
+            style={{ marginTop: "2.8rem", marginBottom: "10px" }}
           />
-        </Box>
-      </FormGroup>
 
-      <RadioComponent
-        label="Tamaño:"
-        name="size"
-        value={selectedSize}
-        onChange={handleSizeChange}
-        options={[
-          { label: "Pequeño", value: "pequeño" },
-          { label: "Mediano", value: "mediano" },
-          { label: "Grande", value: "grande" },
-        ]}
-        style={{ marginTop: "2.8rem", marginBottom: "10px" }}
-      />
+        </>
+      )}
+
 
       <SelectComponent
         label="Especie"
@@ -506,55 +588,48 @@ const PanelFilters = ({ module }) => {
           style={{ marginBottom: "10px" }}
         />
       }
-      <Divider sx={{ marginTop: 1, marginBottom: 2 }}></Divider>
+      {/* <Divider sx={{ marginTop: 1, marginBottom: 2 }}></Divider> */}
 
-      <Divider
-        sx={{
-          marginTop: 3,
-          marginBottom: 1,
-          color: "#A77A23",
-          fontWeight: "600",
-        }}
-      >
-        Salud
-      </Divider>
+      {
+        role === "s" && activeModule === "pets" && (
+          <>
+            <Divider
+              sx={{
+                marginTop: 3,
+                marginBottom: 1,
+                color: "#A77A23",
+                fontWeight: "600",
+              }}
+            >
+              Salud
+            </Divider>
+            <SelectComponent
+              label="Vacunación"
+              name="vaccinated"
+              onChange={handleVaccinatedSelectChange}
+              value={vaccinedSelectSelectedValue}
+              options={vaccinesSelectOptions}
+            />
 
-      {/* <SelectComponent
-        label="Vacunación"
-        name="vaccinated"
-        onChange={handleFilterChange}
-        value={selectedFilter}
-        options={[
-          { label: "Vacunados y sin vacunar", value: 1 },
-          { label: "Vacunado", value: 2 },
-          { label: "Sin vacunar (no se sabe)", value: 3 },
-        ]}
-      />
+            <SelectComponent
+              label="Esterilización"
+              name="sterilized"
+              onChange={handleSterilizedSelectChange}
+              value={sterilizedSelectSelectedValue}
+              options={sterilizedSelectOptions}
+            />
 
-      <SelectComponent
-        label="Esterilización"
-        name="sterilized"
-        onChange={handleFilterChange}
-        value={selectedFilter}
-        options={[
-          { label: "Con y sin esterilización", value: 1 },
-          { label: "Esterilizado", value: 2 },
-          { label: "Sin esterilizar (no se sabe)", value: 3 },
-        ]}
-      />
+            <SelectComponent
+              label="Desparasitación"
+              name="dewormed"
+              onChange={handleDewormedSelectChange}
+              value={dewormedSelectSelectedValue}
+              options={dewormedSelectOptions}
+            />
+            <Divider sx={{ marginTop: 1, marginBottom: 2 }}></Divider></>
+        )
+      }
 
-      <SelectComponent
-        label="Desparasitación"
-        name="dewormed"
-        onChange={handleFilterChange}
-        value={selectedFilter}
-        options={[
-          { label: "Con y sin desparasitación", value: 1 },
-          { label: "Desparasitado", value: 2 },
-          { label: "Sin desparasitar (no se sabe)", value: 3 },
-        ]}
-      /> */}
-      <Divider sx={{ marginTop: 1, marginBottom: 2 }}></Divider>
     </>
   );
 };

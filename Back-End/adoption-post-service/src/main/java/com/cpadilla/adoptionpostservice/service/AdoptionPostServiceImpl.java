@@ -240,6 +240,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .breedId(tsFilters ? request.getFilters().getBreedId() : 0)
                 .specieId(tsFilters ? request.getFilters().getSpecieId() : 0)
                 .size(tsFilters ? request.getFilters().getSize() : null)
+                .age(tsFilters ? request.getFilters().getAge() : 0)
                 .gender(tsFilters ? request.getFilters().getGender() : null)
                 .search(request.getSearch())
                 .build();
@@ -451,6 +452,11 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
             if (filter.getBreedId() != 0 && petDetails.getBreedDetails().getId() != filter.getBreedId())
                 return false;
         }
+
+        if (filter.getAge() > 0) {
+            return petDetails.getAge() <= filter.getAge();
+        }
+
         return true;
     }
 

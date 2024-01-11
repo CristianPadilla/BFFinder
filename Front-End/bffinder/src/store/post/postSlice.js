@@ -12,6 +12,7 @@ const initialState = {
             specie_id: 0,
             breed_id: 0,
             size: '',
+            age: 0,
             department_id: 0,
             city_id: 0,
             gender: "",
@@ -22,7 +23,7 @@ const initialState = {
             desc: false
         },
         page: 0,
-        page_size: 10,
+        page_size: 2,
     },
     species: [],
     breeds: [],
@@ -73,6 +74,9 @@ export const postSlice = createSlice({
         },
         setCities(state, { payload }) {
             state.cities = payload;
+        },
+        setCityIdFilter(state, { payload }) {
+            state.postRequest.filters.city_id = payload;
         }
     },
 });
@@ -86,4 +90,5 @@ export const {
     setCities,
     setSpeciesP, 
     setBreedsP,
+    setCityIdFilter,
 } = postSlice.actions;
