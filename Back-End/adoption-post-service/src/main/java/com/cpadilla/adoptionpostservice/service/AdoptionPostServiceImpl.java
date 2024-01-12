@@ -151,7 +151,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .collect(Collectors.toList());
 
         var sortingField = request.getSorting() != null ? request.getSorting().getSort() : null;
-        var sortingDetails = Sort.by(Sort.Order.by("date"));
+        var sortingDetails = Sort.by(Sort.Order.desc("date"));
         if (sortingField != null && !sortingField.isEmpty()) {
 
             var comparator = switch (sortingField) {

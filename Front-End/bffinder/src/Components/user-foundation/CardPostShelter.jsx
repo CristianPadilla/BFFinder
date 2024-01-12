@@ -141,7 +141,6 @@ const handleCloseDialog = () => {
                 </Typography>
               </Grid>
               <Grid item container direction="row" alignItems="center" justifyContent="center">
-                {console.log("Estado:::",status)}
                 {status ? (
                   <>
                     <Typography

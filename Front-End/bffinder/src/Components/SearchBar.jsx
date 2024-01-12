@@ -12,21 +12,27 @@ const SearchBar = () => {
 
   const dispatch = useDispatch();
   const { activeModule } = useSelector((state) => state.persisted.global);
+  const { role } = useSelector((state) => state.persisted.auth);
 
-  const filters =
+  const { search } =
     activeModule === "posts"
-      ? useSelector((state) => state.posts.postRequest.filters)
+      ? useSelector((state) => state.posts.postRequest)
       : useSelector((state) => state.pets.petsRequest);
 
 
   const handleSearch = ({ target }) => {
     const { value } = target;
-    console.log("searchhhhh ", target);
+    // console.log("searchhhhh ", value);
     const filterObjet = { ["search"]: value };
     activeModule === "posts"
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
       : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
   }
+
+  const placeholder = role === "u"
+    ? "Nombre de la mascota o refugio"
+    : "Nombre de la mascota"
+
 
   return (
     //   <TextField
@@ -43,7 +49,7 @@ const SearchBar = () => {
     <div>
       <form action="#">
         <div className="form-input">
-          <input type="search" onChange={handleSearch} value={filters.search} placeholder="Buscar..." style={{ width: '300px' }} />
+          <input type="search" onChange={handleSearch} value={search} placeholder={placeholder} style={{ width: '300px' }} />
           <button type="submit" className="search-btn">
             <Search />
           </button>

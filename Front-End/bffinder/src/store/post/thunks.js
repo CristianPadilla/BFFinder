@@ -16,7 +16,7 @@ export const fetchPosts = () => async (dispatch, getState) => {
         const { data } = await postApi.post(url, postsRequest);
         const { page, request } = data;
         console.log("fetchPosts from thunk ", data);
-        dispatch(fetchPostsSuccess({
+        const payload = {
 
             page: {
                 pageNumber: page.number,
@@ -27,8 +27,8 @@ export const fetchPosts = () => async (dispatch, getState) => {
                 offset: page.pageable.offset,
                 last: page.last,
                 first: page.first,
-                sort: page.sort.property,
-                desc: page.sort.descending,
+                sort: page.sort[0].property,
+                desc: page.sort[0].descending,
                 posts: page.content,
 
             },
@@ -46,14 +46,15 @@ export const fetchPosts = () => async (dispatch, getState) => {
                     status: request.filters.status,
                 },
                 sorting: {
-                    sort: request.sorting.sort,
-                    desc: request.sorting.desc
+                    sort: page.sort[0].property,
+                    desc: page.sort[0].descending
                 },
                 page: request.page,
                 page_size: request.page_size,
             }
 
-        }));
+        }
+        dispatch(fetchPostsSuccess(payload));
         dispatch(stopContentLoading())
     } catch (error) {
         console.log(error);
