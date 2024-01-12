@@ -1,6 +1,6 @@
 import { HttpStatusCode } from "axios";
 import { petApi } from "../../api/petApi";
-import { savingNewPet, setActivePet, setBreeds, setErrorMessage, setLoadingTrue, setPetsPage, setPetsRequest, setSpecies } from "./petSlice";
+import { savingNewPet, setActivePet, setActivePetField, setActivePetFielsd, setBreeds, setErrorMessage, setLoadingTrue, setPetsPage, setPetsRequest, setSpecies } from "./petSlice";
 import { startContentLoading, stopContentLoading } from "../global";
 import { specieApi } from "../../api/specieApi";
 import { breedApi } from "../../api/breedApi";
@@ -15,7 +15,7 @@ export const startFetchPets = () => async (dispatch, getState) => {
 
         const { data } = await petApi.post("/user/" + userId + "/filter", petsRequest);
         const { page, filters } = data;
-        console.log("startFetchPets from thunk ", data);
+        console.log("finish startFetchPets from thunk ", data);
         dispatch(setPetsPage({
 
             page: {
@@ -42,7 +42,7 @@ export const startFetchPets = () => async (dispatch, getState) => {
                 sterilized: filters.sterilized,
                 dewormed: filters.dewormed,
                 posted: filters.posted,
-                gender : filters.gender,
+                gender: filters.gender,
                 sort: page.sort[0].property,
                 desc: page.sort[0].descending,
                 page: filters.page,
@@ -81,10 +81,12 @@ export const startAddNewPet = () => async (dispatch, getState) => {
 };
 
 export const startGetPetById = (id) => async (dispatch) => {
-    const { data, status } = await petApi.get("/pet/" + id);
-    console.log("startGetPetById", data, status);
+    dispatch(startContentLoading())
+    const { data, status } = await petApi.get('/' + id);
+    console.log("startGetPetById ", data, status);
     if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
     dispatch(setActivePet(data));// no concluido
+    dispatch(stopContentLoading())
 };
 
 export const startGetSpecies = () => async (dispatch, getState) => {
@@ -107,6 +109,13 @@ export const startGetBreedsBySpecieId = (specieId,) => async (dispatch, getState
     activeModule === "posts"
         ? dispatch(setBreedsP(data))
         : dispatch(setBreeds(data));
+};
+
+export const updateActivePet = (fields) => async (dispatch, getState) => {
+    fields.forEach(field => {
+        console.log("actualizando campo de mascota ", field);
+        dispatch(setActivePetField(field));
+    });
 };
 
 

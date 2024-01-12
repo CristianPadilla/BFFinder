@@ -14,13 +14,16 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import imgdefault from "imgs/logo-bffinder.png";
 import FormAddPet from "../post/FormAddPet";
+import { useDispatch, useSelector } from "react-redux";
 
 const DialogViewPet = ({ open, onClose }) => {
   const [profileImageUrl] = useState("");
   const [editing, setEditing] = useState(false);
+  const { active: pet } = useSelector((state) => state.pets);
 
   const renderInformationSection = () => (
     <>
+      {console.log("petXX: ", pet)}
       <Paper
         elevation={0}
         variant="outlined"
@@ -37,6 +40,7 @@ const DialogViewPet = ({ open, onClose }) => {
           <Grid item xs={6} sx={{ textAlign: "justify" }}>
             {/* <Typography sx={{ margin: '.2rem'}}>{breedDetails.specie.name} / {breedDetails.name}</Typography>
       <Typography sx={{ margin: '.2rem'}}>Genero: {gender}</Typography> */}
+            <Typography sx={{ margin: ".2rem" }}>iD {pet.id}</Typography>
             <Typography sx={{ margin: ".2rem" }}>Especie / Raza</Typography>
             <Typography sx={{ margin: ".2rem" }}>Genero: Macho</Typography>
             <Typography sx={{ margin: ".2rem" }}>

@@ -5,7 +5,7 @@ import { Button } from "@mui/base";
 
 const SelectComponent = (props) => {
   // const [field, meta] = useField(props);
-  // console.log("=---------------- :", props);
+  // console.log("=---------------- :", props.options);
 
   return (
     <>
@@ -32,6 +32,7 @@ const SelectComponent = (props) => {
           //     },
           //   });
           // }}
+          clearIcon={props.clearIcon}
           style={props.style}
           freeSolo={props.freeSolo}
           renderInput={(params) => (

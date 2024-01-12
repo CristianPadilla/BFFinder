@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Grid,
@@ -10,38 +10,151 @@ import {
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { TextInputComponent } from "../form/TextInputComponent";
-import SelecInputComponent from "../form/SelectInputComponent";
 import RadioGroupComponent from "../form/RadioGroupComponent";
 import DragandDrop from "../form/DragandDrop";
+import { useDispatch, useSelector } from "react-redux";
+import { startGetSpecies } from "../../store/pet";
+import { act } from "@testing-library/react";
+import { t, use } from "i18next";
+import { getBreedsBySpecieId, getSpecies } from "../../store/global";
+import SelectComponent from "../form/SelectComponent";
+import SelecInputComponent from "../form/SelectInputComponent";
 
-const formFields = {
-  name: "",
-  specie: null,
-  breed: null,
-  size: null,
-  weight: "",
-  age: null,
-  gender: "",
-  dangerous: "",
-  vaccinated: "",
-  sterilized: "",
-  dewormed: "",
-  image: null,
-};
+
 
 const FormAddPet = () => {
+  const dispatch = useDispatch();
+  const { active: pet } = useSelector((state) => state.pets);
+  const { activeModule } = useSelector((state) => state.persisted.global);
+  const [species, setSpecies] = useState([]);
+  const [specieOptionSelectedValue, setSpecieOptionSelectedValue] = useState({ label: "", value: null });
+  const [breedOptionSelectedValue, setBreedOptionSelectedValue] = useState({ label: "", value: null });
+  const [breeds, setBreeds] = useState([]);
+  // const { species, breeds } = activeModule === "posts"
+  //   ? useSelector((state) => state.posts)
+  //   : useSelector((state) => state.pets);
+  console.log('renderizandooooooooooooooo ');
+
   const speciesIds = [1, 2, 3, 4, 5, 6];
   const genderOptions = [
     { label: "Macho", value: "m" },
     { label: "Hembra", value: "f" },
   ];
 
+  const speciesOptions = species.map((specie) => {
+    return { label: t(`species.${specie.name}`), value: specie.id };
+  });
+  const breedsOptions = breeds.map((breed) => {
+    return { label: t(`breeds.${breed.name}`), value: breed.id };
+  });
+
+
+  useEffect(async () => {
+    console.log('useEffect==  : ', pet);
+    const data = await dispatch(getSpecies());
+    setSpecies(data);
+
+
+    if (pet != null) {
+      const breeds = await dispatch(getBreedsBySpecieId(pet.breedDetails.specie.id));
+      console.log('breeds==  : ', breeds);
+      setBreeds(breeds);
+    }
+
+
+  }, []);
+
+  // useEffect(async () => {
+  //   if (species.length != 0 && pet != null) {
+  //     const selectedSpecie = speciesOptions.find((option) => option.value === pet.breedDetails.specie.id)
+  //     setSpecieOptionSelectedValue(selectedSpecie);
+
+
+  //     const breeds = await dispatch(getBreedsBySpecieId(selectedSpecie.value));
+  //     setBreeds(breeds);
+
+
+  //   }
+  // }, [species]);
+
+  // useEffect(async () => {
+  //   if (species.length != 0 && pet != null) {
+
+  //     const selectedBreed = breedsOptions.find((option) => option.value === pet.breedDetails.id)
+  //     setBreedOptionSelectedValue(selectedBreed);
+
+  //   }
+
+  // }, [breeds]);
+
+
+
+
+
+const getOption = (options, value) => {
+ 
+
+}
+
+
+  // const breedOptionSelectedValue =
+  //   filters.breed_id != null && filters.breed_id != 0
+  //     ? breedsOptions.find((option) => option.value === filters.breed_id)
+  // : { label: "", value: null };
+
+
+  const handleSpecieSelectChange = async (event, newValue) => {
+    console.log('handleSpecieSelectChange==  : ', newValue);
+    
+    // if (!newValue) {
+    //   setBreeds([]);
+    //   return;
+    // }
+    // const data = await dispatch(getBreedsBySpecieId(target.value));
+    // setBreeds(data);
+  };
+
+
+
+  const initialValues =
+  pet != null
+  ? {
+    id: pet.id,
+    name: pet.name,
+    weight: pet.weight,
+    age: pet.age,
+    dangerous: pet.dangerous,
+    size: pet.size,
+    gender: pet.gender,
+    breed: { label: t(`breeds.${pet.breedDetails.name}`), value: pet.breedDetails.id },
+    specie: { label: t(`species.${pet.breedDetails.specie.name}`), value: pet.breedDetails.specie.id },
+    vaccinated: pet.vaccinated,
+    sterilized: pet.sterilized,
+    dewormed: pet.dewormed,
+    image: pet.profileImageUrl,
+  }
+  :
+  {
+    name: "",
+    weight: "",
+    age: null,
+    dangerous: "",
+    size: null,
+    gender: "",
+    // breed: null,
+    // specie: null,
+    vaccinated: "",
+    sterilized: "",
+    dewormed: "",
+    image: null,
+  };
+
   return (
     <>
       <Grid container spacing={2}>
         {/* <Grid container spacing={2} sx={{ height: "100vh" }}> */}
         <Formik
-          initialValues={formFields}
+          initialValues={initialValues}
           // onSubmit={handleRegistration}
           validationSchema={Yup.object({
             name: Yup.string()
@@ -52,13 +165,13 @@ const FormAddPet = () => {
               .oneOf(speciesIds, "Por favor, selecciona una especie válida")
               .required("La especie es obligatoria"),
             breed: Yup.number()
-            .oneOf(speciesIds, "Por favor, selecciona una especie válida")
+              .oneOf(speciesIds, "Por favor, selecciona una especie válida")
               .required("La raza es obligatoria"),
             size: Yup.number()
-            .oneOf(speciesIds, "Por favor, selecciona una especie válida")
+              .oneOf(speciesIds, "Por favor, selecciona una especie válida")
               .required("El tamaño es obligatorio"),
             age: Yup.number()
-            .oneOf(speciesIds, "Por favor, selecciona una especie válida")
+              .oneOf(speciesIds, "Por favor, selecciona una especie válida")
               .required("La edad es obligatoria"),
             weight: Yup.number()
               .min(0, "El peso debe ser un número positivo")
@@ -137,31 +250,39 @@ const FormAddPet = () => {
                               value={formik.values.name}
                               onChange={formik.handleChange}
                               sx={{ width: "27ch" }}
-                              // helperText={formik.errors.name}
+                            // helperText={formik.errors.name}
                             />
-                            <SelecInputComponent
+                            <SelectComponent
                               label="Seleccione la especie*"
                               name="specie"
                               onChange={formik.handleChange}
                               value={formik.values.specie}
-                              options={[
-                                { label: "Perro", value: 6 },
-                                { label: "Gato", value: 5 },
-                                { label: "Hamsters y Ratas", value: 3 },
-                                { label: "Aves", value: 1 },
-                                { label: "Peces", value: 2 },
-                                { label: "Gallinas", value: 4 },
-                              ]}
+                              options={speciesOptions}
+                              // options={[
+                              //   { label: "Perro", value: 6 },
+                              //   { label: "Gato", value: 5 },
+                              //   { label: "Hamsters y Ratas", value: 3 },
+                              //   { label: "Aves", value: 1 },
+                              //   { label: "Peces", value: 2 },
+                              //   { label: "Gallinas", value: 4 },
+                              // ]}
+                              clearIcon={false}
                             />
-                            <SelecInputComponent
+                            <SelectComponent
                               label="Seleccione la raza*"
                               name="breed"
                               onChange={formik.handleChange}
                               value={formik.values.breed}
-                              options={[
-                                { label: "Pitbull", value: 1 },
-                                { label: "Siamese", value: 2 },
-                              ]}
+                              options={breedsOptions}
+                              // options={[
+                              //   { label: "Perro", value: 6 },
+                              //   { label: "Gato", value: 5 },
+                              //   { label: "Hamsters y Ratas", value: 3 },
+                              //   { label: "Aves", value: 1 },
+                              //   { label: "Peces", value: 2 },
+                              //   { label: "Gallinas", value: 4 },
+                              // ]}
+                              clearIcon={false}
                             />
                             <RadioGroupComponent
                               row
@@ -222,7 +343,7 @@ const FormAddPet = () => {
                                   value: 11,
                                 },
                               ]}
-                            />  
+                            />
                             <RadioGroupComponent
                               row
                               label="Caracter*"

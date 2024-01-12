@@ -91,6 +91,11 @@ export const petSlice = createSlice({
         setBreeds(state, { payload }) {
             state.breeds = payload;
         },
+        setActivePetField(state, { payload }) {
+            const field = Object.keys(payload)[0];
+            const value = Object.values(payload)[0];
+            state.active[field] = value;    
+        },
     },
 });
 
@@ -106,4 +111,5 @@ export const {
     clearPetsLogout,
     setSpecies,
     setBreeds,
+    setActivePetField,
 } = petSlice.actions;
