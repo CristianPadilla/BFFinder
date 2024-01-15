@@ -6,8 +6,8 @@ import AddIcon from "@mui/icons-material/Add";
 import { useSelector } from "react-redux";
 
 export const SectionFilterPet = () => {
-  const { pets } = useSelector((state) => state.pets.page);
-
+  const { page, isSaving } = useSelector((state) => state.pets);
+  const { pets } = page;
 
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -25,33 +25,36 @@ export const SectionFilterPet = () => {
   };
 
   return (
-    <>
-      {pets && pets.map((pet) => (
-        <Grid key={pet.id} item xs={5} sm={3} md={3} lg={4} xl={4}>
-          <CardVertical pet={pet} />
-        </Grid>
-      ))}
+    isSaving
+      ? <h2> Loadinggg</h2 >
+      :
+      <>
+        {pets && pets.map((pet) => (
+          <Grid key={pet.id} item xs={5} sm={3} md={3} lg={4} xl={4}>
+            <CardVertical pet={pet} />
+          </Grid>
+        ))}
 
-      <Tooltip
-        title={<span style={{ fontSize: "16px" }}>Agregar mascota</span>}
-        arrow
-        placement="left"
-      >
-        <Fab
-          color="primary"
-          aria-label="add"
-          onClick={handleOpenDialog}
-          sx={{ position: "fixed", bottom: "16px", right: "25px" }}
+        <Tooltip
+          title={<span style={{ fontSize: "16px" }}>Agregar mascota</span>}
+          arrow
+          placement="left"
         >
-          <AddIcon />
-        </Fab>
-      </Tooltip>
+          <Fab
+            color="primary"
+            aria-label="add"
+            onClick={handleOpenDialog}
+            sx={{ position: "fixed", bottom: "16px", right: "25px" }}
+          >
+            <AddIcon />
+          </Fab>
+        </Tooltip>
 
-      <ModalAddPet
-        open={openDialog}
-        onClose={handleCloseDialog}
-        onAdd={handleAddPet}
-      />
-    </>
+        <ModalAddPet
+          open={openDialog}
+          onClose={handleCloseDialog}
+          onAdd={handleAddPet}
+        />
+      </>
   );
 };

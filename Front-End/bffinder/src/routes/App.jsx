@@ -47,14 +47,15 @@ const App = () => {
 
 								</Routes>
 							} />
-							: <Route path="/auth/*" element={
+							: <Route path="/*" element={
 								<Routes >
-									<Route path="/login" element={<Autenticacion />} />
+									<Route path="/auth/login" element={<Autenticacion />} />
 									<Route path="/prehome" element={<PreHome />} />
+									<Route path="/*" element={<Navigate to='/prehome' />} />
 								</Routes>
 							} />
 					}
-					<Route path="/*" element={<Navigate to='/auth/login' />} />
+					<Route path="/*" element={<Navigate to='/prehome' />} />
 				</Routes>
 			</Layout>
 		</BrowserRouter>
