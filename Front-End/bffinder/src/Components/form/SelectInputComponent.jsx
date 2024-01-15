@@ -5,6 +5,8 @@ import { Autocomplete, FormControl, TextField } from "@mui/material";
 const SelectInputComponent = (props) => {
   const [field, meta] = useField(props);
 
+  // console.log(`meta del ${props.name}  = `, meta);
+
   return (
     <>
       <FormControl sx={{ width: "27ch" }} margin="normal">

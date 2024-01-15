@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Card,
-CardActionArea,
-CardContent,
-CardMedia,
-Typography,
-} from '@mui/material';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  Card,
+  CardHeader,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Typography,
+} from "@mui/material";
 
 const CardSpecie = ({ speciesName, imagePet, linkTo }) => {
   const [hovered, setHovered] = useState(false);
@@ -19,53 +21,51 @@ const CardSpecie = ({ speciesName, imagePet, linkTo }) => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', margin: '4% 0' }}>
-      <Card elevation={3} sx={{ borderRadius: '18px', width: '300px', height: '350px' }}>
-      <CardActionArea>
-        <Link
-          to={linkTo}
-          style={{
-            textDecoration: 'none',
-            color: hovered ? 'green' : 'black', // Cambia el color cuando se pasa el cursor
-          }}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '70%',
-            }}
-          >
-            <CardMedia
-              component="img"
-              alt={speciesName}
-              height="100%"
-              width="auto"
-              image={imagePet}
-              sx={{ marginTop: '40px', marginLeft: '40px', marginRight: '40px' }}
-            />
-          </div>
-        </Link>
-
-        <CardContent style={{ textAlign: 'center', marginTop: '10px' }}>
+    <div style={{ display: "flex", justifyContent: "center", margin: "1rem" }}>
+      <Card
+        elevation={6}
+        sx={{ borderRadius: "6px", width: "300px", height: "320px" }}
+      >
+        <CardActionArea sx={{ height: "320px" }}>
           <Link
             to={linkTo}
             style={{
-              textDecoration: 'none',
-              color: hovered ? 'chocolate' : 'black', // Cambia el color cuando se pasa el cursor
+              textDecoration: "none",
+              color: hovered ? "chocolate" : "black",
             }}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
-            <Typography variant="h4" align="center">
-              {speciesName}
-            </Typography>
+            <CardHeader
+              title={
+                <Typography variant="h4" align="center">
+                  {speciesName}
+                </Typography>
+              }
+              sx={{ top: "0", position: "absolute", width: "100%" }}
+            />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                // height: "70%",
+              }}
+            >
+              <CardMedia
+                component="img"
+                alt={speciesName}
+                height="100%"
+                width="100%"
+                image={imagePet}
+                sx={{
+                  objectFit: "cover",
+                  padding: "2rem 1rem .5rem 1rem",
+                }}
+              />
+            </div>
           </Link>
-        </CardContent>
-        </ CardActionArea>
+        </CardActionArea>
       </Card>
     </div>
   );

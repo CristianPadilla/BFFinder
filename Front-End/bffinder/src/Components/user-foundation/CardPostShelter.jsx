@@ -18,6 +18,7 @@ import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import DialogViewPost from "./DialogViewPost";
+import { t } from "i18next";
 
 const CardPostShelter = ({ post }) => {
   const { petPartialResponse, images, date, user, status } = post;
@@ -74,7 +75,7 @@ const handleCloseDialog = () => {
                 color="text.secondary"
                 sx={{ fontSize: ".9rem", marginTop: ".5rem" }}
               >
-                {breedDetails.specie.name} - {breedDetails.name}
+                 {t(`species.${breedDetails.specie.name}`)} - {t(`breeds.${breedDetails.name}`)}
               </Typography>
             }
           />

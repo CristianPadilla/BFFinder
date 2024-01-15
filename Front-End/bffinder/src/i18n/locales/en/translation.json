@@ -1,11 +1,19 @@
 {
   "species": {
     "cat": "Cat",
-    "dog": "Dog"
+    "dog": "Dog",
+    "equine": "Horse",
+    "rodent": "Rodent",
+    "bird": "Bird",
+    "other": "Other"
   },
   "pluralSpecies": {
     "cat": "Cats",
-    "dog": "Dogs"
+    "dog": "Dogs",
+    "equine": "Horses",
+    "rodent": "Rodents",
+    "bird": "Birds",
+    "other": "Others"
   },
   "breeds": {
     "siamese": "Siamese",
@@ -14,6 +22,65 @@
     "poodle": "Poodle",
     "pitbull": "Pitbull",
     "british shorthair": "British Shorthair",
-    "pug": "Pug"
+    "pug": "Pug",
+    "golden retriever": "Golden Retriever",
+    "chihuahua": "Chihuahua",
+    "german shepherd": "German Shepherd",
+    "sphynx": "Sphynx",
+    "ragdoll": "Ragdoll",
+    "bengal": "Bengal",
+    "bulldog":"Bulldog",
+    "beagle":"Beagle",
+    "schnauzer":"Schnauzer",
+    "dachshund":"Dachshund",
+    "boxer":"Boxer",
+    "maine coon":"Maine coon",
+    "himalayan":"Himalayan",
+    "turkish angora":"Turkish Angora",
+    "dwarf russian hamster":"Dwarf Russian Hamster",
+    "syrian hamster":"Syrian Hamster",
+    "chinese hamster":"Chinese Hamster",
+    "campbell dwarf hamster":"Campbell Dwarf Hamster",
+    "american guinea pig":"American Guinea Pig",
+    "peruvian guinea pig":"Peruvian Guinea Pig",
+    "rex guinea pig":"Rex Guinea Pig",
+    "angora guinea pig":"Angora Guinea Pig",
+    "silkie guinea pig":"Silkie Guinea Pig",
+    "laboratory mouse":"Laboratory Mouse",
+    "common mouse":"Common Mouse",
+    "amazon aestiva parrot":"Amazon Aestiva Parrot",
+    "cockatoo nymph":"Cockatoo Nymph",
+    "canary":"Canary",
+    "argentina parrot":"Argentina Parrot",
+    "galerita cockatoo":"Galerita Cockatoo",
+    "yellow headed amazon parrot":"Yellow Headed Amazon Parrot",
+    "red-fronted amazon parrot":"Red-Fronted Amazon Parrot",
+    "farinosa amazon parrot":"Farinosa Amazon Parrot",
+    "domestic duck":"Domestic Duck",
+    "creole duck":"Creole Duck",
+    "khaki campbell duck":"Khaki Campbell Duck",
+    "leghron chicken":"Leghron Chicken",
+    "rhode island red":"Rhode Island Red",
+    "plymouth rock chicken":"Plymouth Rock Chicken",
+    "wyandotte chicken":"Wyandotte Chicken",
+    "piroco chicken":"Piroco Chicken",
+    "creole horse":"Creole Horse",
+    "quarter mile horse":"Quarter Mile Horse",
+    "other":"Other",
+    "angel fish":"Angelfish",
+    "betta fish":"Betta Fish",
+    "goldfish":"Goldfish",
+    "guppy fish":"Guppy Fish",
+    "molly fish":"Molly Fish",
+    "platy fish":"Platy Fish"
+  },
+  "sizes": {
+    "s": "Small",
+    "m": "Medium",
+    "l": "Large"
+  },
+  "genders": {
+    "m": "Male",
+    "f": "Female"
   }
 }

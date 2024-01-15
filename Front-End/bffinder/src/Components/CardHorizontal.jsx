@@ -16,6 +16,7 @@ import { Card,
   DialogTitle,
   CardActionArea,
 } from '@mui/material';
+import { t } from "i18next";
 
  const formatTimeDifference = (hours) => {
     const weeks = Math.floor(hours / (24 * 7));
@@ -78,7 +79,7 @@ const HorizontalCard = ({ post }) => {
         </Typography>
 
         <Typography variant="body2" color="text.secondary" sx={{ fontSize: '.9rem', marginTop: '1rem' }}>
-        {breedDetails.specie.name} - {breedDetails.name}
+        {t(`species.${breedDetails.specie.name}`)} - {t(`breeds.${breedDetails.name}`)}
         </Typography>
 
         <CardActions className='parrafo-card'>

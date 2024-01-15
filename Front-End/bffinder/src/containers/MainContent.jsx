@@ -8,6 +8,7 @@ import { changePostsRequest } from "../store/post";
 import SectionFilterPost from "./SectionFilterPost";
 import { SectionFilterPet } from "./SectionFilterPet";
 import { changePetsRequest } from "../store/pet";
+import DialogSelectSpecie from "../Components/DialogSelectSpecie";
 
 const MainContent = () => {
   const { activeModule } = useSelector((state) => state.persisted.global);
@@ -27,14 +28,35 @@ const MainContent = () => {
     // sectionRef.current.scrollIntoView({ top: 0, behavior: "smooth" });
   };
 
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  // useEffect(() => {
+  //   handleOpenDialog();
+  // }, []);
+
   return (
     <div className="layout-container">
       <section ref={sectionRef} className="inicio-user-comun">
         <Grid container spacing={1} className="grid-container">
+          
           {activeModule === "posts"
             ? <SectionFilterPost />
             : <SectionFilterPet />
           }
+          <Grid item>
+            <DialogSelectSpecie
+             onClose={handleCloseDialog}
+            open={openDialog} 
+             />
+          </Grid>
         </Grid>
         <Grid
           container

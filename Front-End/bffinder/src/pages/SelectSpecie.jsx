@@ -1,6 +1,5 @@
 import React from 'react';
 import NavHome from "../Components/NavHome";
-import SectionSelectSpecie from "../containers/SectionSelectSpecie";
 import 'styles/PostDetails.scss';
 
 const SelectSpecie = () => {
@@ -11,7 +10,7 @@ const SelectSpecie = () => {
           <NavHome/>
           <main>
           <div className="main-content-post-select">
-            <SectionSelectSpecie />
+            
             </div>
           </main>
         </section>

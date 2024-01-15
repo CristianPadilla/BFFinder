@@ -4,7 +4,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "containers/Layout";
 import RecoveryPassword from "containers/RecoveryPassword";
 import PreHome from "pages/PreHome";
-import SelectSpecie from "pages/SelectSpecie";
 import Home from "pages/Home";
 import NotFound from "pages/NotFound";
 import Perfil from "pages/Perfil";
@@ -42,7 +41,6 @@ const App = () => {
 									<Route path="/home" element={<Home />} />
 									<Route path="/*" element={<Navigate to="/home" />} />
 									<Route path="/perfil" element={<Perfil />} />
-									<Route path="/selecciona-especie" element={<SelectSpecie />} />
 									<Route path="/ver-publicacion" element={<Verpublicacion />} />
 
 								</Routes>

@@ -1,15 +1,9 @@
 import React, { useState } from "react";
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
+import PropTypes from "prop-types";
+import { Tabs, Tab, Typography, Box, Card, CardContent } from "@mui/material";
 import { RegisterUserPage } from "../pages/RegisterUserPage";
 import { RegisterFoundationPage } from "../pages/RegisterFoundationPage";
 import "../styles/Card.scss";
-
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -51,7 +45,11 @@ export default function SignUp() {
       <CardContent>
         <Box>
           <Box>
-            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+            >
               <Tab label="Usuario Regular" value={0} />
               <Tab label="Fundación" value={1} />
             </Tabs>

@@ -1,0 +1,151 @@
+.icon-filter-loading {
+  margin: 1.5rem;
+  width: auto;
+}
+
+.container-loading {
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  height: 120px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.center-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 140px;
+  height: 140px;
+  border-radius: 100%;
+  background-color: #fff;
+  border: 9px solid #dee1e4;
+  overflow: hidden;
+}
+
+.container-loading::before {
+  content: "";
+  position: absolute;
+  top: 210px;
+  left: 26px;
+  width: 100px;
+  height: 32px;
+  border-radius: 100%;
+  background-color: rgba(222, 225, 228, 0.4);
+}
+
+.wrap {
+  width: 400px;
+  overflow: hidden;
+  position: relative;
+}
+
+.lens::before,
+.lens::after {
+  content: "";
+  position: absolute;
+  background-color: #dee1e4;
+}
+
+.lens::before {
+  width: 100px;
+  height: 10px;
+  transform: rotate(45deg);
+}
+
+.lens::after {
+  left: 35px;
+  top: -4px;
+  width: 29px;
+  height: 16px;
+  transform: rotate(46deg);
+  border-radius: 0 4px 4px 0;
+}
+
+.box {
+  display: flex;
+  width: auto;
+  animation: carousel 23s linear infinite;
+}
+
+@keyframes carousel {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  12.5%,
+  87.5% {
+    transform: translateX(-125%);
+  }
+  25%,
+  75% {
+    transform: translateX(-255%);
+  }
+  37.5%,
+  62.5% {
+    transform: translateX(-385%);
+  }
+  50% {
+    transform: translateX(-539%);
+  }
+}
+
+@keyframes cloud-loop {
+  0% {
+    transform: translateY(15px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes shadow-loop {
+  0% {
+    transform: translate(0, -35px) scale(1.15, 0.25);
+  }
+  100% {
+    transform: translate(0, -35px) scale(1, 0.25);
+  }
+}
+
+.center-loading {
+  animation-name: cloud-loop;
+  animation-duration: 0.7s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease;
+  animation-direction: alternate;
+}
+
+.lens {
+  position: relative;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-animation-name: cloud-loop;
+  animation-name: cloud-loop;
+  -webkit-animation-duration: 0.7s;
+  animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function: ease;
+  -webkit-animation-direction: alternate;
+  animation-direction: alternate;
+}
+
+.container-loading::before {
+  animation-name: shadow-loop;
+  animation-duration: 0.7s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease;
+  animation-direction: alternate;
+}
+
+.dr {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  width: 100px;
+}

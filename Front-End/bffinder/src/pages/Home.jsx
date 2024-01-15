@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts } from "../store/post";
 import { startFetchPets } from "../store/pet";
 import { use } from "i18next";
+import { LoadingFilters } from "../Components/LoadingFilters";
+import NoResults from "../Components/NoResults";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -67,11 +69,11 @@ const Home = () => {
             </div>
             <div className="main-content-scroll animate__animated animate__fadeIn animate__faster">
               {noContent ? (
-                <h2>No hay contenido</h2>
+                <NoResults />
               ) : !content ? (
-                <h2>loading...</h2>
-              ) : (
-                <MainContent />
+                <LoadingFilters />         
+                ) : (
+                  <MainContent />
               )}
 
               {/* {!content ? <h2>loading...</h2> : <MainContent />} */}

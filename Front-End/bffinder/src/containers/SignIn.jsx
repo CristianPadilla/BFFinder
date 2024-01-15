@@ -70,6 +70,7 @@ export default function SignIn() {
               placeholder="ejemplo@mail.com"
               value={formik.values.email}
               onChange={formik.handleChange}
+              sx={{ width: "27ch" }} 
             />
             <TextInputPassword
               label="Contraseña"

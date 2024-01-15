@@ -15,6 +15,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import "styles/Card.scss";
 import DialogViewPet from "./user-foundation/DialogViewPet";
 import { useNavigate } from "react-router-dom";
+import { t } from "i18next";
 
 const CardVertical = ({ pet }) => {
   const { name,
@@ -75,7 +76,7 @@ const CardVertical = ({ pet }) => {
                 color="text.secondary"
                 sx={{ fontSize: "1rem", marginTop: ".4rem" }}
               >
-                {breedDetails.specie.name} - {breedDetails.name}
+                {t(`species.${breedDetails.specie.name}`)} - {t(`breeds.${breedDetails.name}`)}
               </Typography>
             }
           />
@@ -97,7 +98,7 @@ const CardVertical = ({ pet }) => {
                   color="text.secondary"
                   sx={{ fontSize: ".9rem", marginBottom: "1rem" }}
                 >
-                  Tamaño: {size}
+                  Tamaño: {t(`sizes.${size}`)}
                 </Typography>
                 <Typography
                   variant="body2"
