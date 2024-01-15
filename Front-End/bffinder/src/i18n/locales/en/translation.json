@@ -82,5 +82,9 @@
   "genders": {
     "m": "Male",
     "f": "Female"
+  },
+  "dangerous": {
+    "true": "Dangerous",
+    "false": "Social"
   }
 }

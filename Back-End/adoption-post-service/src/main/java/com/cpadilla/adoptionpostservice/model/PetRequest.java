@@ -21,6 +21,7 @@ public class PetRequest {
     private char size;
     private boolean sterilized;
     private boolean dewormed;
+    private char gender;
     private int ownerId;
     private int breedId;
 }

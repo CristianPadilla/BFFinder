@@ -18,7 +18,7 @@ export const TextInputComponent = ({
   ...props
 }) => {
   const [field, meta] = useField(name);
-  // console.log("props araaaaaaaaaaaaaaaaaaaaaa", value);
+  // console.log(`TEXT meta del ${name}  = `, meta);
   return (
     <>
       {/* <label htmlFor={props.id || props.name}>{label}</label>

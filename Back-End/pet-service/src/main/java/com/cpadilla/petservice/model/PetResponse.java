@@ -18,6 +18,7 @@ public class PetResponse {
     private boolean vaccinated;
     private boolean dangerous;
     private char size;
+    private char gender;
     private boolean sterilized;
 //    private boolean status;
     private boolean dewormed;

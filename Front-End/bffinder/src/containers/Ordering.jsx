@@ -7,31 +7,108 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-// import { useTheme } from '@mui/material/styles';
+import { useDispatch, useSelector } from "react-redux";
+import { changePostsRequest } from "../store/post";
+import { changePetsRequest } from "../store/pet";
+import { act } from "react-dom/test-utils";
 
-const Ordering = ({ onSortChange }) => {
-  const [activeChip, setActiveChip] = useState("");
+const Ordering = () => {
+  const dispatch = useDispatch();
+  const { role } = useSelector((state) => state.persisted.auth);
+  const { activeModule } = useSelector((state) => state.persisted.global);
 
-  const handleSortChange = (sortType) => {
-    if (activeChip !== sortType) {
-      setActiveChip(sortType);
-      onSortChange(sortType);
+  const { sort, desc } =
+    activeModule === "posts"
+      ? useSelector((state) => state.posts.postRequest.sorting)
+      : useSelector((state) => state.pets.petsRequest);
+
+
+  const options = [
+    <MenuItem key={3} value={"age"}>Edad: Menor a Mayor</MenuItem>,
+    <MenuItem key={4} value={"ageDesc"}>Edad: Mayor a Menor</MenuItem>
+  ];
+
+  activeModule === "posts" && options.push([
+    <MenuItem key={1} value={"dateDesc"}>Mas recientes primero</MenuItem>,
+    <MenuItem key={2} value={"date"}>Mas antiguos primero</MenuItem>
+  ]);
+
+  role === "s" && options.push([
+    <MenuItem key={5} value={"name"}>Nombre: A - Z</MenuItem>,
+    <MenuItem key={6} value={"nameDesc"}>Nombre: Z - A</MenuItem>
+
+  ]);
+
+
+  const sortingOptionSelectedValue = () => {
+    if (sort === "age") {
+      if (desc) {
+        return "ageDesc";
+      } else {
+        return "age";
+      }
+    } else if (sort === "date") {
+      if (desc) {
+        return "dateDesc";
+      } else {
+        return "date";
+      }
+    } else if (sort === "name") {
+      if (desc) {
+        return "nameDesc";
+      } else {
+        return "name";
+      }
+    } else {
+      return activeModule === "posts" ? "dateDesc" : "age";
     }
+  }
+
+
+  const handleSortChange = ({ target }) => {
+    // console.log("===handleSortChange ", target.value);
+
+    let sortCriteria = "date";
+    let descCriteria = false;
+    switch (target.value) {
+      case "dateDesc":
+        sortCriteria = "date";
+        descCriteria = true;
+        break;
+      case "date":
+        sortCriteria = "date";
+        break;
+      case "age":
+        sortCriteria = "age";
+        break;
+      case "ageDesc":
+        sortCriteria = "age";
+        descCriteria = true;
+        break;
+      case "name":
+        sortCriteria = "name";
+        break;
+      case "nameDesc":
+        sortCriteria = "name";
+        descCriteria = true;
+        break;
+    };
+
+    const sortFilterObjet = { ["sort"]: sortCriteria };
+    const descFilterObjet = { ["desc"]: descCriteria };
+    // console.log("===sortCriteria ", sortFilterObjet, descFilterObjet);
+    activeModule === "posts"
+      ? dispatch(changePostsRequest([sortFilterObjet, descFilterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([sortFilterObjet, descFilterObjet, { page: 0 }]));
+
+
   };
-
-  const [age, setAge] = React.useState('');
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
-
-  // const theme = useTheme();
 
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-        
-      {/* <Typography variant="body1" sx={{ marginRight: 1, fontSize: '1.1rem' }} >
+
+        {/* <Typography variant="body1" sx={{ marginRight: 1, fontSize: '1.1rem' }} >
         Ordenar por nombre:
       </Typography>
 
@@ -65,28 +142,44 @@ const Ordering = ({ onSortChange }) => {
         />
       </Stack> */}
 
-      <Typography variant="body1" sx={{ marginRight: 1, fontSize: '1.1rem' }}>
-        Ordenar por:
-      </Typography>
-      <Stack direction="row">
-      <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-      <Select
-        id="demo-select-small"
-        value={10}
-        onChange={handleChange}
-        sx={{ backgroundColor: 'white', mr: '1.8rem' }}
-      >
-        <MenuItem value={10}>Mas recientes</MenuItem>
-        <MenuItem value={20}>Mas antiguos</MenuItem>
-        <MenuItem value={30}>Edad: Menor a Mayor</MenuItem>
-        <MenuItem value={40}>Edad: Mayor a Menor</MenuItem>
-        <MenuItem value={50}>Nombre: A - Z</MenuItem>
-        <MenuItem value={60}>Nombre: Z - A</MenuItem>
-      </Select>
-    </FormControl>
-      </Stack>
+        <Typography variant="body1" sx={{ marginRight: 1, fontSize: '1.1rem' }}>
+          Ordenar por:
+        </Typography>
+        <Stack direction="row">
+          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+            <Select
+              id="demo-select-small"
+              value={sortingOptionSelectedValue()}
+              onChange={handleSortChange}
+              sx={{ backgroundColor: 'white', mr: '1.8rem' }}
+            >
+              {options}
+              {/* {
+                activeModule === "posts"
+                  ? [
+                    <MenuItem key={1} value={{ field: 'date', direction: 'desc' }}>Mas recientes</MenuItem>,
+                    <MenuItem key={2} value={{ field: 'date', direction: 'asc' }}>Mas antiguos</MenuItem>
+                  ]
+                  : null
 
-      {/* <Typography variant="body1" sx={{ marginRight: 1, fontSize: '1.1rem' }} >
+
+              }
+              <MenuItem key={3} value={{ field: 'age', direction: 'asc' }}>Edad: Menor a Mayor</MenuItem>
+              <MenuItem key={4} value={{ field: 'age', direction: 'desc' }}>Edad: Mayor a Menor</MenuItem>
+              {
+                role === "s"
+                  ? [
+                    <MenuItem key={5} value={{ field: 'age', direction: 'asc' }}>Nombre: A - Z</MenuItem>,
+                    <MenuItem key={6} value={{ field: 'age', direction: 'desc' }}>Nombre: Z - A</MenuItem>
+                  ]
+                  : null
+              } */}
+
+            </Select>
+          </FormControl>
+        </Stack>
+
+        {/* <Typography variant="body1" sx={{ marginRight: 1, fontSize: '1.1rem' }} >
         Edad:
       </Typography>
 
@@ -120,7 +213,7 @@ const Ordering = ({ onSortChange }) => {
         />
       </Stack> */}
 
-    </div>
+      </div>
     </div>
   );
 };

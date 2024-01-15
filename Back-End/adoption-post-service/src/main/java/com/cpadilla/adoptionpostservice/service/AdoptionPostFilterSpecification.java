@@ -5,13 +5,12 @@ import com.cpadilla.adoptionpostservice.exception.CustomException;
 import com.cpadilla.adoptionpostservice.model.PostFilters;
 import jakarta.persistence.criteria.Predicate;
 import lombok.extern.log4j.Log4j2;
+import org.hibernate.query.sqm.TemporalUnit;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,11 +36,20 @@ public class AdoptionPostFilterSpecification<T> {
             if (filterRequest.getFromDate() != null && !filterRequest.getFromDate().isEmpty()) {// date filter
                 log.info("applying filter of date for posts with date before {}", filterRequest.getFromDate());
                 var dateFilter = LocalDate.parse(filterRequest.getFromDate());
+
                 var filter = dateFilter.atStartOfDay(ZoneId.systemDefault()).minusHours(5).toInstant(); // from that day start
-                predicates.add(
-                        filterRequest.isSpecificDate()
-                                ? criteriaBuilder.equal(root.get("date"), Instant.parse(filter.toString()))
-                                : criteriaBuilder.greaterThanOrEqualTo(root.get("date"), Instant.parse(filter.toString())));
+                if (filterRequest.isSpecificDate()) {
+                    var finalOfDay = dateFilter.atStartOfDay(ZoneId.systemDefault()).minusHours(5).plusDays(1).minusSeconds(1).toInstant(); // from that day start
+
+                    var predicate = criteriaBuilder.and(
+                            criteriaBuilder.greaterThanOrEqualTo(root.get("date"), Instant.parse(filter.toString())),
+                            criteriaBuilder.lessThan(root.get("date"), Instant.parse(finalOfDay.toString()))
+                    );
+                    predicates.add(predicate);
+                } else {
+                    predicates.add(
+                            criteriaBuilder.greaterThanOrEqualTo(root.get("date"), Instant.parse(filter.toString())));
+                }
             }
 
             if (filterRequest.getStatus() != null && !filterRequest.getStatus().isEmpty()) {

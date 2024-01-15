@@ -14,6 +14,8 @@ public class PetFilters {
 
     private int specieId;
     private int breedId;
+    private int age;
+    private String gender;
     private String size;
     private String search;
 

@@ -15,6 +15,7 @@ const initialState = {
         vaccinated: null,
         sterilized: null,
         dewormed: null,
+        gender: "",
         posted: null,
         sort: "",
         desc: false,
@@ -55,17 +56,16 @@ export const petSlice = createSlice({
     name: 'pets',
     initialState: initialState,
     reducers: {
-        savingNewPet(state) {
-            state.isSaving = true;
+        savingNewPet(state, { payload }) {
+            state.isSaving = payload;
         },
-        setActivePet(state, action) {
-            state.active = action.payload;
+        setActivePet(state, { payload }) {
+            console.log("setActivePet", payload);
+            state.active = payload;
         },
         setPetsPage(state, { payload }) {
             state.page = payload.page;
             state.petsRequest = payload.petsRequest;
-        },
-        setSavingPet(state, { payload }) {
         },
         updatePet(state, { payload }) {
         },
@@ -90,6 +90,11 @@ export const petSlice = createSlice({
         setBreeds(state, { payload }) {
             state.breeds = payload;
         },
+        setActivePetField(state, { payload }) {
+            const field = Object.keys(payload)[0];
+            const value = Object.values(payload)[0];
+            state.active[field] = value;
+        },
     },
 });
 
@@ -105,4 +110,5 @@ export const {
     clearPetsLogout,
     setSpecies,
     setBreeds,
+    setActivePetField,
 } = petSlice.actions;

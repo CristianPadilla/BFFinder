@@ -77,6 +77,8 @@ const DragAndDrop = ({ label, name, errorClassName, ...props }) => {
   const [imageSelectedPrevious, setImageSelectedPrevious] = useState(null);
   const [field, meta, helpers] = useField(name);
 
+  // console.log(`meta del ${name}  = `, meta);
+
   const changeImage = (e) => {
     if (e.target.files[0] !== undefined) {
       const file = e.target.files[0];
@@ -85,6 +87,16 @@ const DragAndDrop = ({ label, name, errorClassName, ...props }) => {
 
       if (!allowedFormats.includes(extension)) {
         helpers.setError("Formato no permitido");
+        return;
+      }
+
+      // Añadir validación de tamaño de archivo
+      const maxSizeInMB = 10;
+      const sizeInMB = file.size / (1024 * 1024);
+      if (sizeInMB > maxSizeInMB) {
+        console.log("El tamaño de la imagen es demasiado grande");
+        helpers.setError("El tamaño de la imagen es demasiado grande, el tamaño debe ser menor a 10MB");
+        
         return;
       }
 
@@ -119,75 +131,77 @@ const DragAndDrop = ({ label, name, errorClassName, ...props }) => {
 
   return (
     <>
-    <Paper
-    elevation={0}
-    variant="outlined"
-    sx={{
-      margin: ".5rem",
-      padding: ".1rem",
-      borderRadius: "",
-      alignItems: "center",
-    }}
-  >
-    <StyledDrag>
-      <div className="file-upload-wrap">
-        <input
-          className="file-upload-input"
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={(e) => {
-            changeImage(e);
-          }}
-        />
-        <div className="text-information">
-          <Typography variant="h6">
-            {label || "Arrastre su imagen dentro de esta área"}
-            <br />o haga clic&nbsp;
-            <a href="#" onClick={() => console.log("Clickeado")}>
-              aquí
-            </a>
-          </Typography>
-        </div>
-      </div>
-
-      {imageSelectedPrevious && (
-        <div className="image-container">
-          <div className="center">
-            <img src={imageSelectedPrevious} alt="" />
+      <Paper
+        elevation={0}
+        variant="outlined"
+        sx={{
+          margin: ".5rem",
+          padding: ".1rem",
+          borderRadius: "",
+          alignItems: "center",
+        }}
+      >
+        <StyledDrag>
+          <div className="file-upload-wrap">
+            <input
+              className="file-upload-input"
+              type="file"
+              accept="image/*"
+              multiple
+              name={name}
+              onBlur={props.onBlur}
+              onChange={(e) => {
+                changeImage(e);
+              }}
+            />
+            <div className="text-information">
+              <Typography variant="h6">
+                {label || "Arrastre su imagen dentro de esta área"}
+                <br />o haga clic&nbsp;
+                <a href="#" onClick={() => console.log("Clickeado")}>
+                  aquí
+                </a>
+              </Typography>
+            </div>
           </div>
-          <Button
-            className="delete-button"
-            variant="contained"
-            color="error"
-            size="small"
-            onClick={deleteImage}
-          >
-            <IconButton>
-              <DeleteIcon sx={{ color: "white", marginLeft: "-12px" }} />
-            </IconButton>
-            Eliminar
-          </Button>
-        </div>
-      )}
-    </StyledDrag>
-    {/* <div style={{ textAlign: "center", marginTop: "-6px" }}>
+
+          {imageSelectedPrevious && (
+            <div className="image-container">
+              <div className="center">
+                <img src={imageSelectedPrevious} alt="" />
+              </div>
+              <Button
+                className="delete-button"
+                variant="contained"
+                color="error"
+                size="small"
+                onClick={deleteImage}
+              >
+                <IconButton>
+                  <DeleteIcon sx={{ color: "white", marginLeft: "-12px" }} />
+                </IconButton>
+                Eliminar
+              </Button>
+            </div>
+          )}
+        </StyledDrag>
+        {/* <div style={{ textAlign: "center", marginTop: "-6px" }}>
       {meta.touched && meta.error && (
         <span className={errorClassName} style={{ fontSize: ".8rem" }}>
           {meta.error}
         </span>
       )}
     </div> */}
-  </Paper>
-    <div style={{ textAlign: "center", marginTop: "-6px" }}>
-    <ErrorMessage
-      name={name}
-      component="span"
-      className={errorClassName}
-      style={{ fontSize: ".8rem", color: "red" }}
-    />
-  </div>
-  </>
+      </Paper>
+      <div style={{ textAlign: "center", marginTop: "-6px" }}>
+        <ErrorMessage
+          name={name}
+          component="span"
+          className={errorClassName}
+          style={{ fontSize: ".8rem", color: "red" }}
+        />
+      </div>
+    </>
   );
 };
 

@@ -12,8 +12,10 @@ const initialState = {
             specie_id: 0,
             breed_id: 0,
             size: '',
+            age: 0,
             department_id: 0,
             city_id: 0,
+            gender: "",
             status: '',
         },
         sorting: {
@@ -21,7 +23,7 @@ const initialState = {
             desc: false
         },
         page: 0,
-        page_size: 10,
+        page_size: 2,
     },
     species: [],
     breeds: [],
@@ -42,8 +44,8 @@ export const postSlice = createSlice({
         setPostsRequest(state, { payload }) {
             const filter = Object.keys(payload)[0];
             const value = Object.values(payload)[0];
-            if (filter === 'page') {
-                console.log("aplicando filtro de page", filter, value);
+            if (filter === 'page' || filter === 'search') {
+                console.log("aplicando filtro de page o search", filter, value);
                 state.postRequest[filter] = value;
             } else if (filter === 'sort' || filter === 'desc') {
                 console.log("aplicando filtro de sorting", filter, value);
@@ -72,6 +74,9 @@ export const postSlice = createSlice({
         },
         setCities(state, { payload }) {
             state.cities = payload;
+        },
+        setCityIdFilter(state, { payload }) {
+            state.postRequest.filters.city_id = payload;
         }
     },
 });
@@ -85,4 +90,5 @@ export const {
     setCities,
     setSpeciesP, 
     setBreedsP,
+    setCityIdFilter,
 } = postSlice.actions;

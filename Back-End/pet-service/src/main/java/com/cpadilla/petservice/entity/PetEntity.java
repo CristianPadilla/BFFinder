@@ -28,13 +28,13 @@ public class PetEntity {
     private Boolean sterilized;
     private Boolean status;
     private Boolean dewormed;
+    private Character gender;
     @Column(name = "owner_id")
     private Integer ownerId;
     @Column(name = "breed_id")
     private Integer breedId;
     @Column(name = "image_id")
     private Integer imageId;
-
 
 
 }

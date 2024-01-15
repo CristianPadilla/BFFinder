@@ -25,7 +25,7 @@ const formFields = {
 
 export function RegisterFoundationPage() {
   const dispatch = useDispatch();
-  const { status, errorMessage } = useSelector(state => state.auth);
+  const { status, errorMessage } = useSelector(state => state.persisted.auth);
   const isCheckingAuth = useMemo(() => status === 'checking', [status]);
   const [openConfirmationAlert, setOpenConfirmationAlert] = useState(false);
   const navigate = useNavigate();

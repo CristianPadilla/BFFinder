@@ -82,5 +82,9 @@
   "genders": {
     "m": "Macho",
     "f": "Hembra"
+  },
+  "dangerous": {
+    "true": "Territorial",
+    "false": "Sociable"
   }
 }

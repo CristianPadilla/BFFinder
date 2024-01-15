@@ -14,6 +14,7 @@ public class PetPartialResponse {
     private int id;
     private int age;
     private String name;
+    private char gender;
     private BreedDetails breedDetails;
     private char size;
 }

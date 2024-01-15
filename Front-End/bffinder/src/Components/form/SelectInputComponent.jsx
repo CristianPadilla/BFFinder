@@ -13,7 +13,8 @@ const SelectInputComponent = (props) => {
         <Autocomplete
           options={props.options}
           getOptionLabel={(option) => {
-            return option.label;
+            // console.log("option :", option);
+            return option ? option.label : "";
           }}
           onChange={(event, newValue) => {
             return props.onChange({
@@ -24,14 +25,20 @@ const SelectInputComponent = (props) => {
             });
           }}
           freeSolo
+
+          value={props.value}
+          onBlur={props.onBlur}
+          clearIcon={props.clearIcon}
           renderInput={(params) => (
             <TextField
               {...params}
               name={props.name}
               label={props.label}
               variant="outlined"
-              error={meta.touched && !!meta.error}
-              helperText={meta.touched ? meta.error : ""}
+              error={!!(meta.touched && meta.error)}
+              helperText={meta.touched && meta.error ? meta.error.value : ""}
+            // error={props.touched && props.errors}
+            // helperText={props.touched && props.errors}
             />
           )}
         />
@@ -41,3 +48,4 @@ const SelectInputComponent = (props) => {
 };
 
 export default SelectInputComponent;
+

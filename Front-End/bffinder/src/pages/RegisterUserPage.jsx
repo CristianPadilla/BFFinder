@@ -4,7 +4,6 @@ import "../styles/Card.scss";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { TextInputComponent } from "../Components/form/TextInputComponent";
-import { SelectInputComponent } from "../Components/form/SelectInputComponent";
 import { CheckboxInputComponent } from "../Components/form/CheckboxInputComponent";
 import TextInputPassword from "../Components/form/TextInputPassword";
 import { Snackbar, Alert, Grid } from "@mui/material";
@@ -14,7 +13,7 @@ import { authApi } from "../api/authApi";
 import { useDispatch, useSelector } from "react-redux";
 import { startRegisterUser } from "../store/auth";
 import { Redirect, useNavigate } from "react-router-dom";
-import { useHistory } from "react-router-dom";
+
 
 const formFields = {
   firstname: "",

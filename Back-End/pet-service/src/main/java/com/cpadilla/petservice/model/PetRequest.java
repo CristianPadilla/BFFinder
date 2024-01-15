@@ -25,10 +25,12 @@ public class PetRequest {
     private int age;
     private boolean vaccinated;
     private boolean dangerous;
-    @Pattern( regexp = "[sml]", message = "size valid values are s, m, l")
+    @Pattern(regexp = "[sml]", message = "size valid values are s, m, l")
     private String size;
     private boolean sterilized;
     private boolean dewormed;
+    @Pattern(regexp = "[fm]", message = "only f or m are valid values")
+    private String gender;
     @Positive
     private int ownerId;
     @Positive

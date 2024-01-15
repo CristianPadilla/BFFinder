@@ -22,6 +22,8 @@ public class PostFiltersRequest {
     private int cityId;
     @JsonProperty("department_id")
     private int departmentId;
+    private int age;
     private String size;
+    private String gender;
     private String status;
 }

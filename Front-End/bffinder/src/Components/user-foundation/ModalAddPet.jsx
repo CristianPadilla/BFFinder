@@ -10,8 +10,11 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import FormAddPet from "../post/FormAddPet";
 import FormAddPost from "./FormAddPost";
+import { useSelector } from "react-redux";
 
 const ModalAddPet = ({ open, onClose, onAdd }) => {
+  const { activeModule } = useSelector((state) => state.persisted.global);
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
       <DialogTitle
@@ -21,14 +24,16 @@ const ModalAddPet = ({ open, onClose, onAdd }) => {
           fontWeight: "600",
         }}
       >
-        Agregar mascota
+        {activeModule === "posts" ? "Publica una mascota" : "Registra una mascota"}
+
         <IconButton color="inherit" onClick={onClose} aria-label="close">
           <CloseIcon />
         </IconButton>
       </DialogTitle>
       <DialogContent>
+        {activeModule === "posts" ? <FormAddPost /> : <FormAddPet />}
         {/* <FormAddPet /> */}
-        <FormAddPost />
+
       </DialogContent>
       <DialogActions>
         <Button variant="contained" color="error" onClick={onClose}>

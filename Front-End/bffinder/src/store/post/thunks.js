@@ -2,7 +2,7 @@ import { HttpStatusCode } from "axios";
 import { locationApi } from "../../api/locationApi";
 import { postApi } from "../../api/postApi";
 import { startContentLoading, stopContentLoading } from "../global";
-import { fetchPostsStart, fetchPostsSuccess, setCities, setDepartments, setPostsRequest } from "./postSlice";
+import { fetchPostsStart, fetchPostsSuccess, setCities, setCityIdFilter, setDepartments, setPostsRequest } from "./postSlice";
 
 
 export const fetchPosts = () => async (dispatch, getState) => {
@@ -16,7 +16,7 @@ export const fetchPosts = () => async (dispatch, getState) => {
         const { data } = await postApi.post(url, postsRequest);
         const { page, request } = data;
         console.log("fetchPosts from thunk ", data);
-        dispatch(fetchPostsSuccess({
+        const payload = {
 
             page: {
                 pageNumber: page.number,
@@ -27,8 +27,8 @@ export const fetchPosts = () => async (dispatch, getState) => {
                 offset: page.pageable.offset,
                 last: page.last,
                 first: page.first,
-                sort: page.sort.property,
-                desc: page.sort.descending,
+                sort: page.sort[0].property,
+                desc: page.sort[0].descending,
                 posts: page.content,
 
             },
@@ -41,17 +41,20 @@ export const fetchPosts = () => async (dispatch, getState) => {
                     size: request.filters.size,
                     department_id: request.filters.department_id,
                     city_id: request.filters.city_id,
+                    gender: request.filters.gender,
+                    age: request.filters.age,
                     status: request.filters.status,
                 },
                 sorting: {
-                    sort: request.sorting.sort,
-                    desc: request.sorting.desc
+                    sort: page.sort[0].property,
+                    desc: page.sort[0].descending
                 },
                 page: request.page,
                 page_size: request.page_size,
             }
 
-        }));
+        }
+        dispatch(fetchPostsSuccess(payload));
         dispatch(stopContentLoading())
     } catch (error) {
         console.log(error);
@@ -80,4 +83,10 @@ export const startGetCitiesByDepartmentId = (departmentId) => async (dispatch) =
     console.log("startGetCitiesByDepartmentId", data, status);
     if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
     dispatch(setCities(data));
+};
+
+export const startCleanCities = () => async (dispatch) => {
+    console.log("startCleanCities");
+    dispatch(setCities([]));
+    dispatch(setCityIdFilter(0));
 };

@@ -21,6 +21,7 @@ import { act } from "react-dom/test-utils";
 import {
   changePostsRequest,
   setCities,
+  startCleanCities,
   startGetCitiesByDepartmentId,
   startGetDepartments,
 } from "../store/post";
@@ -31,6 +32,7 @@ import {
 } from "../store/pet";
 import { t, use } from "i18next";
 import DateInputComponent from "../Components/form/DateInputComponent";
+import { date } from "yup";
 
 function ValueLabel(props) {
   const { children, open, value } = props;
@@ -39,10 +41,10 @@ function ValueLabel(props) {
     value === 0
       ? "Todas\nlas edades"
       : value === 1
-      ? "Hasta\n1 año"
-      : value === 11
-      ? "10 años+"
-      : `Hasta\n${value} años`;
+        ? "Hasta\n1 año"
+        : value === 11
+          ? "10 años+"
+          : `Hasta\n${value} años`;
 
   return (
     <Tooltip
@@ -78,8 +80,6 @@ const marks = [
 ];
 
 const PanelFilters = ({ module }) => {
-  const [selectedFilter, setSelectedFilter] = React.useState("");
-  const [selectedSize, setSelectedSize] = useState("");
   const dispatch = useDispatch();
   const { role } = useSelector((state) => state.persisted.auth);
   const { activeModule } = useSelector((state) => state.persisted.global);
@@ -112,11 +112,26 @@ const PanelFilters = ({ module }) => {
     { label: "Publicados", value: true },
     { label: "Sin publicar", value: false },
   ];
+  const vaccinesSelectOptions = [
+    { label: "Vacunados", value: true },
+    { label: "Sin vacunar / No sabe", value: false },
+  ]
+  const sterilizedSelectOptions = [
+    { label: "Esterilizados", value: true },
+    { label: "Sin esterilizar / No sabe", value: false },
+  ]
+  const dewormedSelectOptions = [
+    { label: "Desparasitado", value: true },
+    { label: "Sin desparasitar / No sabe", value: false },
+  ]
+
+  // STATUS
   const statusFilter = activeModuleIsPosts ? filters.status : filters.posted;
 
   const statusFilterSelectedValue = statusFilter
     ? statusSelectOptions.find((option) => option.value === statusFilter)
     : { label: "Todos", value: null };
+
   const postedFilterSelectedValue =
     statusFilter != null
       ? postedSelectOptions.find((option) => option.value === statusFilter)
@@ -148,9 +163,8 @@ const PanelFilters = ({ module }) => {
   const departmentOptionSelectedValue =
     filters.department_id != null && filters.department_id != 0
       ? departmentsOptions.find(
-          (option) => option.value === filters.department_id
-        )
-      : { label: "", value: 0 };
+        (option) => option.value === filters.department_id
+      ) : { label: "", value: 0 };
 
   const citiesOptions = cities.map((city) => {
     return { label: city.name, value: city.id };
@@ -161,25 +175,78 @@ const PanelFilters = ({ module }) => {
       ? citiesOptions.find((option) => option.value === filters.city_id)
       : { label: "", value: 0 };
 
-  console.log("FILTROS ACTUALES== ", filters);
-  const handleSizeChange = (event) => {
-    setSelectedSize(event.target.value);
+  // FECHA
+  const getDateSelectOptionValues = () => {
+    const today = new Date();
+    const lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+    const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+    const lastYear = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+
+    return {
+      today: today.toISOString().split('T')[0], // Formato: YYYY-MM-DD
+      lastWeek: lastWeek.toISOString().split('T')[0],
+      lastMonth: lastMonth.toISOString().split('T')[0],
+      lastYear: lastYear.toISOString().split('T')[0],
+    };
   };
+
+  const dateSelectValues = (role === "u" && activeModule == "posts") ? getDateSelectOptionValues() : null;
+  const dateSelectOptions = (role === "u" && activeModule == "posts")
+    ? [
+      { label: "Hoy", value: dateSelectValues.today },
+      { label: "Semana actual", value: dateSelectValues.lastWeek },
+      { label: "Mes actual", value: dateSelectValues.lastMonth },
+      { label: "Año actual", value: dateSelectValues.lastYear },]
+    : null;
+
+  const dateSelectOptionSelectedValue =
+    ((role === "u" && activeModule == "posts") && filters.from_date != null && filters.from_date != "")
+      ? dateSelectOptions.find((option) => option.value === filters.from_date)
+      : { label: "", value: "" };
+
+
+  //GENDER
+  const genderCurrentValue = filters.gender
+  const sizeCurrentValue = filters.size
+
+  // VACUNACION, ESTERILIZACION, DESPARASITACION
+  const vaccinatedFilter = filters.vaccinated;
+  const sterilizedFilter = filters.sterilized;
+  const dewormedFilter = filters.dewormed;
+
+  const vaccinedSelectSelectedValue = vaccinatedFilter != null
+    ? vaccinesSelectOptions.find((option) => option.value === vaccinatedFilter)
+    : { label: "", value: null };
+  const sterilizedSelectSelectedValue = sterilizedFilter != null
+    ? sterilizedSelectOptions.find((option) => option.value === sterilizedFilter)
+    : { label: "", value: null };
+  const dewormedSelectSelectedValue = dewormedFilter != null
+    ? dewormedSelectOptions.find((option) => option.value === dewormedFilter)
+    : { label: "", value: null };
+
+
+
+
+  console.log("FILTROS ACTUALES== ", filters);
+
 
   const handleStatusFilterChange = (event, newValue) => {
     // console.log('handleStatusFilterChange==  : ', newValue);
+    if (newValue === null && (filters.status === "" || filters.status === null)) return;
     const filterObjet = { ["status"]: newValue ? newValue.value : null };
     dispatch(changePostsRequest([filterObjet, { page: 0 }]));
   };
   const handlePostedFilterChange = (event, newValue) => {
     // console.log('handlePostedFilterChange==  : ', newValue);
+    if (newValue === null && filters.posted === null) return;
     const filterObjet = {
       ["posted"]: newValue != null ? newValue.value : null,
     };
     dispatch(changePetsRequest([filterObjet, { page: 0 }]));
   };
   const handleSpecieSelectChange = (event, newValue) => {
-    // console.log('handleSpecieSelectChange==  : ', newValue);
+    console.log('handleSpecieSelectChange==  : ', newValue);
+    if (newValue === null && filters.specie_id === 0) return;
     const filterObjet = { ["specie_id"]: newValue ? newValue.value : 0 };
     activeModuleIsPosts
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
@@ -191,36 +258,107 @@ const PanelFilters = ({ module }) => {
   };
   const handleBreedSelectChange = (event, newValue) => {
     // console.log('handleBreedSelectChange==  : ', newValue);
+    if (newValue === null && filters.breed_id === 0) return;
     const filterObjet = { ["breed_id"]: newValue ? newValue.value : 0 };
     activeModuleIsPosts
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
       : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
   };
   const handleDepartmentSelectChange = (event, newValue) => {
-    console.log("handleDepartmentSelectChange==  : ", newValue);
+    // console.log("handleDepartmentSelectChange==  : ", newValue);
+    if (newValue === null && filters.department_id === 0) return;
     const filterObjet = { ["department_id"]: newValue ? newValue.value : 0 };
+    dispatch(startCleanCities());
     activeModuleIsPosts
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
       : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
 
-    if (!newValue || newValue.value === 0) {
-      dispatch(setCities([]));
-      return;
-    }
-    dispatch(startGetCitiesByDepartmentId(newValue.value));
+    console.log("falla aquii  : ", newValue);
+    newValue != null && dispatch(startGetCitiesByDepartmentId(newValue.value));
   };
   const handleCitySelectChange = (event, newValue) => {
     console.log("handleCitySelectChange==  : ", newValue);
+    if (!newValue && filters.city_id === 0) return;
     const filterObjet = { ["city_id"]: newValue ? newValue.value : 0 };
     activeModuleIsPosts
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
       : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
   };
-  const handleAgeSliceChange = (event) => {
-    console.log("handleAgeSliceChange==  : ", event.target.value);
+  const handleDateSelectFilterChange = (event, newValue) => {
+    // console.log("handledateSelectFilterChange==  : ", newValue);
+    if (!newValue && (filters.from_date === "")) return;
+    const filterObjet = { ["from_date"]: newValue ? newValue.value : "" };
+    activeModuleIsPosts
+      ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
   };
+  const handleDatePickerChange = ({ target }) => {
+    // console.log("handleDatePickerChange==  : ", target.value);
 
-  console.log("ciudades  == ", cities);
+    const filterObjet = { ["from_date"]: target.value };
+    activeModuleIsPosts
+      ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
+  };
+  const handleAgeSliceChange = ({ target }) => {
+    const { value } = target;
+    console.log("handleAgeSliceChange==  : ", value);
+
+    // value > 10 && 
+    const filterObjet = { ["age"]: value > 10 ? 50 : value };// 50 años como edad maxima
+    activeModuleIsPosts
+      ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
+
+
+  };
+  const handleGenderChange = ({ target }) => {
+    const { value } = target;
+    if (value === undefined) return;
+    // console.log("===handleGenderChange ", value)
+
+    const filterObjet = { ["gender"]: value === genderCurrentValue ? "" : value };
+    activeModuleIsPosts
+      ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
+
+  }
+  const handleSizeChange = ({ target }) => {
+    const { value } = target;
+    if (value === undefined) return;
+    // console.log("===handleSizeChange ", value)
+
+    const filterObjet = { ["size"]: value === sizeCurrentValue ? '' : value };
+    activeModuleIsPosts
+      ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
+      : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
+  };
+  const handleVaccinatedSelectChange = (event, newValue) => {
+    // console.log("===handleVaccinatedSelectChange ", newValue)
+    if (newValue === null && filters.vaccinated === null) return;
+    const filterObjet = {
+      ["vaccinated"]: newValue != null ? newValue.value : null,
+    };
+    dispatch(changePetsRequest([filterObjet, { page: 0 }]));
+  }
+  const handleSterilizedSelectChange = (event, newValue) => {
+    // console.log("===handleSterilizedSelectChange ", newValue)
+    if (newValue === null && filters.sterilized === null) return;
+    const filterObjet = {
+      ["sterilized"]: newValue != null ? newValue.value : null,
+    };
+    dispatch(changePetsRequest([filterObjet, { page: 0 }]));
+  }
+  const handleDewormedSelectChange = (event, newValue) => {
+    // console.log("===handleDewormedSelectChange ", newValue)
+    if (newValue === null && filters.dewormed === null) return;
+    const filterObjet = {
+      ["dewormed"]: newValue != null ? newValue.value : null,
+    };
+    dispatch(changePetsRequest([filterObjet, { page: 0 }]));
+  }
+
+
   // ChipsFiltros
   const ListItem = styled("li")(({ theme }) => ({
     margin: theme.spacing(0.5),
@@ -288,22 +426,28 @@ const PanelFilters = ({ module }) => {
           style={{ marginTop: "10px" }}
         />
       )}
-      <SelectComponent
-        fullWidth
-        label="Fecha de subida"
-        name="date"
-        // onChange={handleFilterChange}
-        // value={selectedFilter}
-        options={[
-          { label: "Hoy", value: 1 },
-          { label: "Semana actual", value: 2 },
-          { label: "Mes actual", value: 3 },
-          { label: "Año actual", value: 4 },
-        ]}
-        style={{ marginTop: "5px", marginBottom: "18px" }}
-      />
 
-      <DateInputComponent label="Fecha" />
+      {
+        role === "u" && activeModule == "posts" && (
+          <SelectComponent
+            fullWidth
+            label="Fecha de publicación"
+            name="date"
+            onChange={handleDateSelectFilterChange}
+            value={dateSelectOptionSelectedValue}
+            options={dateSelectOptions}
+            style={{ marginTop: "5px", marginBottom: "18px" }}
+          />
+        )
+      }
+
+      {role === "s" && activeModule == "posts" &&
+        <DateInputComponent
+          onChange={handleDatePickerChange}
+          label="Fecha de publicación"
+          value={filters.from_date ? filters.from_date : ""}
+        />
+      }
 
       {role === "u" && activeModule == "posts" && (
         <Divider
@@ -325,7 +469,7 @@ const PanelFilters = ({ module }) => {
           onChange={handleDepartmentSelectChange}
           value={departmentOptionSelectedValue}
           options={departmentsOptions}
-          // style={{ marginTop: "25px" }}
+        // style={{ marginTop: "25px" }}
         />
       )}
       {role === "u" && activeModule == "posts" && (
@@ -353,35 +497,41 @@ const PanelFilters = ({ module }) => {
         Caracteristicas
       </Divider>
 
-      <FormGroup sx={{ marginTop: "12px" }}>
-        <FormLabel sx={{ marginTop: 1 }}>Edad:</FormLabel>
-        <Box sx={{ width: 260, margin: "auto" }}>
-          <Slider
-            aria-label="Edad"
-            defaultValue={0}
-            valueLabelDisplay="auto"
-            color="warning"
-            onChange={handleAgeSliceChange}
-            step={null}
-            max={11}
-            marks={marks}
-            components={{ ValueLabel }}
+      {((role === "u" && activeModule === "posts") || (role === "s" && activeModule === "pets")) && (
+        <>
+          <FormGroup sx={{ marginTop: "12px" }}>
+            <FormLabel sx={{ marginTop: 1 }}>Edad:</FormLabel>
+            <Box sx={{ width: 260, margin: "auto" }}>
+              <Slider
+                aria-label="Edad"
+                defaultValue={0}
+                value={filters.age}
+                valueLabelDisplay="auto"
+                color="warning"
+                onChange={handleAgeSliceChange}
+                step={null}
+                max={11}
+                marks={marks}
+                components={{ ValueLabel }}
+              />
+            </Box>
+          </FormGroup>
+          <RadioComponent
+            label="Talla"
+            name="size"
+            value={sizeCurrentValue}
+            onChange={handleSizeChange}
+            options={[
+              { label: "Pequeño", value: "s" },
+              { label: "Mediano", value: "m" },
+              { label: "Grande", value: "l" },
+            ]}
+            style={{ marginTop: "2.8rem", marginBottom: "10px" }}
           />
-        </Box>
-      </FormGroup>
 
-      <RadioComponent
-        label="Tamaño:"
-        name="size"
-        value={selectedSize}
-        onChange={handleSizeChange}
-        options={[
-          { label: "Pequeño", value: "pequeño" },
-          { label: "Mediano", value: "mediano" },
-          { label: "Grande", value: "grande" },
-        ]}
-        style={{ marginTop: "2.8rem", marginBottom: "10px" }}
-      />
+        </>
+      )}
+
 
       <SelectComponent
         label="Especie"
@@ -422,67 +572,64 @@ const PanelFilters = ({ module }) => {
         </Select>
       </FormControl> */}
 
-      <RadioComponent
-        row
-        label="Genero:"
-        name="gender"
-        value={selectedSize}
-        onChange={handleSizeChange}
-        options={[
-          { label: "Macho", value: "m" },
-          { label: "Hembra", value: "f" },
-        ]}
-        style={{ marginBottom: "10px" }}
-      />
-      <Divider sx={{ marginTop: 1, marginBottom: 2 }}></Divider>
+      {
+        ((role === "u" && activeModule == "posts") || (role === "s" && activeModule === "pets")) &&
 
-      <Divider
-        sx={{
-          marginTop: 3,
-          marginBottom: 1,
-          color: "#A77A23",
-          fontWeight: "600",
-        }}
-      >
-        Salud
-      </Divider>
+        <RadioComponent
+          row
+          label="Sexo"
+          value={genderCurrentValue}
+          onChange={handleGenderChange}
+          // onClick={handleGenderChange}
+          options={[
+            { label: "Macho", value: "m" },
+            { label: "Hembra", value: "f" },
+          ]}
+          style={{ marginBottom: "10px" }}
+        />
+      }
+      {/* <Divider sx={{ marginTop: 1, marginBottom: 2 }}></Divider> */}
 
-      {/* <SelectComponent
-        label="Vacunación"
-        name="vaccinated"
-        onChange={handleFilterChange}
-        value={selectedFilter}
-        options={[
-          { label: "Vacunados y sin vacunar", value: 1 },
-          { label: "Vacunado", value: 2 },
-          { label: "Sin vacunar (no se sabe)", value: 3 },
-        ]}
-      />
+      {
+        role === "s" && activeModule === "pets" && (
+          <>
+            <Divider
+              sx={{
+                marginTop: 3,
+                marginBottom: 1,
+                color: "#A77A23",
+                fontWeight: "600",
+              }}
+            >
+              Salud
+            </Divider>
+            <SelectComponent
+              label="Vacunación"
+              name="vaccinated"
+              onChange={handleVaccinatedSelectChange}
+              value={vaccinedSelectSelectedValue}
+              options={vaccinesSelectOptions}
+            />
 
-      <SelectComponent
-        label="Esterilización"
-        name="sterilized"
-        onChange={handleFilterChange}
-        value={selectedFilter}
-        options={[
-          { label: "Con y sin esterilización", value: 1 },
-          { label: "Esterilizado", value: 2 },
-          { label: "Sin esterilizar (no se sabe)", value: 3 },
-        ]}
-      />
+            <SelectComponent
+              label="Esterilización"
+              name="sterilized"
+              onChange={handleSterilizedSelectChange}
+              value={sterilizedSelectSelectedValue}
+              options={sterilizedSelectOptions}
+            />
 
-      <SelectComponent
-        label="Desparasitación"
-        name="dewormed"
-        onChange={handleFilterChange}
-        value={selectedFilter}
-        options={[
-          { label: "Con y sin desparasitación", value: 1 },
-          { label: "Desparasitado", value: 2 },
-          { label: "Sin desparasitar (no se sabe)", value: 3 },
-        ]}
-      /> */}
-      <Divider sx={{ marginTop: 1, marginBottom: 2 }}></Divider>
+            <SelectComponent
+              label="Desparasitación"
+              name="dewormed"
+              onChange={handleDewormedSelectChange}
+              value={dewormedSelectSelectedValue}
+              options={dewormedSelectOptions}
+            />
+            <Divider sx={{ marginTop: 1, marginBottom: 2 }}></Divider></>
+        )
+      }
+
     </>
   );
 };

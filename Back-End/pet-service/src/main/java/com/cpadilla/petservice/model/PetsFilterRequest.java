@@ -26,6 +26,7 @@ public class PetsFilterRequest {
     private Boolean vaccinated;
     private Boolean sterilized;
     private Boolean dewormed;
+    private String gender;
     private int page;
     @JsonProperty("page_size")
     private int pageSize;
