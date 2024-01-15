@@ -49,7 +49,7 @@ const App = () => {
 								<Routes >
 									<Route path="/auth/login" element={<Autenticacion />} />
 									<Route path="/prehome" element={<PreHome />} />
-									<Route path="/*" element={<Navigate to='/prehome' />} />
+									<Route path="/*" element={<Navigate to='/auth/login' />} />
 								</Routes>
 							} />
 					}

@@ -49,7 +49,7 @@ const CardVertical = ({ pet }) => {
   // const [openDialog, setOpenDialog] = useState(false);
 
   const handleOpenDialog = () => {
-    console.log("iddddddddddd: ", id);
+    // console.log("iddddddddddd: ", id);
     dispatch(startGetPetById(id))
     // setOpenDialog(true);
   };

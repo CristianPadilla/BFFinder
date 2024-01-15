@@ -15,12 +15,9 @@ import { TextInputComponent } from "../form/TextInputComponent";
 import SelecInputComponent from "../form/SelectInputComponent";
 import SlidersImages from "../post/SlidersImages";
 import CardInfoPet from "./CardInfoPet";
+import { useSelector } from "react-redux";
 
-const formFields = {
-  description: "",
-  pet: "",
-  image: null,
-};
+
 
 const images = [
   {
@@ -38,8 +35,20 @@ const images = [
 ];
 
 const FormAddPost = () => {
-  const [profileImageUrl] = useState("");
-  const [editing, setEditing] = useState(false);
+  const { active: post, isSaving } = useSelector((state) => state.posts);
+
+
+  const initialValues = post
+    ? {
+      description: post.description,
+      pet: { label: `${post.petResponse.name} - ${post.petResponse.breedDetails.specie.name} - ${post.petResponse.breedDetails.name}`, value: post.petResponse.id },
+      images: post.images,
+    }
+    : {
+      description: "",
+      pet: { label: "", value: null },
+      images: [],
+    }
 
   const handleEditClick = () => {
     setEditing(true);
@@ -56,9 +65,15 @@ const FormAddPost = () => {
     // Puedes realizar acciones de cancelación aquí si es necesario
   };
 
+  const onImageInputChange = ({ target }) => {
+    console.log('onImageInputChange==  : ', target.files);
+
+  }
+
+
   return (
     <Formik
-      initialValues={formFields}
+      initialValues={initialValues}
       // onSubmit={handleRegistration}
       validationSchema={Yup.object({
         description: Yup.string()
@@ -92,7 +107,10 @@ const FormAddPost = () => {
                 showPlayButton={false}
                 thumbnailPosition={"left"}
               /> */}
-              <GroupDragandDrop name="image" />
+              <GroupDragandDrop
+              onBlur={formik.handleBlur}
+               onChange={onImageInputChange}
+              name="image" />
             </Grid>
             <Grid container spacing={1} sx={{ margin: "1rem" }}>
               <Grid item xs={6}>
@@ -117,7 +135,7 @@ const FormAddPost = () => {
                   spacing={2}
                   // justifyContent="space-between" // Alinea los elementos con espacio entre ellos
                   alignItems="center"
-                  // sx={{ height: "100%" }}
+                // sx={{ height: "100%" }}
                 >
                   <Grid item xs={6}>
                     <Typography variant="subtitle1">
@@ -136,7 +154,7 @@ const FormAddPost = () => {
                       ]}
                     />
                   </Grid>
-                  <Grid item xs={6} sx={{  height: "100%", marginTop: "1rem", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Grid item xs={6} sx={{ height: "100%", marginTop: "1rem", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <Button
                       type="submit"
                       variant="contained"

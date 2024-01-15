@@ -410,6 +410,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .sterilized(petResponse.isSterilized())
                 .dewormed(petResponse.isDewormed())
                 .userOwnerResponse(petResponse.getUserOwnerResponse())
+                .gender(petResponse.getGender())
                 .breedDetails(petResponse.getBreedDetails())
                 .build();
 

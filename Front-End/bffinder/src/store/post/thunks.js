@@ -2,7 +2,7 @@ import { HttpStatusCode } from "axios";
 import { locationApi } from "../../api/locationApi";
 import { postApi } from "../../api/postApi";
 import { startContentLoading, stopContentLoading } from "../global";
-import { fetchPostsStart, fetchPostsSuccess, setCities, setCityIdFilter, setDepartments, setPostsRequest } from "./postSlice";
+import { fetchPostsStart, fetchPostsSuccess, setActivePost, setCities, setCityIdFilter, setDepartments, setPostsRequest } from "./postSlice";
 
 
 export const fetchPosts = () => async (dispatch, getState) => {
@@ -89,4 +89,13 @@ export const startCleanCities = () => async (dispatch) => {
     console.log("startCleanCities");
     dispatch(setCities([]));
     dispatch(setCityIdFilter(0));
+};
+
+export const startGetPostById = (id) => async (dispatch) => {
+    dispatch(startContentLoading())
+    const { data, status } = await postApi.get('/' + id);
+    // console.log("startGetPostById ", data, status);
+    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+    dispatch(setActivePost(data));
+    dispatch(stopContentLoading())
 };

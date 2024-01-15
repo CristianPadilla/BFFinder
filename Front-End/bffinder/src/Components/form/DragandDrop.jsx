@@ -96,7 +96,7 @@ const DragAndDrop = ({ label, name, errorClassName, ...props }) => {
       if (sizeInMB > maxSizeInMB) {
         console.log("El tamaño de la imagen es demasiado grande");
         helpers.setError("El tamaño de la imagen es demasiado grande, el tamaño debe ser menor a 10MB");
-        
+
         return;
       }
 
@@ -152,6 +152,7 @@ const DragAndDrop = ({ label, name, errorClassName, ...props }) => {
               onBlur={props.onBlur}
               onChange={(e) => {
                 changeImage(e);
+                props.onChange && props.onChange(e)
               }}
             />
             <div className="text-information">

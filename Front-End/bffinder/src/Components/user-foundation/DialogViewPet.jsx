@@ -23,7 +23,6 @@ const DialogViewPet = ({ open, onClose }) => {
 
   const renderInformationSection = () => (
     <>
-      {console.log("petXX: ", pet)}
       <Paper
         elevation={0}
         variant="outlined"
@@ -99,12 +98,11 @@ const DialogViewPet = ({ open, onClose }) => {
   const handleSaveClick = () => {
     setEditing(false);
     // console.log("Datos guardados del edit:", formData);
-    // Puedes realizar acciones de guardado aquí si es necesario
   };
 
   const handleCancelClick = () => {
     setEditing(false);
-    // Puedes realizar acciones de cancelación aquí si es necesario
+
   };
 
   return (
