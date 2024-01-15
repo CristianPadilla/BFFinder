@@ -53,7 +53,7 @@ const App = () => {
 								</Routes>
 							} />
 					}
-					<Route path="/*" element={<Navigate to='/prehome' />} />
+					<Route path="/*" element={<Navigate to='/auth/login' />} />
 				</Routes>
 			</Layout>
 		</BrowserRouter>
