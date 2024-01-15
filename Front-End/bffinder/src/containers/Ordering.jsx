@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { changePostsRequest } from "../store/post";
 import { changePetsRequest } from "../store/pet";
 import { act } from "react-dom/test-utils";
-// import { useTheme } from '@mui/material/styles';
 
 const Ordering = () => {
   const dispatch = useDispatch();
@@ -22,8 +21,7 @@ const Ordering = () => {
     activeModule === "posts"
       ? useSelector((state) => state.posts.postRequest.sorting)
       : useSelector((state) => state.pets.petsRequest);
-  console.log("=========sort ", sort);
-  console.log("======desc ", desc);
+
 
   const options = [
     <MenuItem key={3} value={"age"}>Edad: Menor a Mayor</MenuItem>,
@@ -40,22 +38,6 @@ const Ordering = () => {
     <MenuItem key={6} value={"nameDesc"}>Nombre: Z - A</MenuItem>
 
   ]);
-
-  // const options = [
-  //   <MenuItem key={3} value={{ field: 'age', direction: 'asc' }}>Edad: Menor a Mayor</MenuItem>,
-  //   <MenuItem key={4} value={{ field: 'age', direction: 'desc' }}>Edad: Mayor a Menor</MenuItem>
-  // ];
-
-  // activeModule === "posts" && options.push([
-  //   <MenuItem key={1} value={{ field: 'date', direction: 'desc' }}>Mas recientes</MenuItem>,
-  //   <MenuItem key={2} value={{ field: 'date', direction: 'asc' }}>Mas antiguos</MenuItem>
-  // ]);
-
-  // role === "s" && options.push([
-  //   <MenuItem key={5} value={{ field: 'name', direction: 'asc' }}>Nombre: A - Z</MenuItem>,
-  //   <MenuItem key={6} value={{ field: 'name', direction: 'desc' }}>Nombre: Z - A</MenuItem>
-
-  // ]);
 
 
   const sortingOptionSelectedValue = () => {
@@ -81,21 +63,10 @@ const Ordering = () => {
       return activeModule === "posts" ? "dateDesc" : "age";
     }
   }
-  console.log("====== BBBBBBBBBBB ", sortingOptionSelectedValue());
 
-  // const sortingOptionSelectedValue =
-  //   sort != null && sort != ""
-  //     ? options.find(({ props }) => {
-  //       const { field, direction } = props.value;
-  //       console.log("===option ", props.value);
-  //       return field === sort && direction === desc;
-  //     })
-  //     : { label: "", value: 0 };
-
-  // console.log("====== option ", sortingOptionSelectedValue);
 
   const handleSortChange = ({ target }) => {
-    console.log("===handleSortChange ", target.value);
+    // console.log("===handleSortChange ", target.value);
 
     let sortCriteria = "date";
     let descCriteria = false;
@@ -125,7 +96,7 @@ const Ordering = () => {
 
     const sortFilterObjet = { ["sort"]: sortCriteria };
     const descFilterObjet = { ["desc"]: descCriteria };
-    console.log("===sortCriteria ", sortFilterObjet, descFilterObjet);
+    // console.log("===sortCriteria ", sortFilterObjet, descFilterObjet);
     activeModule === "posts"
       ? dispatch(changePostsRequest([sortFilterObjet, descFilterObjet, { page: 0 }]))
       : dispatch(changePetsRequest([sortFilterObjet, descFilterObjet, { page: 0 }]));

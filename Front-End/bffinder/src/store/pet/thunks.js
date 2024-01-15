@@ -15,7 +15,7 @@ export const startFetchPets = () => async (dispatch, getState) => {
 
         const { data } = await petApi.post("/user/" + userId + "/filter", petsRequest);
         const { page, filters } = data;
-        console.log("finish startFetchPets from thunk ", data);
+        // console.log("finish startFetchPets from thunk ", data);
         dispatch(setPetsPage({
 
             page: {
@@ -68,22 +68,62 @@ export const changePetsRequest = (filters) => async (dispatch, getState) => {
     dispatch(startFetchPets());
 };
 
-export const startAddNewPet = () => async (dispatch, getState) => {
-
-    dispatch(savingNewPet())
+export const startAddNewPet = (pet) => async (dispatch, getState) => {
     const { userId } = getState().persisted.auth;
-    console.log("startNewPet from thunk ", userId);
-    const { data, status } = await petApi.post("/save", newPet);
-    console.log(data, status);
+
+    dispatch(savingNewPet(true))
+    const petToSave = {
+        ...pet, ownerId: userId,
+    }
+    // console.log("startNewPet from thunk ", petToSave);
+
+    const { data, status } = await petApi.post("/save", petToSave);
+    // console.log("Finish savepet from thunk ", data, status);
     if (status !== HttpStatusCode.Created) dispatch(setErrorMessage(data));
+
+    if (pet.image !== null) {
+        // console.log("actualizando imagen de mascota ");
+        dispatch(updatePetProfileImage(data.id, pet.image));
+
+    };
+    dispatch(setActivePet(null)); // no concluido
+    dispatch(savingNewPet(false));
     dispatch(startFetchPets());
-    dispatch(setActivePet(data)); // no concluido
+};
+
+
+export const startUpdatePet = (pet) => async (dispatch, getState) => {
+
+    dispatch(savingNewPet(true))
+    // console.log("startUpdatePet from thunk ", pet);
+
+    const { data, status } = await petApi.put("/update", pet);
+    // console.log("Finish UpdatePet from thunk ", data, status);
+    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+
+    if (pet.image !== null) {
+        // console.log("actualizando imagen de mascota ");
+        dispatch(updatePetProfileImage(data.id, pet.image));
+
+    };
+    dispatch(setActivePet(null));
+    dispatch(savingNewPet(false));
+    dispatch(startFetchPets());
+};
+
+
+
+export const updateActivePet = (fields) => async (dispatch, getState) => {
+    fields.forEach(field => {
+        console.log("actualizando campo de mascota ", field);
+        dispatch(setActivePetField(field));
+    });
 };
 
 export const startGetPetById = (id) => async (dispatch) => {
     dispatch(startContentLoading())
     const { data, status } = await petApi.get('/' + id);
-    console.log("startGetPetById ", data, status);
+    // console.log("startGetPetById ", data, status);
     if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
     dispatch(setActivePet(data));// no concluido
     dispatch(stopContentLoading())
@@ -91,8 +131,7 @@ export const startGetPetById = (id) => async (dispatch) => {
 
 export const startGetSpecies = () => async (dispatch, getState) => {
     const { activeModule } = getState().persisted.global
-    console.log("JJJJJJJJJJJJJJJJ ", activeModule);
-
+    // console.log("JJJJJJJJJJJJJJJJ ", activeModule);
     const { data, status } = await specieApi.get("/all");
     console.log("startGetSpecies", data, status);
     if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
@@ -104,18 +143,33 @@ export const startGetSpecies = () => async (dispatch, getState) => {
 export const startGetBreedsBySpecieId = (specieId,) => async (dispatch, getState) => {
     const { activeModule } = getState().persisted.global
     const { data, status } = await breedApi.get("/specie/" + specieId);
-    console.log("startGetBreedsBySpecieId", data, status);
+    // console.log("startGetBreedsBySpecieId", data, status);
     if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
     activeModule === "posts"
         ? dispatch(setBreedsP(data))
         : dispatch(setBreeds(data));
 };
 
-export const updateActivePet = (fields) => async (dispatch, getState) => {
-    fields.forEach(field => {
-        console.log("actualizando campo de mascota ", field);
-        dispatch(setActivePetField(field));
+
+export const updatePetProfileImage = (petId, imageBase64) => async (dispatch, getState) => {
+    console.log("updatePetProfileImage ", petId, imageBase64);
+
+    const formData = new FormData();
+    const response = await fetch(imageBase64);
+    const imageBlob = await response.blob();
+    formData.append('image', imageBlob, 'image.jpg');
+
+    const { data, status } = await petApi.put("/update/profile/" + petId, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
     });
-};
+
+    // console.log("updatePetProfileImage ", data, status);
+    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+    // dispatch(setActivePet(data));
+}
+
+
+
+
 
 

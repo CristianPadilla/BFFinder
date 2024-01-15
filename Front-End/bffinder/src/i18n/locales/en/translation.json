@@ -15,5 +15,18 @@
     "pitbull": "Pitbull",
     "british shorthair": "British Shorthair",
     "pug": "Pug"
+  },
+  "sizes": {
+    "s": "Small",
+    "m": "Medium",
+    "l": "Large"
+  },
+  "gender": {
+    "m": "Male",
+    "f": "Female"
+  },
+  "dangerous": {
+    "true": "Dangerous",
+    "false": "Social"
   }
 }
