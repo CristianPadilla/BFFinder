@@ -24,20 +24,20 @@ import { t } from "i18next";
 const CardVertical = ({ pet }) => {
   const dispatch = useDispatch();
   const { active } = useSelector((state) => state.pets);
-  const {
-    id,
-    name,
-    breedDetails,
-    specie,
-    size,
-    age,
-    vaccinated,
-    sterilized,
-    dewormed,
-    published,
-    images,
-    dangerous,
-  } = pet;
+  // const {
+  //   id,
+  //   name,
+  //   breedDetails,
+  //   specie,
+  //   size,
+  //   age,
+  //   vaccinated,
+  //   sterilized,
+  //   dewormed,
+  //   published,
+  //   dangerous,
+  //   gender,
+  // } = pet;
   // console.log("log: ", pet);
 
   const navigate = useNavigate();
@@ -49,8 +49,8 @@ const CardVertical = ({ pet }) => {
   // const [openDialog, setOpenDialog] = useState(false);
 
   const handleOpenDialog = () => {
-    console.log("iddddddddddd: ", id);
-    dispatch(startGetPetById(id))
+    // console.log("iddddddddddd: ", pet.id);
+    dispatch(startGetPetById(pet.id));
     // setOpenDialog(true);
   };
 
@@ -58,6 +58,8 @@ const CardVertical = ({ pet }) => {
     dispatch(setActivePet(null));
     // setOpenDialog(false);
   };
+
+  console.log("pet Card: ", pet);
 
   return (
     <div
@@ -69,8 +71,7 @@ const CardVertical = ({ pet }) => {
         elevation={6}
       >
         <CardActionArea>
-          <div className="card-click" onClick={handleOpenDialog} >
-
+          <div className="card-click" onClick={handleOpenDialog}>
             <CardHeader
               avatar={
                 <Typography
@@ -78,7 +79,7 @@ const CardVertical = ({ pet }) => {
                   component="h2"
                   sx={{ fontSize: "1.4rem" }}
                 >
-                  {name}
+                  {pet.name}
                 </Typography>
               }
               action={
@@ -87,7 +88,8 @@ const CardVertical = ({ pet }) => {
                   color="text.secondary"
                   sx={{ fontSize: "1rem", marginTop: ".4rem" }}
                 >
-                  {t(`species.${breedDetails.specie.name}`)} - {t(`breeds.${breedDetails.name}`)}
+                  {t(`species.${pet.breedDetails.specie.name}`)} -{" "}
+                  {t(`breeds.${pet.breedDetails.name}`)}
                 </Typography>
               }
             />
@@ -95,9 +97,7 @@ const CardVertical = ({ pet }) => {
               <CardMedia
                 component="img"
                 sx={{ width: "100%", height: "100%", objectFit: "cover" }}
-                image={
-                  images && images.length > 0 ? images[0].profileImageUrl : imgdefault
-                }
+                image={pet.profileImageUrl ? pet.profileImageUrl : imgdefault}
                 alt="Imagen"
               />
             </div>
@@ -109,21 +109,26 @@ const CardVertical = ({ pet }) => {
                     color="text.secondary"
                     sx={{ fontSize: ".9rem", marginBottom: "1rem" }}
                   >
-                    Tamaño: {t(`sizes.${size}`)}
+                    Tamaño: {t(`sizes.${pet.size}`)}
                   </Typography>
                   <Typography
                     variant="body2"
                     color="text.secondary"
                     sx={{ fontSize: ".9rem", marginBottom: "1rem" }}
                   >
-                    Edad: {age} años
+                    Edad:{" "}
+                    {pet.age === 1
+                      ? `${pet.age} año`
+                      : pet.age === 0
+                      ? "Menos de un año"
+                      : `${pet.age} años`}
                   </Typography>
                   <Typography
                     variant="body2"
                     color="text.secondary"
                     sx={{ fontSize: ".9rem", marginBottom: "1rem" }}
                   >
-                    Genero: {breedDetails.name}
+                    Genero: {t(`genders.${pet.gender}`)}
                   </Typography>
                 </Grid>
 
@@ -136,7 +141,7 @@ const CardVertical = ({ pet }) => {
                   >
                     {/* {console.log("Valor de vaccinated:", vaccinated)} */}
                     Vacunado:{" "}
-                    {vaccinated ? (
+                    {pet.vaccinated ? (
                       <CheckIcon color="success" sx={{ fontSize: 15 }} />
                     ) : (
                       <CloseIcon color="error" sx={{ fontSize: 15 }} />
@@ -148,7 +153,7 @@ const CardVertical = ({ pet }) => {
                     sx={{ fontSize: ".9rem", marginBottom: "1rem" }}
                   >
                     Esterilizado:{" "}
-                    {sterilized ? (
+                    {pet.sterilized ? (
                       <CheckIcon color="success" sx={{ fontSize: 15 }} />
                     ) : (
                       <CloseIcon color="error" sx={{ fontSize: 15 }} />
@@ -160,7 +165,7 @@ const CardVertical = ({ pet }) => {
                     sx={{ fontSize: ".9rem", marginBottom: "1rem" }}
                   >
                     Desparasitado:{" "}
-                    {dewormed ? (
+                    {pet.dewormed ? (
                       <CheckIcon color="success" sx={{ fontSize: 15 }} />
                     ) : (
                       <CloseIcon color="error" sx={{ fontSize: 15 }} />
@@ -169,9 +174,8 @@ const CardVertical = ({ pet }) => {
                 </Grid>
               </Grid>
             </CardContent>
-
           </div>
-        </ CardActionArea>
+        </CardActionArea>
         <CardActions>
           <Grid
             container
@@ -186,7 +190,7 @@ const CardVertical = ({ pet }) => {
             {/* <Typography variant="body2" color="text.secondary" sx={{ padding: '.4rem', backgroundColor: 'lightgreen', borderRadius: '4px', fontWeight: '600', marginLeft: '8px'}}>
     En proceso de adopción
   </Typography> */}
-            {published ? (
+            {pet.published ? (
               <Typography
                 variant="body2"
                 color="text.secondary"
@@ -221,7 +225,9 @@ const CardVertical = ({ pet }) => {
           </Grid>
         </CardActions>
       </Card>
-      {active != null && <DialogViewPet open={active != null} onClose={handleCloseDialog} />}
+      {active != null && (
+        <DialogViewPet open={active != null} onClose={handleCloseDialog} />
+      )}
     </div>
   );
 };

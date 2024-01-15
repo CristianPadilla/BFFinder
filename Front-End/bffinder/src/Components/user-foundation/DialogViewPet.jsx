@@ -12,9 +12,12 @@ import {
   Divider,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import CheckIcon from "@mui/icons-material/Check";
 import imgdefault from "imgs/logo-bffinder.png";
 import FormAddPet from "../post/FormAddPet";
 import { useDispatch, useSelector } from "react-redux";
+import { t } from "i18next";
+import Swal from 'sweetalert2';
 
 const DialogViewPet = ({ open, onClose }) => {
   const [profileImageUrl] = useState("");
@@ -38,19 +41,32 @@ const DialogViewPet = ({ open, onClose }) => {
           sx={{ display: "flex", justifyContent: "center", margin: "1rem" }}
         >
           <Grid item xs={6} sx={{ textAlign: "justify" }}>
-            {/* <Typography sx={{ margin: '.2rem'}}>{breedDetails.specie.name} / {breedDetails.name}</Typography>
-      <Typography sx={{ margin: '.2rem'}}>Genero: {gender}</Typography> */}
-            <Typography sx={{ margin: ".2rem" }}>iD {pet.id}</Typography>
-            <Typography sx={{ margin: ".2rem" }}>Especie / Raza</Typography>
-            <Typography sx={{ margin: ".2rem" }}>Genero: Macho</Typography>
             <Typography sx={{ margin: ".2rem" }}>
-              Caracter: {"dangerous"}
+              {t(`species.${pet.breedDetails.specie.name}`)} -{" "}
+              {t(`breeds.${pet.breedDetails.name}`)}
+            </Typography>
+            <Typography sx={{ margin: ".2rem" }}>
+              Genero: {t(`genders.${pet.gender}`)}{" "}
+            </Typography>
+            <Typography sx={{ margin: ".2rem" }}>
+              Caracter: {t(`dangerous.${pet.dangerous}`)}
             </Typography>
           </Grid>
           <Grid item xs={6} sx={{ textAlign: "justify" }}>
-            <Typography sx={{ margin: ".2rem" }}>Tamaño: {"size"}</Typography>
-            <Typography sx={{ margin: ".2rem" }}>Peso: {"weight"}</Typography>
-            <Typography sx={{ margin: ".2rem" }}>Edad: {"age"}</Typography>
+            <Typography sx={{ margin: ".2rem" }}>
+              Tamaño: {t(`sizes.${pet.size}`)}
+            </Typography>
+            <Typography sx={{ margin: ".2rem" }}>
+              Peso: {pet.weight} kg
+            </Typography>
+            <Typography sx={{ margin: ".2rem" }}>
+              Edad:{" "}
+              {pet.age === 1
+                ? `${pet.age} año`
+                : pet.age === 0
+                ? "Menos de un año"
+                : `${pet.age} años`}
+            </Typography>
           </Grid>
         </Grid>
         <Divider
@@ -74,13 +90,28 @@ const DialogViewPet = ({ open, onClose }) => {
         >
           <Grid item xs={6} sx={{ textAlign: "justify" }}>
             <Typography sx={{ margin: ".2rem" }}>
-              Vacunado: {"vaccinated"}
+              Vacunado:{" "}
+              {pet.vaccinated ? (
+                <CheckIcon color="success" sx={{ fontSize: 15 }} />
+              ) : (
+                <CloseIcon color="error" sx={{ fontSize: 15 }} />
+              )}
             </Typography>
             <Typography sx={{ margin: ".2rem" }}>
-              Esterilizado: {"sterilized"}
+              Esterilizado:{" "}
+              {pet.sterilized ? (
+                <CheckIcon color="success" sx={{ fontSize: 15 }} />
+              ) : (
+                <CloseIcon color="error" sx={{ fontSize: 15 }} />
+              )}
             </Typography>
             <Typography sx={{ margin: ".2rem" }}>
-              Desparasitado: {"dewormed"}
+              Desparasitado:{" "}
+              {pet.dewormed ? (
+                <CheckIcon color="success" sx={{ fontSize: 15 }} />
+              ) : (
+                <CloseIcon color="error" sx={{ fontSize: 15 }} />
+              )}
             </Typography>
           </Grid>
         </Grid>
@@ -94,6 +125,25 @@ const DialogViewPet = ({ open, onClose }) => {
 
   const handleEditClick = () => {
     setEditing(true);
+  };
+
+  const showAlert = () => {
+    Swal.fire({
+      title: '¿Estás seguro de eliminar esta mascota?',
+      text: 'No podrás revertir esta acción!',
+      icon: 'question',
+      confirmButtonText: 'Si, eliminar',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      didOpen: () => {
+        // Ajusta el z-index del contenedor de Sweet Alert
+        const sweetAlertContainer = document.querySelector('.swal2-container');
+        if (sweetAlertContainer) {
+          sweetAlertContainer.style.zIndex = '99999';
+        }
+      },
+    });
   };
 
   const handleSaveClick = () => {
@@ -141,7 +191,7 @@ const DialogViewPet = ({ open, onClose }) => {
                     }}
                   >
                     <img
-                      src={profileImageUrl ? profileImageUrl : imgdefault}
+                      src={pet.profileImageUrl ? pet.profileImageUrl : imgdefault}
                       alt=""
                       height="400px"
                       style={{ width: "auto" }}
@@ -154,7 +204,7 @@ const DialogViewPet = ({ open, onClose }) => {
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Typography variant="h5" sx={{ margin: ".8rem" }}>
-                      {name}
+                      {pet.name}
                     </Typography>
                     {renderInformationSection()}
                   </Grid>
@@ -175,16 +225,21 @@ const DialogViewPet = ({ open, onClose }) => {
             </Button> */}
             <Button
               variant="contained"
-              color="error"
+              color="warning"
               onClick={handleCancelClick}
             >
               Cancelar
             </Button>
           </>
         ) : (
+            <>
+          <Button variant="contained" color="error" onClick={showAlert}>
+            ELiminar
+          </Button>
           <Button variant="contained" color="info" onClick={handleEditClick}>
             Editar
           </Button>
+            </>
         )}
       </DialogActions>
     </Dialog>

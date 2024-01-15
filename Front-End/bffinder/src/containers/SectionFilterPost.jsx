@@ -34,6 +34,16 @@ const SectionFilterPost = () => {
     handleCloseDialog();
   };
 
+  const [tooltipOpen, setTooltipOpen] = useState(true);
+
+  const handleTooltipClose = () => {
+    setTooltipOpen(false);
+  };
+
+  const handleTooltipOpen = () => {
+    setTooltipOpen(true);
+  }; 
+
   return (
     <>
       {posts && posts.map((post) => (
@@ -58,6 +68,9 @@ const SectionFilterPost = () => {
         title={<span style={{ fontSize: "16px" }}>Crear Publicación</span>}
         arrow
         placement="left"
+        open={tooltipOpen}
+        onClose={handleTooltipClose}
+        onOpen={handleTooltipOpen}
       >
         <Fab
           color="primary"

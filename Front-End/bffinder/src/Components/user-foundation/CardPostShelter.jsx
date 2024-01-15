@@ -19,6 +19,7 @@ import Favorite from "@mui/icons-material/Favorite";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import DialogViewPost from "./DialogViewPost";
 import { t } from "i18next";
+import Swal from 'sweetalert2';
 
 const CardPostShelter = ({ post }) => {
   const { petPartialResponse, images, date, user, status } = post;
@@ -46,6 +47,18 @@ const handleOpenDialog = () => {
 
 const handleCloseDialog = () => {
   setOpenDialog(false);
+};
+
+const showAlert = () => {
+  Swal.fire({
+    title: '¿Estás seguro de deshabilitar esta publicación?',
+    // text: 'No podrás revertir esta acción!',
+    icon: 'question',
+    confirmButtonText: 'Si, deshabilitar',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+  });
 };
 
   return (
@@ -161,7 +174,7 @@ const handleCloseDialog = () => {
                     <Button
                       variant="contained"
                       color="error"
-                      // onClick={handleDeactivateClick}
+                      onClick={showAlert}
                       sx={{
                         marginLeft: "8px",
                         letterSpacing: "1px",

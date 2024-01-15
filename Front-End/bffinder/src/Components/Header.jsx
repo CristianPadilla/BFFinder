@@ -19,7 +19,7 @@ const Header = () => {
   const headerRef = useRef(null);
 
   const handleLoginClick = () => {
-    navigate("/login");
+    navigate("/auth/login");
   };
 
   const handleModalOpen = () => {

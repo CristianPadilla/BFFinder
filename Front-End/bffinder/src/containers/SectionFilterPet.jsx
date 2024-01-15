@@ -24,37 +24,50 @@ export const SectionFilterPet = () => {
     handleCloseDialog();
   };
 
-  return (
-    isSaving
-      ? <h2> Loadinggg</h2 >
-      :
-      <>
-        {pets && pets.map((pet) => (
+  const [tooltipOpen, setTooltipOpen] = useState(true);
+
+  const handleTooltipClose = () => {
+    setTooltipOpen(false);
+  };
+
+  const handleTooltipOpen = () => {
+    setTooltipOpen(true);
+  };
+
+  return isSaving ? (
+    <h2> Loadinggg</h2>
+  ) : (
+    <>
+      {pets &&
+        pets.map((pet) => (
           <Grid key={pet.id} item xs={5} sm={3} md={3} lg={4} xl={4}>
             <CardVertical pet={pet} />
           </Grid>
         ))}
 
-        <Tooltip
-          title={<span style={{ fontSize: "16px" }}>Agregar mascota</span>}
-          arrow
-          placement="left"
+      <Tooltip
+        title={<span style={{ fontSize: "16px" }}>Agregar mascota</span>}
+        arrow
+        placement="left"
+        open={tooltipOpen}
+        onClose={handleTooltipClose}
+        onOpen={handleTooltipOpen}
+      >
+        <Fab
+          color="primary"
+          aria-label="add"
+          onClick={handleOpenDialog}
+          sx={{ position: "fixed", bottom: "16px", right: "25px" }}
         >
-          <Fab
-            color="primary"
-            aria-label="add"
-            onClick={handleOpenDialog}
-            sx={{ position: "fixed", bottom: "16px", right: "25px" }}
-          >
-            <AddIcon />
-          </Fab>
-        </Tooltip>
+          <AddIcon />
+        </Fab>
+      </Tooltip>
 
-        <ModalAddPet
-          open={openDialog}
-          onClose={handleCloseDialog}
-          onAdd={handleAddPet}
-        />
-      </>
+      <ModalAddPet
+        open={openDialog}
+        onClose={handleCloseDialog}
+        onAdd={handleAddPet}
+      />
+    </>
   );
 };

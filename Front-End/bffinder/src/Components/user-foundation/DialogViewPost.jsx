@@ -17,6 +17,7 @@ import FormAddPost from "./FormAddPost";
 import DragAndDrop from "../form/DragandDrop";
 import SlidersImages from "../post/SlidersImages";
 import CardInfoPet from "./CardInfoPet";
+import Swal from 'sweetalert2';
 
 const images = [
     {
@@ -193,9 +194,7 @@ const DialogViewPost = ({ open, onClose }) => {
             </Button>
           </>
         ) : (
-          <Button variant="contained" color="info" onClick={handleEditClick}>
-            QUITARR
-          </Button>
+          ""
         )}
       </DialogActions>
     </Dialog>

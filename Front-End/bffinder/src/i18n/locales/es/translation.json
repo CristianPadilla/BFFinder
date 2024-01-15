@@ -13,7 +13,8 @@
     "equine": "Caballos",
     "rodent": "Roedores",
     "bird": "Aves",
-    "other": "Otros"
+    "other": "Otros",
+    "fish": "Peces"
   },
   "breeds": {
     "siamese": "Siamés", 
@@ -37,7 +38,7 @@
     "maine coon":"Maine coon",
     "himalayan":"Himalayo",
     "turkish angora":"Angora Turco",
-    "dwarf russian hamster":"Hamster ruso enano",
+    "dwarf rusian hamster":"Hamster ruso enano",
     "syrian hamster":"Hamster Sirio",
     "chinese hamster":"Hamster Chino",
     "campbell dwarf hamster":"Hamster enano de Campbell",
