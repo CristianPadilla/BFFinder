@@ -26,7 +26,7 @@ export const SectionFilterPet = () => {
 
   return (
     isSaving
-      ? <h2> Loadinggg</h2 >
+      ? <h2> Loadin de haciendo un proceso</h2 >
       :
       <>
         {pets && pets.map((pet) => (

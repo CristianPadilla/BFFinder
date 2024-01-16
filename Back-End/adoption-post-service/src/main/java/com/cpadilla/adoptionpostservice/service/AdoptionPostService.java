@@ -15,6 +15,7 @@ public interface AdoptionPostService {
     ImageResponse savePostImage(int postId, MultipartFile image);
 
     void cancelPostImage(int postId, int imageId);
+    void cleanPostImages(int postId);
 
     PostsFilteredPageResponse getPostsByUserIdFilter(int userId, PostsRequest filterRequest);
 
@@ -23,6 +24,7 @@ public interface AdoptionPostService {
     PostsFilteredPageResponse getAllFilter(PostsRequest filterRequest);
 
     AdoptionPostResponse updatePostDescription(AdoptionPostRequest request);
+    AdoptionPostResponse updatePostAssignedPet(int postId, int petId);
 
     int cancelPost(int postId);
 

@@ -254,6 +254,15 @@ public class PetServiceImpl implements PetService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<PetResponse> getAllForPostingByOwnerId(int ownerId) {
+        return repository.findAllByOwnerId(ownerId)
+                .stream()
+                .map(this::buildPetFromPetEntity)
+                .filter(petResponse -> !petResponse.isPublished())
+                .collect(Collectors.toList());
+    }
+
     public boolean petPassesFilters(PetResponse petResponse, PetsFilterRequest filter) {
 
         if (filter.getSize() != null && !filter.getSize().isEmpty()) {

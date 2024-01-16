@@ -10,7 +10,9 @@ import CardPostShelter from "../Components/user-foundation/CardPostShelter";
 
 const SectionFilterPost = () => {
   const dispatch = useDispatch();
-  const { posts } = useSelector((state) => state.posts.page);
+  const { page, isSaving } = useSelector((state) => state.posts);
+  const { posts } = page;
+
   const { role } = useSelector((state) => state.persisted.auth);
   const sectionRef = useRef(null);
 
@@ -35,46 +37,48 @@ const SectionFilterPost = () => {
   };
 
   return (
-    <>
-      {posts && posts.map((post) => (
-        role === "s"
-          ? <Grid
-            item
-            key={post.id}
-            xs={12}
-            sm={6}
-            md={4}
-            style={{ display: "flex" }}
-          >
-            <CardPostShelter post={post} style={{ flex: "1 0 auto" }} />
-          </Grid>
-          :
-          <Grid item xs={12} key={post.id}>
-            <CardPost post={post} />
-          </Grid>
-      ))}
+    isSaving ? <h2> Loadin de haciendo un proceso</h2 >
+      :
+      <>
+        {posts && posts.map((post) => (
+          role === "s"
+            ? <Grid
+              item
+              key={post.id}
+              xs={12}
+              sm={6}
+              md={4}
+              style={{ display: "flex" }}
+            >
+              <CardPostShelter post={post} style={{ flex: "1 0 auto" }} />
+            </Grid>
+            :
+            <Grid item xs={12} key={post.id}>
+              <CardPost post={post} />
+            </Grid>
+        ))}
 
-      <Tooltip
-        title={<span style={{ fontSize: "16px" }}>Crear Publicación</span>}
-        arrow
-        placement="left"
-      >
-        <Fab
-          color="primary"
-          aria-label="add"
-          onClick={handleOpenDialog}
-          sx={{ position: "fixed", bottom: "16px", right: "25px" }}
+        <Tooltip
+          title={<span style={{ fontSize: "16px" }}>Crear Publicación</span>}
+          arrow
+          placement="left"
         >
-          <AddIcon />
-        </Fab>
-      </Tooltip>
+          <Fab
+            color="primary"
+            aria-label="add"
+            onClick={handleOpenDialog}
+            sx={{ position: "fixed", bottom: "16px", right: "25px" }}
+          >
+            <AddIcon />
+          </Fab>
+        </Tooltip>
 
-      <ModalAddPet
-        open={openDialog}
-        onClose={handleCloseDialog}
-        onAdd={handleAddPet}
-      />
-    </>
+        <ModalAddPet
+          open={openDialog}
+          onClose={handleCloseDialog}
+          onAdd={handleAddPet}
+        />
+      </>
   );
 };
 

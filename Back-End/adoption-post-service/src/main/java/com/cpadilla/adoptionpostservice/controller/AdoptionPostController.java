@@ -49,14 +49,20 @@ public class AdoptionPostController {
     @PostMapping("/save")
     public ResponseEntity<AdoptionPostResponse> saveAdoptionPost(@Validated @RequestBody PostRequest request) {
         log.info("Creating post from CONTROLLER layer");
-        return new ResponseEntity<>(service.savePost(request), HttpStatus.OK);
+        return new ResponseEntity<>(service.savePost(request), HttpStatus.CREATED);
     }
 
 
-    @PutMapping("/update/description/")
+    @PutMapping("/update/description")
     public ResponseEntity<AdoptionPostResponse> updateAdoptionPostDescription(@RequestBody AdoptionPostRequest request) {
         log.info("Updating post description from CONTROLLER layer");
         return new ResponseEntity<>(service.updatePostDescription(request), HttpStatus.OK);
+    }
+
+    @PutMapping("/update/pet/{postId}/{petId}")
+    public ResponseEntity<AdoptionPostResponse> updateAdoptionAssignedPet(@PathVariable("postId") int postId, @PathVariable("petId") int petId) {
+        log.info("Updating post assigned pet from CONTROLLER layer");
+        return new ResponseEntity<>(service.updatePostAssignedPet(postId, petId), HttpStatus.OK);
     }
 
     @GetMapping("/check/pet/{petId}")
@@ -76,6 +82,13 @@ public class AdoptionPostController {
     public ResponseEntity<Void> deleteImageFromPost(@PathVariable("imageId") int imageId, @PathVariable("postId") int postId) {
         log.info("deleting post image from CONTROLLER layer");
         service.cancelPostImage(postId, imageId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/image/clean/{postId}")
+    public ResponseEntity<Void> cleanPostImages(@PathVariable("postId") int postId) {
+        log.info("cleaning post {} images from CONTROLLER layer", postId);
+        service.cleanPostImages(postId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

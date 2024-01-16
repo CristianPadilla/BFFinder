@@ -18,6 +18,7 @@ import CardInfoPet from "./CardInfoPet";
 import { useDispatch, useSelector } from "react-redux";
 import { getPetsByUserId } from "../../store/pet";
 import { t } from "i18next";
+import { startCreatePost, startUpdatePost } from "../../store/post";
 
 
 
@@ -42,12 +43,6 @@ const FormAddPost = () => {
   const [currentSelectedPet, setCurrentSelectedPet] = useState(null);
   const dispatch = useDispatch();
 
-  const petsOptions = selectPets.map((pet) => {
-    return {
-      label: `${pet.name} - ${t(`species.${pet.breedDetails.specie.name}`)} - ${t(`breeds.${pet.breedDetails.name}`)}`,
-      value: pet.id
-    }
-  });
 
   useEffect(async () => {
     // console.log('useEffect==  : ', pet);
@@ -58,11 +53,28 @@ const FormAddPost = () => {
 
   }, []);
 
+  const petsOptions = selectPets.map((pet) => {
+    return {
+      label: `${pet.name} - ${t(`species.${pet.breedDetails.specie.name}`)} - ${t(`breeds.${pet.breedDetails.name}`)}`,
+      value: pet.id
+    }
+  });
+
 
 
   const handleSubmit = (values) => {
-    console.log("========== handleSubmit ", values)
-    // setEditing(true);
+    const postToSave = {
+      postId: post ? post.id : null,
+      description: values.description,
+      petId: values.pet.value,
+      images: values.images,
+    };
+    if(post){
+      dispatch(startUpdatePost(postToSave))
+    }else{
+      dispatch(startCreatePost(postToSave))
+    }
+
   };
 
   const onImageInputChange = ({ target }) => {
@@ -122,8 +134,7 @@ const FormAddPost = () => {
                 onBlur={formik.handleBlur}
                 setImages={(imagesFiles) => {
                   formik.setFieldValue("images", imagesFiles);
-                }
-                }
+                }}
                 name="image" />
             </Grid>
             <Grid container spacing={1} sx={{ margin: "1rem" }}>

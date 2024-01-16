@@ -80,6 +80,9 @@ export const postSlice = createSlice({
         },
         setActivePost(state, { payload }) {
             state.active = payload;
+        },
+        setIsSaving(state, { payload }) {
+            state.isSaving = payload;
         }
     },
 });
@@ -95,4 +98,5 @@ export const {
     setBreedsP,
     setCityIdFilter,
     setActivePost,
+    setIsSaving,
 } = postSlice.actions;

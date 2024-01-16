@@ -144,7 +144,6 @@ const GroupDragandDrop = ({ label, name, errorClassName, ...props }) => {
       return updatedImages;
     });
   };
-  // console.log('KKKKKKKKKKKKKKKKKKKKKK imagesSelected : ', imagesSelected);
   return (
     <Paper
       elevation={0}
@@ -155,7 +154,7 @@ const GroupDragandDrop = ({ label, name, errorClassName, ...props }) => {
         borderRadius: "",
         alignItems: "center",
       }}
-    >
+      >
       <StyledDrag>
         {isInputVisible && ( // Mostrar el input solo si es visible
           <div className="file-upload-wrap">
@@ -167,6 +166,7 @@ const GroupDragandDrop = ({ label, name, errorClassName, ...props }) => {
               onBlur={props.onBlur}
               multiple
               onChange={(e) => {
+                // console.log('KKKKKKKKKKKKKKKKKKKKKK imagesSelected : ', e.target.files);
                 changeImage(e);
               }}
             />
