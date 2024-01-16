@@ -9,6 +9,7 @@ import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import Avatar from '@mui/material/Avatar';
+
  const formatTimeDifference = (hours) => {
     const weeks = Math.floor(hours / (24 * 7));
     const remainingHours = hours % (24 * 7);

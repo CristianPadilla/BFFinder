@@ -12,6 +12,7 @@ import Verpublicacion from "pages/ViewPost";
 import { useDispatch, useSelector } from "react-redux";
 import { CheckingAuth } from "../pages/auth/CheckingAuth";
 import { logout, validateAuth } from "../store/auth";
+import PerfilUser from "../pages/PerfilUser";
 
 const App = () => {
 
@@ -42,7 +43,7 @@ const App = () => {
 									<Route path="/*" element={<Navigate to="/home" />} />
 									<Route path="/perfil" element={<Perfil />} />
 									<Route path="/ver-publicacion" element={<Verpublicacion />} />
-
+									<Route path="/ver-perfil" element={<PerfilUser />} />
 								</Routes>
 							} />
 							: <Route path="/*" element={

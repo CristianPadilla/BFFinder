@@ -193,8 +193,9 @@ const DialogViewPet = ({ open, onClose }) => {
                     <img
                       src={pet.profileImageUrl ? pet.profileImageUrl : imgdefault}
                       alt=""
-                      height="400px"
-                      style={{ width: "auto" }}
+                      height="auto"
+                      // height="400px"
+                      // style={{ width: "auto" }}
                     />
                   </div>
                 </div>

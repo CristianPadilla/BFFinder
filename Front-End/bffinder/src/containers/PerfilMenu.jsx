@@ -56,6 +56,10 @@ const PerfilMenu = () => {
     setAnchorEl(null);
   };
 
+  const handleProfile = () => {
+    navigate("/ver-perfil");
+  };
+
   const handleChangeModule = (module) => {
     dispatch(changeActiveModule({ module }))
   };
@@ -157,7 +161,7 @@ const PerfilMenu = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleProfile}>
           <Avatar /> Mi Cuenta
         </MenuItem>
         {/* <MenuItem onClick={handleClose}>
@@ -170,7 +174,7 @@ const PerfilMenu = () => {
           </ListItemIcon>
           Add another account
         </MenuItem> */}
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleProfile}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>

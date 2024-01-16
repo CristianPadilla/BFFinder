@@ -2,7 +2,18 @@ import React from "react";
 import SlidersImages from "../Components/post/SlidersImages";
 import PetDetails from "../Components/post/PetDetails";
 import CardInfoFundation from "../Components/post/CardInfoFundation";
-import { Typography, Grid, Checkbox } from "@mui/material";
+import {
+  Typography,
+  Grid,
+  Checkbox,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  Box,
+  TextField,
+  Button,
+} from "@mui/material";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
 
@@ -23,7 +34,7 @@ const images = [
 
 const SectionPost = () => {
   return (
-    <div>
+    <>
       <Grid container spacing={2} sx={{ height: "100vh" }}>
         <Grid item xs={12} md={5}>
           <div style={{ width: "100%", height: "300px" }}>
@@ -97,8 +108,75 @@ const SectionPost = () => {
             <CardInfoFundation />
           </div>
         </Grid>
+
+        {/* <Grid container spacing={2} sx={{ height: "100vh" }}> */}
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Divider
+              sx={{
+                marginTop: 4,
+                marginBottom: 4,
+              }}
+            ></Divider>
+            <Box sx={{ margin: "1rem" }}>
+              <Typography variant="h5" sx={{ marginBottom: "3rem" }}>
+                Preguntas y respuestas
+              </Typography>
+
+              <Typography variant="h6" sx={{ marginBottom: ".2rem" }}>
+                {" "}
+                Preguntale al refugio
+              </Typography>
+
+              <Box
+                component="form"
+                // onSubmit={/ maneja el envío del formulario aquí */}
+              >
+                <Grid container spacing={2} alignItems="center">
+                  <Grid item xs={8}>
+                    <TextField
+                      variant="outlined"
+                      label="Haz una pregunta"
+                      fullWidth
+                      margin="normal"
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Button type="submit" variant="contained" color="primary">
+                      Enviar
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Box>
+              <Typography
+                variant="h6"
+                sx={{ marginTop: "2rem", marginBottom: ".3rem" }}
+              >
+                {" "}
+                Preguntas realizadas por otros usuarios
+              </Typography>
+
+              <List>
+                <ListItem alignItems="flex-start">
+                  <ListItemText
+                    primary="¿Esta es una pregunta de ejemplo?"
+                    secondary="Sí, esta es una respuesta de ejemplo."
+                  />
+                </ListItem>
+                {/* <Divider variant="middle" /> */}
+                <ListItem alignItems="flex-start">
+                  <ListItemText
+                    primary="¿Otra pregunta de ejemplo?"
+                    secondary="Sí, esta es otra respuesta de ejemplo."
+                  />
+                </ListItem>
+                {/* <Divider variant="middle" /> */}
+              </List>
+            </Box>
+          </Grid>
+        </Grid>
       </Grid>
-    </div>
+    </>
   );
 };
 
