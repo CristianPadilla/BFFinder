@@ -329,14 +329,22 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         if (!request.getDescription().equals(postToUpdate.getDescription()))
             postToUpdate.setDescription(request.getDescription());
 
-//        var currentLocationDetails = locationService.getById(postToUpdate.getAddressId()).getBody();
-//        if (request.getLocation().getCityId() != currentLocationDetails.getCity().getId()) // update city only
-//            locationService.updateAddress(LocationRequest.builder()
-//                    .id(currentLocationDetails.getId())
-//                    .cityId(request.getLocation().getCityId())
-//                    .build());
+        return buidPostFromEntity(repository.save(postToUpdate));
+    }
+
+    @Override
+    public AdoptionPostResponse updatePostAssignedPet(int postId, int petId) {
+
+        if (checkPetIsPosted(petId))
+            throw new CustomException("Not possible to update adoption post, specified pet has been already posted ", "PET_ALREADY_POSTED", HttpStatus.CONFLICT.value());
+
+        var postToUpdate = repository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("The adoption post not found for id " + postId));
+
+        postToUpdate.setPetId(petId);
 
         return buidPostFromEntity(repository.save(postToUpdate));
+
     }
 
     @Override
@@ -397,6 +405,15 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         imageService.deleteImageById(imageId);
     }
 
+    @Override
+    public void cleanPostImages(int postId) {
+        log.info("cleaning post images for post with id {} ", postId);
+        var images = findPostImages(postId);
+        log.info("imagesss  id {} ", images);
+        images.forEach(image -> imageService.deleteImageById(image.getImageId()));
+
+    }
+
     public AdoptionPostResponse buidPostFromEntity(AdoptionPostEntity postEntity) {
         var petResponse = petService.getById(postEntity.getPetId()).getBody();
         var petDetails = PetResponse.builder()
@@ -410,6 +427,8 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .sterilized(petResponse.isSterilized())
                 .dewormed(petResponse.isDewormed())
                 .userOwnerResponse(petResponse.getUserOwnerResponse())
+                .gender(petResponse.getGender())
+                .profileImageUrl(petResponse.getProfileImageUrl())
                 .breedDetails(petResponse.getBreedDetails())
                 .build();
 

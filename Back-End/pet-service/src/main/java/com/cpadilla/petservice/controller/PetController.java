@@ -39,6 +39,11 @@ public class PetController {
         log.info("Getting all pets by owner id {} from CONTROLLER layer", ownerId);
         return new ResponseEntity<>(service.getAllByOwnerId(ownerId), HttpStatus.OK);
     }
+    @GetMapping("/owner/{id}/unposted")
+    public ResponseEntity<List<PetResponse>> getAllUnpostedByOwnerId(@PathVariable("id") int ownerId) {
+        log.info("Getting all unposted pets by owner id {} from CONTROLLER layer", ownerId);
+        return new ResponseEntity<>(service.getAllForPostingByOwnerId(ownerId), HttpStatus.OK);
+    }
 
     @PostMapping("/save")
     public ResponseEntity<PetResponse> savePet(@Valid @RequestBody PetRequest pet) {

@@ -22,6 +22,7 @@ public interface PetService {
     void disablePet(int petId);
 
     List<PetResponse> getAllByOwnerId(int ownerId);
+    List<PetResponse> getAllForPostingByOwnerId(int ownerId);
 
     PetResponse updateProfileImage(int petId, MultipartFile image);
 

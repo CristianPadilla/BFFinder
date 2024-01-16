@@ -85,7 +85,7 @@ const StyledDrag = styled.div`
 const GroupDragandDrop = ({ label, name, errorClassName, ...props }) => {
   const [imagesSelected, setImagesSelected] = useState([]);
   const [field, meta, helpers] = useField(name);
-  const [isInputVisible, setIsInputVisible] = useState(true); 
+  const [isInputVisible, setIsInputVisible] = useState(true);
 
   const changeImage = (e) => {
     for (let i = 0; i < e.target.files.length; i++) {
@@ -98,22 +98,33 @@ const GroupDragandDrop = ({ label, name, errorClassName, ...props }) => {
         return;
       }
 
+      // Añadir validación de tamaño de archivo
+      const maxSizeInMB = 1;
+      const sizeInMB = file.size / (1024 * 1024);
+      if (sizeInMB > maxSizeInMB) {
+        console.log("El tamaño dede un de los archivos excede el tamaño permitido de 10 MB");
+        helpers.setError("El tamaño de la imagen es demasiado grande, el tamaño debe ser menor a 10MB");
+
+        return;
+      }
+
       const reader = new FileReader();
       reader.readAsDataURL(file);
 
       reader.onload = (e) => {
         e.preventDefault();
         const newImage = { name: file.name, data: e.target.result };
-      
+
         // Verificar si la imagen ya está en la lista
         const alreadyExists = imagesSelected.some((img) => img.name === newImage.name);
-      
+
         if (!alreadyExists && imagesSelected.length < 6) {
           setImagesSelected((prevImagesSelected) => {
             // Mueve la comprobación aquí
             if (prevImagesSelected.length + 1 === 6) {
               setIsInputVisible(false);
             }
+            props.setImages([...prevImagesSelected, newImage])
             return [...prevImagesSelected, newImage];
           });
         }
@@ -125,14 +136,14 @@ const GroupDragandDrop = ({ label, name, errorClassName, ...props }) => {
     setImagesSelected((prevImages) => {
       const updatedImages = [...prevImages];
       updatedImages.splice(index, 1);
-       // Verificar si se han eliminado suficientes imágenes para mostrar el input nuevamente
-       if (updatedImages.length < 6) {
+      // Verificar si se han eliminado suficientes imágenes para mostrar el input nuevamente
+      if (updatedImages.length < 6) {
         setIsInputVisible(true);
       }
+      props.setImages(updatedImages)
       return updatedImages;
     });
   };
-
   return (
     <Paper
       elevation={0}
@@ -143,16 +154,19 @@ const GroupDragandDrop = ({ label, name, errorClassName, ...props }) => {
         borderRadius: "",
         alignItems: "center",
       }}
-    >
+      >
       <StyledDrag>
-      {isInputVisible && ( // Mostrar el input solo si es visible
+        {isInputVisible && ( // Mostrar el input solo si es visible
           <div className="file-upload-wrap">
             <input
               className="file-upload-input"
               type="file"
               accept="image/*"
+              name={name}
+              onBlur={props.onBlur}
               multiple
               onChange={(e) => {
+                // console.log('KKKKKKKKKKKKKKKKKKKKKK imagesSelected : ', e.target.files);
                 changeImage(e);
               }}
             />

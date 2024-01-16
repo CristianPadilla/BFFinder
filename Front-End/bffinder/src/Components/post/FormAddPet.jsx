@@ -15,7 +15,7 @@ import SelectInputComponent from "../form/SelectInputComponent";
 import { useDispatch, useSelector } from "react-redux";
 import { getBreedsBySpecieId, getSpecies } from "../../store/global";
 import { t } from "i18next";
-import {  startAddNewPet, startUpdatePet } from "../../store/pet";
+import { startAddNewPet, startUpdatePet } from "../../store/pet";
 
 
 const FormAddPet = () => {
@@ -121,296 +121,296 @@ const FormAddPet = () => {
     // isSaving
     //   ? <h2> Loadinggg</h2 >
     //   :
-      <>
-        <Grid container spacing={2}>
-          {/* <Grid container spacing={2} sx={{ height: "100vh" }}> */}
-          <Formik
-            initialValues={initialValues}
-            onSubmit={handleSubmit}
-            validationSchema={Yup.object({
-              name: Yup.string()
-                .min(2, "El nombre debe tener al menos 3 caracteres")
-                .max(15, "Sólo se permiten 15 carácteres")
-                .required("El nombre es requerido"),
-              specie: Yup.object()
-                .shape({
-                  value: Yup.number().required("Selecciona una especie válida")
-                }),
-              breed: Yup.object()
-                .shape({
-                  value: Yup.number().required("Selecciona una raza válida")
-                }),
-              size: Yup.object()
-                .shape({
-                  value: Yup.string().required("Por favor especifica el tamaño del animal")
-                }),
-              age: Yup.object()
-                .shape({
-                  value: Yup.number()
-                    .required("Por favor especifica la edad del animalito")
-                    .min(1, "Por favor especifica la edad del animalito")
-                    .max(22, "Por favor especifica la edad del animalito")
-                }),
-              weight: Yup.number()
-                .min(0, "El peso debe ser un número positivo")
-                .max(500, "El peso del animal no debe superar los 500 kg")
-                .typeError("Digita un péso válido")
-                .positive("El peso debe ser un número positivo")
-                .required("El peso ayuda a comprender el estado de salud y caracteristicas del animal"),
-              gender: Yup.string().required("El género del animal es obligatorio"),
-              dangerous: Yup.boolean().required("El caracter de la mascota ayuda a comprender su comportamiento"),
-              vaccinated: Yup.boolean().required("Por favor define el estado de vacunación de la mascota"),
-              sterilized: Yup.boolean().required("La esterilizacion permite conocer el estado de fertilidad de la mascota"),
-              dewormed: Yup.boolean().required("El estado de desparacitacion de la mascota permite conocer su estado de salud"),
-              image: Yup.mixed()
-                .test("fileFormat", "Formato de imagen no permitido", (value) => {
-                  if (!value || !value.type) return true;
+    <>
+      <Grid container spacing={2}>
+        {/* <Grid container spacing={2} sx={{ height: "100vh" }}> */}
+        <Formik
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          validationSchema={Yup.object({
+            name: Yup.string()
+              .min(2, "El nombre debe tener al menos 3 caracteres")
+              .max(15, "Sólo se permiten 15 carácteres")
+              .required("El nombre es requerido"),
+            specie: Yup.object()
+              .shape({
+                value: Yup.number().required("Selecciona una especie válida")
+              }),
+            breed: Yup.object()
+              .shape({
+                value: Yup.number().required("Selecciona una raza válida")
+              }),
+            size: Yup.object()
+              .shape({
+                value: Yup.string().required("Por favor especifica el tamaño del animal")
+              }),
+            age: Yup.object()
+              .shape({
+                value: Yup.number()
+                  .required("Por favor especifica la edad del animalito")
+                  .min(1, "Por favor especifica la edad del animalito")
+                  .max(22, "Por favor especifica la edad del animalito")
+              }),
+            weight: Yup.number()
+              .min(0, "El peso debe ser un número positivo")
+              .max(500, "El peso del animal no debe superar los 500 kg")
+              .typeError("Digita un péso válido")
+              .positive("El peso debe ser un número positivo")
+              .required("El peso ayuda a comprender el estado de salud y caracteristicas del animal"),
+            gender: Yup.string().required("El género del animal es obligatorio"),
+            dangerous: Yup.boolean().required("El caracter de la mascota ayuda a comprender su comportamiento"),
+            vaccinated: Yup.boolean().required("Por favor define el estado de vacunación de la mascota"),
+            sterilized: Yup.boolean().required("La esterilizacion permite conocer el estado de fertilidad de la mascota"),
+            dewormed: Yup.boolean().required("El estado de desparacitacion de la mascota permite conocer su estado de salud"),
+            image: Yup.mixed()
+              .test("fileFormat", "Formato de imagen no permitido", (value) => {
+                if (!value || !value.type) return true;
 
-                  const allowedFormats = ["image/jpeg", "image/png", "image/jpg"];
-                  const fileType = value.type.toLowerCase();
+                const allowedFormats = ["image/jpeg", "image/png", "image/jpg"];
+                const fileType = value.type.toLowerCase();
 
-                  return allowedFormats.includes(fileType);
-                })
-                .test("fileSize", "La imagen es demasiado grande, el tamaño debe ser menor a 10MB", (value) => {
-                  if (!value || !value.size) return true;
-                  const maxSizeInBytes = 1048576; // 1MB
-                  return value.size <= maxSizeInBytes;
-                })
-                .notRequired(),
-            })}
-          >
-            {(formik) => (
-              <>
-                <Grid item xs={12} md={5}>
-                  <div style={{ width: "100%", height: "300px" }}>
-                    <DragandDrop
-                      onBlur={formik.handleBlur}
-                      name="image"
-                      errorClassName="error-message" />
-                    {/* <Typography variant="h6" color="error" textAlign={"center"}>
+                return allowedFormats.includes(fileType);
+              })
+              .test("fileSize", "La imagen es demasiado grande, el tamaño debe ser menor a 10MB", (value) => {
+                if (!value || !value.size) return true;
+                const maxSizeInBytes = 1048576; // 1MB
+                return value.size <= maxSizeInBytes;
+              })
+              .notRequired(),
+          })}
+        >
+          {(formik) => (
+            <>
+              <Grid item xs={12} md={5}>
+                <div style={{ width: "100%", height: "300px" }}>
+                  <DragandDrop
+                    onBlur={formik.handleBlur}
+                    name="image"
+                    errorClassName="error-message" />
+                  {/* <Typography variant="h6" color="error" textAlign={"center"}>
                     {formik.errors.image}
                   </Typography> */}
-                  </div>
-                </Grid>
+                </div>
+              </Grid>
 
-                <Grid item xs={12} md={7}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <Form>
-                        {formik.errors.general && (
-                          <div className="error-message">
-                            {formik.errors.general}
-                          </div>
-                        )}
-                        <Paper
-                          elevation={0}
-                          variant="outlined"
+              <Grid item xs={12} md={7}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Form>
+                      {formik.errors.general && (
+                        <div className="error-message">
+                          {formik.errors.general}
+                        </div>
+                      )}
+                      <Paper
+                        elevation={0}
+                        variant="outlined"
+                        sx={{
+                          margin: ".5rem",
+                          padding: ".8rem .8rem .8rem .8rem",
+                          borderRadius: "",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Divider
+                          variant="middle"
+                          sx={{ marginTop: 1, marginBottom: 2 }}
+                          flexItem
+                        >
+                          Caracteristicas
+                        </Divider>
+
+                        <Grid
+                          container
+                          spacing={1}
                           sx={{
-                            margin: ".5rem",
-                            padding: ".8rem .8rem .8rem .8rem",
-                            borderRadius: "",
-                            alignItems: "center",
+                            display: "flex",
+                            justifyContent: "center",
                           }}
                         >
-                          <Divider
-                            variant="middle"
-                            sx={{ marginTop: 1, marginBottom: 2 }}
-                            flexItem
-                          >
-                            Caracteristicas
-                          </Divider>
-
-                          <Grid
-                            container
-                            spacing={1}
-                            sx={{
-                              display: "flex",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Grid item xs={6} sx={{ textAlign: "center" }}>
-                              <TextInputComponent
-                                label="Nombre de la mascota *"
-                                type="text"
-                                name="name"
-                                value={formik.values.name}
-                                onChange={formik.handleChange}
-                                sx={{ width: "27ch" }}
-                              />
-                              <SelectInputComponent
-                                label="Especie / Grupo *"
-                                name="specie"
-                                errors={formik.errors.specie}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.specie} // ESTOOOOOO
-                                onChange={({ target }) => {
-                                  console.log('value :', target);
-                                  const specieOption = speciesOptions.find((option) => option.value === target.value);
-                                  handleSpecieSelectChange(target.value);
-                                  formik.setFieldValue("breed", { label: "", value: null });
-                                  formik.setFieldValue("specie", specieOption);
-                                }}
-                                clearIcon={false}
-                                options={speciesOptions}
-                              />
-                              <SelectInputComponent
-                                label="Raza / sub grupo *"
-                                name="breed"
-                                onChange={({ target }) => {
-                                  const breedOption = breedsOptions.find((option) => option.value === target.value);
-                                  formik.setFieldValue("breed", breedOption);
-                                }}
-                                options={breedsOptions}
-                                onBlur={formik.handleBlur}
-                                clearIcon={false}
-                                value={formik.values.breed}
-                              />
-                              <RadioGroupComponent
-                                row
-                                label="Género *"
-                                name="gender"
-                                value={formik.values.gender}
-                                onChange={formik.handleChange}
-                                options={genderOptions}
-                              />
-                            </Grid>
-                            <Grid item xs={6} sx={{ textAlign: "center" }}>
-                              <SelectInputComponent
-                                label="Talla *"
-                                name="size"
-                                value={formik.values.size}
-                                options={sizeOptions}
-                                onBlur={formik.handleBlur}
-                                clearIcon={false}
-                                onChange={({ target }) => {
-                                  const sizeOption = sizeOptions.find((option) => option.value === target.value);
-                                  formik.setFieldValue("size", sizeOption);
-                                }}
-                              />
-                              <TextInputComponent
-                                type="number"
-                                label="Peso *"
-                                name="weight"
-                                value={formik.values.weight}
-                                onChange={(event) => {
-                                  let value = parseFloat(event.target.value);
-                                  value = Math.floor(value * 10) / 10;
-                                  if (value.toString().length > 5) {
-                                    value = parseFloat(value.toString().substring(0, 5));
-                                  }
-                                  formik.setFieldValue("weight", value);
-                                }}
-                                endAdornment={
-                                  <InputAdornment position="end">
-                                    kg
-                                  </InputAdornment>
-                                }
-                                sx={{ width: "27ch" }}
-                              />
-
-                              <SelectInputComponent
-                                label="Edad *"
-                                name="age"
-                                onBlur={formik.handleBlur}
-                                clearIcon={false}
-                                onChange={({ target }) => {
-                                  const ageValue = target.value;
-                                  const ageOption = { label: (ageValue) === 1 ? `hasta ${ageValue} año` : `${ageValue} años`, value: ageValue };
-                                  formik.setFieldValue("age", ageOption);
-                                }}
-                                value={formik.values.age}
-                                options={[...Array(20).keys()].map((i) => {
-                                  return { label: (i + 1) === 1 ? `hasta ${i + 1} año` : `${i + 1} años`, value: i + 1 }
-                                }
-                                )}
-                              />
-
-                              <RadioGroupComponent
-                                row
-                                label="Caracter*"
-                                name="dangerous"
-                                value={formik.values.dangerous}
-                                onChange={formik.handleChange}
-                                options={[
-                                  { label: "Sociable", value: true },
-                                  { label: "Territorial", value: false },
-                                ]}
-                              />
-                            </Grid>
+                          <Grid item xs={6} sx={{ textAlign: "center" }}>
+                            <TextInputComponent
+                              label="Nombre de la mascota *"
+                              type="text"
+                              name="name"
+                              value={formik.values.name}
+                              onChange={formik.handleChange}
+                              sx={{ width: "27ch" }}
+                            />
+                            <SelectInputComponent
+                              label="Especie / Grupo *"
+                              name="specie"
+                              errors={formik.errors.specie}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.specie} // ESTOOOOOO
+                              onChange={({ target }) => {
+                                console.log('value :', target);
+                                const specieOption = speciesOptions.find((option) => option.value === target.value);
+                                handleSpecieSelectChange(target.value);
+                                formik.setFieldValue("breed", { label: "", value: null });
+                                formik.setFieldValue("specie", specieOption);
+                              }}
+                              clearIcon={false}
+                              options={speciesOptions}
+                            />
+                            <SelectInputComponent
+                              label="Raza / sub grupo *"
+                              name="breed"
+                              onChange={({ target }) => {
+                                const breedOption = breedsOptions.find((option) => option.value === target.value);
+                                formik.setFieldValue("breed", breedOption);
+                              }}
+                              options={breedsOptions}
+                              onBlur={formik.handleBlur}
+                              clearIcon={false}
+                              value={formik.values.breed}
+                            />
+                            <RadioGroupComponent
+                              row
+                              label="Género *"
+                              name="gender"
+                              value={formik.values.gender}
+                              onChange={formik.handleChange}
+                              options={genderOptions}
+                            />
                           </Grid>
-                          <Divider
-                            variant="middle"
-                            sx={{ marginTop: 1, marginBottom: 2 }}
-                            flexItem
-                          ></Divider>
+                          <Grid item xs={6} sx={{ textAlign: "center" }}>
+                            <SelectInputComponent
+                              label="Talla *"
+                              name="size"
+                              value={formik.values.size}
+                              options={sizeOptions}
+                              onBlur={formik.handleBlur}
+                              clearIcon={false}
+                              onChange={({ target }) => {
+                                const sizeOption = sizeOptions.find((option) => option.value === target.value);
+                                formik.setFieldValue("size", sizeOption);
+                              }}
+                            />
+                            <TextInputComponent
+                              type="number"
+                              label="Peso *"
+                              name="weight"
+                              value={formik.values.weight}
+                              onChange={(event) => {
+                                let value = parseFloat(event.target.value);
+                                value = Math.floor(value * 10) / 10;
+                                if (value.toString().length > 5) {
+                                  value = parseFloat(value.toString().substring(0, 5));
+                                }
+                                formik.setFieldValue("weight", value);
+                              }}
+                              endAdornment={
+                                <InputAdornment position="end">
+                                  kg
+                                </InputAdornment>
+                              }
+                              sx={{ width: "27ch" }}
+                            />
 
-                          <Divider
-                            variant="middle"
-                            sx={{ marginTop: 1, marginBottom: 2 }}
-                            flexItem
-                          >
-                            Salud
-                          </Divider>
-                          <Grid
-                            container
-                            spacing={1}
-                            sx={{
-                              display: "flex",
-                              justifyContent: "left",
-                              margin: "1rem",
-                            }}
-                          >
-                            <Grid item xs={6} sx={{ textAlign: "center" }}>
-                              <RadioGroupComponent
-                                row
-                                label="Vacunado*"
-                                name="vaccinated"
-                                value={formik.values.vaccinated}
-                                onChange={formik.handleChange}
-                                options={[
-                                  { label: "Si", value: true },
-                                  { label: "No", value: false },
-                                ]}
-                              />
-                              <RadioGroupComponent
-                                row
-                                label="Esterilizado*"
-                                name="sterilized"
-                                value={formik.values.sterilized}
-                                onChange={formik.handleChange}
-                                options={[
-                                  { label: "Si", value: true },
-                                  { label: "No", value: false },
-                                ]}
-                              />
-                            </Grid>
-                            <Grid item xs={6} sx={{ textAlign: "center" }}>
-                              <RadioGroupComponent
-                                row
-                                label="Desparasitado*"
-                                name="dewormed"
-                                value={formik.values.dewormed}
-                                onChange={formik.handleChange}
-                                options={[
-                                  { label: "Si", value: true },
-                                  { label: "No", value: false },
-                                ]}
-                              />
-                            </Grid>
+                            <SelectInputComponent
+                              label="Edad *"
+                              name="age"
+                              onBlur={formik.handleBlur}
+                              clearIcon={false}
+                              onChange={({ target }) => {
+                                const ageValue = target.value;
+                                const ageOption = { label: (ageValue) === 1 ? `hasta ${ageValue} año` : `${ageValue} años`, value: ageValue };
+                                formik.setFieldValue("age", ageOption);
+                              }}
+                              value={formik.values.age}
+                              options={[...Array(20).keys()].map((i) => {
+                                return { label: (i + 1) === 1 ? `hasta ${i + 1} año` : `${i + 1} años`, value: i + 1 }
+                              }
+                              )}
+                            />
+
+                            <RadioGroupComponent
+                              row
+                              label="Caracter*"
+                              name="dangerous"
+                              value={formik.values.dangerous}
+                              onChange={formik.handleChange}
+                              options={[
+                                { label: "Sociable", value: true },
+                                { label: "Territorial", value: false },
+                              ]}
+                            />
                           </Grid>
-                        </Paper>
-                        <Button variant="contained" type="submit" color="success">
-                          Guardar Cambios
-                        </Button>
-                      </Form>
-                    </Grid>
+                        </Grid>
+                        <Divider
+                          variant="middle"
+                          sx={{ marginTop: 1, marginBottom: 2 }}
+                          flexItem
+                        ></Divider>
+
+                        <Divider
+                          variant="middle"
+                          sx={{ marginTop: 1, marginBottom: 2 }}
+                          flexItem
+                        >
+                          Salud
+                        </Divider>
+                        <Grid
+                          container
+                          spacing={1}
+                          sx={{
+                            display: "flex",
+                            justifyContent: "left",
+                            margin: "1rem",
+                          }}
+                        >
+                          <Grid item xs={6} sx={{ textAlign: "center" }}>
+                            <RadioGroupComponent
+                              row
+                              label="Vacunado*"
+                              name="vaccinated"
+                              value={formik.values.vaccinated}
+                              onChange={formik.handleChange}
+                              options={[
+                                { label: "Si", value: true },
+                                { label: "No", value: false },
+                              ]}
+                            />
+                            <RadioGroupComponent
+                              row
+                              label="Esterilizado*"
+                              name="sterilized"
+                              value={formik.values.sterilized}
+                              onChange={formik.handleChange}
+                              options={[
+                                { label: "Si", value: true },
+                                { label: "No", value: false },
+                              ]}
+                            />
+                          </Grid>
+                          <Grid item xs={6} sx={{ textAlign: "center" }}>
+                            <RadioGroupComponent
+                              row
+                              label="Desparasitado*"
+                              name="dewormed"
+                              value={formik.values.dewormed}
+                              onChange={formik.handleChange}
+                              options={[
+                                { label: "Si", value: true },
+                                { label: "No", value: false },
+                              ]}
+                            />
+                          </Grid>
+                        </Grid>
+                      </Paper>
+                      <Button variant="contained" type="submit" color="success">
+                        Guardar Cambios
+                      </Button>
+                    </Form>
                   </Grid>
                 </Grid>
-              </>
-            )}
-          </Formik>
-        </Grid>
-      </>
+              </Grid>
+            </>
+          )}
+        </Formik>
+      </Grid>
+    </>
   );
 };
 

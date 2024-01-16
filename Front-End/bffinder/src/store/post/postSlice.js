@@ -77,6 +77,12 @@ export const postSlice = createSlice({
         },
         setCityIdFilter(state, { payload }) {
             state.postRequest.filters.city_id = payload;
+        },
+        setActivePost(state, { payload }) {
+            state.active = payload;
+        },
+        setIsSaving(state, { payload }) {
+            state.isSaving = payload;
         }
     },
 });
@@ -88,7 +94,9 @@ export const {
     clearPostsLogout,
     setDepartments,
     setCities,
-    setSpeciesP, 
+    setSpeciesP,
     setBreedsP,
     setCityIdFilter,
+    setActivePost,
+    setIsSaving,
 } = postSlice.actions;

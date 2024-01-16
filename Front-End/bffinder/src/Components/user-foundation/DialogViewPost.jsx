@@ -18,48 +18,50 @@ import DragAndDrop from "../form/DragandDrop";
 import SlidersImages from "../post/SlidersImages";
 import CardInfoPet from "./CardInfoPet";
 import Swal from 'sweetalert2';
+import { useSelector } from "react-redux";
 
 const images = [
-    {
-      original: "https://picsum.photos/id/1018/1000/600/",
-      thumbnail: "https://picsum.photos/id/1018/250/150/",
-    },
-    {
-      original: "https://picsum.photos/id/1015/1000/600/",
-      thumbnail: "https://picsum.photos/id/1015/250/150/",
-    },
-    {
-      original: "https://picsum.photos/id/1019/1000/600/",
-      thumbnail: "https://picsum.photos/id/1019/250/150/",
-    },
-    {
-      original: "https://picsum.photos/id/1018/1000/600/",
-      thumbnail: "https://picsum.photos/id/1018/250/150/",
-    },
-    {
-      original: "https://picsum.photos/id/1015/1000/600/",
-      thumbnail: "https://picsum.photos/id/1015/250/150/",
-    },
-    {
-      original: "https://picsum.photos/id/1019/1000/600/",
-      thumbnail: "https://picsum.photos/id/1019/250/150/",
-    },
-    {
-      original: "https://picsum.photos/id/1018/1000/600/",
-      thumbnail: "https://picsum.photos/id/1018/250/150/",
-    },
-    {
-      original: "https://picsum.photos/id/1015/1000/600/",
-      thumbnail: "https://picsum.photos/id/1015/250/150/",
-    },
-    {
-      original: "https://picsum.photos/id/1019/1000/600/",
-      thumbnail: "https://picsum.photos/id/1019/250/150/",
-    },
-  ];
+  {
+    original: "https://picsum.photos/id/1018/1000/600/",
+    thumbnail: "https://picsum.photos/id/1018/250/150/",
+  },
+  {
+    original: "https://picsum.photos/id/1015/1000/600/",
+    thumbnail: "https://picsum.photos/id/1015/250/150/",
+  },
+  {
+    original: "https://picsum.photos/id/1019/1000/600/",
+    thumbnail: "https://picsum.photos/id/1019/250/150/",
+  },
+  {
+    original: "https://picsum.photos/id/1018/1000/600/",
+    thumbnail: "https://picsum.photos/id/1018/250/150/",
+  },
+  {
+    original: "https://picsum.photos/id/1015/1000/600/",
+    thumbnail: "https://picsum.photos/id/1015/250/150/",
+  },
+  {
+    original: "https://picsum.photos/id/1019/1000/600/",
+    thumbnail: "https://picsum.photos/id/1019/250/150/",
+  },
+  {
+    original: "https://picsum.photos/id/1018/1000/600/",
+    thumbnail: "https://picsum.photos/id/1018/250/150/",
+  },
+  {
+    original: "https://picsum.photos/id/1015/1000/600/",
+    thumbnail: "https://picsum.photos/id/1015/250/150/",
+  },
+  {
+    original: "https://picsum.photos/id/1019/1000/600/",
+    thumbnail: "https://picsum.photos/id/1019/250/150/",
+  },
+];
 
 const DialogViewPost = ({ open, onClose }) => {
   const [profileImageUrl] = useState("");
+  const { active: post } = useSelector((state) => state.posts);
   const [editing, setEditing] = useState(false);
 
   const renderInformationSection = () => (
@@ -67,48 +69,51 @@ const DialogViewPost = ({ open, onClose }) => {
       {/* <Divider variant="middle" sx={{ marginTop: 1, marginBottom: 2 }}>
           Caracteristicas
         </Divider> */}
-<Grid
-  container
-  spacing={1}
-  sx={{ display: "flex", justifyContent: "center", margin: ".1rem" }}
->
-  <Grid item xs={12} sx={{ margin: ".5rem", display: "flex", flexDirection: "column" }}>
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      sx={{
-        whiteSpace: "normal",
-        textAlign: "justify",
-      }}
-    >
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci, ex
-      impedit pariatur minima porro, eius, corrupti possimus ea magnam
-      accusantium aspernatur! Officiis ipsa, facilis consequuntur rerum ut optio
-      adipisci itaque.
-    </Typography>
+      <Grid
+        container
+        spacing={1}
+        sx={{ display: "flex", justifyContent: "center", margin: ".1rem" }}
+      >
+        <Grid item xs={12} sx={{ margin: ".5rem", display: "flex", flexDirection: "column" }}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              whiteSpace: "normal",
+              textAlign: "justify",
+            }}
+          >
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci, ex
+            impedit pariatur minima porro, eius, corrupti possimus ea magnam
+            accusantium aspernatur! Officiis ipsa, facilis consequuntur rerum ut optio
+            adipisci itaque.
+          </Typography>
 
-    <Grid container justifyContent="space-between" marginTop="1rem">
-      <Grid item>
-        <Typography variant="body2" color="text.secondary">
-          Fecha de publicación: 23423432
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Hora de publicación: 23423432
-        </Typography>
-      </Grid>
+          <Grid container justifyContent="space-between" marginTop="1rem">
+            <Grid item>
+              <Typography variant="body2" color="text.secondary">
+                Fecha de publicación: 23423432
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                ID : {post.id}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Hora de publicación: 23423432
+              </Typography>
+            </Grid>
 
-      <Grid item>
-        <Button
-          variant="contained"
-          color="info"
-          onClick={handleEditClick}
-        >
-          Editar
-        </Button>
+            <Grid item>
+              <Button
+                variant="contained"
+                color="info"
+                onClick={handleEditClick}
+              >
+                Editar
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
       </Grid>
-    </Grid>
-  </Grid>
-</Grid>
       {/* <Divider
           variant="middle"
           sx={{ marginTop: 1, marginBottom: 2 }}
@@ -147,7 +152,7 @@ const DialogViewPost = ({ open, onClose }) => {
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent >
         {editing ? (
           <FormAddPost />
         ) : (
@@ -156,10 +161,10 @@ const DialogViewPost = ({ open, onClose }) => {
               {/* <Grid container spacing={2} sx={{ height: "100vh" }}> */}
               <Grid item xs={12} md={5}>
                 <SlidersImages images={images}
-                showBullets={false}
-                showPlayButton={false}
-                thumbnailPosition="left"
-                showNav={true}
+                  showBullets={false}
+                  showPlayButton={false}
+                  thumbnailPosition="left"
+                  showNav={true}
                 />
               </Grid>
 
@@ -170,9 +175,9 @@ const DialogViewPost = ({ open, onClose }) => {
                   </Grid>
                 </Grid>
               </Grid>
-              <CardInfoPet />
+              <CardInfoPet pet={post.petResponse} />
             </Grid>
-            
+
           </>
         )}
       </DialogContent>

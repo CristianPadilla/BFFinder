@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import imgdefault from "imgs/logo-bffinder.png";
 import {
@@ -20,9 +20,14 @@ import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import DialogViewPost from "./DialogViewPost";
 import { t } from "i18next";
 import Swal from 'sweetalert2';
+import { setActivePost, startGetPostById } from "../../store/post";
+import { useDispatch, useSelector } from "react-redux";
 
 const CardPostShelter = ({ post }) => {
-  const { petPartialResponse, images, date, user, status } = post;
+  const dispatch = useDispatch();
+  const { active } = useSelector((state) => state.posts);
+
+  const { petPartialResponse, images, date, user, status, id } = post;
   const { name, breedDetails, specie } = petPartialResponse;
 
   const parsedDate = new Date(date);
@@ -32,22 +37,23 @@ const CardPostShelter = ({ post }) => {
   const hours = parsedDate.getHours();
   const minutes = parsedDate.getMinutes();
 
-  const formattedDate = `${day < 10 ? "0" : ""}${day}/${
-    month < 10 ? "0" : ""
-  }${month}/${year} - ${hours % 12 || 12}:${
-    minutes < 10 ? "0" : ""
-  }${minutes} ${hours >= 12 ? "pm" : "am"}`;
+  const formattedDate = `${day < 10 ? "0" : ""}${day}/${month < 10 ? "0" : ""
+    }${month}/${year} - ${hours % 12 || 12}:${minutes < 10 ? "0" : ""
+    }${minutes} ${hours >= 12 ? "pm" : "am"}`;
 
-//   Dialog
-const [openDialog, setOpenDialog] = useState(false);
+  //   Dialog
+  const [openDialog, setOpenDialog] = useState(false);
 
-const handleOpenDialog = () => {
-  setOpenDialog(true);
-};
+  const handleOpenDialog = () => {
+    // console.log("iddddddddddd: ", id);
+    dispatch(startGetPostById(id))
+    // setOpenDialog(true);
+  };
 
-const handleCloseDialog = () => {
-  setOpenDialog(false);
-};
+  const handleCloseDialog = () => {
+    dispatch(setActivePost(null));
+    // setOpenDialog(false);
+  };
 
 const showAlert = () => {
   Swal.fire({
@@ -77,7 +83,7 @@ const showAlert = () => {
               <Typography
                 variant="h6"
                 component="h2"
-                // sx={{ fontSize: "1.4rem" }}
+              // sx={{ fontSize: "1.4rem" }}
               >
                 {name}
               </Typography>
@@ -88,7 +94,7 @@ const showAlert = () => {
                 color="text.secondary"
                 sx={{ fontSize: ".9rem", marginTop: ".5rem" }}
               >
-                 {t(`species.${breedDetails.specie.name}`)} - {t(`breeds.${breedDetails.name}`)}
+                {t(`species.${breedDetails.specie.name}`)} - {t(`breeds.${breedDetails.name}`)}
               </Typography>
             }
           />
@@ -128,7 +134,7 @@ const showAlert = () => {
               container
               spacing={1}
               alignItems="center"
-              //   justifyContent="justify-content"
+            //   justifyContent="justify-content"
             >
               <Grid item>
                 <Favorite
@@ -220,7 +226,7 @@ const showAlert = () => {
           </Grid>
         </CardActions>
       </Card>
-      <DialogViewPost open={openDialog} onClose={handleCloseDialog}/>
+      {active != null && <DialogViewPost open={active != null} onClose={handleCloseDialog} />}
     </div>
   );
 };

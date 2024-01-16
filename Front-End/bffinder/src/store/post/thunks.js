@@ -2,7 +2,8 @@ import { HttpStatusCode } from "axios";
 import { locationApi } from "../../api/locationApi";
 import { postApi } from "../../api/postApi";
 import { startContentLoading, stopContentLoading } from "../global";
-import { fetchPostsStart, fetchPostsSuccess, setCities, setCityIdFilter, setDepartments, setPostsRequest } from "./postSlice";
+import { fetchPostsStart, fetchPostsSuccess, setActivePost, setCities, setCityIdFilter, setDepartments, setIsSaving, setPostsRequest } from "./postSlice";
+import { setErrorMessage } from "../pet";
 
 
 export const fetchPosts = () => async (dispatch, getState) => {
@@ -90,3 +91,108 @@ export const startCleanCities = () => async (dispatch) => {
     dispatch(setCities([]));
     dispatch(setCityIdFilter(0));
 };
+
+export const startGetPostById = (id) => async (dispatch) => {
+    dispatch(startContentLoading())
+    const { data, status } = await postApi.get('/' + id);
+    // console.log("startGetPostById ", data, status);
+    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+    dispatch(setActivePost(data));
+    dispatch(stopContentLoading())
+};
+
+export const startUpdatePost = (post) => async (dispatch, getState) => {
+    dispatch(setIsSaving(true))
+    const currentPost = getState().posts.active;
+    console.log("startUpdatePost from thunk ", currentPost);
+    
+    if (currentPost.description !== post.description) {
+        dispatch(startUpdatePostDescription(currentPost.id, post.description));
+    }
+
+    if (post.petId !== currentPost.petResponse.id) {
+        dispatch(startReassignPetOfPost(currentPost.id, post.petId));
+    }
+
+    if (post.images.length > 0) {
+        // console.log("actualizando imagenes de la publicacion");
+        dispatch(startCleanPostImages(currentPost.id));
+        const imagesUploadPromises = [];
+        for (const image of post.images) {
+            // console.log("GGGGGGGGGGGGGGG  ", image);
+            imagesUploadPromises.push(dispatch(startUpdatePostImage(currentPost.id, image)));
+        }
+        const urls = await Promise.all(imagesUploadPromises);
+        console.log("urls ", urls);
+    }
+
+    dispatch(setActivePost(null));
+    dispatch(setIsSaving(false));
+    dispatch(fetchPosts());
+}
+
+export const startUpdatePostImage = (postId, image) => async (dispatch) => {
+    // console.log("startUploadPostImages ", postId, image);
+
+    const formData = new FormData();
+    const response = await fetch(image.data);
+    const imageBlob = await response.blob();
+    formData.append('image', imageBlob, image.name);
+    const { data, status } = await postApi.post(postId + "/image", formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    });
+
+    if (status !== HttpStatusCode.Ok) throw new Error("Error al subir la imagen " + image.name);
+    return data.imageUrl;
+}
+
+export const startCreatePost = (post) => async (dispatch, getState) => {
+    dispatch(setIsSaving(true))
+    // console.log("startCreatePost from thunk ", postToCreate);
+    const { userId } = getState().persisted.auth;
+    const postToCreate = {
+        userId: userId,
+        adoptionPostRequest: {
+            description: post.description,
+            petId: post.petId,
+        }
+    }
+    const { data, status } = await postApi.post('/save', postToCreate);
+
+    if (status !== HttpStatusCode.Created) {
+        console.log("Error al crear la publicacion ", data);
+        dispatch(setErrorMessage(data));
+        throw new Error("Error al crear la publicacion ");
+    }
+
+    if (post.images.length > 0) {
+        const imagesUploadPromises = [];
+        for (const image of post.images) {
+            imagesUploadPromises.push(dispatch(startUpdatePostImage(data.id, image)));
+        }
+        const urls = await Promise.all(imagesUploadPromises);
+        // console.log("urls ", urls);
+    }
+
+    dispatch(setActivePost(null));
+    dispatch(setIsSaving(false))
+    dispatch(fetchPosts());
+}
+
+export const startReassignPetOfPost = (postId, petId) => async (dispatch) => {
+    const { data, status } = await postApi.put('/update/pet/' + postId + '/' + petId);
+    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage("Error al reasignar la mascota de la publicacion"));
+
+}
+
+export const startUpdatePostDescription = (postId, description) => async (dispatch) => {
+    const { data, status } = await postApi.put('/update/description', { id: postId, description: description });
+    // console.log("startUpdatePostDescription ", data, status);
+    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage("Error al actualizar la descripción de la publicacion"));
+}
+
+
+export const startCleanPostImages = (postId) => async (dispatch) => {
+    const { data, status } = await postApi.delete('/image/clean/' + postId);
+    if (status !== HttpStatusCode.NoContent) dispatch(setErrorMessage("Error al actualizar la descripción de la publicacion"));
+}

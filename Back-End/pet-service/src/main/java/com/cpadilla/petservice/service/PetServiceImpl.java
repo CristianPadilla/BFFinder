@@ -250,20 +250,17 @@ public class PetServiceImpl implements PetService {
     public List<PetResponse> getAllByOwnerId(int ownerId) {
         return repository.findAllByOwnerId(ownerId)
                 .stream()
-                .map(petEntity ->
-                                PetResponse.builder()
-                                        .id(petEntity.getId())
-                                        .name(petEntity.getName())
-                                        .weight(petEntity.getWeight())
-                                        .age(petEntity.getAge())
-                                        .vaccinated(petEntity.getVaccinated())
-                                        .dangerous(petEntity.getDangerous())
-                                        .size(petEntity.getSize())
-                                        .sterilized(petEntity.getSterilized())
-                                        .dewormed(petEntity.getDewormed())
-//                                .breedDetails(pe)// still not implemented
-                                        .build()
-                ).collect(Collectors.toList());
+                .map(this::buildPetFromPetEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PetResponse> getAllForPostingByOwnerId(int ownerId) {
+        return repository.findAllByOwnerId(ownerId)
+                .stream()
+                .map(this::buildPetFromPetEntity)
+                .filter(petResponse -> !petResponse.isPublished())
+                .collect(Collectors.toList());
     }
 
     public boolean petPassesFilters(PetResponse petResponse, PetsFilterRequest filter) {
