@@ -124,6 +124,7 @@ const GroupDragandDrop = ({ label, name, errorClassName, ...props }) => {
             if (prevImagesSelected.length + 1 === 6) {
               setIsInputVisible(false);
             }
+            props.setImages([...prevImagesSelected, newImage])
             return [...prevImagesSelected, newImage];
           });
         }
@@ -139,10 +140,11 @@ const GroupDragandDrop = ({ label, name, errorClassName, ...props }) => {
       if (updatedImages.length < 6) {
         setIsInputVisible(true);
       }
+      props.setImages(updatedImages)
       return updatedImages;
     });
   };
-
+  // console.log('KKKKKKKKKKKKKKKKKKKKKK imagesSelected : ', imagesSelected);
   return (
     <Paper
       elevation={0}
@@ -161,10 +163,11 @@ const GroupDragandDrop = ({ label, name, errorClassName, ...props }) => {
               className="file-upload-input"
               type="file"
               accept="image/*"
+              name={name}
+              onBlur={props.onBlur}
               multiple
               onChange={(e) => {
                 changeImage(e);
-                props.onChange && props.onChange(e)
               }}
             />
             <div className="text-information">

@@ -120,6 +120,7 @@ export const updateActivePet = (fields) => async (dispatch, getState) => {
     });
 };
 
+
 export const startGetPetById = (id) => async (dispatch) => {
     dispatch(startContentLoading())
     const { data, status } = await petApi.get('/' + id);
@@ -138,6 +139,13 @@ export const startGetSpecies = () => async (dispatch, getState) => {
     activeModule === "posts"
         ? dispatch(setSpeciesP(data))
         : dispatch(setSpecies(data));
+};
+export const getPetsByUserId = () => async (dispatch, getState) => {
+    const { userId } = getState().persisted.auth;
+    const { data, status } = await petApi.get('/owner/' + userId);
+    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+    console.log("pets pot uusario ", data, status);
+    return data;
 };
 
 export const startGetBreedsBySpecieId = (specieId,) => async (dispatch, getState) => {

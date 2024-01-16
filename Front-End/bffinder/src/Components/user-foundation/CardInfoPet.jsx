@@ -14,13 +14,17 @@ import {
 import React from "react";
 import imgdefault from "imgs/logo-bffinder.png";
 
-const CardInfoPet = () => {
+const CardInfoPet = ({ pet }) => {
   const images = [{ imageUrl: "https://picsum.photos/id/1018/1000/600/" }];
-  //   const { name, breedDetails, specie } = petPartialResponse;
+
+  // abtener todos las propiedades de la mascota de esta forma para  no tener un error
+  const name = pet ? pet.name : "Nombre de la mascota";
+
+  console.log('pet del card info  : ', pet);
 
   return (
     <>
-      <div style={{ margin: ".1rem 0 1rem 1.3rem"}}>
+      <div style={{ margin: ".1rem 0 1rem 1.3rem" }}>
         <Divider
           textAlign="left"
           color="text.secondary"
@@ -49,16 +53,16 @@ const CardInfoPet = () => {
                 position: "relative",
               }}
             >
-                <CardMedia
-                  component="img"
-                  sx={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  image={
-                    images && images.length > 0
-                      ? images[0].imageUrl
-                      : imgdefault
-                  }
-                  alt="Imagen"
-                />
+              <CardMedia
+                component="img"
+                sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+                image={
+                  images && images.length > 0
+                    ? images[0].imageUrl
+                    : imgdefault
+                }
+                alt="Imagen"
+              />
             </div>
 
             <CardContent sx={{ padding: "1rem", flexGrow: 1, height: "100%" }}>
@@ -71,7 +75,7 @@ const CardInfoPet = () => {
                 component="h6"
                 sx={{ marginBottom: "0.7rem" }}
               >
-                {/* {name} */} Name Pet
+                {pet ? name : "Nombre de la mascota"}
               </Typography>
               {/* </Link> */}
 
@@ -80,7 +84,7 @@ const CardInfoPet = () => {
                   <Paper
                     elevation={0}
                     variant="outlined"
-                    //   sx={{ margin: "1rem", borderRadius: "" }}
+                  //   sx={{ margin: "1rem", borderRadius: "" }}
                   >
                     <Divider
                       variant="middle"
@@ -132,7 +136,7 @@ const CardInfoPet = () => {
                   <Paper
                     elevation={0}
                     variant="outlined"
-                    //   sx={{ margin: "1rem", borderRadius: "" }}
+                  //   sx={{ margin: "1rem", borderRadius: "" }}
                   >
                     <Divider
                       variant="middle"

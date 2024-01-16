@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Typography,
@@ -15,7 +15,9 @@ import { TextInputComponent } from "../form/TextInputComponent";
 import SelecInputComponent from "../form/SelectInputComponent";
 import SlidersImages from "../post/SlidersImages";
 import CardInfoPet from "./CardInfoPet";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getPetsByUserId } from "../../store/pet";
+import { t } from "i18next";
 
 
 
@@ -36,51 +38,59 @@ const images = [
 
 const FormAddPost = () => {
   const { active: post, isSaving } = useSelector((state) => state.posts);
+  const [selectPets, setSelectPets] = useState([]);
+  const [currentSelectedPet, setCurrentSelectedPet] = useState(null);
+  const dispatch = useDispatch();
 
+  const petsOptions = selectPets.map((pet) => {
+    return {
+      label: `${pet.name} - ${t(`species.${pet.breedDetails.specie.name}`)} - ${t(`breeds.${pet.breedDetails.name}`)}`,
+      value: pet.id
+    }
+  });
+
+  useEffect(async () => {
+    // console.log('useEffect==  : ', pet);
+    const pets = await dispatch(getPetsByUserId());
+    console.log('useEffect==  : ', pets);
+    setSelectPets(pets);
+    post && setCurrentSelectedPet(post.petResponse)
+
+  }, []);
+
+
+
+  const handleSubmit = (values) => {
+    console.log("========== handleSubmit ", values)
+    // setEditing(true);
+  };
+
+  const onImageInputChange = ({ target }) => {
+    // console.log('onImageInputChange==  : ', target.files.length);
+  }
 
   const initialValues = post
     ? {
       description: post.description,
       pet: { label: `${post.petResponse.name} - ${post.petResponse.breedDetails.specie.name} - ${post.petResponse.breedDetails.name}`, value: post.petResponse.id },
-      images: post.images,
+      images: [],
     }
     : {
       description: "",
       pet: { label: "", value: null },
       images: [],
     }
-
-  const handleEditClick = () => {
-    setEditing(true);
-  };
-
-  const handleSaveClick = () => {
-    setEditing(false);
-    // console.log("Datos guardados del edit:", formData);
-    // Puedes realizar acciones de guardado aquí si es necesario
-  };
-
-  const handleCancelClick = () => {
-    setEditing(false);
-    // Puedes realizar acciones de cancelación aquí si es necesario
-  };
-
-  const onImageInputChange = ({ target }) => {
-    console.log('onImageInputChange==  : ', target.files);
-
-  }
-
-
   return (
     <Formik
       initialValues={initialValues}
-      // onSubmit={handleRegistration}
+      onSubmit={handleSubmit}
       validationSchema={Yup.object({
         description: Yup.string()
           .required("La descripción es obligatorio"),
-        pet: Yup.number()
-          // .oneOf(speciesIds, "Por favor, selecciona una especie válida")
-          .required("La seleccion de una mascota es obligatoria"),
+        pet: Yup.object()
+          .shape({
+            value: Yup.number().required("Selecciona una raza válida")
+          }),
         image: Yup.mixed()
           .test("fileFormat", "Formato de imagen no permitido", (value) => {
             if (!value || !value.type) return true;
@@ -90,7 +100,7 @@ const FormAddPost = () => {
 
             return allowedFormats.includes(fileType);
           })
-          .required("Las imagenes son obligatorias"),
+          .notRequired(),
       })}
     >
       {(formik) => (
@@ -99,6 +109,7 @@ const FormAddPost = () => {
             <div className="error-message">{formik.errors.general}</div>
           )}
           <Grid container spacing={2}>
+            {console.log("formik.values ====", formik.values)}
             <Grid item xs={12}>
               {/* <SlidersImages
                 images={images}
@@ -108,9 +119,12 @@ const FormAddPost = () => {
                 thumbnailPosition={"left"}
               /> */}
               <GroupDragandDrop
-              onBlur={formik.handleBlur}
-               onChange={onImageInputChange}
-              name="image" />
+                onBlur={formik.handleBlur}
+                setImages={(imagesFiles) => {
+                  formik.setFieldValue("images", imagesFiles);
+                }
+                }
+                name="image" />
             </Grid>
             <Grid container spacing={1} sx={{ margin: "1rem" }}>
               <Grid item xs={6}>
@@ -144,14 +158,15 @@ const FormAddPost = () => {
                     <SelecInputComponent
                       label="Seleccione la mascota*"
                       name="pet"
-                      onChange={formik.handleChange}
+                      // onChange={formik.handleChange}
+                      onChange={({ target }) => {
+                        const petOption = petsOptions.find((option) => option.value === target.value);
+                        formik.setFieldValue("pet", petOption);
+                        setCurrentSelectedPet(selectPets.find((pet) => pet.id === petOption.value))
+                      }
+                      }
                       value={formik.values.pet}
-                      options={[
-                        { label: "Quira", value: 1 },
-                        { label: "Arnulfo", value: 2 },
-                        { label: "Manchas", value: 3 },
-                        { label: "Tomas", value: 4 },
-                      ]}
+                      options={petsOptions}
                     />
                   </Grid>
                   <Grid item xs={6} sx={{ height: "100%", marginTop: "1rem", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -159,7 +174,6 @@ const FormAddPost = () => {
                       type="submit"
                       variant="contained"
                       color="success"
-                      onClick={handleEditClick}
                     >
                       <Typography
                         component="div"
@@ -172,7 +186,7 @@ const FormAddPost = () => {
                 </Grid>
               </Grid>
             </Grid>
-            <CardInfoPet />
+            {<CardInfoPet pet={currentSelectedPet} />}
           </Grid>
         </Form>
       )}

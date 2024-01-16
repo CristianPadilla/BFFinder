@@ -174,7 +174,7 @@ const DialogViewPost = ({ open, onClose }) => {
                   </Grid>
                 </Grid>
               </Grid>
-              <CardInfoPet />
+              <CardInfoPet pet={post.petResponse} />
             </Grid>
 
           </>

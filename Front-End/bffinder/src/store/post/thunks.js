@@ -99,3 +99,31 @@ export const startGetPostById = (id) => async (dispatch) => {
     dispatch(setActivePost(data));
     dispatch(stopContentLoading())
 };
+
+export const startReassignPetOfPost = (postId, petId) => async (dispatch) => {
+    // dispatch(startContentLoading())
+    // const { data, status } = await postApi.put('/' + id + '/update-description', description);
+    // // console.log("startUpdatePostDescription ", data, status);
+    // if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+    // dispatch(setActivePost(data));
+    // dispatch(stopContentLoading())
+}
+
+export const startUpdatePostDescription = (id, description) => async (dispatch) => {
+    // dispatch(startContentLoading())
+    // const { data, status } = await postApi.put('/' + id + '/update-description', description);
+    // // console.log("startUpdatePostDescription ", data, status);
+    // if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+    // dispatch(setActivePost(data));
+    // dispatch(stopContentLoading())
+}
+
+export const startUpdatePostImages = (postId, images) => async (dispatch) => {
+    console.log("startUploadPostImages ", postId, images);
+    // dispatch(startContentLoading())
+    // const { data, status } = await postApi.post('/' + id + '/upload-images', images);
+    // // console.log("startUploadPostImages ", data, status);
+    // if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+    // dispatch(setActivePost(data));
+    // dispatch(stopContentLoading())
+}
