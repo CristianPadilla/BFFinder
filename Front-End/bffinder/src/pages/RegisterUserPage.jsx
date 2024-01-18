@@ -47,7 +47,6 @@ export function RegisterUserPage() {
   }, [status]);
 
   const handleRegistration = (values) => {
-    console.log("from componenttt ", values);
 
     const user = {
       firstname: values.firstname,
@@ -57,7 +56,6 @@ export function RegisterUserPage() {
       password: values.password,
       type: 'u',
     }
-    console.log("user from componenttt ", user);
     dispatch(startRegisterUser(user))
   };
 

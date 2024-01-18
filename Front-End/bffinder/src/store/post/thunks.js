@@ -16,7 +16,7 @@ export const fetchPosts = () => async (dispatch, getState) => {
             : `/user/${userId}/filter`;
         const { data } = await postApi.post(url, postsRequest);
         const { page, request } = data;
-        console.log("fetchPosts from thunk ", data);
+        // console.log("fetchPosts from thunk ", data);
         const payload = {
 
             page: {
@@ -65,7 +65,6 @@ export const fetchPosts = () => async (dispatch, getState) => {
 
 export const changePostsRequest = (filters) => async (dispatch, getState) => {
     filters.forEach(filter => {
-        console.log("aplicando filtro ", filter);
         dispatch(setPostsRequest(filter));
     });
     dispatch(fetchPosts());
@@ -74,20 +73,20 @@ export const changePostsRequest = (filters) => async (dispatch, getState) => {
 
 export const startGetDepartments = () => async (dispatch) => {
     const { data, status } = await locationApi.get("/department/all");
-    console.log("startGetDepartments", data, status);
+    // console.log("startGetDepartments", data, status);
     if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
     dispatch(setDepartments(data));
 };
 
 export const startGetCitiesByDepartmentId = (departmentId) => async (dispatch) => {
     const { data, status } = await locationApi.get("/department/" + departmentId + "/cities");
-    console.log("startGetCitiesByDepartmentId", data, status);
+    // console.log("startGetCitiesByDepartmentId", data, status);
     if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
     dispatch(setCities(data));
 };
 
 export const startCleanCities = () => async (dispatch) => {
-    console.log("startCleanCities");
+    // console.log("startCleanCities");
     dispatch(setCities([]));
     dispatch(setCityIdFilter(0));
 };
@@ -104,7 +103,7 @@ export const startGetPostById = (id) => async (dispatch) => {
 export const startUpdatePost = (post) => async (dispatch, getState) => {
     dispatch(setIsSaving(true))
     const currentPost = getState().posts.active;
-    console.log("startUpdatePost from thunk ", currentPost);
+    // console.log("startUpdatePost from thunk ", currentPost);
     
     if (currentPost.description !== post.description) {
         dispatch(startUpdatePostDescription(currentPost.id, post.description));
@@ -123,7 +122,7 @@ export const startUpdatePost = (post) => async (dispatch, getState) => {
             imagesUploadPromises.push(dispatch(startUpdatePostImage(currentPost.id, image)));
         }
         const urls = await Promise.all(imagesUploadPromises);
-        console.log("urls ", urls);
+        // console.log("urls ", urls);
     }
 
     dispatch(setActivePost(null));

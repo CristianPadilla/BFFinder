@@ -39,9 +39,7 @@ const SectionAllPosts = () => {
       .post("/post/all/filter", filters)
       // .post("/pet/user/52/filter", filters)
       .then((response) => {
-        console.log("Datos obtenidos:", response.data);
         setPostList(response.data.content);
-        console.log("RRRRRRRRRRRRRR ", postList);
         // window.scrollTo({ top: 0, behavior: 'smooth' });
       })
       .catch((error) => {

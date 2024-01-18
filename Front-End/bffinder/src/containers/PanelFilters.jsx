@@ -98,7 +98,7 @@ const PanelFilters = ({ module }) => {
   const { departments, cities } = useSelector((state) => state.posts);
 
   useEffect(() => {
-    console.log("consultando especies == ", species);
+    // console.log("consultando especies == ", species);
     if (!species || species.length === 0) dispatch(startGetSpecies());
     if (!departments || departments.length === 0)
       dispatch(startGetDepartments());
@@ -131,12 +131,12 @@ const PanelFilters = ({ module }) => {
 
   const statusFilterSelectedValue = statusFilter
     ? statusSelectOptions.find((option) => option.value === statusFilter)
-    : { label: "Todos", value: null };
+    : null;
 
   const postedFilterSelectedValue =
     statusFilter != null
       ? postedSelectOptions.find((option) => option.value === statusFilter)
-      : { label: "Todos", value: null };
+      : null;
 
   // ESPECIES y RAZAS
   const speciesOptions = species.map((specie) => {
@@ -174,7 +174,7 @@ const PanelFilters = ({ module }) => {
   const cityOptionSelectedValue =
     filters.city_id != null && filters.city_id != 0
       ? citiesOptions.find((option) => option.value === filters.city_id)
-      : { label: "", value: 0 };
+      : null;
 
   // FECHA
   const getDateSelectOptionValues = () => {
@@ -203,7 +203,7 @@ const PanelFilters = ({ module }) => {
   const dateSelectOptionSelectedValue =
     ((role === "u" && activeModule == "posts") && filters.from_date != null && filters.from_date != "")
       ? dateSelectOptions.find((option) => option.value === filters.from_date)
-      : { label: "", value: "" };
+      : null;
 
 
   //GENDER
@@ -217,18 +217,18 @@ const PanelFilters = ({ module }) => {
 
   const vaccinedSelectSelectedValue = vaccinatedFilter != null
     ? vaccinesSelectOptions.find((option) => option.value === vaccinatedFilter)
-    : { label: "", value: null };
+    : null;
   const sterilizedSelectSelectedValue = sterilizedFilter != null
     ? sterilizedSelectOptions.find((option) => option.value === sterilizedFilter)
-    : { label: "", value: null };
+    : null;
   const dewormedSelectSelectedValue = dewormedFilter != null
     ? dewormedSelectOptions.find((option) => option.value === dewormedFilter)
-    : { label: "", value: null };
+    : null;
 
 
 
 
-  console.log("FILTROS ACTUALES== ", filters);
+  // console.log("FILTROS ACTUALES== ", filters);
 
 
   const handleStatusFilterChange = (event, newValue) => {

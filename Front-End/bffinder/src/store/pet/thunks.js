@@ -62,7 +62,7 @@ export const startFetchPets = () => async (dispatch, getState) => {
 
 export const changePetsRequest = (filters) => async (dispatch, getState) => {
     filters.forEach(filter => {
-        console.log("aplicando filtro ", filter);
+        // console.log("aplicando filtro ", filter);
         dispatch(setPetsRequest(filter));
     });
     dispatch(startFetchPets());
@@ -115,7 +115,7 @@ export const startUpdatePet = (pet) => async (dispatch, getState) => {
 
 export const updateActivePet = (fields) => async (dispatch, getState) => {
     fields.forEach(field => {
-        console.log("actualizando campo de mascota ", field);
+        // console.log("actualizando campo de mascota ", field);
         dispatch(setActivePetField(field));
     });
 };
@@ -145,7 +145,7 @@ export const startGetSpecies = () => async (dispatch, getState) => {
     } catch (error) {
         // console.log("error startGetSpecies", error.config.headers);
         console.log("error startGetSpecies", error);
-
+        throw new Error(error);
     }
 };
 export const getPetsByUserId = () => async (dispatch, getState) => {
