@@ -165,7 +165,7 @@ const PanelFilters = ({ module }) => {
     filters.department_id != null && filters.department_id != 0
       ? departmentsOptions.find(
         (option) => option.value === filters.department_id
-      ) : { label: "", value: 0 };
+      ) : null;
 
   const citiesOptions = cities.map((city) => {
     return { label: city.name, value: city.id };
@@ -255,7 +255,7 @@ const PanelFilters = ({ module }) => {
 
     // activeModuleIsPosts?
     dispatch(startGetBreedsBySpecieId(newValue ? newValue.value : 0));
-    handleBreedSelectChange(null, 0);
+    handleBreedSelectChange(null, null);
   };
   const handleBreedSelectChange = (event, newValue) => {
     // console.log('handleBreedSelectChange==  : ', newValue);
@@ -537,7 +537,7 @@ const PanelFilters = ({ module }) => {
 
 
       <SelectComponent
-        label="Especie"
+        label="Especie / Grupo"
         name="specie"
         // clearIcon={true}
         onChange={handleSpecieSelectChange}
@@ -546,7 +546,7 @@ const PanelFilters = ({ module }) => {
       />
 
       <SelectComponent
-        label="Raza"
+        label="Raza / Subgrupo"
         name="breed"
         // clearIcon={true}
         onChange={handleBreedSelectChange}
@@ -612,6 +612,7 @@ const PanelFilters = ({ module }) => {
               label="Vacunación"
               name="vaccinated"
               onChange={handleVaccinatedSelectChange}
+              // inputDisabled={true}
               value={vaccinedSelectSelectedValue}
               options={vaccinesSelectOptions}
             />
@@ -619,6 +620,7 @@ const PanelFilters = ({ module }) => {
             <SelectComponent
               label="Esterilización"
               name="sterilized"
+              // inputDisabled={true}
               onChange={handleSterilizedSelectChange}
               value={sterilizedSelectSelectedValue}
               options={sterilizedSelectOptions}
@@ -628,6 +630,7 @@ const PanelFilters = ({ module }) => {
               label="Desparasitación"
               name="dewormed"
               onChange={handleDewormedSelectChange}
+              // inputDisabled={true}
               value={dewormedSelectSelectedValue}
               options={dewormedSelectOptions}
             />

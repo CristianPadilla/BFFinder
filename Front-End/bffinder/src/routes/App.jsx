@@ -24,8 +24,15 @@ const App = () => {
 
 	useEffect(() => {
 		if (status === 'authenticated' || status === 'checking') dispatch(validateAuth({ tokenToValidate: token }));
-		// setAuthToken(token);
 	}, []);
+
+
+	useEffect(() => {
+		setAuthToken(token);
+	}, [token]);
+
+
+
 
 	if (status === 'checking') {
 		return <CheckingAuth />
