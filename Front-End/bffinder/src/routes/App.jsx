@@ -12,6 +12,8 @@ import Verpublicacion from "pages/ViewPost";
 import { useDispatch, useSelector } from "react-redux";
 import { CheckingAuth } from "../pages/auth/CheckingAuth";
 import { logout, validateAuth } from "../store/auth";
+import { setAuthToken } from "../api";
+import { use } from "i18next";
 
 const App = () => {
 
@@ -22,13 +24,14 @@ const App = () => {
 
 	useEffect(() => {
 		if (status === 'authenticated' || status === 'checking') dispatch(validateAuth({ tokenToValidate: token }));
+		// setAuthToken(token);
 	}, []);
 
 	if (status === 'checking') {
 		return <CheckingAuth />
 	}
 
-
+	setAuthToken(token);
 	return (
 
 		<BrowserRouter>

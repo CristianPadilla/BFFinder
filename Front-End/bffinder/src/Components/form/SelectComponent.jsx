@@ -25,7 +25,7 @@ const SelectComponent = (props) => {
             // console.log("option :", option.value === value.value);
             return option.value === value.value
           }}
-          clearIcon={props.clearIcon}
+          // clearIcon={true}
           style={props.style}
           freeSolo={props.freeSolo}
           renderInput={(params) => (

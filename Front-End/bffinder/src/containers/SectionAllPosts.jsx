@@ -8,8 +8,10 @@ import Stack from "@mui/material/Stack";
 import "styles/SectionAllPosts.scss";
 import axios from "axios";
 import "styles/Home.scss";
+import { useSelector } from "react-redux";
 
 const SectionAllPosts = () => {
+  const { token: authToken } = useSelector((state) => state.persisted.auth);
   const [postList, setPostList] = useState([]);
   const sectionRef = useRef(null);
   const filters = {
@@ -22,8 +24,7 @@ const SectionAllPosts = () => {
     page_size: 10,
   };
 
-  const authToken =
-    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ3YWthbmRhQG1haWwuY29tIiwiaWF0IjoxNzAzNTM5NTgzLCJleHAiOjE3MDM2MjU5ODN9.ltl4zL4S8IxOWBpqCm1BDweifaGQ8kIUAc_ReC-lDa0";
+
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:9090",
@@ -70,34 +71,34 @@ const SectionAllPosts = () => {
   return (
     <div className="layout-container">
       <section ref={sectionRef} className="inicio-user-comun">
-      <Grid container className="grid-container">
-        {currentPosts.map((post) => (
-          <Grid item key={post.id} xs={12} sm={6} md={4} lg={4} xl={4} spacing={1}>
-          <Cardv post={post} />
+        <Grid container className="grid-container">
+          {currentPosts.map((post) => (
+            <Grid item key={post.id} xs={12} sm={6} md={4} lg={4} xl={4} spacing={1}>
+              <Cardv post={post} />
+            </Grid>
+            // <Grid item xs={12} key={post.id}>
+            //   <CardPost post={post}/>
+            // </Grid>
+          ))}
         </Grid>
-          // <Grid item xs={12} key={post.id}>
-          //   <CardPost post={post}/>
-          // </Grid>
-        ))}
-      </Grid>
 
-      <Grid
-        container
-        className="grid-container"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Stack spacing={2}>
-          <Pagination
-            count={Math.ceil(postList.length / postsPerPage)}
-            color="warning"
-            className="pagination-custom"
-            page={currentPage}
-            onChange={handlePageChange}
-          />
-        </Stack>
-      </Grid>
-    </section>
+        <Grid
+          container
+          className="grid-container"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Stack spacing={2}>
+            <Pagination
+              count={Math.ceil(postList.length / postsPerPage)}
+              color="warning"
+              className="pagination-custom"
+              page={currentPage}
+              onChange={handlePageChange}
+            />
+          </Stack>
+        </Grid>
+      </section>
     </div>
   );
 };

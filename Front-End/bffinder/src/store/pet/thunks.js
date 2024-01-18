@@ -131,20 +131,28 @@ export const startGetPetById = (id) => async (dispatch) => {
 };
 
 export const startGetSpecies = () => async (dispatch, getState) => {
-    const { activeModule } = getState().persisted.global
-    // console.log("JJJJJJJJJJJJJJJJ ", activeModule);
-    const { data, status } = await specieApi.get("/all");
-    console.log("startGetSpecies", data, status);
-    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
-    activeModule === "posts"
-        ? dispatch(setSpeciesP(data))
-        : dispatch(setSpecies(data));
+    try {
+
+        const { activeModule } = getState().persisted.global
+        // const { token } = getState().persisted.auth
+        // console.log("JJJJJJJJJJJJJJJJ ", specieApi.defaults);
+        const { data, status } = await specieApi.get("/all");
+        // console.log("startGetSpecies", data, status);
+        if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+        activeModule === "posts"
+            ? dispatch(setSpeciesP(data))
+            : dispatch(setSpecies(data));
+    } catch (error) {
+        // console.log("error startGetSpecies", error.config.headers);
+        console.log("error startGetSpecies", error);
+
+    }
 };
 export const getPetsByUserId = () => async (dispatch, getState) => {
     const { userId } = getState().persisted.auth;
     const { data, status } = await petApi.get('/owner/' + userId + '/unposted');
     if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
-    console.log("pets pot uusario ", data, status);
+    // console.log("pets pot usario ", data, status);
     return data;
 };
 

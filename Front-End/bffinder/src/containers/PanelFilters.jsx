@@ -33,6 +33,7 @@ import {
 import { t, use } from "i18next";
 import DateInputComponent from "../Components/form/DateInputComponent";
 import { date } from "yup";
+import { specieApi } from "../api/specieApi";
 
 function ValueLabel(props) {
   const { children, open, value } = props;
@@ -81,7 +82,7 @@ const marks = [
 
 const PanelFilters = ({ module }) => {
   const dispatch = useDispatch();
-  const { role } = useSelector((state) => state.persisted.auth);
+  const { role, token } = useSelector((state) => state.persisted.auth);
   const { activeModule } = useSelector((state) => state.persisted.global);
   const activeModuleIsPosts = activeModule === "posts" ? true : false;
 
@@ -144,7 +145,7 @@ const PanelFilters = ({ module }) => {
   const specieOptionSelectedValue =
     filters.specie_id != null && filters.specie_id != 0
       ? speciesOptions.find((option) => option.value === filters.specie_id)
-      : { label: "", value: null };
+      : null;
 
   const breedsOptions = breeds.map((breed) => {
     return { label: t(`breeds.${breed.name}`), value: breed.id };
@@ -153,7 +154,7 @@ const PanelFilters = ({ module }) => {
   const breedOptionSelectedValue =
     filters.breed_id != null && filters.breed_id != 0
       ? breedsOptions.find((option) => option.value === filters.breed_id)
-      : { label: "", value: null };
+      : null;
 
   // DEPARTAMENTOS y CIUDADES
   const departmentsOptions = departments.map((department) => {
@@ -533,9 +534,12 @@ const PanelFilters = ({ module }) => {
       )}
 
 
+
+
       <SelectComponent
         label="Especie"
         name="specie"
+        // clearIcon={true}
         onChange={handleSpecieSelectChange}
         value={specieOptionSelectedValue}
         options={speciesOptions}
@@ -544,6 +548,7 @@ const PanelFilters = ({ module }) => {
       <SelectComponent
         label="Raza"
         name="breed"
+        // clearIcon={true}
         onChange={handleBreedSelectChange}
         value={breedOptionSelectedValue}
         options={breedsOptions}
