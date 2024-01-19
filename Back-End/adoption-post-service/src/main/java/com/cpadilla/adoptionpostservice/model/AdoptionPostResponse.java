@@ -22,4 +22,5 @@ public class AdoptionPostResponse {
     private PetResponse petResponse;
     private LocationResponse locationResponse;
     private List<ImageResponse> images;
+    private List<QuestionResponse> questions;
 }
