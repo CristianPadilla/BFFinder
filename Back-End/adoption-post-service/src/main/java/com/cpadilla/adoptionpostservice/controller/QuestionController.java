@@ -1,6 +1,7 @@
 package com.cpadilla.adoptionpostservice.controller;
 
 
+import com.cpadilla.adoptionpostservice.model.QuestionAnswerUpdateRequest;
 import com.cpadilla.adoptionpostservice.model.QuestionRequest;
 import com.cpadilla.adoptionpostservice.model.QuestionResponse;
 import com.cpadilla.adoptionpostservice.service.AdoptionPostService;
@@ -25,6 +26,12 @@ public class QuestionController {
     ResponseEntity<QuestionResponse> saveQuestion(@RequestBody QuestionRequest request) {
         log.info("Saving question from CONTROLLER layer");
         return ResponseEntity.status(HttpStatus.CREATED).body(adoptionPostService.saveQuestion(request));
+    }
+
+    @PutMapping("/update/answer")
+    ResponseEntity<QuestionResponse> updateQuestionAnswer(@RequestBody QuestionAnswerUpdateRequest request) {
+        log.info("Updating question answer from CONTROLLER layer");
+        return ResponseEntity.status(HttpStatus.OK).body(adoptionPostService.updateQuestionAnswer(request));
     }
 
     @GetMapping("/all/shelter/{userId}")

@@ -403,7 +403,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
             });
         });
 
-        log.info("questionss {}", questions);
+//        log.info("questionss {}", questions);
         return questions;
     }
 
@@ -431,8 +431,16 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     }
 
     @Override
-    public QuestionResponse updateQuestionAnswer(String description, int questionId) {
-        return null;
+    public QuestionResponse updateQuestionAnswer(QuestionAnswerUpdateRequest request) {
+
+        var questionToUpdate = questionRepository
+                .findById(request.getQuestionId())
+                .orElseThrow(() -> new CustomException("Question not found with id: " + request.getQuestionId(), "QUESTION_NOT_FOUND", HttpStatus.NOT_FOUND.value()));
+
+        questionToUpdate.setAnswer(request.getAnswer());
+        questionToUpdate.setAnswerDate(LocalDate.now());
+        questionToUpdate = questionRepository.save(questionToUpdate);
+        return buildQuestionFromEntity(questionToUpdate);
     }
 
     @Override

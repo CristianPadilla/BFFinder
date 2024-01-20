@@ -37,7 +37,7 @@ public interface AdoptionPostService {
     QuestionResponse saveQuestion(QuestionRequest request);
 
     QuestionResponse updateQuestionDescription(String description, int questionId);
-    QuestionResponse updateQuestionAnswer(String description, int questionId);
+    QuestionResponse updateQuestionAnswer(QuestionAnswerUpdateRequest request);
 
 
 }
