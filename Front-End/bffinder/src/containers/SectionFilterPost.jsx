@@ -16,7 +16,6 @@ const SectionFilterPost = () => {
   const { role } = useSelector((state) => state.persisted.auth);
   const sectionRef = useRef(null);
 
-
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
     sectionRef.current.scrollIntoView({ top: 0, behavior: "smooth" });
@@ -44,54 +43,60 @@ const SectionFilterPost = () => {
 
   const handleTooltipOpen = () => {
     setTooltipOpen(true);
-  }; 
+  };
 
-  return (
-    isSaving ? <h2> Loadin de haciendo un proceso</h2 >
-      :
-      <>
-        {posts && posts.map((post) => (
-          role === "s"
-            ? <Grid
-              item
-              key={post.id}
-              xs={12}
-              sm={6}
-              md={4}
-              style={{ display: "flex" }}
-            >
-              <CardPostShelter post={post} style={{ flex: "1 0 auto" }} />
-            </Grid>
-            :
+  return isSaving ? (
+    <h2> Loadin de haciendo un proceso</h2>
+  ) : (
+    <>
+      {posts &&
+        posts.map((post) =>
+          role === "s" ? (
+            <>
+              <Grid
+                item
+                key={post.id}
+                xs={12}
+                sm={6}
+                md={4}
+                style={{ display: "flex" }}
+              >
+                <CardPostShelter post={post} style={{ flex: "1 0 auto" }} />
+              </Grid>
+
+              <Tooltip
+                title={
+                  <span style={{ fontSize: "16px" }}>Crear Publicación</span>
+                }
+                arrow
+                placement="left"
+                open={tooltipOpen}
+                onClose={handleTooltipClose}
+                onOpen={handleTooltipOpen}
+              >
+                <Fab
+                  color="primary"
+                  aria-label="add"
+                  onClick={handleOpenDialog}
+                  sx={{ position: "fixed", bottom: "16px", right: "25px" }}
+                >
+                  <AddIcon />
+                </Fab>
+              </Tooltip>
+
+              <ModalAddPet
+                open={openDialog}
+                onClose={handleCloseDialog}
+                onAdd={handleAddPet}
+              />
+            </>
+          ) : (
             <Grid item xs={12} key={post.id}>
               <CardPost post={post} />
             </Grid>
-        ))}
-
-        <Tooltip
-          title={<span style={{ fontSize: "16px" }}>Crear Publicación</span>}
-          arrow
-          placement="left"
-          open={tooltipOpen}
-        onClose={handleTooltipClose}
-        onOpen={handleTooltipOpen}
-        >
-          <Fab
-            color="primary"
-            aria-label="add"
-            onClick={handleOpenDialog}
-            sx={{ position: "fixed", bottom: "16px", right: "25px" }}
-          >
-            <AddIcon />
-          </Fab>
-        </Tooltip>
-
-        <ModalAddPet
-          open={openDialog}
-          onClose={handleCloseDialog}
-          onAdd={handleAddPet}
-        />
-      </>
+          )
+        )}
+    </>
   );
 };
 

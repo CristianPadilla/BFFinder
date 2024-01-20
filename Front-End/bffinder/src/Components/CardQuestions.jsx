@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -6,13 +6,16 @@ import {
   Typography,
   TextField,
   Button,
-} from '@mui/material';
-import { Edit as EditIcon } from '@mui/icons-material';
+} from "@mui/material";
+import { Edit as EditIcon } from "@mui/icons-material";
 
-const CardQuestions = ({ comment, onReply, onEdit }) => {
+const CardQuestions = ({ question, onReply, onEdit, showAnswered }) => {
   const [isReplying, setIsReplying] = useState(false);
-  const [replyText, setReplyText] = useState(comment.replyText || '');
-  const [showEdit, setShowEdit] = useState(false);
+  const [replyText, setReplyText] = useState(question.replyText || "");
+
+  useEffect(() => {
+    setReplyText(question.replyText || "");
+  }, [question.replyText]);
 
   const handleReplyClick = () => {
     setIsReplying(true);
@@ -20,34 +23,35 @@ const CardQuestions = ({ comment, onReply, onEdit }) => {
 
   const handleSendReply = () => {
     setIsReplying(false);
-    setShowEdit(true);
-    onReply(comment.id, replyText);
+    onReply(question.id, replyText);
   };
 
   const handleEditClick = () => {
     setIsReplying(true);
-    setShowEdit(false);
   };
 
   const handleEditSave = () => {
-    onEdit(comment.id, replyText);
+    onEdit(question.id, replyText);
     setIsReplying(false);
   };
 
   return (
-    <Card elevation={1} sx={{ borderRadius: '12px', margin: '13px' }}>
+    <Card elevation={1} sx={{ borderRadius: "12px", margin: "13px" }}>
       <CardContent>
         <div
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ display: "flex", alignItems: "center" }}>
             <Avatar />
             <Typography variant="subtitle1" sx={{ marginLeft: 1 }}>
-              Nombre de la Mascota
+              User
+            </Typography>
+            <Typography variant="caption" sx={{ marginLeft: 1, lineHeight: 0 }}>
+              Date
             </Typography>
           </div>
         </div>
@@ -56,11 +60,11 @@ const CardQuestions = ({ comment, onReply, onEdit }) => {
           variant="body2"
           sx={{ marginTop: 2, marginLeft: 1, marginBottom: 3 }}
         >
-          {comment.content}
+          {question.content}
         </Typography>
 
-        {comment.isAnswered ? (
-          <div style={{ display: 'flex', alignItems: 'center', marginTop: 2 }}>
+        {
+          <div style={{ display: "flex", alignItems: "center", marginTop: 2 }}>
             {isReplying ? (
               <TextField
                 fullWidth
@@ -70,11 +74,29 @@ const CardQuestions = ({ comment, onReply, onEdit }) => {
                 onChange={(e) => setReplyText(e.target.value)}
               />
             ) : (
-              <Typography variant="body2" color="GrayText" sx={{ marginLeft: 3 }}>
-                {comment.replyText}
-              </Typography>
+              <>
+                <Typography
+                  variant="body2"
+                  color="GrayText"
+                  sx={{ marginLeft: 3 }}
+                >
+                  {question.replyText}
+                </Typography>
+                <Typography variant="caption" sx={{ marginLeft: 1 }}>
+                  Date
+                </Typography>
+
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleEditClick}
+                  sx={{ marginLeft: 1 }}
+                >
+                  Editar
+                </Button>
+              </>
             )}
-            {isReplying ? (
+            {isReplying && (
               <Button
                 variant="contained"
                 color="primary"
@@ -83,51 +105,36 @@ const CardQuestions = ({ comment, onReply, onEdit }) => {
               >
                 Guardar
               </Button>
-            ) : (
-              <Button
-                variant="text"
-                color="primary"
-                startIcon={<EditIcon />}
-                onClick={handleEditClick}
-                sx={{ marginLeft: 1 }}
-                size="small"
-              >
-                Editar
-              </Button>
             )}
           </div>
-        ) : (
-          <>
-            {isReplying && (
-              <div style={{ display: 'flex', alignItems: 'center', marginTop: 2 }}>
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  label="Responder"
-                  value={replyText}
-                  onChange={(e) => setReplyText(e.target.value)}
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleSendReply}
-                  sx={{ marginLeft: 1 }}
-                >
-                  Enviar
-                </Button>
-              </div>
-            )}
-            {!isReplying && (
-              <Button
-                variant="text"
-                color="primary"
-                onClick={handleReplyClick}
-                // sx={{ marginTop: 2 }}
-              >
-                Responder
-              </Button>
-            )}
-          </>
+        }
+
+        {!isReplying && !showAnswered && (
+          <div style={{ display: "flex", alignItems: "center", marginTop: 2 }}>
+            <Button variant="text" color="primary" onClick={handleReplyClick}>
+              Responder
+            </Button>
+          </div>
+        )}
+
+        {isReplying && (
+          <div style={{ display: "flex", alignItems: "center", marginTop: 2 }}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="Responder"
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSendReply}
+              sx={{ marginLeft: 1 }}
+            >
+              Enviar
+            </Button>
+          </div>
         )}
       </CardContent>
     </Card>

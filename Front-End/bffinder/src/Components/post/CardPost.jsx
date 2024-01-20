@@ -75,7 +75,7 @@ const CardPost = ({ post }) => {
         <div
           style={{
             width: "30%", // Porción de la card ocupada por la imagen
-            height: "100%", // Altura total de la card
+            // height: "50px", // Altura total de la card
             overflow: "hidden",
           }}
         >

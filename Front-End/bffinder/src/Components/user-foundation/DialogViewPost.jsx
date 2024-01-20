@@ -20,7 +20,7 @@ import CardInfoPet from "./CardInfoPet";
 import Swal from 'sweetalert2';
 import { useSelector } from "react-redux";
 
-const images = [
+const photos = [
   {
     original: "https://picsum.photos/id/1018/1000/600/",
     thumbnail: "https://picsum.photos/id/1018/250/150/",
@@ -60,9 +60,22 @@ const images = [
 ];
 
 const DialogViewPost = ({ open, onClose }) => {
-  const [profileImageUrl] = useState("");
   const { active: post } = useSelector((state) => state.posts);
   const [editing, setEditing] = useState(false);
+
+  const postToDisplay = post
+  ? {
+      description: post.description,
+      date: post.date,
+      images: post.images,
+    }
+  : {
+      description: "Descripción de la mascota",
+      date: "Fecha de publicación",
+      images: photos,
+    };
+
+    console.log("INFO DIALOG", post);
 
   const renderInformationSection = () => (
     <>
@@ -83,22 +96,23 @@ const DialogViewPost = ({ open, onClose }) => {
               textAlign: "justify",
             }}
           >
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci, ex
+            {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci, ex
             impedit pariatur minima porro, eius, corrupti possimus ea magnam
             accusantium aspernatur! Officiis ipsa, facilis consequuntur rerum ut optio
-            adipisci itaque.
+            adipisci itaque. */}
+            {postToDisplay.description}
           </Typography>
 
           <Grid container justifyContent="space-between" marginTop="1rem">
             <Grid item>
               <Typography variant="body2" color="text.secondary">
-                Fecha de publicación: 23423432
+                Fecha de publicación: {postToDisplay.date}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              {/* <Typography variant="body2" color="text.secondary">
                 ID : {post.id}
-              </Typography>
+              </Typography> */}
               <Typography variant="body2" color="text.secondary">
-                Hora de publicación: 23423432
+                Hora de publicación: {postToDisplay.date}
               </Typography>
             </Grid>
 
@@ -160,7 +174,7 @@ const DialogViewPost = ({ open, onClose }) => {
             <Grid container spacing={2}>
               {/* <Grid container spacing={2} sx={{ height: "100vh" }}> */}
               <Grid item xs={12} md={5}>
-                <SlidersImages images={images}
+                <SlidersImages images={postToDisplay.images}
                   showBullets={false}
                   showPlayButton={false}
                   thumbnailPosition="left"

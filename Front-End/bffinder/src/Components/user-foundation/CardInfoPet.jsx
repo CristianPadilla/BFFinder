@@ -13,14 +13,47 @@ import {
 } from "@mui/material";
 import React from "react";
 import imgdefault from "imgs/logo-bffinder.png";
+import CloseIcon from "@mui/icons-material/Close";
+import CheckIcon from "@mui/icons-material/Check";
+import { t } from "i18next";
 
 const CardInfoPet = ({ pet }) => {
   const images = [{ imageUrl: "https://picsum.photos/id/1018/1000/600/" }];
 
+  const petToDisplay = pet
+    ? {
+        name: pet.name,
+        breed: pet.breedDetails.name,
+        specie: pet.breedDetails.specie.name,
+        gender: pet.gender,
+        character: pet.dangerous,
+        size: pet.size,
+        weight: pet.weight,
+        age: pet.age,
+        vaccinated: pet.vaccinated,
+        dewormed: pet.dewormed,
+        sterilized: pet.sterilized,
+      }
+    : {
+        name: "Nombre de la mascota",
+        size: "Tamaño",
+        breed: "Raza",
+        specie: "Especie",
+        gender: "Genero",
+        character: "Caracter",
+        weight: "Peso",
+        age: "Edad",
+        vaccinated: "Vacunado",
+        dewormed: "Desparasitado",
+        sterilized: "Esterilizado",
+      };
+
+  // {pet ? name : "Nombre de la mascota"}
+
   // abtener todos las propiedades de la mascota de esta forma para  no tener un error
   const name = pet ? pet.name : "Nombre de la mascota";
 
-  console.log('pet del card info  : ', pet);
+  console.log("petcard info  : ", pet);
 
   return (
     <>
@@ -57,9 +90,7 @@ const CardInfoPet = ({ pet }) => {
                 component="img"
                 sx={{ width: "100%", height: "100%", objectFit: "cover" }}
                 image={
-                  images && images.length > 0
-                    ? images[0].imageUrl
-                    : imgdefault
+                  images && images.length > 0 ? images[0].imageUrl : imgdefault
                 }
                 alt="Imagen"
               />
@@ -75,7 +106,8 @@ const CardInfoPet = ({ pet }) => {
                 component="h6"
                 sx={{ marginBottom: "0.7rem" }}
               >
-                {pet ? name : "Nombre de la mascota"}
+                {/* {pet ? name : "Nombre de la mascota"} */}
+                {petToDisplay.name}
               </Typography>
               {/* </Link> */}
 
@@ -84,7 +116,7 @@ const CardInfoPet = ({ pet }) => {
                   <Paper
                     elevation={0}
                     variant="outlined"
-                  //   sx={{ margin: "1rem", borderRadius: "" }}
+                    //   sx={{ margin: "1rem", borderRadius: "" }}
                   >
                     <Divider
                       variant="middle"
@@ -105,24 +137,30 @@ const CardInfoPet = ({ pet }) => {
                         {/* <Typography sx={{ margin: '.2rem'}}>{breedDetails.specie.name} / {breedDetails.name}</Typography>
       <Typography sx={{ margin: '.2rem'}}>Genero: {gender}</Typography> */}
                         <Typography sx={{ margin: ".1rem" }}>
-                          Especie / Raza
+                          {t(`species.${petToDisplay.specie}`)} /{" "}
+                          {t(`breeds.${petToDisplay.breed}`)}
                         </Typography>
                         <Typography sx={{ margin: ".1rem" }}>
-                          Genero: Macho
+                          Genero: {t(`genders.${petToDisplay.gender}`)}
                         </Typography>
                         <Typography sx={{ margin: ".1rem" }}>
-                          Caracter: {"dangerous"}
+                          Caracter: {t(`dangerous.${petToDisplay.character}`)}
                         </Typography>
                       </Grid>
                       <Grid item xs={6} sx={{ textAlign: "justify" }}>
                         <Typography sx={{ margin: ".1rem" }}>
-                          Tamaño: {"size"}
+                          Tamaño: {t(`sizes.${petToDisplay.size}`)}
                         </Typography>
                         <Typography sx={{ margin: ".1rem" }}>
-                          Peso: {"weight"}
+                          Peso: {petToDisplay.weight} kg
                         </Typography>
                         <Typography sx={{ margin: ".1rem" }}>
-                          Edad: {"age"}
+                          Edad:{" "}
+                          {petToDisplay.age === 1
+                            ? `${petToDisplay.age} año`
+                            : petToDisplay.age === 0
+                            ? "Menos de un año"
+                            : `${petToDisplay.age} años`}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -136,7 +174,7 @@ const CardInfoPet = ({ pet }) => {
                   <Paper
                     elevation={0}
                     variant="outlined"
-                  //   sx={{ margin: "1rem", borderRadius: "" }}
+                    //   sx={{ margin: "1rem", borderRadius: "" }}
                   >
                     <Divider
                       variant="middle"
@@ -155,16 +193,26 @@ const CardInfoPet = ({ pet }) => {
                     >
                       <Grid item xs={6} sx={{ textAlign: "justify" }}>
                         <Typography sx={{ margin: ".1rem" }}>
-                          {/* Vacunado: {vaccinated} */}
-                          Vacunado: Si
+                          Vacunado:{" "}
+                          {petToDisplay.vaccinated ? (
+                            <CheckIcon color="success" sx={{ fontSize: 15 }} />
+                          ) : (
+                            <CloseIcon color="error" sx={{ fontSize: 15 }} />
+                          )}
                         </Typography>
                         <Typography sx={{ margin: ".1rem" }}>
-                          {/* Esterilizado: {sterilized} */}
-                          Esterilizado: No
+                          Esterilizado: {petToDisplay.sterilized ? (
+                            <CheckIcon color="success" sx={{ fontSize: 15 }} />
+                          ) : (
+                            <CloseIcon color="error" sx={{ fontSize: 15 }} />
+                          )}
                         </Typography>
                         <Typography sx={{ margin: ".1rem" }}>
-                          {/* Desparasitado: {dewormed} */}
-                          Desparasitado: No
+                          Desparasitado: {petToDisplay.dewormed ? (
+                            <CheckIcon color="success" sx={{ fontSize: 15 }} />
+                          ) : (
+                            <CloseIcon color="error" sx={{ fontSize: 15 }} />
+                          )}
                         </Typography>
                       </Grid>
                     </Grid>

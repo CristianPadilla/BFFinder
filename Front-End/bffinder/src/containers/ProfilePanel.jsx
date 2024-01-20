@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 import {
   Avatar,
   Box,
@@ -8,43 +8,70 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-} from '@mui/material';
-import { AccountCircle, Settings, QuestionAnswer, Favorite } from '@mui/icons-material';
+} from "@mui/material";
+import {
+  AccountCircle,
+  Settings,
+  QuestionAnswer,
+  Favorite,
+} from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
+import { setActiveModule } from "../store/global";
 
 const ProfilePanel = () => {
+  const dispatch = useDispatch();
+  const { name, photoUrl } = useSelector((state) => state.persisted.auth);
   const user = {
-    name: 'Nombre del Usuario',
-    joinDate: '01/01/2022',
+    name: name || "Usuario",
+    joinDate: "01/01/2022",
   };
 
+  // const navigationItems = [
+  //   { text: "Perfil", icon: <AccountCircle />, link: "/perfil" },
+  //   { text: "Configuración", icon: <Settings />, link: "/configuracion" },
+  //   { text: "Preguntas", icon: <QuestionAnswer />, link: "/preguntas" },
+  //   { text: "Favoritos", icon: <Favorite />, link: "/favoritos" },
+  // ];
   const navigationItems = [
-    { text: 'Perfil', icon: <AccountCircle />, link: '/perfil' },
-    { text: 'Configuración', icon: <Settings />, link: '/configuracion' },
-    { text: 'Preguntas', icon: <QuestionAnswer />, link: '/preguntas' },
-    { text: 'Favoritos', icon: <Favorite />, link: '/favoritos' },
+    { value: "profile", text: "Perfil", icon: <AccountCircle /> },
+    { value: "config", text: "Configuración", icon: <Settings /> },
+    { value: "questions", text: "Preguntas", icon: <QuestionAnswer /> },
+    { value: "favs", text: "Favoritos", icon: <Favorite /> },
   ];
+
+  const handleModuleChange = (e) => {
+    console.log("handleModuleChange===", e.currentTarget.dataset.value);
+    dispatch(setActiveModule({ module: e.currentTarget.dataset.value }));
+  };
+
+
 
   return (
     <>
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
           padding: 2,
         }}
       >
-        <Avatar sx={{ width: 64, height: 64 }} />
+        <Avatar src={photoUrl || ""} sx={{ width: 100, height: 100 }} />
         <Typography variant="h6" sx={{ marginTop: 1, marginBottom: 0 }}>
           {user.name}
-        </Typography>
-        <Typography variant="caption" color="textSecondary">
-          Se unió el {user.joinDate}
         </Typography>
       </Box>
       <List>
         {navigationItems.map((item, index) => (
-          <ListItem button key={index} component={Link} to={item.link}>
+          <ListItem
+            onClick={handleModuleChange}
+            button
+            key={index}
+            component={Link}
+            to={item.link}
+            data-value={item.value}
+            sx={{ margin: ".9rem" }}
+          >
             <ListItemIcon>{item.icon}</ListItemIcon>
             <ListItemText primary={item.text} />
           </ListItem>

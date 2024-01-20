@@ -7,11 +7,6 @@ import allPNG from "imgs/Pets/allPets.png";
 import { Dialog, DialogContent, DialogTitle, IconButton, Grid, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-// const dogPNG = "https://img.icons8.com/color/480/dog.png";
-// const catPNG = "https://img.icons8.com/color/480/000000/calico-cat.png";
-// const hamsterPNG = "https://img.icons8.com/color/480/cute-hamster.png";
-// const allPNG = "https://img.icons8.com/color/96/budgie.png";
-
 const speciesData = [
   { name: "Perros", image: dogPNG, link: "/home" },
   { name: "Gatos", image: catPNG, link: "/gatos" },

@@ -1,22 +1,22 @@
 import React from "react";
-import NavHome from "../Components/NavHome";
+import NavProfile from "../Components/NavProfile";
 import SectionPerfilPost from "../containers/SectionPerfilPost"
 import SectionPost from "../containers/SectionPost"
 import Breadcrumbs from "../Components/MyBreadcrumbs"
-import 'styles/PostDetails.scss';
+import 'styles/ViewPost.scss';
 
 const ViewPost = () => {
   return (
     <div>
       <section id="content">
-        <NavHome />
-        <main>
+        <NavProfile />
+        <main className="content-container">
             {/* <div className="head-title-perfil">
                 <SectionPerfilPost/>
             </div> */}
-            <div className="head-navigation">
+            {/* <div className="head-navigation">
                 <Breadcrumbs/>
-            </div>
+            </div> */}
 
           <div className="main-content-post">
                 <SectionPost  />

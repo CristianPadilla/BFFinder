@@ -6,15 +6,22 @@ import { Typography } from "@mui/material";
 import { IconButton } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { useNavigate } from 'react-router-dom';
 
 const NavProfile = () => {
+  const navigate = useNavigate();
+
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
   return (
     <div>
       <nav className="nav-profile">
         <div className="zone-back">
-          <IconButton>
-            <ArrowBackIcon sx={{fontSize: "37px"}}/>
-            {/* <ArrowBackIosIcon sx={{fontSize: "35px"}}/> */}
+          <IconButton onClick={handleGoBack}>
+            {/* <ArrowBackIcon sx={{fontSize: "37px"}}/> */}
+            Volver
           </IconButton>
         </div>
         <a href="#" className="fingerprint">

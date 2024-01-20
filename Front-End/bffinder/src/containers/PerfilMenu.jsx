@@ -1,4 +1,5 @@
-import * as React from "react";
+// import * as React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Avatar,
@@ -11,24 +12,28 @@ import {
   Tooltip,
   ToggleButton,
 } from "@mui/material";
-import { Settings, Logout, Favorite, Pets } from "@mui/icons-material";
+import { Settings, Logout, Favorite, Pets, QuestionAnswer } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
-import { startLogout } from '../store/auth';
-import { changeActiveModule } from '../store/global';
+import { useDispatch, useSelector } from "react-redux";
+import { startLogout } from "../store/auth";
+import { changeActiveModule, setActiveModule } from "../store/global";
+import { startGetLoggedUserInformation } from "../store/global";
 
 const PerfilMenu = () => {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
-
   const { page } = useSelector((state) => state.pets);
   const { activeModule } = useSelector((state) => state.persisted.global);
+  const { photoUrl } = useSelector((state) => state.persisted.auth);
+  // const { user } = useSelector((state) => state.persisted.auth);
   const { role } = useSelector((state) => state.persisted.auth);
+  const [user, setUser] = useState(null);
+  const isMounted = useRef(true);
 
-  const postsModuleTitle = role === 'u' ? "Adoptar" : "Mis publicaciones";
-  
+  const postsModuleTitle = role === "u" ? "Adoptar" : "Mis publicaciones";
+
   const commonButtonStyles = {
     borderRadius: "16px",
     // color: "#A0A0A0",
@@ -56,17 +61,36 @@ const PerfilMenu = () => {
     setAnchorEl(null);
   };
 
-  const handleProfile = () => {
-    navigate("/ver-perfil");
+  const handleProfile = (e) => {
+    console.log("handleProfile===", e.currentTarget.dataset.value);
+    dispatch(setActiveModule({ module: e.currentTarget.dataset.value }));
+    navigate("/account");
   };
 
   const handleChangeModule = (module) => {
-    dispatch(changeActiveModule({ module }))
+    dispatch(changeActiveModule({ module }));
   };
 
   const handleLogout = () => {
     dispatch(startLogout({}));
   };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await dispatch(startGetLoggedUserInformation());
+      console.log("profile MENU: ", user);
+      if (isMounted.current) {
+        setUser(user);
+      }
+    };
+    fetchUser();
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  console.log("DATOSSS: ", photoUrl);
 
   return (
     <div>
@@ -120,8 +144,9 @@ const PerfilMenu = () => {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar sx={{ width: 37, height: 37, backgroundColor: "blue" }}>
-              EX
+            <Avatar 
+            src={photoUrl || ""} 
+            sx={{ width: 37, height: 37 }}>
             </Avatar>
           </IconButton>
         </Tooltip>
@@ -161,8 +186,9 @@ const PerfilMenu = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleProfile}>
-          <Avatar /> Mi Cuenta
+        <MenuItem data-value="profile" onClick={handleProfile}>
+          {/* <Avatar />  */}
+          Mi Cuenta
         </MenuItem>
         {/* <MenuItem onClick={handleClose}>
           <Avatar /> My account
@@ -174,11 +200,17 @@ const PerfilMenu = () => {
           </ListItemIcon>
           Add another account
         </MenuItem> */}
-        <MenuItem onClick={handleProfile}>
+        <MenuItem data-value="config" onClick={handleProfile}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
           Configuraciones
+        </MenuItem>
+        <MenuItem data-value="questions" onClick={handleProfile}>
+          <ListItemIcon>
+            <QuestionAnswer fontSize="small" />
+          </ListItemIcon>
+          Preguntas
         </MenuItem>
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>

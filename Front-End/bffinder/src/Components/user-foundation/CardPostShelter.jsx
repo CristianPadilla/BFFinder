@@ -19,7 +19,7 @@ import Favorite from "@mui/icons-material/Favorite";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import DialogViewPost from "./DialogViewPost";
 import { t } from "i18next";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import { setActivePost, startGetPostById } from "../../store/post";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -28,7 +28,7 @@ const CardPostShelter = ({ post }) => {
   const { active } = useSelector((state) => state.posts);
 
   const { petPartialResponse, images, date, user, status, id } = post;
-  const { name, breedDetails, specie } = petPartialResponse;
+  const { name, breedDetails, specie, profileImageUrl } = petPartialResponse;
 
   const parsedDate = new Date(date);
   const day = parsedDate.getDate();
@@ -37,16 +37,18 @@ const CardPostShelter = ({ post }) => {
   const hours = parsedDate.getHours();
   const minutes = parsedDate.getMinutes();
 
-  const formattedDate = `${day < 10 ? "0" : ""}${day}/${month < 10 ? "0" : ""
-    }${month}/${year} - ${hours % 12 || 12}:${minutes < 10 ? "0" : ""
-    }${minutes} ${hours >= 12 ? "pm" : "am"}`;
+  const formattedDate = `${day < 10 ? "0" : ""}${day}/${
+    month < 10 ? "0" : ""
+  }${month}/${year} - ${hours % 12 || 12}:${
+    minutes < 10 ? "0" : ""
+  }${minutes} ${hours >= 12 ? "pm" : "am"}`;
 
   //   Dialog
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleOpenDialog = () => {
     // console.log("iddddddddddd: ", id);
-    dispatch(startGetPostById(id))
+    dispatch(startGetPostById(id));
     // setOpenDialog(true);
   };
 
@@ -55,17 +57,19 @@ const CardPostShelter = ({ post }) => {
     // setOpenDialog(false);
   };
 
-const showAlert = () => {
-  Swal.fire({
-    title: '¿Estás seguro de deshabilitar esta publicación?',
-    // text: 'No podrás revertir esta acción!',
-    icon: 'question',
-    confirmButtonText: 'Si, deshabilitar',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-  });
-};
+  const showAlert = () => {
+    Swal.fire({
+      title: "¿Estás seguro de deshabilitar esta publicación?",
+      // text: 'No podrás revertir esta acción!',
+      icon: "question",
+      confirmButtonText: "Si, deshabilitar",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+    });
+  };
+
+  // console.log("post Fundaciónn: ", post);
 
   return (
     <div
@@ -83,7 +87,7 @@ const showAlert = () => {
               <Typography
                 variant="h6"
                 component="h2"
-              // sx={{ fontSize: "1.4rem" }}
+                // sx={{ fontSize: "1.4rem" }}
               >
                 {name}
               </Typography>
@@ -94,7 +98,8 @@ const showAlert = () => {
                 color="text.secondary"
                 sx={{ fontSize: ".9rem", marginTop: ".5rem" }}
               >
-                {t(`species.${breedDetails.specie.name}`)} - {t(`breeds.${breedDetails.name}`)}
+                {t(`species.${breedDetails.specie.name}`)} -{" "}
+                {t(`breeds.${breedDetails.name}`)}
               </Typography>
             }
           />
@@ -103,11 +108,7 @@ const showAlert = () => {
             <CardMedia
               component="img"
               sx={{ width: "100%", height: "100%", objectFit: "cover" }}
-              image={
-                images && images.length > 0
-                  ? images[0].profileImageUrl
-                  : imgdefault
-              }
+              image={profileImageUrl ? profileImageUrl : imgdefault}
               alt="Imagen"
             />
           </div>
@@ -134,7 +135,7 @@ const showAlert = () => {
               container
               spacing={1}
               alignItems="center"
-            //   justifyContent="justify-content"
+              //   justifyContent="justify-content"
             >
               <Grid item>
                 <Favorite
@@ -160,7 +161,13 @@ const showAlert = () => {
                   4 personas preguntaron
                 </Typography>
               </Grid>
-              <Grid item container direction="row" alignItems="center" justifyContent="center">
+              <Grid
+                item
+                container
+                direction="row"
+                alignItems="center"
+                justifyContent="center"
+              >
                 {status ? (
                   <>
                     <Typography
@@ -226,7 +233,9 @@ const showAlert = () => {
           </Grid>
         </CardActions>
       </Card>
-      {active != null && <DialogViewPost open={active != null} onClose={handleCloseDialog} />}
+      {active != null && (
+        <DialogViewPost open={active != null} onClose={handleCloseDialog} />
+      )}
     </div>
   );
 };

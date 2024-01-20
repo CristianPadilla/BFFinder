@@ -4,6 +4,7 @@ import { specieApi } from "../../api/specieApi"
 import { setErrorMessage } from "../pet"
 import { HttpStatusCode } from "axios"
 import { breedApi } from "../../api/breedApi"
+import { userApi } from "../../api/userApi"
 
 export const changeActiveModule = ({ module }) =>
     async (dispatch, getState) => {
@@ -26,3 +27,12 @@ export const getBreedsBySpecieId = (specieId) => async (dispatch, getState) => {
     if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
     return data;
 };
+
+export const startGetLoggedUserInformation = () => async (dispatch, getState) => {
+    console.log("startGetLoggedUserInformation");
+
+    const { userId } = getState().persisted.auth;
+    const { data, status } = await userApi.get("/" + userId);
+    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+    return data;
+}
