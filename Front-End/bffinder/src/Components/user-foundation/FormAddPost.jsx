@@ -121,7 +121,6 @@ const FormAddPost = () => {
             <div className="error-message">{formik.errors.general}</div>
           )}
           <Grid container spacing={2}>
-            {console.log("formik.values ====", formik.values)}
             <Grid item xs={12}>
               {/* <SlidersImages
                 images={images}

@@ -60,7 +60,6 @@ export const petSlice = createSlice({
             state.isSaving = payload;
         },
         setActivePet(state, { payload }) {
-            console.log("setActivePet", payload);
             state.active = payload;
         },
         setPetsPage(state, { payload }) {

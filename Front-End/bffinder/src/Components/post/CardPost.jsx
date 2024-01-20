@@ -15,8 +15,9 @@ import {
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { t } from "i18next";
+import { setActivePost } from "../../store/post";
 
 const formatTimeDifference = (hours) => {
   const weeks = Math.floor(hours / (24 * 7));
@@ -35,6 +36,7 @@ const formatTimeDifference = (hours) => {
 
 const CardPost = ({ post }) => {
   const { role } = useSelector(state => state.persisted.auth);
+  const dispatch = useDispatch();
 
 
   const navigate = useNavigate();
@@ -57,6 +59,7 @@ const CardPost = ({ post }) => {
   const formattedTimeDifference = formatTimeDifference(timeDifferenceInHours);
 
   const handleVerClick = () => {
+    dispatch(setActivePost(post));
     navigate("/ver-publicacion");
   };
 
@@ -79,16 +82,17 @@ const CardPost = ({ post }) => {
             overflow: "hidden",
           }}
         >
-          <Link to="/ver-publicacion">
-            <CardMedia
-              component="img"
-              sx={{ width: "100%", height: "100%", objectFit: "cover" }}
-              image={
-                images && images.length > 0 ? images[0].imageUrl : imgdefault
-              }
-              alt="Imagen"
-            />
-          </Link>
+          {/* <Link to="/ver-publicacion"> */}
+          <CardMedia
+            onClick={handleVerClick}
+            component="img"
+            sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+            image={
+              images && images.length > 0 ? images[0].imageUrl : imgdefault
+            }
+            alt="Imagen"
+          />
+          {/* </Link> */}
         </div>
         <CardContent
           className="content-card"
@@ -100,18 +104,16 @@ const CardPost = ({ post }) => {
         >
           <Grid container justifyContent="space-between" alignItems="center">
             <Grid item>
-              <Link
-                to="/ver-publicacion"
-                style={{ textDecoration: "none", color: "inherit" }}
+
+              {/* style={{ textDecoration: "none", color: "inherit" }} */}
+              <Typography
+                onClick={handleVerClick}
+                variant="h5"
+                component="h2"
+                sx={{ fontSize: "1.7rem", marginTop: "-6%" }}
               >
-                <Typography
-                  variant="h5"
-                  component="h2"
-                  sx={{ fontSize: "1.7rem", marginTop: "-6%" }}
-                >
-                  {name}
-                </Typography>
-              </Link>
+                {name}
+              </Typography>
             </Grid>
 
 

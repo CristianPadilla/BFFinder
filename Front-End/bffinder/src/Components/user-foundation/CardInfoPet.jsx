@@ -53,7 +53,7 @@ const CardInfoPet = ({ pet }) => {
   // abtener todos las propiedades de la mascota de esta forma para  no tener un error
   const name = pet ? pet.name : "Nombre de la mascota";
 
-  console.log("petcard info  : ", pet);
+  // console.log('pet del card info  : ', pet);
 
   return (
     <>

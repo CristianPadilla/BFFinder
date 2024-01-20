@@ -33,6 +33,7 @@ import {
 import { t, use } from "i18next";
 import DateInputComponent from "../Components/form/DateInputComponent";
 import { date } from "yup";
+import { specieApi } from "../api/specieApi";
 
 function ValueLabel(props) {
   const { children, open, value } = props;
@@ -81,7 +82,7 @@ const marks = [
 
 const PanelFilters = ({ module }) => {
   const dispatch = useDispatch();
-  const { role } = useSelector((state) => state.persisted.auth);
+  const { role, token } = useSelector((state) => state.persisted.auth);
   const { activeModule } = useSelector((state) => state.persisted.global);
   const activeModuleIsPosts = activeModule === "posts" ? true : false;
 
@@ -97,7 +98,7 @@ const PanelFilters = ({ module }) => {
   const { departments, cities } = useSelector((state) => state.posts);
 
   useEffect(() => {
-    console.log("consultando especies == ", species);
+    // console.log("consultando especies == ", species);
     if (!species || species.length === 0) dispatch(startGetSpecies());
     if (!departments || departments.length === 0)
       dispatch(startGetDepartments());
@@ -130,12 +131,12 @@ const PanelFilters = ({ module }) => {
 
   const statusFilterSelectedValue = statusFilter
     ? statusSelectOptions.find((option) => option.value === statusFilter)
-    : { label: "Todos", value: null };
+    : null;
 
   const postedFilterSelectedValue =
     statusFilter != null
       ? postedSelectOptions.find((option) => option.value === statusFilter)
-      : { label: "Todos", value: null };
+      : null;
 
   // ESPECIES y RAZAS
   const speciesOptions = species.map((specie) => {
@@ -144,7 +145,7 @@ const PanelFilters = ({ module }) => {
   const specieOptionSelectedValue =
     filters.specie_id != null && filters.specie_id != 0
       ? speciesOptions.find((option) => option.value === filters.specie_id)
-      : { label: "", value: null };
+      : null;
 
   const breedsOptions = breeds.map((breed) => {
     return { label: t(`breeds.${breed.name}`), value: breed.id };
@@ -153,7 +154,7 @@ const PanelFilters = ({ module }) => {
   const breedOptionSelectedValue =
     filters.breed_id != null && filters.breed_id != 0
       ? breedsOptions.find((option) => option.value === filters.breed_id)
-      : { label: "", value: null };
+      : null;
 
   // DEPARTAMENTOS y CIUDADES
   const departmentsOptions = departments.map((department) => {
@@ -164,7 +165,7 @@ const PanelFilters = ({ module }) => {
     filters.department_id != null && filters.department_id != 0
       ? departmentsOptions.find(
         (option) => option.value === filters.department_id
-      ) : { label: "", value: 0 };
+      ) : null;
 
   const citiesOptions = cities.map((city) => {
     return { label: city.name, value: city.id };
@@ -173,7 +174,7 @@ const PanelFilters = ({ module }) => {
   const cityOptionSelectedValue =
     filters.city_id != null && filters.city_id != 0
       ? citiesOptions.find((option) => option.value === filters.city_id)
-      : { label: "", value: 0 };
+      : null;
 
   // FECHA
   const getDateSelectOptionValues = () => {
@@ -202,7 +203,7 @@ const PanelFilters = ({ module }) => {
   const dateSelectOptionSelectedValue =
     ((role === "u" && activeModule == "posts") && filters.from_date != null && filters.from_date != "")
       ? dateSelectOptions.find((option) => option.value === filters.from_date)
-      : { label: "", value: "" };
+      : null;
 
 
   //GENDER
@@ -216,18 +217,18 @@ const PanelFilters = ({ module }) => {
 
   const vaccinedSelectSelectedValue = vaccinatedFilter != null
     ? vaccinesSelectOptions.find((option) => option.value === vaccinatedFilter)
-    : { label: "", value: null };
+    : null;
   const sterilizedSelectSelectedValue = sterilizedFilter != null
     ? sterilizedSelectOptions.find((option) => option.value === sterilizedFilter)
-    : { label: "", value: null };
+    : null;
   const dewormedSelectSelectedValue = dewormedFilter != null
     ? dewormedSelectOptions.find((option) => option.value === dewormedFilter)
-    : { label: "", value: null };
+    : null;
 
 
 
 
-  console.log("FILTROS ACTUALES== ", filters);
+  // console.log("FILTROS ACTUALES== ", filters);
 
 
   const handleStatusFilterChange = (event, newValue) => {
@@ -254,7 +255,7 @@ const PanelFilters = ({ module }) => {
 
     // activeModuleIsPosts?
     dispatch(startGetBreedsBySpecieId(newValue ? newValue.value : 0));
-    handleBreedSelectChange(null, 0);
+    handleBreedSelectChange(null, null);
   };
   const handleBreedSelectChange = (event, newValue) => {
     // console.log('handleBreedSelectChange==  : ', newValue);
@@ -533,17 +534,21 @@ const PanelFilters = ({ module }) => {
       )}
 
 
+
+
       <SelectComponent
-        label="Especie"
+        label="Especie / Grupo"
         name="specie"
+        // clearIcon={true}
         onChange={handleSpecieSelectChange}
         value={specieOptionSelectedValue}
         options={speciesOptions}
       />
 
       <SelectComponent
-        label="Raza"
+        label="Raza / Subgrupo"
         name="breed"
+        // clearIcon={true}
         onChange={handleBreedSelectChange}
         value={breedOptionSelectedValue}
         options={breedsOptions}
@@ -607,6 +612,7 @@ const PanelFilters = ({ module }) => {
               label="Vacunación"
               name="vaccinated"
               onChange={handleVaccinatedSelectChange}
+              // inputDisabled={true}
               value={vaccinedSelectSelectedValue}
               options={vaccinesSelectOptions}
             />
@@ -614,6 +620,7 @@ const PanelFilters = ({ module }) => {
             <SelectComponent
               label="Esterilización"
               name="sterilized"
+              // inputDisabled={true}
               onChange={handleSterilizedSelectChange}
               value={sterilizedSelectSelectedValue}
               options={sterilizedSelectOptions}
@@ -623,6 +630,7 @@ const PanelFilters = ({ module }) => {
               label="Desparasitación"
               name="dewormed"
               onChange={handleDewormedSelectChange}
+              // inputDisabled={true}
               value={dewormedSelectSelectedValue}
               options={dewormedSelectOptions}
             />

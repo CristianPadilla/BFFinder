@@ -2,6 +2,7 @@ package com.cpadilla.adoptionpostservice.service;
 
 import com.cpadilla.adoptionpostservice.entity.AdoptionPostEntity;
 import com.cpadilla.adoptionpostservice.entity.PostImageEntity;
+import com.cpadilla.adoptionpostservice.entity.QuestionEntity;
 import com.cpadilla.adoptionpostservice.exception.CustomException;
 import com.cpadilla.adoptionpostservice.exception.PetNotFoundException;
 import com.cpadilla.adoptionpostservice.exception.PostNotFoundException;
@@ -13,6 +14,7 @@ import com.cpadilla.adoptionpostservice.external.client.UserService;
 import com.cpadilla.adoptionpostservice.model.*;
 import com.cpadilla.adoptionpostservice.repository.AdoptionPostRepository;
 import com.cpadilla.adoptionpostservice.repository.PostImageRepository;
+import com.cpadilla.adoptionpostservice.repository.QuestionRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -39,6 +42,9 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
     @Autowired
     private PostImageRepository postImageRepository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
 
     @Autowired
     private PetService petService;
@@ -63,7 +69,14 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         var postEntity = repository.findById(postId)
                 .orElseThrow(() -> new CustomException("Adoption post not found with id: " + postId, "ADOPTION_POST_NOT_FOUND", HttpStatus.NOT_FOUND.value()));
 
-        return buidPostFromEntity(postEntity);
+        var post = buidPostFromEntity(postEntity);
+        var questionsEntities
+                = questionRepository.findAllByPostId(postEntity.getId());
+        var questions = questionsEntities
+                .stream().map(this::buildQuestionFromEntity).toList();
+
+        post.setQuestions(questions);
+        return post;
     }
 
     @Override
@@ -374,6 +387,64 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
     }
 
     @Override
+    public List<QuestionResponse> findQuestionsByShelterUserId(int userId) {
+        log.info("Getting post questions by shelter user with id", userId);
+
+        var postsIds = repository.findAllByUserIdAndStatusIsTrue(userId)
+                .stream().map(AdoptionPostEntity::getId).toList();
+
+        var questions = new ArrayList<QuestionResponse>();
+        postsIds.forEach(postId -> {
+            var postQuestions = questionRepository.findAllByPostId(postId);
+            postQuestions.forEach(questionEntity -> {
+                var question = buildQuestionFromEntity(questionEntity);
+                var postResponse = getAdoptionPostById(questionEntity.getPostId());
+                question.setPost(postResponse);
+                questions.add(question);
+            });
+        });
+
+//        log.info("questionss {}", questions);
+        return questions;
+    }
+
+    @Override
+    public QuestionResponse saveQuestion(QuestionRequest request) {
+
+        if (repository.findByIdAndStatusIsTrue(request.getPostId()).isEmpty())
+            throw new CustomException("Adoption post not found with id: " + request.getPostId(), "ADOPTION_POST_NOT_FOUND", HttpStatus.NOT_FOUND.value());
+        if (!(userService.getUserById(request.getUserId()).getBody().getRole() == 'u'))
+            throw new CustomException("User not allowed to make questions: " + request.getUserId(), "USER_NOT_ALLOWED", HttpStatus.NOT_FOUND.value());
+
+        var savedQuestion = questionRepository.save(QuestionEntity.builder()
+                .description(request.getQuestion())
+                .date(LocalDate.now())
+                .userId(request.getUserId())
+                .postId(request.getPostId())
+                .build());
+
+        return buildQuestionFromEntity(savedQuestion);
+    }
+
+    @Override
+    public QuestionResponse updateQuestionDescription(String description, int questionId) {
+        return null;
+    }
+
+    @Override
+    public QuestionResponse updateQuestionAnswer(QuestionAnswerUpdateRequest request) {
+
+        var questionToUpdate = questionRepository
+                .findById(request.getQuestionId())
+                .orElseThrow(() -> new CustomException("Question not found with id: " + request.getQuestionId(), "QUESTION_NOT_FOUND", HttpStatus.NOT_FOUND.value()));
+
+        questionToUpdate.setAnswer(request.getAnswer());
+        questionToUpdate.setAnswerDate(LocalDate.now());
+        questionToUpdate = questionRepository.save(questionToUpdate);
+        return buildQuestionFromEntity(questionToUpdate);
+    }
+
+    @Override
     public ImageResponse savePostImage(int postId, MultipartFile image) {
         log.info("saving post image for post id {} from service layer", postId);
 
@@ -415,7 +486,9 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
     }
 
+
     public AdoptionPostResponse buidPostFromEntity(AdoptionPostEntity postEntity) {
+
         var petResponse = petService.getById(postEntity.getPetId()).getBody();
         var petDetails = PetResponse.builder()
                 .id(petResponse.getId())
@@ -433,8 +506,9 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .breedDetails(petResponse.getBreedDetails())
                 .build();
 
-        var locationResponse = locationService.getById(postEntity.getAddressId()).getBody();
+        var ownerDetails = userService.getUserById(postEntity.getUserId()).getBody();
 
+        var locationResponse = locationService.getById(postEntity.getAddressId()).getBody();
         var images = findPostImages(postEntity.getId());
 
         var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -446,7 +520,28 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .date(formattedDate)
                 .petResponse(petDetails)
                 .locationResponse(locationResponse)
+                .user(ownerDetails)
                 .images(images)
+                .build();
+    }
+
+    public QuestionResponse buildQuestionFromEntity(QuestionEntity questionEntity) {
+        var userResponse = userService.getUserById(questionEntity.getUserId()).getBody();
+
+        var userPartialsResponse = UserPartialsResponse.builder()
+                .userId(userResponse.getUserId())
+                .name(userResponse.getName())
+                .email(userResponse.getEmail())
+                .phoneNumber(userResponse.getPhoneNumber())
+                .profileImageUrl(userResponse.getProfileImageUrl())
+                .build();
+        return QuestionResponse.builder()
+                .id(questionEntity.getId())
+                .question(questionEntity.getDescription())
+                .answer(questionEntity.getAnswer())
+                .answerDate(questionEntity.getAnswerDate())
+                .user(userPartialsResponse)
+                .date(questionEntity.getDate())
                 .build();
     }
 

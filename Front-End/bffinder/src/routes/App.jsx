@@ -6,13 +6,15 @@ import RecoveryPassword from "containers/RecoveryPassword";
 import PreHome from "pages/PreHome";
 import Home from "pages/Home";
 import NotFound from "pages/NotFound";
+import Account from "../pages/Account";
 import Perfil from "pages/Perfil";
 import Autenticacion from "pages/Autenticacion";
 import Verpublicacion from "pages/ViewPost";
 import { useDispatch, useSelector } from "react-redux";
 import { CheckingAuth } from "../pages/auth/CheckingAuth";
 import { logout, validateAuth } from "../store/auth";
-import Account from "../pages/Account";
+import { setAuthToken } from "../api";
+import { use } from "i18next";
 
 const App = () => {
 
@@ -25,11 +27,19 @@ const App = () => {
 		if (status === 'authenticated' || status === 'checking') dispatch(validateAuth({ tokenToValidate: token }));
 	}, []);
 
+
+	useEffect(() => {
+		setAuthToken(token);
+	}, [token]);
+
+
+
+
 	if (status === 'checking') {
 		return <CheckingAuth />
 	}
 
-
+	setAuthToken(token);
 	return (
 
 		<BrowserRouter>

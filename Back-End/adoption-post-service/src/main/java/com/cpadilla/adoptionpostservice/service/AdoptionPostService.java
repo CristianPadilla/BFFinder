@@ -32,5 +32,12 @@ public interface AdoptionPostService {
 
     List<ImageResponse> findPostImages(int postId);
 
+    List<QuestionResponse> findQuestionsByShelterUserId(int userId);
+
+    QuestionResponse saveQuestion(QuestionRequest request);
+
+    QuestionResponse updateQuestionDescription(String description, int questionId);
+    QuestionResponse updateQuestionAnswer(QuestionAnswerUpdateRequest request);
+
 
 }

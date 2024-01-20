@@ -45,13 +45,13 @@ export const postSlice = createSlice({
             const filter = Object.keys(payload)[0];
             const value = Object.values(payload)[0];
             if (filter === 'page' || filter === 'search') {
-                console.log("aplicando filtro de page o search", filter, value);
+                // console.log("aplicando filtro de page o search", filter, value);
                 state.postRequest[filter] = value;
             } else if (filter === 'sort' || filter === 'desc') {
-                console.log("aplicando filtro de sorting", filter, value);
+                // console.log("aplicando filtro de sorting", filter, value);
                 state.postRequest.sorting[filter] = value;
             } else {
-                console.log("aplicando filtro normal", filter, value);
+                // console.log("aplicando filtro normal", filter, value);
                 state.postRequest.filters[filter] = value;
             }
         },

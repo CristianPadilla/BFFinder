@@ -9,6 +9,7 @@ import SectionFilterPost from "./SectionFilterPost";
 import { SectionFilterPet } from "./SectionFilterPet";
 import { changePetsRequest } from "../store/pet";
 import DialogSelectSpecie from "../Components/DialogSelectSpecie";
+import { specieApi } from "../api/specieApi";
 
 const MainContent = () => {
   const { activeModule } = useSelector((state) => state.persisted.global);

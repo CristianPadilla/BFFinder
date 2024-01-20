@@ -1,11 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import NavProfile from "../Components/NavProfile";
 import SectionPerfilPost from "../containers/SectionPerfilPost"
 import SectionPost from "../containers/SectionPost"
 import Breadcrumbs from "../Components/MyBreadcrumbs"
 import 'styles/ViewPost.scss';
+import { useSelector } from "react-redux";
+import { use } from "i18next";
 
 const ViewPost = () => {
+
+  const { active } = useSelector(state => state.posts);
+
+  useEffect(async () => {
+    console.log("usefect viweposttt  ", active);
+    const pet = await dispatch(getPetsByUserId());
+
+
+  }, []);
+
   return (
     <div>
       <section id="content">
@@ -19,12 +31,12 @@ const ViewPost = () => {
             </div> */}
 
           <div className="main-content-post">
-                <SectionPost  />
-{/* Definir que el otro elemento este dejabo de SectionPost */}
-              
+            <SectionPost />
+            {/* Definir que el otro elemento este dejabo de SectionPost */}
+
           </div>
-          
-          
+
+
 
         </main>
       </section>
