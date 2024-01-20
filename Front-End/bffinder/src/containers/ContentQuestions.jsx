@@ -90,7 +90,7 @@ const ContentQuestions = () => {
     }
     return questionsGroups;
   };
-  const answeredGroups = extractPetGroups(answeredQuestions);
+  const answeredGroups = extractPetGroups(answeredQuestions);// 
   const unAnsweredGroups = extractPetGroups(unAnsweredQuestions);
   console.log("DDDDDDDDDDDDDDDD questionsGroups:", answeredGroups);
   console.log("FFFFFFFFFFFFFFFF questionsGroups:", unAnsweredGroups);

@@ -39,7 +39,7 @@ const Profile = () => {
     fetchUser();
 
     return () => {
-      isMounted.current = false; // Actualiza la referencia cuando el componente se desmonta
+      isMounted.current = false;
     };
   }, []);
 

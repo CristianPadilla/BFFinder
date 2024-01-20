@@ -34,10 +34,18 @@ const SlidersImages = ({
   handleTouchStart,
   ...otherProps
 }) => {
+  const imagesToDisplay = images.map((image) => {
+    return {
+      original: image,
+      thumbnail: image,
+    };
+  });
+
+  // console.log("============= images", imagesToDisplay);
   return (
     <div>
       <ImagesGallery
-        items={images}
+        items={imagesToDisplay}
         thumbnailPosition={thumbnailPosition} //posicion de las miniaturas
         showBullets={showBullets} //puntos de navegacion
         showThumbnails={showThumbnails} //miniaturas
@@ -50,11 +58,11 @@ const SlidersImages = ({
         disableSwipe={disableSwipe} //desactivar el deslizamiento tactil en dispositivos moviles
         disableSwipeThreshold={disableSwipeThreshold}
         useBrowserFullscreen={useBrowserFullscreen} //usar pantalla completa del navegador
-        preventDefaultTouchmoveEvent={preventDefaultTouchmoveEvent} 
+        preventDefaultTouchmoveEvent={preventDefaultTouchmoveEvent}
         slideDuration={slideDuration} //duracion de la animacion al cambiar de imagen
         slideInterval={slideInterval} //intervalo de tiempo entre imagenes con la reproduccion automatica
-        startIndex={startIndex} //indice de la imagen inicial 
-        onSlide={handleSlide} //evento al cambiar de imagen 
+        startIndex={startIndex} //indice de la imagen inicial
+        onSlide={handleSlide} //evento al cambiar de imagen
         onBeforeSlide={handleBeforeSlide}
         onScreenChange={handleScreenChange}
         onPause={handlePause}
@@ -66,8 +74,8 @@ const SlidersImages = ({
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         onTouchStart={handleTouchStart}
-        additionalClass="custom-gallery-class" 
-        useTranslate3D={true} 
+        additionalClass="custom-gallery-class"
+        useTranslate3D={true}
         {...otherProps}
       />
     </div>

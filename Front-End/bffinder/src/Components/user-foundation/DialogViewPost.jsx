@@ -17,7 +17,7 @@ import FormAddPost from "./FormAddPost";
 import DragAndDrop from "../form/DragandDrop";
 import SlidersImages from "../post/SlidersImages";
 import CardInfoPet from "./CardInfoPet";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 
 const photos = [
@@ -63,19 +63,22 @@ const DialogViewPost = ({ open, onClose }) => {
   const { active: post } = useSelector((state) => state.posts);
   const [editing, setEditing] = useState(false);
 
-  const postToDisplay = post
-  ? {
-      description: post.description,
-      date: post.date,
-      images: post.images,
-    }
-  : {
-      description: "Descripción de la mascota",
-      date: "Fecha de publicación",
-      images: photos,
-    };
+  const imagesToDisplay =
+    post.images.length > 0 ? post.images.map((image) => image.imageUrl) : [];
 
-    console.log("INFO DIALOG", post);
+  const postToDisplay = post
+    ? {
+        description: post.description,
+        date: post.date,
+        images: imagesToDisplay,
+      }
+    : {
+        description: "Descripción de la mascota",
+        date: "Fecha de publicación",
+        images: imagesToDisplay,
+      };
+
+  console.log("INFO DIALOG", imagesToDisplay);
 
   const renderInformationSection = () => (
     <>
@@ -87,7 +90,11 @@ const DialogViewPost = ({ open, onClose }) => {
         spacing={1}
         sx={{ display: "flex", justifyContent: "center", margin: ".1rem" }}
       >
-        <Grid item xs={12} sx={{ margin: ".5rem", display: "flex", flexDirection: "column" }}>
+        <Grid
+          item
+          xs={12}
+          sx={{ margin: ".5rem", display: "flex", flexDirection: "column" }}
+        >
           <Typography
             variant="body2"
             color="text.secondary"
@@ -166,7 +173,7 @@ const DialogViewPost = ({ open, onClose }) => {
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      <DialogContent >
+      <DialogContent>
         {editing ? (
           <FormAddPost />
         ) : (
@@ -174,7 +181,8 @@ const DialogViewPost = ({ open, onClose }) => {
             <Grid container spacing={2}>
               {/* <Grid container spacing={2} sx={{ height: "100vh" }}> */}
               <Grid item xs={12} md={5}>
-                <SlidersImages images={postToDisplay.images}
+                <SlidersImages
+                  images={postToDisplay.images}
                   showBullets={false}
                   showPlayButton={false}
                   thumbnailPosition="left"
@@ -191,7 +199,6 @@ const DialogViewPost = ({ open, onClose }) => {
               </Grid>
               <CardInfoPet pet={post.petResponse} />
             </Grid>
-
           </>
         )}
       </DialogContent>

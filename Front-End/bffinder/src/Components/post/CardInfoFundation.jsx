@@ -22,11 +22,17 @@ import {
   Favorite,
 } from "@mui/icons-material";
 
-const CardInfoFundation = () => {
+const CardInfoFundation = ({post }) => {
   return (
     <>
       <Card elevation={2} sx={{ borderRadius: "8px" }}>
-        <Grid container direction="row" alignItems="center" justifyContent="space-between" sx={{ padding: 1}}>
+        <Grid
+          container
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{ padding: 1 }}
+        >
           <Typography
             variant="caption"
             sx={{
@@ -48,8 +54,12 @@ const CardInfoFundation = () => {
         </Grid>
         <CardHeader
           title={
-            <Typography variant="h6" component="div" sx={{ margin: "0 .8rem 0 .8rem"}}>
-              Nombre mascota
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ margin: "0 .8rem 0 .8rem" }}
+            >
+              Nombre mascota 
             </Typography>
           }
         />

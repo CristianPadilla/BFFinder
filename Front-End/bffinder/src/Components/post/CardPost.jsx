@@ -35,9 +35,8 @@ const formatTimeDifference = (hours) => {
 };
 
 const CardPost = ({ post }) => {
-  const { role } = useSelector(state => state.persisted.auth);
+  const { role } = useSelector((state) => state.persisted.auth);
   const dispatch = useDispatch();
-
 
   const navigate = useNavigate();
   const {
@@ -59,8 +58,9 @@ const CardPost = ({ post }) => {
   const formattedTimeDifference = formatTimeDifference(timeDifferenceInHours);
 
   const handleVerClick = () => {
+    console.log("post : ", post);
     dispatch(setActivePost(post));
-    navigate("/ver-publicacion");
+    navigate("/ver-publicacion/" + post.id);
   };
 
   return (
@@ -104,7 +104,6 @@ const CardPost = ({ post }) => {
         >
           <Grid container justifyContent="space-between" alignItems="center">
             <Grid item>
-
               {/* style={{ textDecoration: "none", color: "inherit" }} */}
               <Typography
                 onClick={handleVerClick}
@@ -115,7 +114,6 @@ const CardPost = ({ post }) => {
                 {name}
               </Typography>
             </Grid>
-
 
             <Grid item>
               <Grid
@@ -138,7 +136,6 @@ const CardPost = ({ post }) => {
                 <Avatar alt="Fundación" src={user.profileImageUrl} />
               </Grid>
             </Grid>
-
           </Grid>
 
           <Typography
@@ -150,13 +147,13 @@ const CardPost = ({ post }) => {
             {city.department.name}
           </Typography>
 
-
           <Typography
             variant="body2"
             color="text.secondary"
             sx={{ fontSize: ".9rem", marginTop: "1rem" }}
           >
-            {t(`species.${breedDetails.specie.name}`)} - {t(`breeds.${breedDetails.name}`)}
+            {t(`species.${breedDetails.specie.name}`)} -{" "}
+            {t(`breeds.${breedDetails.name}`)}
           </Typography>
 
           <Typography

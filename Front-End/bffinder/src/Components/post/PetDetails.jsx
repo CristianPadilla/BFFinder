@@ -34,7 +34,7 @@ const formFields = {
   dewormed: "",
 };
 
-const PetDetails = ({ editing }) => {
+const PetDetails = ({ pet, editing }) => {
   const [name, setName] = useState("Name~");
   const [breed, setBreed] = useState("Pitbull");
   const [specie, setSpecie] = useState("Perro");
@@ -46,7 +46,7 @@ const PetDetails = ({ editing }) => {
   const [vaccinated, setVaccinated] = useState("Si");
   const [sterilized, setSterilized] = useState("Si");
   const [dewormed, setDewormed] = useState("Si");
-  
+
   // const handleGenderChange = (event) => {
   //   // setGender(event.target.value);
   //   console.log("handleChangeGender se activó:", event);
@@ -70,7 +70,7 @@ const PetDetails = ({ editing }) => {
         sx={{ margin: "1rem", borderRadius: "" }}
       >
         <Divider variant="middle" sx={{ marginTop: 1, marginBottom: 2 }}>
-          Caracteristicas
+          Caracteristicas {pet ? pet.name : ""}
         </Divider>
         <Grid
           container
@@ -146,19 +146,29 @@ const PetDetails = ({ editing }) => {
               .min(3, "El nombre debe tener al menos 3 caracteres")
               .max(20, "El nombre debe tener 20 caracteres o menos")
               .required("El nombre es obligatorio"),
-              specie: Yup.string()
-              .oneOf(['Perros', 'Gatos', 'Hamsters y Ratas', 'Aves', 'Peces', 'Gallinas'], 'Por favor, selecciona una especie válida')
-              .required('La especie es obligatoria'),
-              breed: Yup.string().required('La raza es obligatoria'),
-              size: Yup.string().required('El tamaño es obligatorio'),
-              age: Yup.string().required('La edad es obligatoria'),
-              weight: Yup.number()
+            specie: Yup.string()
+              .oneOf(
+                [
+                  "Perros",
+                  "Gatos",
+                  "Hamsters y Ratas",
+                  "Aves",
+                  "Peces",
+                  "Gallinas",
+                ],
+                "Por favor, selecciona una especie válida"
+              )
+              .required("La especie es obligatoria"),
+            breed: Yup.string().required("La raza es obligatoria"),
+            size: Yup.string().required("El tamaño es obligatorio"),
+            age: Yup.string().required("La edad es obligatoria"),
+            weight: Yup.number()
               .min(2, "El peso debe tener al menos 2 caracteres")
               .max(3, "El peso debe tener 3 o 2 caracteres ")
-              .typeError('Ingresa un valor numérico')
-              .positive('El peso debe ser un número positivo')
-              .integer('El peso debe ser un número entero')
-              .required("El peso es obligatorio"),              
+              .typeError("Ingresa un valor numérico")
+              .positive("El peso debe ser un número positivo")
+              .integer("El peso debe ser un número entero")
+              .required("El peso es obligatorio"),
           })}
         >
           {(formik) => (
@@ -253,12 +263,14 @@ const PetDetails = ({ editing }) => {
                     //   <InputAdornment position="end">kg</InputAdornment>
                     // }
                   /> */}
-                   <FormControl
+                  <FormControl
                     sx={{ width: "27ch" }}
                     margin="normal"
                     variant="outlined"
                   >
-                    <InputLabel htmlFor="outlined-adornment-weight" required >Peso</InputLabel>
+                    <InputLabel htmlFor="outlined-adornment-weight" required>
+                      Peso
+                    </InputLabel>
                     <OutlinedInput
                       value={weight}
                       id="outlined-adornment-weight"
@@ -393,9 +405,7 @@ const PetDetails = ({ editing }) => {
     </>
   );
   return (
-    <>{editing ? renderEditableFormSection() : renderInformationSection()}
-    
-    </>
+    <>{editing ? renderEditableFormSection() : renderInformationSection()}</>
   );
 };
 

@@ -57,14 +57,32 @@ const CardPostShelter = ({ post }) => {
     // setOpenDialog(false);
   };
 
-  const showAlert = () => {
+  const showAlert = (e) => {
+    const { value } = e.target.dataset;
+    console.log("pooooooooooooooooo ", value);
+
+    const title =
+      value === "disable"
+        ? "¿Estás seguro de deshabilitar esta publicación?"
+        : "¿Estás seguro de habilitar esta publicación?";
+
+    const confirmButtonText =
+      value === "disable"
+        ? "Deshabilitar"
+        : "Habilitar";
+
+        const confirmButtonColor =
+        value === "disable"
+          ? "#d33"
+          : "#1b5e20"; 
+
     Swal.fire({
-      title: "¿Estás seguro de deshabilitar esta publicación?",
+      title: title,
       // text: 'No podrás revertir esta acción!',
       icon: "question",
-      confirmButtonText: "Si, deshabilitar",
+      confirmButtonText: confirmButtonText,
       showCancelButton: true,
-      confirmButtonColor: "#d33",
+      confirmButtonColor: confirmButtonColor,
       cancelButtonColor: "#3085d6",
     });
   };
@@ -169,64 +187,33 @@ const CardPostShelter = ({ post }) => {
                 justifyContent="center"
               >
                 {status ? (
-                  <>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{
-                        padding: ".6rem",
-                        backgroundColor: "lightgreen",
-                        borderRadius: "4px",
-                        letterSpacing: "1px",
-                        fontWeight: "600",
-                        marginLeft: "8px",
-                      }}
-                    >
-                      Activo
-                    </Typography>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      onClick={showAlert}
-                      sx={{
-                        marginLeft: "8px",
-                        letterSpacing: "1px",
-                      }}
-                    >
-                      Desactivar
-                    </Button>
-                  </>
+                  <Button
+                    data-value={"disable"}
+                    variant="contained"
+                    color="error"
+                    size="small"
+                    onClick={showAlert}
+                    sx={{
+                      marginLeft: "8px",
+                      letterSpacing: "1px",
+                    }}
+                  >
+                    Deshabilitar
+                  </Button>
                 ) : (
-                  <>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{
-                        padding: ".5rem",
-                        backgroundColor: "lightcoral",
-                        color: "white",
-                        borderRadius: "4px",
-                        fontWeight: "600",
-                        letterSpacing: "1px",
-                        marginLeft: "8px",
-                        // width: "178px",
-                        textAlign: "center",
-                      }}
-                    >
-                      Inactivo
-                    </Typography>
-                    <Button
-                      variant="contained"
-                      color="success"
-                      // onClick={handleActivateClick}
-                      sx={{
-                        marginLeft: "8px",
-                        letterSpacing: "1px",
-                      }}
-                    >
-                      Activar
-                    </Button>
-                  </>
+                  <Button
+                    data-value={"enable"}
+                    variant="contained"
+                    color="success"
+                    size="small"
+                    onClick={showAlert}
+                    sx={{
+                      marginLeft: "8px",
+                      letterSpacing: "1px",
+                    }}
+                  >
+                    Habilitar
+                  </Button>
                 )}
               </Grid>
             </Grid>
