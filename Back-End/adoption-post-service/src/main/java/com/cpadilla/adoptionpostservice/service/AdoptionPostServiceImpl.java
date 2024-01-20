@@ -136,6 +136,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                             .age(pet.getAge())
                             .age(pet.getAge())
                             .size(pet.getSize())
+                            .profileImageUrl(pet.getProfileImageUrl())
                             .gender(pet.getGender())
                             .breedDetails(pet.getBreedDetails())
                             .build();
