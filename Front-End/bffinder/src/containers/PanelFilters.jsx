@@ -27,8 +27,10 @@ import {
 } from "../store/post";
 import {
   changePetsRequest,
-  startGetBreedsBySpecieId,
-  startGetSpecies,
+  startGetAvailablePostedBreedsBySpecieId,
+  startGetAvailablePostedSpecies,
+  startGetShelterAvailableBreedsBySpecieId,
+  startGetShelterAvailableSpecies,
 } from "../store/pet";
 import { t, use } from "i18next";
 import DateInputComponent from "../Components/form/DateInputComponent";
@@ -99,7 +101,9 @@ const PanelFilters = ({ module }) => {
 
   useEffect(() => {
     // console.log("consultando especies == ", species);
-    if (!species || species.length === 0) dispatch(startGetSpecies());
+    if (!species || species.length === 0) {
+      role === "u" ? dispatch(startGetAvailablePostedSpecies()) : dispatch(startGetShelterAvailableSpecies());
+    }
     if (!departments || departments.length === 0)
       dispatch(startGetDepartments());
   }, [activeModule]);
@@ -254,7 +258,10 @@ const PanelFilters = ({ module }) => {
       : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
 
     // activeModuleIsPosts?
-    dispatch(startGetBreedsBySpecieId(newValue ? newValue.value : 0));
+    role === "u" 
+    ? dispatch(startGetAvailablePostedBreedsBySpecieId(newValue ? newValue.value : 0))
+    : dispatch(startGetShelterAvailableBreedsBySpecieId(newValue ? newValue.value : 0));
+    
     handleBreedSelectChange(null, null);
   };
   const handleBreedSelectChange = (event, newValue) => {

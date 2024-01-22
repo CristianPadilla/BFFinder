@@ -16,7 +16,6 @@ public class PetPartialResponse {
     private String name;
     private String profileImageUrl;
     private char gender;
-    private String profileImageUrl;
     private BreedDetails breedDetails;
     private char size;
 }

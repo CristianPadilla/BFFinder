@@ -4,7 +4,6 @@ import com.cpadilla.adoptionpostservice.model.*;
 import com.cpadilla.adoptionpostservice.service.AdoptionPostService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -97,6 +96,32 @@ public class AdoptionPostController {
         log.info("disabling post from CONTROLLER layer");
         service.cancelPost(postId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/enable/{postId}")
+    public ResponseEntity<Void> enablePost(@PathVariable("postId") int postId) {
+        log.info("enabling post from CONTROLLER layer");
+        service.enablePost(postId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/pet/{petId}/delete")
+    public ResponseEntity<Void> deletePostByPetId(@PathVariable("petId") int petId) {
+        log.info("deleting post from CONTROLLER layer");
+        service.deletePostByPetId(petId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/available/species")
+    public ResponseEntity<List<Integer>> findAvailablePostedSpecies() {
+        log.info("Getting available species from CONTROLLER layer");
+        return new ResponseEntity<>(service.findAvailablePostedSpecies(), HttpStatus.OK);
+    }
+
+    @GetMapping("/available/breeds/specie/{specieId}")
+    public ResponseEntity<List<Integer>> findAvailablePostedBreedsBySpecieId(@PathVariable("specieId") int specieId) {
+        log.info("Getting available breeds from CONTROLLER layer");
+        return new ResponseEntity<>(service.findAvailablePostedBreedsBySpecieId(specieId), HttpStatus.OK);
     }
 
 }

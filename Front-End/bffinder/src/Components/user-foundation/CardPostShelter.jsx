@@ -20,7 +20,7 @@ import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import DialogViewPost from "./DialogViewPost";
 import { t } from "i18next";
 import Swal from "sweetalert2";
-import { setActivePost, startGetPostById } from "../../store/post";
+import { setActivePost, startChangePostStatus, startGetPostById } from "../../store/post";
 import { useDispatch, useSelector } from "react-redux";
 
 const CardPostShelter = ({ post }) => {
@@ -37,11 +37,9 @@ const CardPostShelter = ({ post }) => {
   const hours = parsedDate.getHours();
   const minutes = parsedDate.getMinutes();
 
-  const formattedDate = `${day < 10 ? "0" : ""}${day}/${
-    month < 10 ? "0" : ""
-  }${month}/${year} - ${hours % 12 || 12}:${
-    minutes < 10 ? "0" : ""
-  }${minutes} ${hours >= 12 ? "pm" : "am"}`;
+  const formattedDate = `${day < 10 ? "0" : ""}${day}/${month < 10 ? "0" : ""
+    }${month}/${year} - ${hours % 12 || 12}:${minutes < 10 ? "0" : ""
+    }${minutes} ${hours >= 12 ? "pm" : "am"}`;
 
   //   Dialog
   const [openDialog, setOpenDialog] = useState(false);
@@ -57,7 +55,9 @@ const CardPostShelter = ({ post }) => {
     // setOpenDialog(false);
   };
 
-  const showAlert = () => {
+  const handleStatusChange = ({ target }) => {
+    const value = target.dataset.value;
+    console.log("value: ", value);
     Swal.fire({
       title: "¿Estás seguro de deshabilitar esta publicación?",
       // text: 'No podrás revertir esta acción!',
@@ -66,7 +66,12 @@ const CardPostShelter = ({ post }) => {
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-    });
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(startChangePostStatus(id, value));
+      }
+    })
+      ;
   };
 
   // console.log("post Fundaciónn: ", post);
@@ -87,7 +92,7 @@ const CardPostShelter = ({ post }) => {
               <Typography
                 variant="h6"
                 component="h2"
-                // sx={{ fontSize: "1.4rem" }}
+              // sx={{ fontSize: "1.4rem" }}
               >
                 {name}
               </Typography>
@@ -135,7 +140,7 @@ const CardPostShelter = ({ post }) => {
               container
               spacing={1}
               alignItems="center"
-              //   justifyContent="justify-content"
+            //   justifyContent="justify-content"
             >
               <Grid item>
                 <Favorite
@@ -187,7 +192,8 @@ const CardPostShelter = ({ post }) => {
                     <Button
                       variant="contained"
                       color="error"
-                      onClick={showAlert}
+                      data-value={"disable"}
+                      onClick={handleStatusChange}
                       sx={{
                         marginLeft: "8px",
                         letterSpacing: "1px",
@@ -216,9 +222,10 @@ const CardPostShelter = ({ post }) => {
                       Inactivo
                     </Typography>
                     <Button
+                      data-value={"enable"}
                       variant="contained"
                       color="success"
-                      // onClick={handleActivateClick}
+                      onClick={handleStatusChange}
                       sx={{
                         marginLeft: "8px",
                         letterSpacing: "1px",

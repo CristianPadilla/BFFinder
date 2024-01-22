@@ -81,6 +81,8 @@ export const petSlice = createSlice({
             state.active = null;
             state.page = null;
             state.petsRequest = initialState.petsRequest;
+            state.species = [];
+            state.breeds = [];
 
         },
         setSpecies(state, { payload }) {

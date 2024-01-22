@@ -17,7 +17,7 @@ import "styles/Card.scss";
 import DialogViewPet from "./user-foundation/DialogViewPet";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { startGetBreedsBySpecieId, startGetPetById } from "../store/pet/thunks";
+import { startGetPetById } from "../store/pet/thunks";
 import { setActivePet } from "../store/pet/petSlice";
 import { t } from "i18next";
 
@@ -59,7 +59,7 @@ const CardVertical = ({ pet }) => {
     // setOpenDialog(false);
   };
 
-  console.log("pet Card: ", pet);
+  // console.log("pet Card: ", pet);
 
   return (
     <div

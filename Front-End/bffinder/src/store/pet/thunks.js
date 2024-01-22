@@ -4,12 +4,13 @@ import { savingNewPet, setActivePet, setActivePetField, setActivePetFielsd, setB
 import { startContentLoading, stopContentLoading } from "../global";
 import { specieApi } from "../../api/specieApi";
 import { breedApi } from "../../api/breedApi";
-import { setBreedsP, setSpeciesP } from "../post";
+import { changePostsRequest, fetchPosts, setBreedsP, setSpeciesP } from "../post";
 
 export const startFetchPets = () => async (dispatch, getState) => {
     try {
         dispatch(startContentLoading())
         const petsRequest = getState().pets.petsRequest;
+        // console.log("startFetchPets from thunk ", petsRequest);
         const { userId } = getState().persisted.auth;
         if (!userId) throw new Error("No user id exists");
 
@@ -88,6 +89,7 @@ export const startAddNewPet = (pet) => async (dispatch, getState) => {
     };
     dispatch(setActivePet(null)); // no concluido
     dispatch(savingNewPet(false));
+    dispatch(changePetsRequest([{ page: 0 }]))
     dispatch(startFetchPets());
 };
 
@@ -108,7 +110,25 @@ export const startUpdatePet = (pet) => async (dispatch, getState) => {
     };
     dispatch(setActivePet(null));
     dispatch(savingNewPet(false));
+    dispatch(changePetsRequest([{ page: 0 }]))
     dispatch(startFetchPets());
+    dispatch(changePostsRequest([{ page: 0 }]))
+    dispatch(fetchPosts());
+};
+
+export const startDeletePet = (petId) => async (dispatch, getState) => {
+    dispatch(savingNewPet(true))
+
+    const { data, status } = await petApi.put(`/${petId}/disable`);
+    // console.log("Finish DeletePet from thunk ", data, status);
+    if (status !== HttpStatusCode.NoContent) dispatch(setErrorMessage(data));
+
+    dispatch(setActivePet(null));
+    dispatch(savingNewPet(false));
+    dispatch(changePetsRequest([{ page: 0 }]))
+    dispatch(changePostsRequest([{ page: 0 }]))
+    dispatch(startFetchPets());
+    dispatch(fetchPosts());
 };
 
 
@@ -130,40 +150,67 @@ export const startGetPetById = (id) => async (dispatch) => {
     dispatch(stopContentLoading())
 };
 
-export const startGetSpecies = () => async (dispatch, getState) => {
+export const startGetAvailablePostedSpecies = () => async (dispatch, getState) => {// species that are available in whole active posts
     try {
-
         const { activeModule } = getState().persisted.global
-        // const { token } = getState().persisted.auth
-        // console.log("JJJJJJJJJJJJJJJJ ", specieApi.defaults);
-        const { data, status } = await specieApi.get("/all");
-        // console.log("startGetSpecies", data, status);
+        const { data, status } = await specieApi.get("/available");
+        // console.log("startGetAvailablePostedSpecies", data, status);
         if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
         activeModule === "posts"
             ? dispatch(setSpeciesP(data))
             : dispatch(setSpecies(data));
     } catch (error) {
-        // console.log("error startGetSpecies", error.config.headers);
-        console.log("error startGetSpecies", error);
+        console.log("error startGetAvailablePostedSpecies", error);
         throw new Error(error);
     }
 };
+
+export const startGetShelterAvailableSpecies = () => async (dispatch, getState) => {// species that shelter has in pets
+    try {
+
+        const { activeModule } = getState().persisted.global
+        const { data, status } = await specieApi.get("/available/shelter/" + getState().persisted.auth.userId);
+        // console.log("startGetShelterAvailableSpecies", data, status);
+        if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+        activeModule === "posts"
+            ? dispatch(setSpeciesP(data))
+            : dispatch(setSpecies(data));
+    } catch (error) {
+        console.log("error startGetAvailablePostedSpecies", error);
+        throw new Error(error);
+    }
+};
+
+
+export const startGetAvailablePostedBreedsBySpecieId = (specieId,) => async (dispatch, getState) => {
+    const { activeModule } = getState().persisted.global
+    const { data, status } = await breedApi.get("/available/specie/" + specieId);
+    // console.log("startGetAvailablePostedBreedsBySpecieId", data, status);
+    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+    activeModule === "posts"
+        ? dispatch(setBreedsP(data))
+        : dispatch(setBreeds(data));
+};
+
+export const startGetShelterAvailableBreedsBySpecieId = (specieId) => async (dispatch, getState) => {
+    const { activeModule } = getState().persisted.global
+    const url = `/available/shelter/${getState().persisted.auth.userId}/specie/${specieId}`
+    const { data, status } = await breedApi.get(url);
+    // console.log("startGetShelterAvailableBreedsBySpecieId", data, status);
+    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+    activeModule === "posts"
+
+        ? dispatch(setBreedsP(data))
+        : dispatch(setBreeds(data));
+};
+
+
 export const getPetsByUserId = () => async (dispatch, getState) => {
     const { userId } = getState().persisted.auth;
     const { data, status } = await petApi.get('/owner/' + userId + '/unposted');
     if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
     // console.log("pets pot usario ", data, status);
     return data;
-};
-
-export const startGetBreedsBySpecieId = (specieId,) => async (dispatch, getState) => {
-    const { activeModule } = getState().persisted.global
-    const { data, status } = await breedApi.get("/specie/" + specieId);
-    // console.log("startGetBreedsBySpecieId", data, status);
-    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
-    activeModule === "posts"
-        ? dispatch(setBreedsP(data))
-        : dispatch(setBreeds(data));
 };
 
 export const updatePetProfileImage = (petId, imageBase64) => async (dispatch, getState) => {

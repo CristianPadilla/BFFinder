@@ -11,14 +11,23 @@ import { startFetchPets } from "../store/pet";
 import { use } from "i18next";
 import { LoadingFilters } from "../Components/LoadingFilters";
 import NoResults from "../Components/NoResults";
+import { setActiveModule } from "../store/global";
 
 const Home = () => {
   const dispatch = useDispatch();
   const { activeModule, contentLoading } = useSelector(
     (state) => state.persisted.global
   );
+  const { role } = useSelector((state) => state.persisted.auth);
   const { page: petsPage } = useSelector((state) => state.pets);
   const { page: postsPage } = useSelector((state) => state.posts);
+
+  useEffect(() => {
+    if (activeModule !== "posts" && activeModule !== "pets") {
+      // console.log("PONIENDOOO ROLLL", activeModule);
+      dispatch(setActiveModule({ module: role === "u" ? "posts" : "pets" }));
+    }
+  }, []);
 
   useEffect(() => {
     if (activeModule === "posts") {
@@ -73,7 +82,7 @@ const Home = () => {
                 : noContent ? (
                   <NoResults />
                 ) : !content ? (
-                  <LoadingFilters />     
+                  <LoadingFilters />
                 ) : (
                   <MainContent />
                 )}

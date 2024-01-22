@@ -15,6 +15,7 @@ import com.cpadilla.adoptionpostservice.model.*;
 import com.cpadilla.adoptionpostservice.repository.AdoptionPostRepository;
 import com.cpadilla.adoptionpostservice.repository.PostImageRepository;
 import com.cpadilla.adoptionpostservice.repository.QuestionRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
@@ -363,16 +364,30 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
     @Override
     public int cancelPost(int postId) {
-        AdoptionPostEntity postToUpdate = repository.findByIdAndStatusIsTrue(postId)
+        AdoptionPostEntity postToUpdate = repository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("The adoption post not found for id " + postId));
 
         postToUpdate.setStatus(false);
         return repository.save(postToUpdate).getId();
     }
 
+
+    @Override
+    @Transactional
+    public void deletePostByPetId(int petId) {
+        log.info("deleting post by pet id {}", petId);
+        AdoptionPostEntity postToDelete = repository.findByPetId(petId)
+                .orElseThrow(() -> new PostNotFoundException("The adoption post not found for petId " + petId));
+        postToDelete.setStatus(false);
+        deletePostImages(postToDelete.getId());
+//        log.info("=========", postToDisable);
+        repository.delete(postToDelete);
+    }
+
+
     @Override
     public boolean checkPetIsPosted(int petId) {
-        return repository.findByPetIdAndStatusIsTrue(petId).isPresent();
+        return repository.findByPetId(petId).isPresent();
     }
 
     @Override
@@ -385,6 +400,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
         ).filter(Objects::nonNull).collect(Collectors.toList());
     }
+
 
     @Override
     public List<QuestionResponse> findQuestionsByShelterUserId(int userId) {
@@ -406,6 +422,16 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
 //        log.info("questionss {}", questions);
         return questions;
+    }
+
+    @Override
+    public void deletePostImages(int postId) {
+        log.info("deleting post images for post with id {} ", postId);
+
+        postImageRepository.deleteByPostId(postId);
+//        var images = findPostImages(postId);
+//        log.info("imagesss  id {} ", images);
+//        images.forEach(image -> imageService.deleteImageById(image.getImageId()));
     }
 
     @Override
@@ -543,6 +569,41 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 .user(userPartialsResponse)
                 .date(questionEntity.getDate())
                 .build();
+    }
+
+    @Override
+    public int enablePost(int postId) {
+        AdoptionPostEntity postToUpdate = repository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("The adoption post not found for id " + postId));
+
+        postToUpdate.setStatus(true);
+        return repository.save(postToUpdate).getId();
+    }
+
+    @Override
+    public List<Integer> findAvailablePostedSpecies() {
+        List<Integer> availableSpecies = new ArrayList<>();
+
+        var posts = repository.findAllByStatusTrue();
+        posts.stream().map(AdoptionPostEntity::getPetId).forEach(petId -> {
+            var pet = petService.getById(petId).getBody();
+            if (!availableSpecies.contains(pet.getBreedDetails().getSpecie().getId()))
+                availableSpecies.add(pet.getBreedDetails().getSpecie().getId());
+        });
+        return availableSpecies;
+    }
+
+    @Override
+    public List<Integer> findAvailablePostedBreedsBySpecieId(int specieId) {
+        List<Integer> availableBreeds = new ArrayList<>();
+
+        var posts = repository.findAllByStatusTrue();
+        posts.stream().map(AdoptionPostEntity::getPetId).forEach(petId -> {
+            var pet = petService.getById(petId).getBody();
+            if (!availableBreeds.contains(pet.getBreedDetails().getId()))
+                availableBreeds.add(pet.getBreedDetails().getId());
+        });
+        return availableBreeds;
     }
 
 

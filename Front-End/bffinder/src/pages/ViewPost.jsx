@@ -4,16 +4,16 @@ import SectionPerfilPost from "../containers/SectionPerfilPost"
 import SectionPost from "../containers/SectionPost"
 import Breadcrumbs from "../Components/MyBreadcrumbs"
 import 'styles/ViewPost.scss';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { use } from "i18next";
+import { getPetsByUserId } from "../store/pet";
 
 const ViewPost = () => {
-
   const { active } = useSelector(state => state.posts);
 
   useEffect(async () => {
-    console.log("usefect viweposttt  ", active);
-    const pet = await dispatch(getPetsByUserId());
+    // console.log("usefect viweposttt  ", active);
+    // const pet = await dispatch(getPetsByUserId());??
 
 
   }, []);
@@ -23,10 +23,10 @@ const ViewPost = () => {
       <section id="content">
         <NavProfile />
         <main className="content-container">
-            {/* <div className="head-title-perfil">
+          {/* <div className="head-title-perfil">
                 <SectionPerfilPost/>
             </div> */}
-            {/* <div className="head-navigation">
+          {/* <div className="head-navigation">
                 <Breadcrumbs/>
             </div> */}
 

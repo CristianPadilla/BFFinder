@@ -17,11 +17,13 @@ public interface AdoptionPostRepository extends JpaRepository<AdoptionPostEntity
 
     List<AdoptionPostEntity> findAllByPetId(int petId);
 
-    Optional<AdoptionPostEntity> findByIdAndStatusIsTrue(int userId);
+    Optional<AdoptionPostEntity> findByIdAndStatusIsTrue(int postId);
+    Optional<AdoptionPostEntity> findById(int postId);
 
     List<AdoptionPostEntity> findAllByUserIdAndStatusIsTrue(int userId);
 
     List<AdoptionPostEntity> findAllByStatusTrue(Sort sort);
+    List<AdoptionPostEntity> findAllByStatusTrue();
 
     Page<AdoptionPostEntity> findAll(Specification<AdoptionPostEntity> specification, Pageable pageable);
 

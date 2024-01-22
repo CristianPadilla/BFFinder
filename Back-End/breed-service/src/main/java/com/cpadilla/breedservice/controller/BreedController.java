@@ -33,4 +33,17 @@ public class BreedController {
         log.info("Getting breeds for specie with id: {} from CONTROLLER layer", specieId);
         return new ResponseEntity<>(service.getAllBreedsBySpecieId(specieId), HttpStatus.OK);
     }
+
+    @GetMapping("/available/specie/{specieId}")
+    public ResponseEntity<List<BreedResponse>> getAvailablePostedBreedsBySpecieId(@PathVariable(name = "specieId") int specieId) {
+        log.info("Getting available breeds for specie with id: {} from CONTROLLER layer", specieId);
+        return new ResponseEntity<>(service.getAllBySpecieIdAndAvailablePosted(specieId), HttpStatus.OK);
+    }
+
+    @GetMapping("/available/shelter/{shelterId}/specie/{specieId}")
+    public ResponseEntity<List<BreedResponse>> getAllBySpecieIdAndShelterPets(@PathVariable(name = "specieId") int specieId,
+                                                                              @PathVariable(name = "shelterId") int shelterId) {
+        log.info("Getting available breeds for shelter with id: {} from CONTROLLER layer", shelterId);
+        return new ResponseEntity<>(service.getAllBySpecieIdAndShelterPets(specieId, shelterId), HttpStatus.OK);
+    }
 }
