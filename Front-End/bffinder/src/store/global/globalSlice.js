@@ -5,7 +5,7 @@ export const globalSlice = createSlice({
     name: 'global',
     initialState: {
         activeModule: 'posts',
-        contentLoading: true,
+        contentLoading: false,
     },
     reducers: {
         setActiveModule(state, { payload }) {

@@ -39,9 +39,10 @@ const App = () => {
 		return <CheckingAuth />
 	}
 
+	console.log("XXXXXXXXXXXXXXXXXXX status", status);
+
 	setAuthToken(token);
 	return (
-
 		<BrowserRouter>
 			<Layout areClass={'Layout'} css={style.css} >
 				<Routes>

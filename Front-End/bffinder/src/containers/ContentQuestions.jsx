@@ -1,53 +1,81 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, Tabs, Tab, Typography } from "@mui/material";
 import ContentPetQuestions from "./ContentPetQuestions";
+import { useDispatch, useSelector } from "react-redux";
+import { use } from "i18next";
+import { startFetchQuestionsByShelter } from "../store/questions/thunks";
 
 const ContentQuestions = () => {
+  const dispatch = useDispatch();
+  const { activeModule, contentLoading } = useSelector((state) => state.persisted.global);
   const [tabValue, setTabValue] = useState(0);
-  const [questions, setQuestions] = useState([
-    {
-      id: 1,
-      question: "Mensaje sin responder 1",
-      isAnswered: false,
-      answer: "",
-      petId: 1,
-    },
-    {
-      id: 2,
-      question: "Mensaje con responder 2",
-      isAnswered: true,
-      answer: "respuesta 1",
-      petId: 2,
-    },
-    {
-      id: 3,
-      question: "Mensaje sin responder 3",
-      isAnswered: false,
-      answer: "",
-      petId: 2,
-    },
-    {
-      id: 4,
-      question: "Mensaje con responder 4",
-      isAnswered: true,
-      answer: "respuesta 2",
-      petId: 1,
-    },
-    {
-      id: 5,
-      question: "Mensaje sin responder 5",
-      isAnswered: false,
-      answer: "",
-      petId: 2,
-    },
-    {
-      id: 6,
-      question: "Mensaje con responder 5",
-      isAnswered: true,
-      answer: "respuesta 3",
-      petId: 3,
-    },
-  ]);
+  const [questions, setQuestions] = useState([]);
+  // const [questions, setQuestions] = useState([
+  //   {
+  //     id: 1,
+  //     question: "Mensaje sin responder 1",
+  //     isAnswered: false,
+  //     answer: "",
+  //     petId: 1,
+  //   },
+  //   {
+  //     id: 2,
+  //     question: "Mensaje con responder 2",
+  //     isAnswered: true,
+  //     answer: "respuesta 1",
+  //     petId: 2,
+  //   },
+  //   {
+  //     id: 3,
+  //     question: "Mensaje sin responder 3",
+  //     isAnswered: false,
+  //     answer: "",
+  //     petId: 2,
+  //   },
+  //   {
+  //     id: 4,
+  //     question: "Mensaje con responder 4",
+  //     isAnswered: true,
+  //     answer: "respuesta 2",
+  //     petId: 1,
+  //   },
+  //   {
+  //     id: 5,
+  //     question: "Mensaje sin responder 5",
+  //     isAnswered: false,
+  //     answer: "",
+  //     petId: 2,
+  //   },
+  //   {
+  //     id: 6,
+  //     question: "Mensaje con responder 5",
+  //     isAnswered: true,
+  //     answer: "respuesta 3",
+  //     petId: 3,
+  //   },
+  // ]);
+  console.log("RENDER questions:", questions);
+  
+  useEffect(() => {
+    let isMounted = true;
+    const fetchQuestions = async () => {
+      const fetchedQuestions = await dispatch(startFetchQuestionsByShelter());
+      console.log("fetchedQuestions:", fetchedQuestions);
+      if (isMounted) { // Solo actualiza el estado si el componente está montado
+        setQuestions(fetchedQuestions);
+      }
+    };
+
+    if ((questions.length === 0 ) && !contentLoading) {
+      // fetchQuestions();
+    };
+    return () => {
+      isMounted = false; // Actualiza la variable cuando el componente se desmonta
+    };
+
+  },[dispatch]);
+
+
 
   const answeredQuestions = questions.filter((question) => question.isAnswered);
   const unAnsweredQuestions = questions.filter(

@@ -214,7 +214,7 @@ export const getPetsByUserId = () => async (dispatch, getState) => {
 };
 
 export const updatePetProfileImage = (petId, imageBase64) => async (dispatch, getState) => {
-    console.log("updatePetProfileImage ", petId, imageBase64);
+    // console.log("updatePetProfileImage ", petId, imageBase64);
 
     const formData = new FormData();
     const response = await fetch(imageBase64);

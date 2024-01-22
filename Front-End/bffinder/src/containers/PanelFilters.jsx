@@ -250,7 +250,7 @@ const PanelFilters = ({ module }) => {
     dispatch(changePetsRequest([filterObjet, { page: 0 }]));
   };
   const handleSpecieSelectChange = (event, newValue) => {
-    console.log('handleSpecieSelectChange==  : ', newValue);
+    // console.log('handleSpecieSelectChange==  : ', newValue);
     if (newValue === null && filters.specie_id === 0) return;
     const filterObjet = { ["specie_id"]: newValue ? newValue.value : 0 };
     activeModuleIsPosts
