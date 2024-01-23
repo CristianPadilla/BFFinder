@@ -9,108 +9,69 @@ const ContentQuestions = () => {
   const dispatch = useDispatch();
   const { activeModule, contentLoading } = useSelector((state) => state.persisted.global);
   const [tabValue, setTabValue] = useState(0);
-  const [questions, setQuestions] = useState([]);
-  // const [questions, setQuestions] = useState([
-  //   {
-  //     id: 1,
-  //     question: "Mensaje sin responder 1",
-  //     isAnswered: false,
-  //     answer: "",
-  //     petId: 1,
-  //   },
-  //   {
-  //     id: 2,
-  //     question: "Mensaje con responder 2",
-  //     isAnswered: true,
-  //     answer: "respuesta 1",
-  //     petId: 2,
-  //   },
-  //   {
-  //     id: 3,
-  //     question: "Mensaje sin responder 3",
-  //     isAnswered: false,
-  //     answer: "",
-  //     petId: 2,
-  //   },
-  //   {
-  //     id: 4,
-  //     question: "Mensaje con responder 4",
-  //     isAnswered: true,
-  //     answer: "respuesta 2",
-  //     petId: 1,
-  //   },
-  //   {
-  //     id: 5,
-  //     question: "Mensaje sin responder 5",
-  //     isAnswered: false,
-  //     answer: "",
-  //     petId: 2,
-  //   },
-  //   {
-  //     id: 6,
-  //     question: "Mensaje con responder 5",
-  //     isAnswered: true,
-  //     answer: "respuesta 3",
-  //     petId: 3,
-  //   },
-  // ]);
-  console.log("RENDER questions:", questions);
-  
+  const { questions } = useSelector((state) => state.questions);
+
+
   useEffect(() => {
-    let isMounted = true;
-    const fetchQuestions = async () => {
-      const fetchedQuestions = await dispatch(startFetchQuestionsByShelter());
-      console.log("fetchedQuestions:", fetchedQuestions);
-      if (isMounted) { // Solo actualiza el estado si el componente está montado
-        setQuestions(fetchedQuestions);
-      }
-    };
-
-    if ((questions.length === 0 ) && !contentLoading) {
-      // fetchQuestions();
-    };
-    return () => {
-      isMounted = false; // Actualiza la variable cuando el componente se desmonta
-    };
-
-  },[dispatch]);
+    console.log('useEffect== 11 : ', questions);
+    if (questions.length === 0) {
+      dispatch(startFetchQuestionsByShelter());
+    }
+  }, []);
 
 
+  const answeredQuestions = questions
+    .filter((question) => question.answer && question.answer.trim().length > 0)
+    .sort((a, b) => new Date(b.answerDate) - new Date(a.answerDate));
 
-  const answeredQuestions = questions.filter((question) => question.isAnswered);
-  const unAnsweredQuestions = questions.filter(
-    (question) => !question.isAnswered
-  );
+  const unAnsweredQuestions = questions
+    .filter((question) => !question.answer || question.answer.trim().length === 0)
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
 
-  // const petAnsweredGroups = answeredQuestions.map((question) => {
+  console.log('answeredQuestions: ', answeredQuestions);
+  console.log('unAnsweredQuestions: ', unAnsweredQuestions);
+
 
   const extractPetGroups = (questions) => {
     let questionsGroups = [];
     let i = 0;
     for (i; i < questions.length; i++) {
-      console.log("questions[i].petId:", questions[i]);
+      console.log("questions[i].post.id:", questions[i].post.id);
       const aux = questionsGroups.findIndex(
-        (questionGroup) => questionGroup.petId === questions[i].petId
+        (questionGroup) => questionGroup.postId === questions[i].post.id
       );
       console.log("aux:", aux);
-      if (aux > 0) {
+      if (aux >= 0) {
         console.log("iffffff", aux);
         questionsGroups[aux].questions.push({
           id: questions[i].id,
           descripcion: questions[i].question,
+          date: questions[i].date,
           answer: questions[i].answer,
-          isAnswered: questions[i].isAnswered,
+          answerDate: questions[i].answerDate,
+          user: {
+            name: questions[i].user.name,
+            surname: questions[i].user.surname,
+            avatar: questions[i].user.profileImageUrl,
+          },
         });
       } else {
         console.log("elseeee", aux);
         questionsGroups.push({
-          petId: questions[i].petId,
+          postId: questions[i].post.id,
+          pet: questions[i].post.petResponse,
           questions: [
             {
               id: questions[i].id,
               descripcion: questions[i].question,
+              date: questions[i].date,
               answer: questions[i].answer,
-              user: {},
+              answerDate: questions[i].answerDate,
+              user: {
+                name: questions[i].user.name,
+                surname: questions[i].user.surname,
+                avatar: questions[i].user.profileImageUrl,
+              },
             },
           ],
         });
@@ -118,14 +79,11 @@ const ContentQuestions = () => {
     }
     return questionsGroups;
   };
-  const answeredGroups = extractPetGroups(answeredQuestions);
-  const unAnsweredGroups = extractPetGroups(unAnsweredQuestions);
-  console.log("DDDDDDDDDDDDDDDD questionsGroups:", answeredGroups);
-  console.log("FFFFFFFFFFFFFFFF questionsGroups:", unAnsweredGroups);
-  // });
 
-  // const [answeredQuestions, setAnsweredQuestions] = useState([]);
-  // const [editedQuestions, setEditedQuestions] = useState([]);
+  const answeredQuestionsGroups = extractPetGroups(answeredQuestions);
+  const unAnsweredQuestionsGroups = extractPetGroups(unAnsweredQuestions);
+  console.log("DDDDDDDDDDDDDDDD answeredGroups:", answeredQuestionsGroups);
+  console.log("FFFFFFFFFFFFFFFF unAnsweredGroups:", unAnsweredQuestionsGroups);
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -184,20 +142,24 @@ const ContentQuestions = () => {
         </Tabs>
 
         {tabValue === 0 && (
-          // unAnsweredQuestions.map((question) => !question.isAnswered) && ()
-
-          <ContentPetQuestions
-            questions={questions.filter((question) => !question.isAnswered)}
-            onReply={handleReply}
-            showAnswered={false}
-          />
+          unAnsweredQuestionsGroups.map((questionGroup) => (
+            <ContentPetQuestions
+              key={questionGroup.postId}
+              questionsGroup={questionGroup}
+              onReply={handleReply}
+              showAnswered={false}
+            />
+          ))
         )}
         {tabValue === 1 && (
-          <ContentPetQuestions
-            questions={answeredQuestions}
-            showAnswered={true}
-            onEdit={handleEdit}
-          />
+          answeredQuestionsGroups.map((questionGroup) => (
+            <ContentPetQuestions
+              key={questionGroup.postId}
+              questionsGroup={questionGroup}
+              showAnswered={true}
+              onEdit={handleEdit}
+            />
+          ))
         )}
       </CardContent>
     </Card>
