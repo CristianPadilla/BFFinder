@@ -7,7 +7,6 @@ import ContentQuestions from "../containers/ContentQuestions";
 import { Typography } from "@mui/material";
 
 const ContentMainAccount = () => {
-  console.log("RENDER ContentMainAccount");
   const { activeModule, contentLoading } = useSelector((state) => state.persisted.global);
 
 

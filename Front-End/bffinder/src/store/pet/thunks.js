@@ -55,7 +55,7 @@ export const startFetchPets = () => async (dispatch, getState) => {
         dispatch(stopContentLoading())
     } catch (error) {
         console.log(error);
-        throw new Error(error);
+        // throw new Error(error);
     }
 
 };
@@ -161,7 +161,7 @@ export const startGetAvailablePostedSpecies = () => async (dispatch, getState) =
             : dispatch(setSpecies(data));
     } catch (error) {
         console.log("error startGetAvailablePostedSpecies", error);
-        throw new Error(error);
+        // throw new Error(error);
     }
 };
 
@@ -177,7 +177,7 @@ export const startGetShelterAvailableSpecies = () => async (dispatch, getState) 
             : dispatch(setSpecies(data));
     } catch (error) {
         console.log("error startGetAvailablePostedSpecies", error);
-        throw new Error(error);
+        // throw new Error(error);
     }
 };
 

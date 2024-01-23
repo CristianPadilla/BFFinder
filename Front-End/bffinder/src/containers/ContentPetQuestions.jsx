@@ -12,11 +12,11 @@ import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import CardInfoPet from '../Components/user-foundation/CardInfoPet';
 import CardQuestions from '../Components/CardQuestions';
 
-const ContentPetQuestions = ({ questionsGroup, showAnswered, onReply, onEdit }) => {
+const ContentPetQuestions = ({ questionsGroup }) => {
   const [expanded, setExpanded] = useState(false);
 
   const { questions, pet, petId } = questionsGroup;
-  // console.log('pet from ContentPetQuestions => ', pet);
+  // console.log('pet from ContentPetQuestions => ', questions);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -49,10 +49,6 @@ const ContentPetQuestions = ({ questionsGroup, showAnswered, onReply, onEdit }) 
               <CardQuestions
                 key={question.id}
                 question={question}
-                onReply={(replyText) => onReply(question.id, replyText)}
-                onEdit={(editedText) => onEdit(question.id, editedText)}
-                showAnswered={showAnswered}
-
               />
             ))}
         </CardContent>

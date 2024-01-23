@@ -13,7 +13,7 @@ const ContentQuestions = () => {
 
 
   useEffect(() => {
-    console.log('useEffect== 11 : ', questions);
+    // console.log('useEffect== 11 : ', questions);
     if (questions.length === 0) {
       dispatch(startFetchQuestionsByShelter());
     }
@@ -28,25 +28,24 @@ const ContentQuestions = () => {
     .filter((question) => !question.answer || question.answer.trim().length === 0)
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
-  console.log('answeredQuestions: ', answeredQuestions);
-  console.log('unAnsweredQuestions: ', unAnsweredQuestions);
+  // console.log('answeredQuestions: ', answeredQuestions);
+  // console.log('unAnsweredQuestions: ', unAnsweredQuestions);
 
 
   const extractPetGroups = (questions) => {
     let questionsGroups = [];
     let i = 0;
     for (i; i < questions.length; i++) {
-      console.log("questions[i].post.id:", questions[i].post.id);
+      // console.log("questions[i].post.id:", questions[i].post.id);
       const aux = questionsGroups.findIndex(
         (questionGroup) => questionGroup.postId === questions[i].post.id
       );
-      console.log("aux:", aux);
       if (aux >= 0) {
-        console.log("iffffff", aux);
         questionsGroups[aux].questions.push({
           id: questions[i].id,
           descripcion: questions[i].question,
           date: questions[i].date,
+          isAnswered: (questions[i].answer && questions[i].answer.trim().length > 0) ? true : false,
           answer: questions[i].answer,
           answerDate: questions[i].answerDate,
           user: {
@@ -56,7 +55,6 @@ const ContentQuestions = () => {
           },
         });
       } else {
-        console.log("elseeee", aux);
         questionsGroups.push({
           postId: questions[i].post.id,
           pet: questions[i].post.petResponse,
@@ -65,6 +63,7 @@ const ContentQuestions = () => {
               id: questions[i].id,
               descripcion: questions[i].question,
               date: questions[i].date,
+              isAnswered: (questions[i].answer && questions[i].answer.trim().length > 0) ? true : false,
               answer: questions[i].answer,
               answerDate: questions[i].answerDate,
               user: {
@@ -82,50 +81,12 @@ const ContentQuestions = () => {
 
   const answeredQuestionsGroups = extractPetGroups(answeredQuestions);
   const unAnsweredQuestionsGroups = extractPetGroups(unAnsweredQuestions);
-  console.log("DDDDDDDDDDDDDDDD answeredGroups:", answeredQuestionsGroups);
-  console.log("FFFFFFFFFFFFFFFF unAnsweredGroups:", unAnsweredQuestionsGroups);
+  // console.log("DDDDDDDDDDDDDDDD answeredGroups:", answeredQuestionsGroups);
+  // console.log("FFFFFFFFFFFFFFFF unAnsweredGroups:", unAnsweredQuestionsGroups);
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
-
-  const handleReply = (questionId, replyText) => {
-    console.log("handleReply==");
-    // const updatedQuestions = questions.map((question) =>
-    //   question.id === questionId
-    //     ? { ...question, isAnswered: true, replyText }
-    //     : question
-    // );
-    // const answeredQuestion = updatedQuestions.find(
-    //   (question) => question.id === questionId
-    // );
-    // setAnsweredQuestions([...answeredQuestions, answeredQuestion]);
-    // setQuestions(updatedQuestions);
-  };
-
-  const handleEdit = (questionId, editedText) => {
-    console.log("handleEdit==");
-    // const updatedAnsweredQuestions = answeredQuestions.map((question) =>
-    //   question.id === questionId
-    //     ? { ...question, replyText: editedText }
-    //     : question
-    // );
-    // setAnsweredQuestions(updatedAnsweredQuestions);
-  };
-  // {
-  //   petINfo: {}
-  //   questions: [
-  //     {
-  //       id,
-  //       descripcion,
-  //       answer,
-  //       date,
-  //       answerDate
-  //       user:{},
-  //     },
-  //     {},
-  //   ]
-  // }
 
   // console.log("answeredQuestions:", answeredQuestions);
   // console.log("unAnsweredQuestions:", unAnsweredQuestions);
@@ -142,25 +103,31 @@ const ContentQuestions = () => {
         </Tabs>
 
         {tabValue === 0 && (
-          unAnsweredQuestionsGroups.map((questionGroup) => (
-            <ContentPetQuestions
-              key={questionGroup.postId}
-              questionsGroup={questionGroup}
-              onReply={handleReply}
-              showAnswered={false}
-            />
-          ))
-        )}
+          unAnsweredQuestions.length === 0 ? (
+            <Typography variant="body1" component="div" sx={{ marginBottom: 4 }}>
+              No hay preguntas pendientes!
+            </Typography>
+          ) : (
+            unAnsweredQuestionsGroups.map((questionGroup) => (
+              <ContentPetQuestions
+                key={questionGroup.postId}
+                questionsGroup={questionGroup}
+              />
+            ))
+          ))}
         {tabValue === 1 && (
-          answeredQuestionsGroups.map((questionGroup) => (
-            <ContentPetQuestions
-              key={questionGroup.postId}
-              questionsGroup={questionGroup}
-              showAnswered={true}
-              onEdit={handleEdit}
-            />
-          ))
-        )}
+          answeredQuestionsGroups.length === 0 ? (
+            <Typography variant="body1" component="div" sx={{ marginBottom: 4 }}>
+              Aun no has respondido ninguna pregunta
+            </Typography>
+          ) : (
+            answeredQuestionsGroups.map((questionGroup) => (
+              <ContentPetQuestions
+                key={questionGroup.postId}
+                questionsGroup={questionGroup}
+              />
+            ))
+          ))}
       </CardContent>
     </Card>
   );

@@ -33,13 +33,9 @@ const App = () => {
 	}, [token]);
 
 
-
-
 	if (status === 'checking') {
 		return <CheckingAuth />
 	}
-
-	console.log("XXXXXXXXXXXXXXXXXXX status", status);
 
 	setAuthToken(token);
 	return (
