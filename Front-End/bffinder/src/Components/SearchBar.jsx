@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from "@mui/material/TextField";
 import "styles/SearchBar.scss";
@@ -7,6 +7,7 @@ import { Menu, Search, CloudDownload, Add, FilterList } from '@mui/icons-materia
 import { useDispatch, useSelector } from 'react-redux';
 import { changePetsRequest } from '../store/pet';
 import { changePostsRequest } from '../store/post';
+import { debounce } from 'lodash';
 
 const SearchBar = () => {
 
@@ -20,14 +21,21 @@ const SearchBar = () => {
       : useSelector((state) => state.pets.petsRequest);
 
 
-  const handleSearch = ({ target }) => {
+  const [searchValue, setSearchValue] = useState(search);
+
+  const handleSearchValueChange = ({ target }) => {
+    // console.log("handleSearchValueChange== ", target.value);
+    setSearchValue(target.value);
+  }
+  const handleSearch = ({target}) => {
+    // console.log("searchhhhh ", target.value);
     const { value } = target;
-    // console.log("searchhhhh ", value);
     const filterObjet = { ["search"]: value };
     activeModule === "posts"
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
       : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
   }
+  const debouncedHandleSearch = debounce(handleSearch, 300);
 
   const placeholder = role === "u"
     ? "Nombre de la mascota o refugio"
@@ -49,7 +57,12 @@ const SearchBar = () => {
     <div>
       <form action="#">
         <div className="form-input">
-          <input type="search" onChange={handleSearch} value={search} placeholder={placeholder} style={{ width: '300px' }} />
+          <input type="search"
+            onChange={(e) => {
+              handleSearchValueChange(e);
+              debouncedHandleSearch(e);
+            }}
+            value={searchValue} placeholder={placeholder} style={{ width: '300px' }} />
           <button type="submit" className="search-btn">
             <Search />
           </button>

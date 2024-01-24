@@ -141,9 +141,9 @@ const PerfilMenu = () => {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar 
-            src={photoUrl || ""} 
-            sx={{ width: 37, height: 37 }}>
+            <Avatar
+              src={photoUrl || ""}
+              sx={{ width: 37, height: 37 }}>
             </Avatar>
           </IconButton>
         </Tooltip>
@@ -201,14 +201,18 @@ const PerfilMenu = () => {
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
-          Configuraciones
+          Configuración
         </MenuItem>
-        <MenuItem data-value="questions" onClick={handleProfile}>
-          <ListItemIcon>
-            <QuestionAnswer fontSize="small" />
-          </ListItemIcon>
-          Preguntas
-        </MenuItem>
+        {
+          role === "s" &&
+          <MenuItem data-value="questions" onClick={handleProfile}>
+            <ListItemIcon>
+              <QuestionAnswer fontSize="small" />
+            </ListItemIcon>
+            Preguntas
+          </MenuItem>
+        }
+
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />

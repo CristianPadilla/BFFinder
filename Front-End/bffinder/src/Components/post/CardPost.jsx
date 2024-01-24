@@ -33,7 +33,7 @@ const CardPost = ({ post }) => {
     navigate("/ver-publicacion/" + post.id);
   };
 
-  console.log("CARDDD POST : ", post);
+  // console.log("CARDDD POST : ", post);
 
   return (
     <div style={{ display: "flex", justifyContent: "center", margin: "2% 0" }}>
