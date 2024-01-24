@@ -11,11 +11,11 @@ import { useParams } from "react-router";
 
 const ViewPost = () => {
   const dispatch = useDispatch();
-  const { id } = useParams(); // Aquí obtienes el id de la ruta
+  const { id } = useParams();
   const { active: post } = useSelector((state) => state.posts);
 
   useEffect(async () => {
-    console.log("usefect viweposttt  ", id);
+    // console.log("usefect viweposttt  ", id);
     dispatch(startGetPostById(id));
   }, []);
 

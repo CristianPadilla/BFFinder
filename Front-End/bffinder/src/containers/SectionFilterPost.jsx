@@ -52,7 +52,7 @@ const SectionFilterPost = () => {
       {posts &&
         posts.map((post) =>
           role === "s" ? (
-            <>
+            <React.Fragment key={post.id}>
               <Grid
                 item
                 key={post.id}
@@ -89,7 +89,7 @@ const SectionFilterPost = () => {
                 onClose={handleCloseDialog}
                 onAdd={handleAddPet}
               />
-            </>
+            </React.Fragment>
           ) : (
             <Grid item xs={12} key={post.id}>
               <CardPost post={post} />

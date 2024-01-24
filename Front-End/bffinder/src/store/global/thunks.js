@@ -16,7 +16,7 @@ export const changeActiveModule = ({ module }) =>
 export const getSpecies = () => async (dispatch, getState) => {
 
     const { data, status } = await specieApi.get("/all");
-    // console.log("startGetSpecies", data, status);
+    // console.log("getSpecies", data, status);
     if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
     return data;
 };

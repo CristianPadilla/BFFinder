@@ -4,9 +4,16 @@ import Profile from "../containers/Profile";
 import { useSelector } from "react-redux";
 import UserConfigurations from "../containers/UserConfigurations";
 import ContentQuestions from "../containers/ContentQuestions";
+import { Typography } from "@mui/material";
 
 const ContentMainAccount = () => {
-  const { activeModule } = useSelector((state) => state.persisted.global);
+  const { activeModule, contentLoading } = useSelector((state) => state.persisted.global);
+
+
+  if (contentLoading) return (<Typography variant="h4" component="div" gutterBottom>
+    Cargando...
+  </Typography>)
+
 
   return (
     <>

@@ -194,6 +194,10 @@ public class PetServiceImpl implements PetService {
     @Override
     public void disablePet(int petId) {
         log.info("disabling pet with id {} at SERVICE layer", petId);
+        var isposted = adoptionPostService.checkPetIsPosted(petId).getBody();
+        if (isposted)
+            adoptionPostService.deletePostByPetId(petId);
+
         var petToDisable = repository.findByIdAndStatusTrue(petId)
                 .orElseThrow(() -> new CustomException("Pet not found with id: " + petId, "PET_NOT_FOUND", HttpStatus.NOT_FOUND.value()));
         petToDisable.setStatus(false);
@@ -234,6 +238,32 @@ public class PetServiceImpl implements PetService {
 
     }
 
+    @Override
+    public List<Integer> findAvailableShelterSpecies(int shelterId) {
+        log.info("Getting available species from CONTROLLER layer");
+        var pets = repository.findAllByOwnerIdAndStatusIsTrue(shelterId);
+
+        return pets.stream()
+                .map(petEntity -> {
+                    var pet = buildPetFromPetEntity(petEntity);
+                    return pet.getBreedDetails().getSpecie().getId();
+                })
+                .distinct()
+                .collect(Collectors.toList());
+
+    }
+
+    @Override
+    public List<Integer> findAvailableShelterBreeds(int shelterId) {
+        log.info("Getting available breeds for shelter {} from CONTROLLER layer", shelterId);
+        var pets = repository.findAllByOwnerIdAndStatusIsTrue(shelterId);
+
+        return pets.stream()
+                .map(PetEntity::getBreedId)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
     public String validateSorting(String sortRequest) {
         var sort = "name";
         if (sortRequest != null && !sortRequest.isEmpty()) {
@@ -248,7 +278,7 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public List<PetResponse> getAllByOwnerId(int ownerId) {
-        return repository.findAllByOwnerId(ownerId)
+        return repository.findAllByOwnerIdAndStatusIsTrue(ownerId)
                 .stream()
                 .map(this::buildPetFromPetEntity)
                 .collect(Collectors.toList());
@@ -256,7 +286,7 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public List<PetResponse> getAllForPostingByOwnerId(int ownerId) {
-        return repository.findAllByOwnerId(ownerId)
+        return repository.findAllByOwnerIdAndStatusIsTrue(ownerId)
                 .stream()
                 .map(this::buildPetFromPetEntity)
                 .filter(petResponse -> !petResponse.isPublished())

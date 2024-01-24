@@ -7,23 +7,32 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { Edit as EditIcon } from "@mui/icons-material";
+import { useDispatch } from "react-redux";
+import { startUpdateQuestionAnswer } from "../store/questions";
 
-const CardQuestions = ({ question, onReply, onEdit, showAnswered }) => {
+const CardQuestions = ({ question, onEdit }) => {
+  const dispatch = useDispatch();
   const [isReplying, setIsReplying] = useState(false);
-  const [replyText, setReplyText] = useState(question.replyText || "");
+  const [replyText, setReplyText] = useState(question.answer || "");
 
-  useEffect(() => {
-    setReplyText(question.replyText || "");
-  }, [question.replyText]);
+  // console.log("question from CardQuestions => ", question);
+  const { user, descripcion, answer, isAnswered } = question;
+  const { name } = user;
+
 
   const handleReplyClick = () => {
     setIsReplying(true);
   };
 
   const handleSendReply = () => {
-    setIsReplying(false);
-    onReply(question.id, replyText);
+    // console.log('handleSendReply ', replyText);
+    // console.log('question.descripcion ', question.descripcion);
+    if (replyText === question.answer) {
+      setIsReplying(false);
+      return;
+    }
+    dispatch(startUpdateQuestionAnswer(question.id, replyText));
+
   };
 
   const handleEditClick = () => {
@@ -32,9 +41,9 @@ const CardQuestions = ({ question, onReply, onEdit, showAnswered }) => {
 
   const handleEditSave = () => {
     onEdit(question.id, replyText);
-    setIsReplying(false);
-  };
 
+  };
+  // console.log('replyyyyyyy  ', replyText);
   return (
     <Card elevation={1} sx={{ borderRadius: "12px", margin: "13px" }}>
       <CardContent>
@@ -48,10 +57,10 @@ const CardQuestions = ({ question, onReply, onEdit, showAnswered }) => {
           <div style={{ display: "flex", alignItems: "center" }}>
             <Avatar />
             <Typography variant="subtitle1" sx={{ marginLeft: 1 }}>
-              User
+              {name}
             </Typography>
             <Typography variant="caption" sx={{ marginLeft: 1, lineHeight: 0 }}>
-              Date
+              { }
             </Typography>
           </div>
         </div>
@@ -63,7 +72,7 @@ const CardQuestions = ({ question, onReply, onEdit, showAnswered }) => {
           {question.content}
         </Typography>
 
-        {
+        {isAnswered &&
           <div style={{ display: "flex", alignItems: "center", marginTop: 2 }}>
             {isReplying ? (
               <TextField
@@ -83,7 +92,7 @@ const CardQuestions = ({ question, onReply, onEdit, showAnswered }) => {
                   {question.replyText}
                 </Typography>
                 <Typography variant="caption" sx={{ marginLeft: 1 }}>
-                  Date
+                  {descripcion}  {question.id}
                 </Typography>
 
                 <Button
@@ -100,7 +109,7 @@ const CardQuestions = ({ question, onReply, onEdit, showAnswered }) => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={handleEditSave}
+                onClick={handleSendReply}
                 sx={{ marginLeft: 1 }}
               >
                 Guardar
@@ -108,34 +117,34 @@ const CardQuestions = ({ question, onReply, onEdit, showAnswered }) => {
             )}
           </div>
         }
+        {!isAnswered &&
+          (
+            !isReplying
+              ? (<div style={{ display: "flex", alignItems: "center", marginTop: 2 }}>
+                <Button variant="text" color="primary" onClick={handleReplyClick}>
+                  Responder
+                </Button>
+              </div>)
+              : (<div style={{ display: "flex", alignItems: "center", marginTop: 2 }}>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  label="Responder"
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSendReply}
+                  sx={{ marginLeft: 1 }}
+                >
+                  Enviar
+                </Button>
+              </div>)
+          )
+        }
 
-        {!isReplying && !showAnswered && (
-          <div style={{ display: "flex", alignItems: "center", marginTop: 2 }}>
-            <Button variant="text" color="primary" onClick={handleReplyClick}>
-              Responder
-            </Button>
-          </div>
-        )}
-
-        {isReplying && (
-          <div style={{ display: "flex", alignItems: "center", marginTop: 2 }}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              label="Responder"
-              value={replyText}
-              onChange={(e) => setReplyText(e.target.value)}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSendReply}
-              sx={{ marginLeft: 1 }}
-            >
-              Enviar
-            </Button>
-          </div>
-        )}
       </CardContent>
     </Card>
   );

@@ -18,8 +18,11 @@ import FormAddPet from "../post/FormAddPet";
 import { useDispatch, useSelector } from "react-redux";
 import { t } from "i18next";
 import Swal from 'sweetalert2';
+import { start } from "@popperjs/core";
+import { startDeletePet } from "../../store/pet";
 
 const DialogViewPet = ({ open, onClose }) => {
+  const dispatch = useDispatch();
   const [profileImageUrl] = useState("");
   const [editing, setEditing] = useState(false);
   const { active: pet } = useSelector((state) => state.pets);
@@ -63,8 +66,8 @@ const DialogViewPet = ({ open, onClose }) => {
               {pet.age === 1
                 ? `${pet.age} año`
                 : pet.age === 0
-                ? "Menos de un año"
-                : `${pet.age} años`}
+                  ? "Menos de un año"
+                  : `${pet.age} años`}
             </Typography>
           </Grid>
         </Grid>
@@ -126,12 +129,12 @@ const DialogViewPet = ({ open, onClose }) => {
     setEditing(true);
   };
 
-  const showAlert = () => {
+  const handleDeletePet = () => {
     Swal.fire({
-      title: '¿Estás seguro de eliminar esta mascota?',
-      text: 'No podrás revertir esta acción!',
+      title: `¿Estás seguro de eliminar a ${pet.name}?`,
+      text: `No podrás recuperar la informacion de tu mascota!`,
       icon: 'question',
-      confirmButtonText: 'Si, eliminar',
+      confirmButtonText: 'Eliminar',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
@@ -142,7 +145,34 @@ const DialogViewPet = ({ open, onClose }) => {
           sweetAlertContainer.style.zIndex = '99999';
         }
       },
-    });
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (pet.published) {
+          Swal.fire({
+            title: `${pet.name} tiene una publicacion actualmente ¿Eliminar de todas formas?`,
+            text: `No podras recuperar la informacion de la publicacion!`,
+            icon: 'question',
+            confirmButtonText: 'Eliminar',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            didOpen: () => {
+              const sweetAlertContainer = document.querySelector('.swal2-container');
+              if (sweetAlertContainer) {
+                sweetAlertContainer.style.zIndex = '99999';
+              }
+            },
+          }).then((result) => {
+            if (result.isConfirmed) {
+              dispatch(startDeletePet(pet.id));
+            }
+          })
+        } else {
+          dispatch(startDeletePet(pet.id));
+        }
+      }
+    })
+      ;
   };
 
   const handleSaveClick = () => {
@@ -192,8 +222,8 @@ const DialogViewPet = ({ open, onClose }) => {
                       src={pet.profileImageUrl ? pet.profileImageUrl : imgdefault}
                       alt=""
                       height="auto"
-                      // height="400px"
-                      // style={{ width: "auto" }}
+                    // height="400px"
+                    // style={{ width: "auto" }}
                     />
                   </div>
                 </div>
@@ -231,14 +261,14 @@ const DialogViewPet = ({ open, onClose }) => {
             </Button>
           </>
         ) : (
-            <>
-          <Button variant="contained" color="error" onClick={showAlert}>
-            ELiminar
-          </Button>
-          <Button variant="contained" color="info" onClick={handleEditClick}>
-            Editar
-          </Button>
-            </>
+          <>
+            <Button variant="contained" color="error" onClick={handleDeletePet}>
+              ELiminar
+            </Button>
+            <Button variant="contained" color="info" onClick={handleEditClick}>
+              Editar
+            </Button>
+          </>
         )}
       </DialogActions>
     </Dialog>

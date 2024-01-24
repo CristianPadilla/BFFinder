@@ -1,6 +1,8 @@
 package com.cpadilla.specieservice.service;
 
 import com.cpadilla.specieservice.exception.CustomException;
+import com.cpadilla.specieservice.external.client.AdoptionPostService;
+import com.cpadilla.specieservice.external.client.PetService;
 import com.cpadilla.specieservice.model.SpecieRequest;
 import com.cpadilla.specieservice.model.SpecieResponse;
 import com.cpadilla.specieservice.repository.SpecieRepository;
@@ -18,6 +20,12 @@ public class SpecieServiceImpl implements SpecieService {
 
     @Autowired
     private SpecieRepository repository;
+
+    @Autowired
+    private AdoptionPostService adoptionPostService;
+
+    @Autowired
+    private PetService petService;
 
 
     @Override
@@ -51,6 +59,42 @@ public class SpecieServiceImpl implements SpecieService {
                         .build()).collect(Collectors.toList());
 
 
+    }
+
+    @Override
+    public List<SpecieResponse> getAvailablePostedSpecies() {// species that have at least one posted pet
+        log.info("Getting list of available posted species from SERVICE layer");
+        var specieEntities = repository.findAll();
+
+        var availableSpecies = adoptionPostService.findAvailablePostedSpecies().getBody();
+
+        return specieEntities.stream().map(specieEntity ->
+                        SpecieResponse.builder()
+                                .id(specieEntity.getId())
+                                .name(specieEntity.getName())
+                                .description(specieEntity.getDescription())
+                                .build())
+                .filter(specieResponse -> availableSpecies.contains(specieResponse.getId()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SpecieResponse> getAvailableShelterSpecies(int shelterId) {
+
+        log.info("Getting list of available species for shelter with id: {} from SERVICE layer", shelterId);
+        var specieEntities = repository.findAll();
+
+        var availableSpecies = petService.findAvailableShelterSpecies(shelterId).getBody();
+
+        return specieEntities.stream()
+                .filter(specieEntity -> availableSpecies.contains(specieEntity.getId()))
+                .map(specieEntity ->
+                        SpecieResponse.builder()
+                                .id(specieEntity.getId())
+                                .name(specieEntity.getName())
+                                .description(specieEntity.getDescription())
+                                .build())
+                .collect(Collectors.toList());
     }
 
     @Override

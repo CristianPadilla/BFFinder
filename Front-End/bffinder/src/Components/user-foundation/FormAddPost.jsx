@@ -53,13 +53,13 @@ const FormAddPost = () => {
 
   }, []);
 
-  const petsOptions = selectPets.map((pet) => {
+  let petsOptions = (selectPets.map((pet) => {
     return {
       label: `${pet.name} - ${t(`species.${pet.breedDetails.specie.name}`)} - ${t(`breeds.${pet.breedDetails.name}`)}`,
       value: pet.id
     }
-  });
-
+  }));
+  post && petsOptions.push({ label: `${post.petResponse.name} - ${t(`species.${post.petResponse.breedDetails.specie.name}`)} - ${t(`breeds.${post.petResponse.breedDetails.name}`)}`, value: post.petResponse.id });
 
 
   const handleSubmit = (values) => {
@@ -69,9 +69,9 @@ const FormAddPost = () => {
       petId: values.pet.value,
       images: values.images,
     };
-    if(post){
+    if (post) {
       dispatch(startUpdatePost(postToSave))
-    }else{
+    } else {
       dispatch(startCreatePost(postToSave))
     }
 
@@ -84,7 +84,7 @@ const FormAddPost = () => {
   const initialValues = post
     ? {
       description: post.description,
-      pet: { label: `${post.petResponse.name} - ${post.petResponse.breedDetails.specie.name} - ${post.petResponse.breedDetails.name}`, value: post.petResponse.id },
+      pet: petsOptions.find((option) => option.value === post.petResponse.id),
       images: [],
     }
     : {
@@ -167,6 +167,7 @@ const FormAddPost = () => {
                     </Typography>
                     <SelecInputComponent
                       label="Seleccione la mascota*"
+                      clearIcon={false}
                       name="pet"
                       // onChange={formik.handleChange}
                       onChange={({ target }) => {

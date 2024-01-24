@@ -8,6 +8,7 @@ import { combineReducers } from '@reduxjs/toolkit';
 import { thunk } from 'redux-thunk';
 import { petSlice } from './pet';
 import { globalSlice } from './global';
+import { questionSlice } from './questions/questionSlice';
 
 
 const persistConfig = {
@@ -28,6 +29,7 @@ export const store = configureStore({
     reducer: {
         posts: postSlice.reducer,
         pets: petSlice.reducer,
+        questions: questionSlice.reducer,
         // auth: authSlice.reducer,
         persisted: persistedReducers,
     },

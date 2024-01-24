@@ -104,7 +104,7 @@ export const startUpdatePost = (post) => async (dispatch, getState) => {
     dispatch(setIsSaving(true))
     const currentPost = getState().posts.active;
     // console.log("startUpdatePost from thunk ", currentPost);
-    
+
     if (currentPost.description !== post.description) {
         dispatch(startUpdatePostDescription(currentPost.id, post.description));
     }
@@ -194,4 +194,22 @@ export const startUpdatePostDescription = (postId, description) => async (dispat
 export const startCleanPostImages = (postId) => async (dispatch) => {
     const { data, status } = await postApi.delete('/image/clean/' + postId);
     if (status !== HttpStatusCode.NoContent) dispatch(setErrorMessage("Error al actualizar la descripción de la publicacion"));
+}
+
+export const startChangePostStatus = (postId, statusToSet) => async (dispatch) => {
+    console.log("startChangePostStatus ", postId, statusToSet);
+
+    let response;
+    if (statusToSet === "enable") {
+        response = await postApi.put('/enable/' + postId);
+
+    } else if (statusToSet === "disable") {
+        response = await postApi.put('/disable/' + postId);
+    }
+    const {status, data} = response;
+    if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage("Error al deshabilitar la publicacion"));
+
+    dispatch(setActivePost(null));
+    dispatch(changePostsRequest([{ page: 0 }]))
+    dispatch(fetchPosts());
 }

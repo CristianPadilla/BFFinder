@@ -20,7 +20,7 @@ import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import DialogViewPost from "./DialogViewPost";
 import { t } from "i18next";
 import Swal from "sweetalert2";
-import { setActivePost, startGetPostById } from "../../store/post";
+import { setActivePost, startChangePostStatus, startGetPostById } from "../../store/post";
 import { useDispatch, useSelector } from "react-redux";
 
 const CardPostShelter = ({ post }) => {
@@ -37,11 +37,9 @@ const CardPostShelter = ({ post }) => {
   const hours = parsedDate.getHours();
   const minutes = parsedDate.getMinutes();
 
-  const formattedDate = `${day < 10 ? "0" : ""}${day}/${
-    month < 10 ? "0" : ""
-  }${month}/${year} - ${hours % 12 || 12}:${
-    minutes < 10 ? "0" : ""
-  }${minutes} ${hours >= 12 ? "pm" : "am"}`;
+  const formattedDate = `${day < 10 ? "0" : ""}${day}/${month < 10 ? "0" : ""
+    }${month}/${year} - ${hours % 12 || 12}:${minutes < 10 ? "0" : ""
+    }${minutes} ${hours >= 12 ? "pm" : "am"}`;
 
   //   Dialog
   const [openDialog, setOpenDialog] = useState(false);
@@ -57,10 +55,8 @@ const CardPostShelter = ({ post }) => {
     // setOpenDialog(false);
   };
 
-  const showAlert = (e) => {
+  const handleStatusChange = ({ target }) => {
     const { value } = e.target.dataset;
-    console.log("pooooooooooooooooo ", value);
-
     const title =
       value === "disable"
         ? "¿Estás seguro de deshabilitar esta publicación?"
@@ -71,11 +67,12 @@ const CardPostShelter = ({ post }) => {
         ? "Deshabilitar"
         : "Habilitar";
 
-        const confirmButtonColor =
-        value === "disable"
-          ? "#d33"
-          : "#1b5e20"; 
+    const confirmButtonColor =
+      value === "disable"
+        ? "#d33"
+        : "#1b5e20";
 
+    console.log("value: ", value);
     Swal.fire({
       title: title,
       // text: 'No podrás revertir esta acción!',
@@ -84,7 +81,12 @@ const CardPostShelter = ({ post }) => {
       showCancelButton: true,
       confirmButtonColor: confirmButtonColor,
       cancelButtonColor: "#3085d6",
-    });
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(startChangePostStatus(id, value));
+      }
+    })
+      ;
   };
 
   // console.log("post Fundaciónn: ", post);
@@ -105,7 +107,7 @@ const CardPostShelter = ({ post }) => {
               <Typography
                 variant="h6"
                 component="h2"
-                // sx={{ fontSize: "1.4rem" }}
+              // sx={{ fontSize: "1.4rem" }}
               >
                 {name}
               </Typography>
@@ -153,7 +155,7 @@ const CardPostShelter = ({ post }) => {
               container
               spacing={1}
               alignItems="center"
-              //   justifyContent="justify-content"
+            //   justifyContent="justify-content"
             >
               <Grid item>
                 <Favorite
@@ -192,7 +194,7 @@ const CardPostShelter = ({ post }) => {
                     variant="contained"
                     color="error"
                     size="small"
-                    onClick={showAlert}
+                    onClick={handleStatusChange}
                     sx={{
                       marginLeft: "8px",
                       letterSpacing: "1px",
@@ -206,7 +208,7 @@ const CardPostShelter = ({ post }) => {
                     variant="contained"
                     color="success"
                     size="small"
-                    onClick={showAlert}
+                    onClick={handleStatusChange}
                     sx={{
                       marginLeft: "8px",
                       letterSpacing: "1px",

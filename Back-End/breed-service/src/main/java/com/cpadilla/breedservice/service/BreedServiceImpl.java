@@ -1,6 +1,8 @@
 package com.cpadilla.breedservice.service;
 
 import com.cpadilla.breedservice.exception.CustomException;
+import com.cpadilla.breedservice.external.client.AdoptionPostService;
+import com.cpadilla.breedservice.external.client.PetService;
 import com.cpadilla.breedservice.external.client.SpecieService;
 import com.cpadilla.breedservice.model.BreedResponse;
 import com.cpadilla.breedservice.model.SpecieDetails;
@@ -22,6 +24,12 @@ public class BreedServiceImpl implements BreedService {
 
     @Autowired
     private SpecieService specieService;
+
+    @Autowired
+    private AdoptionPostService adoptionPostService;
+
+    @Autowired
+    private PetService petService;
 
 
     @Override
@@ -65,6 +73,55 @@ public class BreedServiceImpl implements BreedService {
                             .build();
 
                 }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BreedResponse> getAllBySpecieIdAndAvailablePosted(int specieId) {
+        var breeds = repository.findAllBySpecieId(specieId);
+        var availableBreeds = adoptionPostService.findAvailablePostedBreedsBySpecieId(specieId).getBody();
+
+        return breeds.stream()
+                .map(breed -> {
+                    var specie = specieService.getSpecieById(breed.getSpecieId()).getBody();
+                    var specieResponse = SpecieDetails.builder()
+                            .id(specie.getId())
+                            .name(specie.getName())
+                            .build();
+
+                    return BreedResponse.builder()
+                            .id(breed.getId())
+                            .name(breed.getName())
+                            .specie(specieResponse)
+                            .build();
+
+                })
+                .filter(breedResponse -> availableBreeds.contains(breedResponse.getId()))
+                .collect(Collectors.toList());
+
+    }
+
+    @Override
+    public List<BreedResponse> getAllBySpecieIdAndShelterPets(int specieId, int shelterId) {
+        var breeds = repository.findAllBySpecieId(specieId);
+        var shelterAvailableBreeds = petService.findAvailableShelterBreeds(shelterId).getBody();
+
+        return breeds.stream()
+                .filter(breed -> shelterAvailableBreeds.contains(breed.getId()))
+                .map(breed -> {
+                    var specie = specieService.getSpecieById(breed.getSpecieId()).getBody();
+                    var specieResponse = SpecieDetails.builder()
+                            .id(specie.getId())
+                            .name(specie.getName())
+                            .build();
+
+                    return BreedResponse.builder()
+                            .id(breed.getId())
+                            .name(breed.getName())
+                            .specie(specieResponse)
+                            .build();
+
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
