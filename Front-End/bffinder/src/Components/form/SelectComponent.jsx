@@ -11,8 +11,7 @@ const SelectComponent = (props) => {
 
   return (
     <>
-      {/* <FormLabel component="legend">Departamento</FormLabel> */}
-      <FormControl sx={{ width: "27ch" }} margin="normal" fullWidth={props.fullWidth} className="filter-container">
+      <FormControl sx={props.sx} margin="normal" fullWidth={props.fullWidth} className="filter-container">
         <Autocomplete
           value={props.value}
           options={props.options}
@@ -28,6 +27,7 @@ const SelectComponent = (props) => {
           // }}
           // clearIcon={true}
           style={props.style}
+          fullWidth={props.fullWidth}
           freeSolo={false}// para que el el campo de texto solo pueda tener una de las opciones del select
           renderInput={(params) => (
             <TextField

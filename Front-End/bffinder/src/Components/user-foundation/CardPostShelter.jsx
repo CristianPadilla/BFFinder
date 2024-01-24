@@ -22,6 +22,7 @@ import { t } from "i18next";
 import Swal from "sweetalert2";
 import { setActivePost, startGetPostById } from "../../store/post";
 import { useDispatch, useSelector } from "react-redux";
+import FormattedDate from "../FormattedDate";
 
 const CardPostShelter = ({ post }) => {
   const dispatch = useDispatch();
@@ -29,19 +30,6 @@ const CardPostShelter = ({ post }) => {
 
   const { petPartialResponse, images, date, user, status, id } = post;
   const { name, breedDetails, specie, profileImageUrl } = petPartialResponse;
-
-  const parsedDate = new Date(date);
-  const day = parsedDate.getDate();
-  const month = parsedDate.getMonth() + 1;
-  const year = parsedDate.getFullYear();
-  const hours = parsedDate.getHours();
-  const minutes = parsedDate.getMinutes();
-
-  const formattedDate = `${day < 10 ? "0" : ""}${day}/${
-    month < 10 ? "0" : ""
-  }${month}/${year} - ${hours % 12 || 12}:${
-    minutes < 10 ? "0" : ""
-  }${minutes} ${hours >= 12 ? "pm" : "am"}`;
 
   //   Dialog
   const [openDialog, setOpenDialog] = useState(false);
@@ -91,11 +79,11 @@ const CardPostShelter = ({ post }) => {
 
   return (
     <div
-      className="custom-card"
+      // className="custom-card"
       style={{ display: "flex", justifyContent: "center", margin: "4% 0" }}
     >
       <Card
-        sx={{ width: "100%", maxWidth: 300, borderRadius: "18px" }}
+        sx={{ width: "100%", maxWidth: 310, borderRadius: "18px" }}
         elevation={6}
       >
         <CardActionArea onClick={handleOpenDialog}>
@@ -121,22 +109,19 @@ const CardPostShelter = ({ post }) => {
               </Typography>
             }
           />
-          {/* height: "250px", */}
-          <div style={{ width: "100%", overflow: "hidden" }}>
             <CardMedia
               component="img"
-              sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+              height="194"
               image={profileImageUrl ? profileImageUrl : imgdefault}
               alt="Imagen"
             />
-          </div>
           <CardContent>
             <Typography
               variant="caption"
               color="text.secondary"
               sx={{ fontSize: ".8rem" }}
             >
-              Publicado el {formattedDate}
+              <FormattedDate date={date}/>
             </Typography>
           </CardContent>
           {/* </div> */}
@@ -167,7 +152,7 @@ const CardPostShelter = ({ post }) => {
                 </Typography>
               </Grid>
 
-              <Grid item xs={1} />
+              <Grid item xs={2} />
               <Grid item>
                 <QuestionAnswerIcon
                   fontSize="small"

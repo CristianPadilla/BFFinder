@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Box, IconButton } from '@mui/material';
-import Cardh from '../Components/CardHorizontal';
+import CardHorizontal from '../Components/CardHorizontal';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import 'styles/CardPrePost.scss';
@@ -42,7 +42,7 @@ const SectionPrePosts = () => {
       <Grid container spacing={1}>
         {postList.slice(currentIndex, currentIndex + 4).map((post) => (
           <Grid item xs={12} sm={6} key={post.id}>
-            <Cardh post={post} />
+            <CardHorizontal post={post} />
           </Grid>
         ))}
       </Grid>

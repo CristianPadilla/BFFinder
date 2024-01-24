@@ -4,7 +4,7 @@ import "../styles/Card.scss";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { TextInputComponent } from "../Components/form/TextInputComponent";
-import { CheckboxInputComponent } from "../Components/form/CheckboxInputComponent";
+import SwitchInputComponent from "../Components/form/SwitchInputComponent";
 import TextInputPassword from "../Components/form/TextInputPassword";
 import { Snackbar, Alert, Grid } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -121,9 +121,10 @@ export function RegisterUserPage() {
         })}
       >
         {(formik) => (
-          <div className="register-form-container">
-            <Form className="sign-up-form register-form animate__animated animate__fadeIn" id="sign-up-form">
-              <div className="form-container">
+          // <div className="register-form-container">
+          <Form className="animate__animated animate__fadeIn" >
+            {/* <Form className="sign-up-form register-form animate__animated animate__fadeIn"> */}
+              {/* <div className="form-container"> */}
                 <TextInputComponent
                   type="text"
                   label="Nombres"
@@ -186,7 +187,7 @@ export function RegisterUserPage() {
                   }}
                   sx={{ width: "27ch" }}
                 />
-                <CheckboxInputComponent
+                <SwitchInputComponent
                   label="Términos y condiciones"
                   name="terms"
                   className="slider round"
@@ -197,7 +198,7 @@ export function RegisterUserPage() {
                 <Grid item xs={12} display={!!errorMessage ? '' : 'none'}>
                   <Alert severity="error">{errorMessage}</Alert>
                 </Grid>
-                <button disabled={isCheckingAuth} id="sign-up-btn" type="submit" className="btn">
+                <button disabled={isCheckingAuth} type="submit" className="btn" style={{ marginTop: "1.2rem" }}>
                   Registrarse
                 </button>
                 <p className="social-text">O</p>
@@ -209,9 +210,9 @@ export function RegisterUserPage() {
                 {formik.errors.general && (
                   <div className="error-message">{formik.errors.general}</div>
                 )}{" "}
-              </div>
+              {/* </div> */}
             </Form>
-          </div>
+          // </div>
         )}
       </Formik>
     </>

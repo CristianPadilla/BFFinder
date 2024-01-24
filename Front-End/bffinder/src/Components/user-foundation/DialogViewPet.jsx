@@ -20,7 +20,6 @@ import { t } from "i18next";
 import Swal from 'sweetalert2';
 
 const DialogViewPet = ({ open, onClose }) => {
-  const [profileImageUrl] = useState("");
   const [editing, setEditing] = useState(false);
   const { active: pet } = useSelector((state) => state.pets);
 

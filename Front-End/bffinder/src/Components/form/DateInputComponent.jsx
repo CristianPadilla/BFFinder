@@ -1,10 +1,7 @@
-import React from 'react';
-import TextField from '@mui/material/TextField';
+import React from "react";
+import TextField from "@mui/material/TextField";
 
-const DateInputComponent = ({ label, width, onChange, value }) => {
-  const [selectedDate, setSelectedDate] = React.useState(null);
-
-
+const DateInputComponent = ({ label, onChange, value, sx, helperText, placeholder }) => {
   return (
     <TextField
       id="date"
@@ -12,10 +9,12 @@ const DateInputComponent = ({ label, width, onChange, value }) => {
       type="date"
       value={value}
       onChange={onChange}
+      placeholder={placeholder}
+      sx={sx}
       InputLabelProps={{
         shrink: true,
       }}
-      sx={{ width: width || "100%" }}
+      helperText={helperText}
     />
   );
 };

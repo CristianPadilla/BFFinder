@@ -41,29 +41,36 @@ export default function SignUp() {
   };
 
   return (
-    <Card className="card-register">
-      <CardContent>
-        <Box>
-          <Box>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label="basic tabs example"
-            >
-              <Tab label="Usuario Regular" value={0} />
-              <Tab label="Fundación" value={1} />
-            </Tabs>
-          </Box>
-        </Box>
+    <Card
+      sx={{
+        height: "93vh",
+        width: "80vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        aria-label="basic tabs example"
+      >
+        <Tab label="Usuario Regular" value={0} />
+        <Tab label="Fundación" value={1} />
+      </Tabs>
 
+      <CardContent sx={{ flex: "1" }}>
         <CustomTabPanel value={value} index={0}>
           <h2 className="titulo-r">Registrarse</h2>
-          <RegisterUserPage />
+          <Box sx={{ overflowY: "auto", maxHeight: "72vh", paddingTop: 4, paddingBottom: 3 }}>
+            <RegisterUserPage />
+          </Box>
         </CustomTabPanel>
 
         <CustomTabPanel value={value} index={1}>
           <h2 className="titulo-r">Registrarse</h2>
-          <RegisterFoundationPage />
+          <Box sx={{ overflowY: "auto", maxHeight: "72vh", paddingTop: 4, paddingBottom: 3 }}>
+            <RegisterFoundationPage />
+          </Box>
         </CustomTabPanel>
       </CardContent>
     </Card>

@@ -18,5 +18,6 @@ public class ShelterUserProfileResponse extends UserResponse{
     private String description;
     @Column(name = "commercial_reg_num")
     private String commercialRegistrationNumber;
+    private String webPageUrl;
 
 }

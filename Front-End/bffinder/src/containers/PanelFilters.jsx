@@ -142,6 +142,7 @@ const PanelFilters = ({ module }) => {
   const speciesOptions = species.map((specie) => {
     return { label: t(`pluralSpecies.${specie.name}`), value: specie.id };
   });
+  speciesOptions.sort((a, b) => a.label.localeCompare(b.label));
   const specieOptionSelectedValue =
     filters.specie_id != null && filters.specie_id != 0
       ? speciesOptions.find((option) => option.value === filters.specie_id)
@@ -150,7 +151,7 @@ const PanelFilters = ({ module }) => {
   const breedsOptions = breeds.map((breed) => {
     return { label: t(`breeds.${breed.name}`), value: breed.id };
   });
-
+  breedsOptions.sort((a, b) => a.label.localeCompare(b.label));
   const breedOptionSelectedValue =
     filters.breed_id != null && filters.breed_id != 0
       ? breedsOptions.find((option) => option.value === filters.breed_id)
@@ -160,7 +161,7 @@ const PanelFilters = ({ module }) => {
   const departmentsOptions = departments.map((department) => {
     return { label: department.name, value: department.id };
   });
-
+  departmentsOptions.sort((a, b) => a.label.localeCompare(b.label));
   const departmentOptionSelectedValue =
     filters.department_id != null && filters.department_id != 0
       ? departmentsOptions.find(
@@ -170,7 +171,7 @@ const PanelFilters = ({ module }) => {
   const citiesOptions = cities.map((city) => {
     return { label: city.name, value: city.id };
   });
-
+  citiesOptions.sort((a, b) => a.label.localeCompare(b.label));
   const cityOptionSelectedValue =
     filters.city_id != null && filters.city_id != 0
       ? citiesOptions.find((option) => option.value === filters.city_id)
@@ -437,16 +438,18 @@ const PanelFilters = ({ module }) => {
             onChange={handleDateSelectFilterChange}
             value={dateSelectOptionSelectedValue}
             options={dateSelectOptions}
-            style={{ marginTop: "5px", marginBottom: "18px" }}
+            style={{ marginTop: "5px", marginBottom: "20px" }}
           />
         )
       }
 
       {role === "s" && activeModule == "posts" &&
         <DateInputComponent
+          sx={{ marginTop: "20px", width: "100%", marginBottom: "10px" }}
           onChange={handleDatePickerChange}
           label="Fecha de publicación"
           value={filters.from_date ? filters.from_date : ""}
+          placeholder="DD/MM/AAAA"
         />
       }
 
@@ -475,6 +478,7 @@ const PanelFilters = ({ module }) => {
       )}
       {role === "u" && activeModule == "posts" && (
         <SelectComponent
+          fullWidth
           label="Municipio"
           name="city"
           onChange={handleCitySelectChange}
@@ -514,11 +518,22 @@ const PanelFilters = ({ module }) => {
                 max={11}
                 marks={marks}
                 components={{ ValueLabel }}
+                sx={{
+                  "& .MuiSlider-thumb": {
+                    backgroundColor: "#E1A26A", // Cambia este color según tus preferencias
+                  },
+                  // "& .MuiSlider-track": {
+                  //   backgroundColor: "#db711590", // Cambia este color según tus preferencias
+                  // },
+                  // "& .MuiSlider-rail": {
+                  //   backgroundColor: "#db711590", // Cambia este color según tus preferencias
+                  // },
+                }}
               />
             </Box>
           </FormGroup>
           <RadioComponent
-            label="Talla"
+            label="Tamaño"
             name="size"
             value={sizeCurrentValue}
             onChange={handleSizeChange}
@@ -527,7 +542,7 @@ const PanelFilters = ({ module }) => {
               { label: "Mediano", value: "m" },
               { label: "Grande", value: "l" },
             ]}
-            style={{ marginTop: "2.8rem", marginBottom: "10px" }}
+            style={{ marginTop: "3rem", marginBottom: "10px" }}
           />
 
         </>
@@ -537,6 +552,7 @@ const PanelFilters = ({ module }) => {
 
 
       <SelectComponent
+        fullWidth
         label="Especie / Grupo"
         name="specie"
         // clearIcon={true}
@@ -546,6 +562,7 @@ const PanelFilters = ({ module }) => {
       />
 
       <SelectComponent
+        fullWidth
         label="Raza / Subgrupo"
         name="breed"
         // clearIcon={true}
@@ -609,6 +626,7 @@ const PanelFilters = ({ module }) => {
               Salud
             </Divider>
             <SelectComponent
+              fullWidth
               label="Vacunación"
               name="vaccinated"
               onChange={handleVaccinatedSelectChange}
@@ -618,6 +636,7 @@ const PanelFilters = ({ module }) => {
             />
 
             <SelectComponent
+              fullWidth
               label="Esterilización"
               name="sterilized"
               // inputDisabled={true}
@@ -627,6 +646,7 @@ const PanelFilters = ({ module }) => {
             />
 
             <SelectComponent
+              fullWidth
               label="Desparasitación"
               name="dewormed"
               onChange={handleDewormedSelectChange}

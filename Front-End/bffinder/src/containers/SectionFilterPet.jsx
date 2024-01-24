@@ -4,6 +4,7 @@ import CardVertical from "../Components/CardVertical";
 import ModalAddPet from "../Components/user-foundation/ModalAddPet";
 import AddIcon from "@mui/icons-material/Add";
 import { useSelector } from "react-redux";
+import ProgressCircular from "../Components/ProgressCircular";
 
 export const SectionFilterPet = () => {
   const { page, isSaving } = useSelector((state) => state.pets);
@@ -35,7 +36,7 @@ export const SectionFilterPet = () => {
   };
 
   return isSaving ? (
-    <h2> Loadin de haciendo un proceso</h2>
+    <ProgressCircular />
   ) : (
     <>
       {pets &&
@@ -54,12 +55,19 @@ export const SectionFilterPet = () => {
         onOpen={handleTooltipOpen}
       >
         <Fab
-          color="primary"
           aria-label="add"
           onClick={handleOpenDialog}
-          sx={{ position: "fixed", bottom: "16px", right: "25px" }}
+          sx={{
+            position: "fixed",
+            bottom: "16px",
+            right: "25px",
+            backgroundColor: "#E1A26A",
+            "&:hover": {
+              backgroundColor: "#da9054",
+            },
+          }}
         >
-          <AddIcon />
+          <AddIcon sx={{ color: "white" }} />
         </Fab>
       </Tooltip>
 

@@ -75,20 +75,20 @@ const PerfilMenu = () => {
     dispatch(startLogout({}));
   };
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const user = await dispatch(startGetLoggedUserInformation());
-      console.log("profile MENU: ", user);
-      if (isMounted.current) {
-        setUser(user);
-      }
-    };
-    fetchUser();
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     const user = await dispatch(startGetLoggedUserInformation());
+  //     console.log("profile MENU: ", user);
+  //     if (isMounted.current) {
+  //       setUser(user);
+  //     }
+  //   };
+  //   fetchUser();
 
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
+  //   return () => {
+  //     isMounted.current = false;
+  //   };
+  // }, []);
 
   console.log("DATOSSS: ", photoUrl);
 

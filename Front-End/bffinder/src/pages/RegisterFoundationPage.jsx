@@ -3,7 +3,7 @@ import { TextInputComponent } from "../Components/form/TextInputComponent";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import "../styles/Card.scss";
-import { CheckboxInputComponent } from "../Components/form/CheckboxInputComponent";
+// import SwitchInputComponent from "../Components/form/SwitchInputComponent";
 import TextInputPassword from "../Components/form/TextInputPassword";
 import { Snackbar, Alert, Grid } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -11,6 +11,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { startRegisterUser } from "../store/auth";
+import SwitchInputComponent from "../Components/form/SwitchInputComponent";
 
 const formFields = {
   name: "",
@@ -111,8 +112,8 @@ export function RegisterFoundationPage() {
         })}
       >
         {(formik) => (
-          <div className="register-form-container">
-            <Form className="sign-up-form register-form animate__animated animate__fadeIn" id="sign-up-form">
+          // <div className="register-form-container">
+            <Form className="animate__animated animate__fadeIn" id="sign-up-form">
               {formik.errors.general && (
                 <div className="error-message">{formik.errors.general}</div>
               )}
@@ -175,19 +176,16 @@ export function RegisterFoundationPage() {
                 value={formik.values.password2}
                 onChange={formik.handleChange}
               />
-              <CheckboxInputComponent
+              <SwitchInputComponent
                 label="Términos y condiciones"
                 name="terms"
-                className="slider round"
-                labelClassName="switch"
-                spanClassName="slider round"
               />
               <Grid item xs={12} display={!!errorMessage ? '' : 'none'}>
                 <Alert severity="error">{errorMessage}</Alert>
               </Grid>
-              <button type="submit" className="btn" disabled={isCheckingAuth}>
-                Registrarse
-              </button>
+              <button disabled={isCheckingAuth} type="submit" className="btn" style={{ marginTop: "1.2rem" }}>
+                  Registrarse
+                </button>
               <p className="social-text">O</p>
               <div className="social-media">
                 <button type="button" className="googlebutton">
@@ -195,7 +193,7 @@ export function RegisterFoundationPage() {
                 </button>
               </div>
             </Form>
-          </div>
+          // </div>
         )}
       </Formik>
     </>

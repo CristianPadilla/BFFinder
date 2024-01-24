@@ -1,55 +1,48 @@
 import React, { useEffect, useRef } from "react";
 import "styles/Header.scss";
-import { Link } from "react-scroll"; //libreria react-scroll para las sections
+import { Link } from "react-scroll";
 import { useNavigate } from "react-router-dom";
-import { 
-  Button, 
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle, 
-} from "@mui/material";
 import imglogobff from "imgs/logo-bffinder.png";
 import logobff from "imgs/logo-bffinder-FINAL2.png";
+import Swal from "sweetalert2";
 
 const Header = () => {
-  const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
   const headerRef = useRef(null);
+
+  const showAlert = () => {
+    Swal.fire({
+      title: "Se requiere iniciar sesión",
+      text: "Para publicar una mascota en BFFinder debes iniciar sesión",
+      icon: "info",
+      confirmButtonText: "Ir a iniciar sesión",
+      cancelButtonText: "Cerrar",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      // cancelButtonColor: "#3085d6",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate("/auth/login");
+      }
+    });
+  };
 
   const handleLoginClick = () => {
     navigate("/auth/login");
   };
 
-  const handleModalOpen = () => {
-    setOpen(true);
+  const handleScroll = () => {
+    if (headerRef.current) {
+      headerRef.current.classList.toggle("scrolled", window.scrollY > 0);
+    }
   };
 
-  const handleModalClose = () => {
-    setOpen(false);
-  };
-
-  //Para que el nav identifique si el usuario bajo en la pagina
-    // const handleScroll = () => {
-    //   console.log(header);
-    //   const header = document.querySelector('header');
-    //   header.classList.toggle('scrolled', window.scrollY > 0);
-    // };
-
-    const handleScroll = () => {
-      if (headerRef.current) {
-        headerRef.current.classList.toggle("scrolled", window.scrollY > 0);
-      }
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
     };
-  
-    useEffect(() => {
-      window.addEventListener('scroll', handleScroll);
-      return () => {
-        window.removeEventListener('scroll', handleScroll);
-      };
-    }, []);
-
+  }, []);
 
   return (
     <div id="inicio" className="header-container">
@@ -61,7 +54,9 @@ const Header = () => {
         <nav className="nav-prehome">
           <ul>
             <li>
-              <Link to="inicio" spy={true} smooth={true} duration={500}>Inicio</Link >
+              <Link to="inicio" spy={true} smooth={true} duration={500}>
+                Inicio
+              </Link>
             </li>
             <li>
               <Link to="mascotas" spy={true} smooth={true} duration={500}>
@@ -79,21 +74,8 @@ const Header = () => {
                 type="submit"
                 value="Publicar Mascota"
                 className="btnh"
-                onClick={handleModalOpen}
+                onClick={showAlert}
               />
-              <Dialog open={open} onClose={handleModalClose}>
-                <DialogTitle><b>Atención</b></DialogTitle>
-                <DialogContent>
-                  <DialogContentText>
-                    <b>Para publicar una mascota en BFFinder debes
-                    iniciar sesión.</b>
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button variant="contained" color="error" onClick={handleModalClose}>Cancelar</Button>
-                  <Button variant="contained" color="success" onClick={handleLoginClick}>Iniciar Sesión</Button>
-                </DialogActions>
-              </Dialog>
             </li>
           </ul>
         </nav>

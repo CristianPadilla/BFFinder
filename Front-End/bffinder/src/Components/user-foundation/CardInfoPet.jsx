@@ -18,10 +18,11 @@ import CheckIcon from "@mui/icons-material/Check";
 import { t } from "i18next";
 
 const CardInfoPet = ({ pet }) => {
-  const images = [{ imageUrl: "https://picsum.photos/id/1018/1000/600/" }];
+  // const images = [{ imageUrl: "https://picsum.photos/id/1018/1000/600/" }];
 
   const petToDisplay = pet
     ? {
+        image: pet.profileImageUrl || imgdefault,
         name: pet.name,
         breed: pet.breedDetails.name,
         specie: pet.breedDetails.specie.name,
@@ -35,6 +36,7 @@ const CardInfoPet = ({ pet }) => {
         sterilized: pet.sterilized,
       }
     : {
+        image: imgdefault,
         name: "Nombre de la mascota",
         size: "Tamaño",
         breed: "Raza",
@@ -53,7 +55,7 @@ const CardInfoPet = ({ pet }) => {
   // abtener todos las propiedades de la mascota de esta forma para  no tener un error
   const name = pet ? pet.name : "Nombre de la mascota";
 
-  // console.log('pet del card info  : ', pet);
+  console.log("pet del card info  : ", pet);
 
   return (
     <>
@@ -89,9 +91,7 @@ const CardInfoPet = ({ pet }) => {
               <CardMedia
                 component="img"
                 sx={{ width: "100%", height: "100%", objectFit: "cover" }}
-                image={
-                  images && images.length > 0 ? images[0].imageUrl : imgdefault
-                }
+                image={petToDisplay.image}
                 alt="Imagen"
               />
             </div>
@@ -201,14 +201,16 @@ const CardInfoPet = ({ pet }) => {
                           )}
                         </Typography>
                         <Typography sx={{ margin: ".1rem" }}>
-                          Esterilizado: {petToDisplay.sterilized ? (
+                          Esterilizado:{" "}
+                          {petToDisplay.sterilized ? (
                             <CheckIcon color="success" sx={{ fontSize: 15 }} />
                           ) : (
                             <CloseIcon color="error" sx={{ fontSize: 15 }} />
                           )}
                         </Typography>
                         <Typography sx={{ margin: ".1rem" }}>
-                          Desparasitado: {petToDisplay.dewormed ? (
+                          Desparasitado:{" "}
+                          {petToDisplay.dewormed ? (
                             <CheckIcon color="success" sx={{ fontSize: 15 }} />
                           ) : (
                             <CloseIcon color="error" sx={{ fontSize: 15 }} />

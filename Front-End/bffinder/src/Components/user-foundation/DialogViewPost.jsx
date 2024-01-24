@@ -19,6 +19,8 @@ import SlidersImages from "../post/SlidersImages";
 import CardInfoPet from "./CardInfoPet";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
+import FormattedDate from "../FormattedDate";
+import { Favorite, QuestionAnswer } from "@mui/icons-material";
 
 const photos = [
   {
@@ -82,48 +84,95 @@ const DialogViewPost = ({ open, onClose }) => {
 
   const renderInformationSection = () => (
     <>
-      {/* <Divider variant="middle" sx={{ marginTop: 1, marginBottom: 2 }}>
-          Caracteristicas
-        </Divider> */}
       <Grid
         container
         spacing={1}
+        height="100%"
         sx={{ display: "flex", justifyContent: "center", margin: ".1rem" }}
       >
         <Grid
           item
           xs={12}
+          height="100%"
           sx={{ margin: ".5rem", display: "flex", flexDirection: "column" }}
         >
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{
-              whiteSpace: "normal",
-              textAlign: "justify",
-            }}
-          >
-            {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci, ex
-            impedit pariatur minima porro, eius, corrupti possimus ea magnam
-            accusantium aspernatur! Officiis ipsa, facilis consequuntur rerum ut optio
-            adipisci itaque. */}
-            {postToDisplay.description}
+          <Typography variant="body2" color="text.primary">
+            <FormattedDate date={postToDisplay.date} />
           </Typography>
 
-          <Grid container justifyContent="space-between" marginTop="1rem">
-            <Grid item>
-              <Typography variant="body2" color="text.secondary">
-                Fecha de publicación: {postToDisplay.date}
-              </Typography>
-              {/* <Typography variant="body2" color="text.secondary">
-                ID : {post.id}
-              </Typography> */}
-              <Typography variant="body2" color="text.secondary">
-                Hora de publicación: {postToDisplay.date}
-              </Typography>
+          <Grid
+            container
+            direction="column"
+            spacing={2}
+            alignItems="center"
+            justifyContent="center"
+            sx={{ marginTop: "1rem", marginBottom: "1.2rem" }}
+          >
+            <Grid item container alignItems="center" spacing={1}>
+              <Grid item>
+                <Favorite
+                  fontSize="small"
+                  style={{
+                    color: "indianred",
+                    paddingLeft: "0px",
+                    marginBottom: "-5px",
+                  }}
+                />
+              </Grid>
+              <Grid item>
+                <Typography variant="body2" sx={{ marginLeft: 1 }}>
+                  2 personas guardaron en favoritos
+                </Typography>
+              </Grid>
             </Grid>
 
+            <Grid item container alignItems="center" spacing={1}>
+              <Grid item>
+                <QuestionAnswer
+                  fontSize="small"
+                  sx={{ color: "steelblue", marginBottom: "-5px" }}
+                />
+              </Grid>
+              <Grid item>
+                <Typography variant="body2" sx={{ marginLeft: 1 }}>
+                  4 personas preguntaron
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid
+            container
+            justifyContent="space-between"
+            alignItems="flex-start"
+            marginTop="1rem"
+            position="relative"
+            height="-webkit-fill-available"
+          >
             <Grid item>
+              <Typography
+                variant="h6"
+                color="text.secondary"
+                sx={{ marginBottom: 2 }}
+              >
+                Descripción o su historia
+              </Typography>
+              <Typography
+                variant="body2"
+                color="text.primary"
+                sx={{
+                  whiteSpace: "normal",
+                  textAlign: "justify",
+                }}
+              >
+                {postToDisplay.description}
+              </Typography>
+              {/* <Typography variant="body2" color="text.secondary">
+                 ID : {post.id}
+                  </Typography> */}
+            </Grid>
+
+            <Grid item position="absolute" bottom="0" right="0">
               <Button
                 variant="contained"
                 color="info"
@@ -135,10 +184,6 @@ const DialogViewPost = ({ open, onClose }) => {
           </Grid>
         </Grid>
       </Grid>
-      {/* <Divider
-          variant="middle"
-          sx={{ marginTop: 1, marginBottom: 2 }}
-        ></Divider> */}
     </>
   );
 
@@ -146,15 +191,8 @@ const DialogViewPost = ({ open, onClose }) => {
     setEditing(true);
   };
 
-  const handleSaveClick = () => {
-    setEditing(false);
-    // console.log("Datos guardados del edit:", formData);
-    // Puedes realizar acciones de guardado aquí si es necesario
-  };
-
   const handleCancelClick = () => {
     setEditing(false);
-    // Puedes realizar acciones de cancelación aquí si es necesario
   };
 
   return (
@@ -191,11 +229,7 @@ const DialogViewPost = ({ open, onClose }) => {
               </Grid>
 
               <Grid item xs={12} md={7}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    {renderInformationSection()}
-                  </Grid>
-                </Grid>
+                {renderInformationSection()}
               </Grid>
               <CardInfoPet pet={post.petResponse} />
             </Grid>
@@ -203,14 +237,7 @@ const DialogViewPost = ({ open, onClose }) => {
         )}
       </DialogContent>
       <DialogActions>
-        {/* <Button variant="contained" color="info">Editar</Button>
-        <Button variant="contained" color="success">Guardar Cambios</Button>
-        <Button variant="contained" color="error">Borrar publicación</Button> */}
         {editing ? (
-          <>
-            {/* <Button variant="contained" color="success" onClick={handleSaveClick}>
-              Guardar Cambios
-            </Button> */}
             <Button
               variant="contained"
               color="error"
@@ -218,7 +245,6 @@ const DialogViewPost = ({ open, onClose }) => {
             >
               Cancelar
             </Button>
-          </>
         ) : (
           ""
         )}

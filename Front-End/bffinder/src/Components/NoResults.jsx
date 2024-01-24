@@ -12,7 +12,8 @@ const NoResults = () => {
         height: '100%',
       }}
     >
-      <Grid container spacing={0} direction="column" alignItems="center" justifyContent="center" sx={{ position: "absolute"}}>
+      {/* <Grid container spacing={0} direction="column" alignItems="center" justifyContent="center" sx={{ position: "absolute"}}> */}
+      <Grid container spacing={0} direction="column" alignItems="center" justifyContent="center">
         <Grid item>
           <img src={Pet} alt="Pet" style={{ width: '200px', height: 'auto' }} />
         </Grid>

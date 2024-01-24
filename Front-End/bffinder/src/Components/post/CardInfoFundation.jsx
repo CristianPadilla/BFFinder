@@ -20,12 +20,61 @@ import {
   WhatsApp,
   FavoriteBorder,
   Favorite,
+  MailOutline,
 } from "@mui/icons-material";
+import CurrentDate from "../CurrentDate";
 
-const CardInfoFundation = ({post }) => {
+const CardInfoFundation = ({ post }) => {
+  // console.log("CARD INFO FUNDATION name", post);
+  const postToDisplay = post
+    ? {
+        description: post.description,
+        date: post.date,
+        city: post.locationResponse.city.name,
+        department: post.locationResponse.city.department.name,
+        neighborhood: post.locationResponse.neighborhood,
+        user: {
+          // whatsapp: post.user.whatsapp,
+          // webpage: post.user.webpage,
+          name: post.user.name,
+          profileImageUrl: post.user.profileImageUrl,
+          email: post.user.email,
+          address: post.locationResponse.address,
+          phoneNumber: post.user.phoneNumber,
+          webPageUrl: post.user.webPageUrl,
+        },
+        pet: {
+          name: post.petResponse.name,
+        },
+      }
+    : {
+        description:"Descripción de la mascota",
+        date: "Fecha de publicación",
+        city:"Ciudad",
+        department: "Departamento",
+        neighborhood: "Barrio",
+        user: {
+          // whatsapp: post.user.whatsapp,
+          // webpage: post.user.webpage,
+          name:"Nombre del usuario",
+          profileImageUrl: "https://picsum.photos/200",
+          email: "Correo electrónico",
+          address: "Dirección",
+          phoneNumber: "Número de celular",
+          webPageUrl: "Pagina web de la Fundación",
+        },
+        pet: {
+          name:"Nombre de la mascota",
+        },
+      };
+  // console.log("CARD INFO FUNDATION 22222222222", post);
+
   return (
     <>
-      <Card elevation={2} sx={{ borderRadius: "8px" }}>
+      <Card
+        elevation={0}
+        sx={{ borderRadius: "8px", backgroundColor: "#f6dfc8" }}
+      >
         <Grid
           container
           direction="row"
@@ -40,7 +89,7 @@ const CardInfoFundation = ({post }) => {
               margin: "0 0 0 .8rem",
             }}
           >
-            Hace 3 horas
+            <CurrentDate date={postToDisplay.date} />
           </Typography>
           <Grid item>
             <Typography variant="caption" sx={{ marginRight: 1 }}>
@@ -59,7 +108,7 @@ const CardInfoFundation = ({post }) => {
               component="div"
               sx={{ margin: "0 .8rem 0 .8rem" }}
             >
-              Nombre mascota 
+              {postToDisplay.pet.name}
             </Typography>
           }
         />
@@ -73,18 +122,20 @@ const CardInfoFundation = ({post }) => {
               margin: "0 .8rem 0 .8rem",
             }}
           >
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci,
-            ex impedit pariatur minima porro, eius, corrupti possimus ea magnam
-            accusantium aspernatur! Officiis ipsa, facilis consequuntur rerum ut
-            optio adipisci itaque.
+            {postToDisplay.description}
           </Typography>
         </CardContent>
-        <Card elevation={1} sx={{ borderRadius: "18px", margin: 2 }}>
+        <Card elevation={0} sx={{ borderRadius: "8px", margin: 2 }}>
           <CardHeader
-            avatar={<Avatar aria-label="avatar">A</Avatar>}
+            avatar={
+              <Avatar
+                aria-label="avatar"
+                src={postToDisplay.user.profileImageUrl}
+              ></Avatar>
+            }
             title={
               <Typography variant="h6" component="div">
-                Perfil
+                {postToDisplay.user.name}
               </Typography>
             }
             subheader={
@@ -97,7 +148,10 @@ const CardInfoFundation = ({post }) => {
                     marginRight: ".3rem",
                   }}
                 />
-                <Typography variant="body2"> Valle del Cauca / Cali</Typography>
+                <Typography variant="body2">
+                  {" "}
+                  {postToDisplay.department} / {postToDisplay.city}
+                </Typography>
               </Stack>
             }
           />
@@ -105,12 +159,21 @@ const CardInfoFundation = ({post }) => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Typography variant="subtitle1">
-                  Barrio: Nombre del Barrio
+                  Barrio: {postToDisplay.user.neighborhood}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="subtitle1">
-                  Dirección: Dirección de la ubicación
+                  Dirección: {postToDisplay.user.address}
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1">
+                  <MailOutline
+                    fontSize="small"
+                    style={{ marginBottom: "-4px", marginRight: ".3rem" }}
+                  />{" "}
+                  Correo Electronico: {postToDisplay.user.email}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
@@ -119,7 +182,7 @@ const CardInfoFundation = ({post }) => {
                     fontSize="small"
                     style={{ marginBottom: "-3px", marginRight: ".3rem" }}
                   />{" "}
-                  Número Cel: (123) 456-7890
+                  Número Celular: {postToDisplay.user.phoneNumber}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
@@ -137,7 +200,7 @@ const CardInfoFundation = ({post }) => {
                     fontSize="small"
                     style={{ marginBottom: "-4px", marginRight: ".3rem" }}
                   />{" "}
-                  Página web: www.ejemplo.com
+                  Página web: {postToDisplay.webPageUrl}
                 </Typography>
               </Grid>
               <Grid item xs={12}>

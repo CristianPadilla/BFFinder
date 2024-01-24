@@ -1,7 +1,6 @@
-import { CircularProgress } from '@material-ui/core'
-import { Grid } from '@mui/material'
+import { Grid } from '@mui/material';
 import "styles/LoaderPaws.scss";
-import React from 'react'
+import React from 'react';
 
 export const CheckingAuth = () => {
     return (
@@ -41,7 +40,6 @@ export const CheckingAuth = () => {
                             <div className="paw"><svg className="icon"><use xlinkHref="#paw" /></svg></div>
                     </div>
                 </div>
-                {/* <CircularProgress color='primary' /> */}
             </Grid>
         </Grid>
     )

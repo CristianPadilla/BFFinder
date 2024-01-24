@@ -63,11 +63,11 @@ const CardVertical = ({ pet }) => {
 
   return (
     <div
-      className="custom-card"
+      // className="custom-card"
       style={{ display: "flex", justifyContent: "center", margin: "4% 0" }}
     >
       <Card
-        sx={{ width: "100%", maxWidth: 350, borderRadius: "18px" }}
+        sx={{ width: "100%", maxWidth: 345, borderRadius: "18px" }}
         elevation={6}
       >
         <CardActionArea>
@@ -93,14 +93,15 @@ const CardVertical = ({ pet }) => {
                 </Typography>
               }
             />
-            <div style={{ width: "100%", height: "250px", overflow: "hidden" }}>
+            {/* <div style={{ width: "100%", height: "250px", overflow: "hidden" }}> */}
               <CardMedia
                 component="img"
-                sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+                height="195"
+                // sx={{ width: "100%", height: "100%", objectFit: "cover" }}
                 image={pet.profileImageUrl ? pet.profileImageUrl : imgdefault}
                 alt="Imagen"
               />
-            </div>
+            {/* </div> */}
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
@@ -187,9 +188,6 @@ const CardVertical = ({ pet }) => {
             <Button variant="contained" size="small" onClick={handleVerClick}>
               Ver publicación
             </Button>
-            {/* <Typography variant="body2" color="text.secondary" sx={{ padding: '.4rem', backgroundColor: 'lightgreen', borderRadius: '4px', fontWeight: '600', marginLeft: '8px'}}>
-    En proceso de adopción
-  </Typography> */}
             {pet.published ? (
               <Typography
                 variant="body2"
@@ -199,7 +197,7 @@ const CardVertical = ({ pet }) => {
                   backgroundColor: "lightgreen",
                   borderRadius: "4px",
                   fontWeight: "600",
-                  marginLeft: "8px",
+                  // marginLeft: "8px",
                 }}
               >
                 En proceso de adopción
@@ -214,7 +212,7 @@ const CardVertical = ({ pet }) => {
                   color: "white",
                   borderRadius: "4px",
                   fontWeight: "600",
-                  marginLeft: "8px",
+                  // marginLeft: "8px",
                   width: "178px",
                   textAlign: "center",
                 }}

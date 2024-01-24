@@ -82,7 +82,7 @@ export default function SignIn() {
             <Grid item xs={12} display={!!errorMessage ? '' : 'none'}>
               <Alert severity="error">{errorMessage}</Alert>
             </Grid>
-            <Grid container spacing={2} sx={{ mb: 2, mt: 1 }} justifyContent={"center"}>
+            <Grid sx={{ mt: 4 }} >
               <Grid item xs={12} sm={6}>
                 <button disabled={isCheckingAuth} id="sign-in-btn" type="submit" className="btn">
                   Iniciar Sesión

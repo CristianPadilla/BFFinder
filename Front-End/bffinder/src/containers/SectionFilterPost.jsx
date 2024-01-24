@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import CardPost from "../Components/post/CardPost";
-import { Fab, Tooltip, Grid } from "@mui/material";
+import { Fab, Tooltip, Grid, CircularProgress } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ModalAddPet from "../Components/user-foundation/ModalAddPet";
 import "styles/SectionAllPosts.scss";
 import "styles/Home.scss";
 import { useDispatch, useSelector } from "react-redux";
 import CardPostShelter from "../Components/user-foundation/CardPostShelter";
+import ProgressCircular from "../Components/ProgressCircular";
 
 const SectionFilterPost = () => {
   const dispatch = useDispatch();
@@ -45,8 +46,10 @@ const SectionFilterPost = () => {
     setTooltipOpen(true);
   };
 
+  // console.log("ANTESSSS CARDSSSSSSPOST", posts.post);
+
   return isSaving ? (
-    <h2> Loadin de haciendo un proceso</h2>
+    <ProgressCircular />
   ) : (
     <>
       {posts &&
@@ -59,9 +62,9 @@ const SectionFilterPost = () => {
                 xs={12}
                 sm={6}
                 md={4}
-                style={{ display: "flex" }}
+                // style={{ margin: "2rem" }}
               >
-                <CardPostShelter post={post} style={{ flex: "1 0 auto" }} />
+                <CardPostShelter post={post} />
               </Grid>
 
               <Tooltip
@@ -75,12 +78,19 @@ const SectionFilterPost = () => {
                 onOpen={handleTooltipOpen}
               >
                 <Fab
-                  color="primary"
                   aria-label="add"
                   onClick={handleOpenDialog}
-                  sx={{ position: "fixed", bottom: "16px", right: "25px" }}
+                  sx={{
+                    position: "fixed",
+                    bottom: "16px",
+                    right: "25px",
+                    backgroundColor: "#E1A26A",
+                    "&:hover": {
+                      backgroundColor: "#da9054",
+                    },
+                  }}
                 >
-                  <AddIcon />
+                  <AddIcon sx={{ color: "white" }} />
                 </Fab>
               </Tooltip>
 
