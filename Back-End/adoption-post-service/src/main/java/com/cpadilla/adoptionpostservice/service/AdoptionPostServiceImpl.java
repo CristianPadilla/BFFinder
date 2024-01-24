@@ -154,11 +154,13 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                             .gender(pet.getGender())
                             .breedDetails(pet.getBreedDetails())
                             .build();
+                    var questionsQuantity = questionRepository.countByPostId(post.getId());
                     return AdoptionPostPartialsResponse.builder()
                             .id(post.getId())
                             .date(post.getDate())
                             .status(post.isStatus())
                             .petPartialResponse(petDetails)
+                            .questionsQuantity(questionsQuantity)
                             .build();
                 })
                 .filter(post -> passesFilters(post, post.getPetPartialResponse(), petFilters, postFilters))
@@ -294,7 +296,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                             .build();
 
                     var images = findPostImages(post.getId());
-
+                    var questionsQuantity = questionRepository.countByPostId(post.getId());
                     return AdoptionPostPartialsResponse.builder()
                             .id(post.getId())
                             .status(post.isStatus())
@@ -302,6 +304,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                             .date(post.getDate())
                             .petPartialResponse(petDetails)
                             .user(userDetails)
+                            .questionsQuantity(questionsQuantity)
                             .locationResponse(locationDetails)
                             .build();
                 }).filter(post -> passesFilters(post, post.getPetPartialResponse(), petFilters, postFilters))// apply all filters
