@@ -12,4 +12,6 @@ public interface QuestionRepository extends JpaRepository<QuestionEntity, Intege
 
     List<QuestionEntity> findAllByPostId(int postId);
 
+    int countByPostId(int postId);
+
 }

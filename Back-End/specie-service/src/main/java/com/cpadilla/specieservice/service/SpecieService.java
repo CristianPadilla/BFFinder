@@ -12,6 +12,8 @@ public interface SpecieService {
 
     SpecieResponse getSpecieById(int specieId);
     List<SpecieResponse> getSpecies();
+    List<SpecieResponse> getAvailablePostedSpecies();
+    List<SpecieResponse> getAvailableShelterSpecies(int shelterId);
 
     void updateSpecie(SpecieResponse specieResponse);
 

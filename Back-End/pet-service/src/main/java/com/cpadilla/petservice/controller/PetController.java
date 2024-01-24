@@ -39,6 +39,7 @@ public class PetController {
         log.info("Getting all pets by owner id {} from CONTROLLER layer", ownerId);
         return new ResponseEntity<>(service.getAllByOwnerId(ownerId), HttpStatus.OK);
     }
+
     @GetMapping("/owner/{id}/unposted")
     public ResponseEntity<List<PetResponse>> getAllUnpostedByOwnerId(@PathVariable("id") int ownerId) {
         log.info("Getting all unposted pets by owner id {} from CONTROLLER layer", ownerId);
@@ -66,7 +67,19 @@ public class PetController {
     public ResponseEntity<Void> updatePet(@PathVariable("petId") int petId) {
         log.info("changing status to inactive to pet with id: {} from controller layer", petId);
         service.disablePet(petId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/shelter/{shelterId}/species")
+    public ResponseEntity<List<Integer>> findAvailableShelterSpecies(@PathVariable("shelterId") int shelterId) {
+        log.info("Getting available species for shelter with id: {} from CONTROLLER layer", shelterId);
+        return new ResponseEntity<>(service.findAvailableShelterSpecies(shelterId), HttpStatus.OK);
+    }
+
+    @GetMapping("/shelter/{shelterId}/breeds")
+    public ResponseEntity<List<Integer>> findAvailableShelterBreeds(@PathVariable("shelterId") int shelterId) {
+        log.info("Getting available breeds for shelter with id: {} from CONTROLLER layer", shelterId);
+        return new ResponseEntity<>(service.findAvailableShelterBreeds(shelterId), HttpStatus.OK);
     }
 
 }

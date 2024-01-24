@@ -260,7 +260,6 @@ const FormAddPet = () => {
                               onBlur={formik.handleBlur}
                               value={formik.values.specie} // ESTOOOOOO
                               onChange={({ target }) => {
-                                console.log("value :", target);
                                 const specieOption = speciesOptions.find(
                                   (option) => option.value === target.value
                                 );

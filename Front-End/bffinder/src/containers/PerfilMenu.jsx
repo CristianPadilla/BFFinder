@@ -20,17 +20,14 @@ import { changeActiveModule, setActiveModule } from "../store/global";
 import { startGetLoggedUserInformation } from "../store/global";
 
 const PerfilMenu = () => {
+
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
-  const { page } = useSelector((state) => state.pets);
   const { activeModule } = useSelector((state) => state.persisted.global);
   const { photoUrl } = useSelector((state) => state.persisted.auth);
-  // const { user } = useSelector((state) => state.persisted.auth);
   const { role } = useSelector((state) => state.persisted.auth);
-  const [user, setUser] = useState(null);
-  const isMounted = useRef(true);
 
   const postsModuleTitle = role === "u" ? "Adoptar" : "Mis publicaciones";
 
@@ -90,7 +87,7 @@ const PerfilMenu = () => {
   //   };
   // }, []);
 
-  console.log("DATOSSS: ", photoUrl);
+  // console.log("DATOSSS: ", photoUrl);
 
   return (
     <div>

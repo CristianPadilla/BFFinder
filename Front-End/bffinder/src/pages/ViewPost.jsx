@@ -12,7 +12,7 @@ const ViewPost = () => {
   const { active: post } = useSelector((state) => state.posts);
 
   useEffect(async () => {
-    console.log("usefect viweposttt  ", id);
+    // console.log("usefect viweposttt  ", id);
     dispatch(startGetPostById(id));
   }, []);
 

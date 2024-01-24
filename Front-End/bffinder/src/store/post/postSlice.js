@@ -61,6 +61,10 @@ export const postSlice = createSlice({
             state.active = null;
             state.page = null;
             state.postRequest = initialState.postRequest;
+            state.species = [];
+            state.breeds = [];
+            state.departments = [];
+            state.cities = [];
 
         },
         setSpeciesP(state, { payload }) {

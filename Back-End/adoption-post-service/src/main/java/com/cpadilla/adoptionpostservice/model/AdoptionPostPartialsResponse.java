@@ -17,7 +17,8 @@ public class AdoptionPostPartialsResponse {
 
     private int id;
     private boolean status;
-    private String date;
+    private Instant date;
+    private int questionsQuantity;
     private PetPartialResponse petPartialResponse;
     private List<ImageResponse> images;
     private UserPartialsResponse user;

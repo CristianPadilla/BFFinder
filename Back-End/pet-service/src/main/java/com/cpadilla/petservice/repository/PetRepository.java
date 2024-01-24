@@ -16,7 +16,7 @@ import java.util.Optional;
 @Repository
 public interface PetRepository extends JpaRepository<PetEntity, Integer>, JpaSpecificationExecutor<PetEntity> {
 
-    List<PetEntity> findAllByOwnerId(int ownerId);
+    List<PetEntity> findAllByOwnerIdAndStatusIsTrue(int ownerId);
 
     Optional<PetEntity> findByIdAndStatusTrue(int petId);
 

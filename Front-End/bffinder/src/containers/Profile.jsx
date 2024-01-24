@@ -29,6 +29,7 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    console.log("PRUEBAAAAAAAAAAAAAA ", role);
     const fetchUser = async () => {
       const user = await dispatch(startGetLoggedUserInformation());
       console.log("profile ", user);

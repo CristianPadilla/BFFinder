@@ -3,10 +3,11 @@ import { locationApi } from "./locationApi";
 import { petApi } from "./petApi";
 import { postApi } from "./postApi";
 import { specieApi } from "./specieApi";
+import { userApi } from "./userApi";
 
 
-export const authToken =
-"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ3YWthbmRhQG1haWwuY29tIiwiaWF0IjoxNzA1MzYzMDA5LCJleHAiOjE3MDU0NDk0MDl9.0MtxdLMDUNFcMFdhb8R2NvvXJw04EO8O7zr9y3OCX0Y";
+// export const authToken =
+// "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ3YWthbmRhQG1haWwuY29tIiwiaWF0IjoxNzA1MzYzMDA5LCJleHAiOjE3MDU0NDk0MDl9.0MtxdLMDUNFcMFdhb8R2NvvXJw04EO8O7zr9y3OCX0Y";
 
 
 export const setAuthToken = (token) => {
@@ -18,4 +19,5 @@ export const setAuthToken = (token) => {
     locationApi.defaults.headers.common.Authorization = authToken;
     petApi.defaults.headers.common.Authorization = authToken;
     postApi.defaults.headers.common.Authorization = authToken;
+    userApi.defaults.headers.common.Authorization = authToken;
 } 

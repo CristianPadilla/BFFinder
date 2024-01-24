@@ -33,15 +33,12 @@ const App = () => {
 	}, [token]);
 
 
-
-
 	if (status === 'checking') {
 		return <CheckingAuth />
 	}
 
 	setAuthToken(token);
 	return (
-
 		<BrowserRouter>
 			<Layout areClass={'Layout'} css={style.css} >
 				<Routes>

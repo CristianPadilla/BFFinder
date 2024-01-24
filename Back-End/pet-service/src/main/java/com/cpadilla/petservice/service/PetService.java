@@ -26,4 +26,7 @@ public interface PetService {
 
     PetResponse updateProfileImage(int petId, MultipartFile image);
 
+    List<Integer> findAvailableShelterSpecies(int shelterId);
+    List<Integer> findAvailableShelterBreeds(int shelterId);
+
 }
