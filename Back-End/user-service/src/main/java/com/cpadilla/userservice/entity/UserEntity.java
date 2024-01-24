@@ -42,6 +42,8 @@ public class UserEntity {
     @Column(name = "address_id")
     private Integer addressId;
     private Character role;
+    @Column(name = "web_page_url")
+    private String webPageUrl;
     @Column(name = "image_id")
     private Integer imageId;
 

@@ -22,8 +22,6 @@ import { start } from "@popperjs/core";
 import { startDeletePet } from "../../store/pet";
 
 const DialogViewPet = ({ open, onClose }) => {
-  const dispatch = useDispatch();
-  const [profileImageUrl] = useState("");
   const [editing, setEditing] = useState(false);
   const { active: pet } = useSelector((state) => state.pets);
 

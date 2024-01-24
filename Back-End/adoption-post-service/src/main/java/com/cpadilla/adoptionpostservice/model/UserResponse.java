@@ -19,6 +19,7 @@ public class UserResponse {
     private String email;
     private String phoneNumber;
     private String profileImageUrl;
+    private String webPageUrl;
     private char role;
     private Instant birthDate;
     private LocationResponse location;

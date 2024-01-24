@@ -1,8 +1,8 @@
 import React from "react";
 import Header from "../Components/Header";
-import PrePost from "../containers/SectionPrePosts";
-import Fundations from "../containers/SectionFundation";
-import Footer from "../Components/FooterPreHome";
+import SectionPrePost from "../containers/SectionPrePosts";
+import SectionFundation from "../containers/SectionFundation";
+import FooterPreHome from "../Components/FooterPreHome";
 import 'styles/Prehome.scss';
 
 const PreHome = () => {
@@ -11,16 +11,16 @@ const PreHome = () => {
       <Header />
       <section id="mascotas" className="container-sections">
         <div className="section-content">
-            <PrePost />
+            <SectionPrePost />
         </div>
       </section>
       <section id="fundaciones" className="container-sections">
         <div className="section-content">
-           <Fundations /> 
+           <SectionFundation /> 
         </div>
       </section>
       <section>
-        <Footer />
+        <FooterPreHome />
       </section>
     </>
   );

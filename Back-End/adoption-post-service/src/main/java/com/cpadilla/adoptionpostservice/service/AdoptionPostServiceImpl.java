@@ -140,6 +140,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
         var postEntities = repository.findAll(specification);
 
+        var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         List<AdoptionPostPartialsResponse> filteredPosts;
         filteredPosts = postEntities.stream()
                 .map(post -> {
@@ -222,6 +223,9 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
                         var images = findPostImages(post.getId());
 
+                        var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        String formattedDate = formatter.format(post.getDate().atZone(ZoneId.of("UTC")));
+
                         return AdoptionPostPartialsResponse.builder()
                                 .id(post.getId())
                                 .petPartialResponse(petDetails)
@@ -268,6 +272,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                 repository.findAll(specification);
 
         List<AdoptionPostPartialsResponse> filteredPosts;
+        var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         filteredPosts = postEntities.stream().map(post -> {
                     var pet = petService.getById(post.getPetId()).getBody();
@@ -276,6 +281,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                             .name(pet.getName())
                             .gender(pet.getGender())
                             .age(pet.getAge())
+                            .profileImageUrl(pet.getProfileImageUrl())
                             .breedDetails(pet.getBreedDetails())
                             .size(pet.getSize())
                             .build();

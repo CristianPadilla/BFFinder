@@ -1,13 +1,14 @@
-import React from 'react';
-import { InputAdornment,
-IconButton,
-OutlinedInput,
-InputLabel,
-FormControl,
-} from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useField, ErrorMessage } from 'formik';
-import { FormHelperText } from '@mui/material';
+import React from "react";
+import {
+  InputAdornment,
+  IconButton,
+  OutlinedInput,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useField, ErrorMessage } from "formik";
+import { FormHelperText } from "@mui/material";
 
 const TextInputPassword = (props) => {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -20,20 +21,25 @@ const TextInputPassword = (props) => {
 
   return (
     <>
-      <FormControl sx={{ m: 1, width: '27ch' }} variant="filled" margin="normal" error={error}>
+      <FormControl
+        sx={{ width: "27ch" }}
+        variant="outlined"
+        error={meta.touched && !!meta.error} 
+        margin="normal"
+      >
         <InputLabel
           htmlFor={props.id || props.name}
-          shrink={true}>
+          shrink={props.value || props.isFocused}
+        >
           {props.label}
         </InputLabel>
         <OutlinedInput
           {...field}
           {...props}
-          type={showPassword ? 'text' : 'password'}
+          type={showPassword ? "text" : "password"}
           placeholder={props.placeholder}
           className={props.className}
           error={meta.touched && !!meta.error}
-
           endAdornment={
             <InputAdornment position="end">
               <IconButton
@@ -47,7 +53,11 @@ const TextInputPassword = (props) => {
             </InputAdornment>
           }
         />
-        {error && <FormHelperText id="my-input-error-text">{meta.touched ? meta.error : ''}</FormHelperText>}
+        {error && (
+          <FormHelperText id="my-input-error-text">
+            {meta.touched ? meta.error : ""}
+          </FormHelperText>
+        )}
       </FormControl>
 
       {/* <div style={{ textAlign: "center", marginTop: "-7px" }}>
@@ -58,7 +68,6 @@ const TextInputPassword = (props) => {
           style={{ fontSize: ".8rem"  }}
         />
       </div> */}
-
     </>
   );
 };

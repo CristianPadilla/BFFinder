@@ -20,7 +20,7 @@ const NavProfile = () => {
       <nav className="nav-profile">
         <div className="zone-back">
           <IconButton onClick={handleGoBack}>
-            {/* <ArrowBackIcon sx={{fontSize: "37px"}}/> */}
+            <ArrowBackIosIcon sx={{fontSize: "37px"}}/>
             Volver
           </IconButton>
         </div>

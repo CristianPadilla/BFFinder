@@ -4,6 +4,7 @@ import "react-image-gallery/styles/css/image-gallery.css";
 
 const SlidersImages = ({
   images,
+  imageStyle,
   thumbnailPosition,
   showBullets,
   showPlayButton,
@@ -43,7 +44,7 @@ const SlidersImages = ({
 
   // console.log("============= images", imagesToDisplay);
   return (
-    <div>
+    <div style={imageStyle}>
       <ImagesGallery
         items={imagesToDisplay}
         thumbnailPosition={thumbnailPosition} //posicion de las miniaturas
