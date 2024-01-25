@@ -3,18 +3,21 @@ import NavProfile from "../Components/NavProfile";
 import SectionPost from "../containers/SectionPost";
 import "styles/ViewPost.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { startGetPostById } from "../store/post";
+import { setActivePost, startGetPostById } from "../store/post";
 import { useParams } from "react-router";
 
 const ViewPost = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
+  const { contentLoading } = useSelector(state => state.persisted.global);
   const { active: post } = useSelector((state) => state.posts);
 
   useEffect(async () => {
-    // console.log("usefect viweposttt  ", id);
+    dispatch(setActivePost(null));
+    console.log("usefect viweposttt  ", post);
     dispatch(startGetPostById(id));
-  }, []);
+  }, [id]);
+
 
   return (
     <div>
@@ -29,7 +32,9 @@ const ViewPost = () => {
                 <Breadcrumbs/>
             </div> */}
           <div className="main-content-post">
-            {post && <SectionPost  post={post}/>}
+            {contentLoading
+              ? <h1>Cargando...</h1>
+              : post && <SectionPost post={post} />}
           </div>
         </main>
       </section>

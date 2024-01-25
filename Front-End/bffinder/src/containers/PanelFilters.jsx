@@ -36,6 +36,7 @@ import { t, use } from "i18next";
 import DateInputComponent from "../Components/form/DateInputComponent";
 import { date } from "yup";
 import { specieApi } from "../api/specieApi";
+import { debounce } from "lodash";
 
 function ValueLabel(props) {
   const { children, open, value } = props;
@@ -67,26 +68,81 @@ function ValueLabel(props) {
   );
 }
 
+
 const marks = [
-  { value: 0 },
-  { value: 1 },
-  { value: 2 },
-  { value: 3 },
-  { value: 4 },
-  { value: 5 },
-  { value: 6 },
-  { value: 7 },
-  { value: 8 },
-  { value: 9 },
-  { value: 10 },
-  { value: 11 },
+  {
+    value: 0,
+    label: ""
+  },
+  {
+    value: 1,
+    label: '1',
+  },
+  {
+    value: 2,
+    label: '2',
+  },
+  {
+    value: 3,
+    label: '3',
+  },
+  {
+    value: 4,
+    label: '4',
+  },
+  {
+    value: 5,
+    label: '5',
+  },
+  {
+    value: 6,
+    label: '6',
+  },
+  {
+    value: 7,
+    label: '7',
+  },
+  {
+    value: 8,
+    label: '8',
+  },
+  {
+    value: 9,
+    label: '9',
+  },
+  {
+    value: 10,
+    label: '10',
+  },
+  {
+    value: 11,
+    label: '+',
+  },
 ];
+
+// function valuetext(value) {
+//   return value === 0
+//     ? "Todas\nlas edades"
+//     : value === 1
+//       ? "Hasta\n1 año"
+//       : value === 11
+//         ? "10 años+"
+//         : `Hasta\n${value} años`;
+// }
+
+// function valueLabelFormat(value) {
+//   console.log("valueLabelFormat== ", value);
+//   return marks.findIndex((mark) => mark.value === value);
+// }
 
 const PanelFilters = ({ module }) => {
   const dispatch = useDispatch();
   const { role, token } = useSelector((state) => state.persisted.auth);
   const { activeModule } = useSelector((state) => state.persisted.global);
   const activeModuleIsPosts = activeModule === "posts" ? true : false;
+
+
+
 
   const filters =
     activeModule === "posts"
@@ -255,10 +311,10 @@ const PanelFilters = ({ module }) => {
       : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
 
     // activeModuleIsPosts?
-    role === "u" 
-    ? dispatch(startGetAvailablePostedBreedsBySpecieId(newValue ? newValue.value : 0))
-    : dispatch(startGetShelterAvailableBreedsBySpecieId(newValue ? newValue.value : 0));
-    
+    role === "u"
+      ? dispatch(startGetAvailablePostedBreedsBySpecieId(newValue ? newValue.value : 0))
+      : dispatch(startGetShelterAvailableBreedsBySpecieId(newValue ? newValue.value : 0));
+
     handleBreedSelectChange(null, null);
   };
   const handleBreedSelectChange = (event, newValue) => {
@@ -305,18 +361,23 @@ const PanelFilters = ({ module }) => {
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
       : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
   };
-  const handleAgeSliceChange = ({ target }) => {
-    const { value } = target;
+
+  const [sliderValue, setSliderValue] = useState(filters.age);
+  const handleSliderChange = (event, newValue) => {
+    console.log("handleSliderChange==  : ", newValue);
+    setSliderValue(newValue);
+  };
+  const handleAgeSliceChange = (event, newValue) => {
+    const value = newValue;
     console.log("handleAgeSliceChange==  : ", value);
 
-    // value > 10 && 
     const filterObjet = { ["age"]: value > 10 ? 50 : value };// 50 años como edad maxima
     activeModuleIsPosts
       ? dispatch(changePostsRequest([filterObjet, { page: 0 }]))
       : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
-
-
   };
+  const debouncedHandleAgeSliceChange = debounce(handleAgeSliceChange, 300);
+
   const handleGenderChange = ({ target }) => {
     const { value } = target;
     if (value === undefined) return;
@@ -464,18 +525,22 @@ const PanelFilters = ({ module }) => {
       {((role === "u" && activeModule === "posts") || (role === "s" && activeModule === "pets")) && (
         <>
           <FormGroup sx={{ marginTop: "12px" }}>
-            <FormLabel sx={{ marginTop: 1 }}>Edad:</FormLabel>
+            <FormLabel sx={{ marginTop: 1 }}>{"Edad (años)"}</FormLabel>
             <Box sx={{ width: 260, margin: "auto" }}>
               <Slider
                 aria-label="Edad"
                 defaultValue={0}
-                value={filters.age}
+                // value={filters.age}
+                value={sliderValue}
                 valueLabelDisplay="auto"
                 color="warning"
-                onChange={handleAgeSliceChange}
-                step={null}
+                // onChange={debouncedHandleAgeSliceChange}
+                onChange={handleSliderChange}
+                onChangeCommitted={debouncedHandleAgeSliceChange}
+                step={1}
                 max={11}
-                marks={marks}
+                // getAriaValueText={valuetext}
+                marks={marks}//--------------------------------
                 components={{ ValueLabel }}
                 sx={{
                   "& .MuiSlider-thumb": {
