@@ -37,6 +37,7 @@ import DateInputComponent from "../Components/form/DateInputComponent";
 import { date } from "yup";
 import { specieApi } from "../api/specieApi";
 import { debounce } from "lodash";
+import { setLocation } from "../store/global";
 
 function ValueLabel(props) {
   const { children, open, value } = props;
@@ -138,8 +139,9 @@ const marks = [
 const PanelFilters = ({ module }) => {
   const dispatch = useDispatch();
   const { role, token } = useSelector((state) => state.persisted.auth);
-  const { activeModule } = useSelector((state) => state.persisted.global);
+  const { activeModule, department_location, city_location } = useSelector((state) => state.persisted.global);
   const activeModuleIsPosts = activeModule === "posts" ? true : false;
+
 
 
 
@@ -160,9 +162,34 @@ const PanelFilters = ({ module }) => {
     if (!species || species.length === 0) {
       role === "u" ? dispatch(startGetAvailablePostedSpecies()) : dispatch(startGetShelterAvailableSpecies());
     }
-    if (!departments || departments.length === 0)
-      dispatch(startGetDepartments());
+    if (!departments || departments.length === 0) dispatch(startGetDepartments());
   }, [activeModule]);
+
+  useEffect(() => { // implementacion de setear departamento y ciudad por ubicacion
+    if (activeModule === "posts" && (department_location && city_location)) {
+      // console.log("consultando ciudades == ", cities);
+
+      if (filters.department_id === 0 && departments.length > 0) {
+        console.log("cityId: ", city_location, departmentsOptions);
+        // const cityId = citiesOptions.find((option) => option.label === city_location);
+        const departmentId = departmentsOptions.find((option) => option.label === department_location).value;
+
+        const departmentFilterObjet = { ["department_id"]: departmentId || 0 };
+        // const cityFilterObjet = { ["city_id"]: cityId || 0 };
+        dispatch(changePostsRequest([departmentFilterObjet, { page: 0 }]))
+        dispatch(startGetCitiesByDepartmentId(departmentId));
+        // console.log("cityId 11: ", citiesOptions);
+      }
+      if (cities.length > 0 && filters.city_id === 0) {
+
+        // console.log("cityId 22: ", cities);
+        const cityId = citiesOptions.find((option) => option.label === city_location).value;
+        const cityFilterObjet = { ["city_id"]: cityId || 0 };
+        dispatch(changePostsRequest([cityFilterObjet, { page: 0 }]))
+      }
+    }
+
+  }, [departments, cities]);
 
   // ESTADOS
   const statusSelectOptions = [
@@ -332,6 +359,7 @@ const PanelFilters = ({ module }) => {
   const handleDepartmentSelectChange = (event, newValue) => {
     // console.log("handleDepartmentSelectChange==  : ", newValue);
     if (newValue === null && filters.department_id === 0) return;
+    !newValue && dispatch(setLocation({ city: null, department: null }));
     const filterObjet = { ["department_id"]: newValue ? newValue.value : 0 };
     dispatch(startCleanCities());
     activeModuleIsPosts
