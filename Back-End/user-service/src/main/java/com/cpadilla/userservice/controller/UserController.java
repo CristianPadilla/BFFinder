@@ -1,5 +1,6 @@
 package com.cpadilla.userservice.controller;
 
+import com.cpadilla.userservice.model.ShelterUserProfilePartialsResponse;
 import com.cpadilla.userservice.model.UserCredentialsResponse;
 import com.cpadilla.userservice.model.UserResponse;
 import com.cpadilla.userservice.service.UserService;
@@ -9,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Log4j2
 @RestController
@@ -43,6 +46,12 @@ public class UserController {
     public ResponseEntity<UserResponse> updateProfileImage(@PathVariable("id") int userId, @RequestBody MultipartFile image) {
         log.info("updating profile photo for user with id: {} from controller layer", userId);
         return new ResponseEntity<>(service.updateProfileImage(userId, image), HttpStatus.OK);
+    }
+
+    @GetMapping("/all/shelters")
+    public ResponseEntity<List<ShelterUserProfilePartialsResponse>> findSheltersProfiles() {
+        log.info("getting  SHELTERSSS");
+        return new ResponseEntity<>(service.findSheltersPartialsProfiles(), HttpStatus.OK);
     }
 
 

@@ -49,7 +49,7 @@ const CardPost = ({ post }) => {
         <CardMedia
           onClick={handleVerClick}
           component="img"
-          sx={{ width: 250, cursor: "pointer" }}
+          sx={{ width: 290, cursor: "pointer" }}
           // sx={{ width: "100%", height: "100%", objectFit: "cover", cursor: "pointer" }}
           image={petPartialResponse.profileImageUrl || imgdefault}
           alt="Imagen"

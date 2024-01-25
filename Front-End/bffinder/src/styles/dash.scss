@@ -122,6 +122,7 @@ body {
 	/* padding: 36px 24px; */
 	/* height: 100%; */
 	display: flex;
+	background: white;
 }
 #content main .column-filters {
 	width: 320px;
@@ -142,6 +143,7 @@ body {
 	padding: 36px 24px;
 	// background-color: white;
 	background-color: $fondo-sections;
+	border-top-left-radius: 18px;
 }
 /* MAIN */
 /* CONTENT */

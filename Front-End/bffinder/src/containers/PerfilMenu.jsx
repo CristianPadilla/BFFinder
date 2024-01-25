@@ -106,13 +106,13 @@ const PerfilMenu = () => {
             }}
           >
             <Pets />{" "}
-            <Typography sx={{ minWidth: 100 }}>{postsModuleTitle}</Typography>
+            <Typography sx={{ minWidth: 100, marginLeft: 1 }}>{postsModuleTitle}</Typography>
           </ToggleButton>
         </Tooltip>
 
         {role === "s" && (
           <Tooltip
-            title={<span style={{ fontSize: "16px" }}>Mascotas</span>}
+            title={<span style={{ fontSize: "16px" }}>Mis mascotas</span>}
             arrow
           >
             <ToggleButton
@@ -127,7 +127,7 @@ const PerfilMenu = () => {
               }}
             >
               <Favorite />{" "}
-              <Typography sx={{ minWidth: 100 }}>Mascotas</Typography>
+              <Typography sx={{ minWidth: 100, marginLeft: 1 }}>Mis Mascotas</Typography>
             </ToggleButton>
           </Tooltip>
         )}

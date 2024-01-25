@@ -10,6 +10,7 @@ import {
   IconButton,
   Paper,
   Divider,
+  Chip,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import imgdefault from "imgs/logo-bffinder.png";
@@ -19,7 +20,7 @@ import SlidersImages from "../post/SlidersImages";
 import CardInfoPet from "./CardInfoPet";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
-import FormattedDate from "../FormattedDate";
+import FormattedDatePost from "../FormattedDatePost";
 import { Favorite, QuestionAnswer } from "@mui/icons-material";
 
 const photos = [
@@ -80,7 +81,7 @@ const DialogViewPost = ({ open, onClose }) => {
         images: imagesToDisplay,
       };
 
-  console.log("INFO DIALOG", imagesToDisplay);
+  // console.log("INFO DIALOG", imagesToDisplay);
 
   const renderInformationSection = () => (
     <>
@@ -97,7 +98,7 @@ const DialogViewPost = ({ open, onClose }) => {
           sx={{ margin: ".5rem", display: "flex", flexDirection: "column" }}
         >
           <Typography variant="body2" color="text.primary">
-            <FormattedDate date={postToDisplay.date} />
+            <FormattedDatePost date={postToDisplay.date} />
           </Typography>
 
           <Grid
@@ -231,6 +232,14 @@ const DialogViewPost = ({ open, onClose }) => {
               <Grid item xs={12} md={7}>
                 {renderInformationSection()}
               </Grid>
+
+              <Divider
+                textAlign="left"
+                color="text.secondary"
+                sx={{ marginBottom: "-5px", marginTop: 4, width: "100%" }}
+              >
+                <Chip label="Información de la mascota" />
+              </Divider>
               <CardInfoPet pet={post.petResponse} />
             </Grid>
           </>
@@ -238,13 +247,9 @@ const DialogViewPost = ({ open, onClose }) => {
       </DialogContent>
       <DialogActions>
         {editing ? (
-            <Button
-              variant="contained"
-              color="error"
-              onClick={handleCancelClick}
-            >
-              Cancelar
-            </Button>
+          <Button variant="contained" color="error" onClick={handleCancelClick}>
+            Cancelar
+          </Button>
         ) : (
           ""
         )}

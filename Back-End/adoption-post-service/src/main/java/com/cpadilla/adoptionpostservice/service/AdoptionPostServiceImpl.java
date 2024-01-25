@@ -213,6 +213,7 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
                                 .name(pet.getName())
                                 .gender(pet.getGender())
                                 .breedDetails(pet.getBreedDetails())
+                                .profileImageUrl(pet.getProfileImageUrl())
                                 .build();
 
                         var locationResponse = locationService.getById(post.getAddressId()).getBody();

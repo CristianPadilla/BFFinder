@@ -16,7 +16,7 @@ const ContentPetQuestions = ({ questionsGroup }) => {
   const [expanded, setExpanded] = useState(false);
 
   const { questions, pet, petId } = questionsGroup;
-  // console.log('pet from ContentPetQuestions => ', questions);
+  // console.log('PETTT INFO ContentPetQuestions => ', questionsGroup.pet);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -25,21 +25,31 @@ const ContentPetQuestions = ({ questionsGroup }) => {
   return (
     <>
       <Card
-        sx={{ margin: '1rem', background: '#fdfbf7', borderRadius: '7px' }}
-        elevation={2}
+        sx={{ margin: '1rem', background: '#f6dfc8', borderRadius: '7px' }}
+        elevation={0}
       >
         <CardHeader
-          avatar={<Avatar />}
-          title={pet.name}
+          avatar={<Avatar src={pet.profileImageUrl} sx={{ width: 60, height: 60 }}/>}
+          title={
+            <Typography variant="h6">
+              {pet.name}
+            </Typography>
+            }
           action={
+            <>
+            <Typography variant="caption" sx={{fontSize: "1rem", marginRight: 1}}>
+              Información de la mascota
+            </Typography>
             <IconButton aria-expanded={expanded} onClick={handleExpandClick}>
-              <ExpandMoreIcon />
+              <ExpandMoreIcon fontSize='large'/>
             </IconButton>
+            
+          </>
           }
         />
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <CardInfoPet />
+            <CardInfoPet pet={pet} />
           </CardContent>
         </Collapse>
         {/* Contenido fuera del colapso */}

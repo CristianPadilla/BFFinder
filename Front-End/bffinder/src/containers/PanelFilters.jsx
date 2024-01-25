@@ -230,11 +230,7 @@ const PanelFilters = ({ module }) => {
     ? dewormedSelectOptions.find((option) => option.value === dewormedFilter)
     : null;
 
-
-
-
   // console.log("FILTROS ACTUALES== ", filters);
-
 
   const handleStatusFilterChange = (event, newValue) => {
     // console.log('handleStatusFilterChange==  : ', newValue);
@@ -367,52 +363,8 @@ const PanelFilters = ({ module }) => {
     dispatch(changePetsRequest([filterObjet, { page: 0 }]));
   }
 
-
-  // ChipsFiltros
-  const ListItem = styled("li")(({ theme }) => ({
-    margin: theme.spacing(0.5),
-  }));
-  const [chipData, setChipData] = React.useState([
-    { key: 0, label: "Angular" },
-    { key: 1, label: "jQuery" },
-  ]);
-
-  const handleDelete = (chipToDelete) => () => {
-    setChipData((chips) =>
-      chips.filter((chip) => chip.key !== chipToDelete.key)
-    );
-  };
-
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          flexWrap: "wrap",
-          margin: "1.7rem 1rem .1rem 1rem",
-        }}
-      >
-        {chipData.map((data) => {
-          let icon;
-
-          // if (data.label === "React") {
-          //   icon = <TagFacesIcon />;
-          // }
-
-          return (
-            <ListItem key={data.key}>
-              <Chip
-                icon={icon}
-                label={data.label}
-                onDelete={
-                  data.label === "React" ? undefined : handleDelete(data)
-                }
-              />
-            </ListItem>
-          );
-        })}
-      </div>
       {role === "s" && activeModule == "posts" && (
         <SelectComponent
           fullWidth

@@ -1,10 +1,9 @@
 package com.cpadilla.userservice.service;
 
-import com.cpadilla.userservice.model.UserCredentialsResponse;
-import com.cpadilla.userservice.model.UserProfileResponse;
-import com.cpadilla.userservice.model.UserRequest;
-import com.cpadilla.userservice.model.UserResponse;
+import com.cpadilla.userservice.model.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 
 public interface UserService {
@@ -12,6 +11,7 @@ public interface UserService {
 //    long saveUser(UserRequest user);// responsability is now of auth service
 
     UserResponse getUserById(long userId);
+    List<ShelterUserProfilePartialsResponse> findSheltersPartialsProfiles();
 
     UserCredentialsResponse getUserCredentialsByEmail(String email);
 

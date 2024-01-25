@@ -1,7 +1,8 @@
 import React from "react";
-import 'styles/CarouselPreHome.scss';
+import "styles/CarouselPreHome.scss";
 
-const CarouselPreHome = () => {
+const CarouselPreHome = ({ shelters }) => {
+  console.log("shelters ========", shelters);
   return (
     <div className="sliderr">
       <div className="slide-track">
@@ -39,7 +40,6 @@ const CarouselPreHome = () => {
         <div className="slidee">
           <img src="https://img.artpal.com/040741/5-19-12-30-2-0-26m.jpg" />
         </div>
-        
       </div>
     </div>
   );

@@ -18,7 +18,7 @@ import Swal from "sweetalert2";
 const HorizontalCard = ({ post }) => {
   const navigate = useNavigate();
   const { petPartialResponse, images, locationResponse, date } = post;
-  const { name, breedDetails, specie } = petPartialResponse;
+  const { name, breedDetails, specie, profileImageUrl } = petPartialResponse;
   const { city } = locationResponse;
 
   const showAlert = () => {
@@ -38,6 +38,8 @@ const HorizontalCard = ({ post }) => {
     });
   };
 
+  console.log("post del card horizontal: ", post);
+
   return (
     <>
       <Card
@@ -49,7 +51,7 @@ const HorizontalCard = ({ post }) => {
           component="img"
           // sx={{ width: 200, height: 200, objectFit: "cover" }}
           sx={{ width: 200, cursor: "pointer"}}
-          image={images && images.length > 0 ? images[0].imageUrl : imgdefault}
+          image={petPartialResponse.profileImageUrl || imgdefault}
           alt="Imagen"
         />
 

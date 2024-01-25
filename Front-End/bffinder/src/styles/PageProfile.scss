@@ -21,7 +21,9 @@
 	/* padding: 36px 24px; */
 	/* height: 100%; */
 	display: flex;
+	background: white;
 }
+
 #content main .column-profile {
 	width: 320px;
 	min-width: 320px;
@@ -42,7 +44,8 @@
 	// display: flex;
 	width: 100%;
 	// background-color: $fondo-sections;
-	background-color: gainsboro;
+	// background-color: gainsboro;
+	background-color: $cafe-oscuro-p;
 	border-top-left-radius: 18px;
 }
 

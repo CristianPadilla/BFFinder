@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -89,6 +90,27 @@ public class UserServiceImpl implements UserService {
 //                .build();
 
     }
+
+    @Override
+    public List<ShelterUserProfilePartialsResponse> findSheltersPartialsProfiles() {
+        var shelters = repository.findAllByRoleOrderByBirthDate(Character.valueOf('s'));
+//        log.info("USUARIOSSSSS {}", shelters);
+
+        return shelters.stream().map(userEntity ->{
+            var profileImage =
+                    userEntity.getImageId() != null
+                            ? imageService.getImageById(userEntity.getImageId()).getBody().getImageUrl()
+                            : null;
+
+            return ShelterUserProfilePartialsResponse.builder()
+                    .id(userEntity.getUserId())
+                    .name(userEntity.getName())
+                    .profileImageUrl(profileImage)
+                    .build();
+                }
+        ).collect(Collectors.toList());
+    }
+
 
     @Override
     public UserCredentialsResponse getUserCredentialsByEmail(String email) {

@@ -59,16 +59,10 @@ const CardInfoPet = ({ pet }) => {
 
   return (
     <>
-      <div style={{ margin: ".1rem 0 1rem 1.3rem" }}>
-        <Divider
-          textAlign="left"
-          color="text.secondary"
-          sx={{ marginBottom: "-5px", marginTop: 4, width: "100%" }}
-        >
-          <Chip label="Información de la mascota" />
-        </Divider>
+      {/* <div style={{ margin: ".1rem 0 1rem 1.3rem" }}> */}
+        
         <div
-          style={{ display: "flex", justifyContent: "center", margin: "2% 0" }}
+          style={{ display: "flex", justifyContent: "center", margin: "2% 0 2% 2%" }}
         >
           <Card
             sx={{
@@ -228,7 +222,7 @@ const CardInfoPet = ({ pet }) => {
             </CardContent>
           </Card>
         </div>
-      </div>
+      {/* </div> */}
     </>
   );
 };

@@ -18,6 +18,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { startCreateQuestion } from "../store/questions";
 import { use } from "i18next";
 import Swal from "sweetalert2";
+import ProgressCircular from "../Components/ProgressCircular";
+import { Send } from "@mui/icons-material";
 
 const images = [
   {
@@ -37,6 +39,9 @@ const images = [
 const SectionPost = ({ post }) => {
   const [error, setError] = useState("");
   const [question, setQuestion] = useState("");
+  const answeredQuestions = post.questions.filter(
+    (question) => question.answer && question.answer !== ""
+  );
   // const { active: post } = useSelector((state) => state.posts);
   const { contentLoading } = useSelector((state) => state.persisted.global);
   const dispatch = useDispatch();
@@ -79,8 +84,7 @@ const SectionPost = ({ post }) => {
   return (
     <>
       <Paper elevation={0} sx={{ background: "white", padding: 3 }}>
-        <Grid container spacing={2} >
-
+        <Grid container spacing={2}>
           <Grid item xs={12} md={7}>
             {/* <div style={{ width: "100%", height: "300px", position: "relative" }}> */}
             <SlidersImages
@@ -107,9 +111,7 @@ const SectionPost = ({ post }) => {
                 ¿Tienes alguna duda? preguntale al refugio
               </Typography>
               {contentLoading ? (
-                <Typography variant="h4" component="div" gutterBottom>
-                  Preguntando...
-                </Typography>
+                <ProgressCircular />
               ) : (
                 <Box component="form">
                   <Grid container spacing={2} alignItems="center">
@@ -133,6 +135,7 @@ const SectionPost = ({ post }) => {
                         onClick={handleSaveQuestion}
                         variant="contained"
                         color="primary"
+                        endIcon={<Send />}
                       >
                         Enviar
                       </Button>
@@ -140,42 +143,19 @@ const SectionPost = ({ post }) => {
                   </Grid>
                 </Box>
               )}
-
-              <Typography
-                variant="h6"
-                sx={{ marginTop: "2rem", marginBottom: ".3rem" }}
-              >
-                {" "}
-                Preguntas realizadas por otros usuarios
-              </Typography>
-
-              <List>
-                <ListItem alignItems="flex-start">
-                  <ListItemText
-                    primary="¿Esta es una pregunta de ejemplo?"
-                    secondary="Sí, esta es una respuesta de ejemplo."
-                  />
-                </ListItem>
-                <ListItem alignItems="flex-start">
-                  <ListItemText
-                    primary="¿Otra pregunta de ejemplo?"
-                    secondary="Sí, esta es otra respuesta de ejemplo."
-                  />
-                </ListItem>
-              </List>
             </Box>
 
             {}
             <Typography
-              variant="body1"
+              variant="h6"
               sx={{ marginTop: "2rem", marginBottom: ".3rem" }}
             >
               Preguntas realizadas por otros usuarios
             </Typography>
 
             <List>
-              {post.questions &&
-                post.questions.map((question) => (
+              {answeredQuestions &&
+                answeredQuestions.map((question) => (
                   <ListItem key={question.id} alignItems="flex-start">
                     <ListItemText
                       // primary={question.question}
@@ -214,10 +194,9 @@ const SectionPost = ({ post }) => {
                             sx={{ marginLeft: "10px" }}
                           >
                             <>
-                              {question.answer || "Si, lo es bastante cariñosa"}{" "}
-                              -{" "}
+                              {question.answer || ""}
                               <span style={{ fontSize: "0.7rem" }}>
-                                {question.answerDate || "2024-01-19"}
+                                {question.answerDate || ""}
                               </span>
                             </>
                           </Typography>
@@ -238,7 +217,7 @@ const SectionPost = ({ post }) => {
             </div>
           </Grid>
         </Grid>
-      </Paper >
+      </Paper>
     </>
   );
 };

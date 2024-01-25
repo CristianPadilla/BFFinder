@@ -22,7 +22,7 @@ import { t } from "i18next";
 import Swal from "sweetalert2";
 import { setActivePost, startChangePostStatus, startGetPostById } from "../../store/post";
 import { useDispatch, useSelector } from "react-redux";
-import FormattedDate from "../FormattedDate";
+import FormattedDatePost from "../FormattedDatePost";
 
 const CardPostShelter = ({ post }) => {
   const dispatch = useDispatch();
@@ -46,7 +46,7 @@ const CardPostShelter = ({ post }) => {
   };
 
   const handleStatusChange = ({ target }) => {
-    const { value } = e.target.dataset;
+    const { value } = target.dataset;
     const title =
       value === "disable"
         ? "¿Estás seguro de deshabilitar esta publicación?"
@@ -125,7 +125,7 @@ const CardPostShelter = ({ post }) => {
               color="text.secondary"
               sx={{ fontSize: ".8rem" }}
             >
-              <FormattedDate date={date}/>
+              <FormattedDatePost date={date}/>
             </Typography>
           </CardContent>
           {/* </div> */}

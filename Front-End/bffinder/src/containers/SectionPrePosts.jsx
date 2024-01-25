@@ -33,7 +33,7 @@ const SectionPrePosts = () => {
   return (
     <div>
     <div className='title-container'>
-      <h1 className='title-pre'>Publicaciones de Adopción</h1>
+      <h1 className='title-pre'>Tu mejor amigo espera por ti !</h1>
     </div>
     <Box className='section-prepost' m={2}>
       <IconButton onClick={handlePrev} disabled={currentIndex === 0} className='left-arrow'>

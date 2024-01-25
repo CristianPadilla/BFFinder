@@ -24,39 +24,14 @@ import { t } from "i18next";
 const CardVertical = ({ pet }) => {
   const dispatch = useDispatch();
   const { active } = useSelector((state) => state.pets);
-  // const {
-  //   id,
-  //   name,
-  //   breedDetails,
-  //   specie,
-  //   size,
-  //   age,
-  //   vaccinated,
-  //   sterilized,
-  //   dewormed,
-  //   published,
-  //   dangerous,
-  //   gender,
-  // } = pet;
-  // console.log("log: ", pet);
-
-  const navigate = useNavigate();
-
-  const handleVerClick = () => {
-    navigate("/ver-publicacion");
-  };
-
-  // const [openDialog, setOpenDialog] = useState(false);
 
   const handleOpenDialog = () => {
     // console.log("iddddddddddd: ", pet.id);
     dispatch(startGetPetById(pet.id));
-    // setOpenDialog(true);
   };
 
   const handleCloseDialog = () => {
     dispatch(setActivePet(null));
-    // setOpenDialog(false);
   };
 
   // console.log("pet Card: ", pet);
@@ -185,9 +160,6 @@ const CardVertical = ({ pet }) => {
             alignItems="center"
             sx={{ marginLeft: "1px" }}
           >
-            <Button variant="contained" size="small" onClick={handleVerClick}>
-              Ver publicación
-            </Button>
             {pet.published ? (
               <Typography
                 variant="body2"
