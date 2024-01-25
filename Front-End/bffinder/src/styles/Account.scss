@@ -38,7 +38,8 @@
 
 #content main .main-content-account {
 	flex-grow: 1;
-	overflow-y: auto;
+	// overflow-y: auto;
+	overflow-y: hidden;
 	padding: 36px 24px;
 	/* height: 100%; */
 	// display: flex;

@@ -77,13 +77,15 @@ const Home = () => {
               <PanelF />
             </div>
             <div className="main-content-scroll animate__animated animate__fadeIn animate__faster">
-              { noContent && contentLoading
-                ? (<LoadingFilters />)
-                : noContent
-                  ? (<NoResults />)
-                  : !content
-                    ? (<LoadingFilters />)
-                    : (<MainContent />)}
+              {noContent && contentLoading ? (
+                <LoadingFilters />
+              ) : noContent ? (
+                <MainContent noResult={<NoResults />} />
+              ) : !content ? (
+                <LoadingFilters />
+              ) : (
+                <MainContent />
+              )}
 
               {/* {noContent ? (
                 <h2>No hay contenido</h2>

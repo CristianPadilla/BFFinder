@@ -59,8 +59,7 @@ const SectionPost = ({ post }) => {
       setError("La pregunta debe tener entre 10 y 250 caracteres");
     } else {
       setError("");
-      const postId = 452; // -------------------------------------------CAMBIAR id tara-----------------------------------------------
-      dispatch(startCreateQuestion(question, postId))
+      dispatch(startCreateQuestion(question, post.id))
         .then(() => {
           Swal.fire(
             "¡Pregunta realizada con Éxito!",

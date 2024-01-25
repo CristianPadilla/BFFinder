@@ -25,6 +25,9 @@ const DialogViewPet = ({ open, onClose }) => {
   const [editing, setEditing] = useState(false);
   const { active: pet } = useSelector((state) => state.pets);
 
+  
+
+  console.log("pet del dialog: ", pet);
   const renderInformationSection = () => (
     <>
       <Paper

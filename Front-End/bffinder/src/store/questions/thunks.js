@@ -11,8 +11,8 @@ export const startFetchQuestionsByShelter = () =>
             const { userId } = getState().persisted.auth;
             if (!userId) throw new Error("No user id not exists");
 
+            console.log("startFetchQuestionsByShelter from thunk ", userId);
             const { status, data } = await postApi.get("/question/all/shelter/" + userId);
-            // console.log("startFetchQuestionsByShelter from thunk ", status, data);
 
             if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
 

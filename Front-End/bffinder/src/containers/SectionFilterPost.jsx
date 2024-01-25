@@ -8,10 +8,13 @@ import "styles/Home.scss";
 import { useDispatch, useSelector } from "react-redux";
 import CardPostShelter from "../Components/user-foundation/CardPostShelter";
 import ProgressCircular from "../Components/ProgressCircular";
+import { setActivePost } from "../store/post";
+import DialogViewPost from "../Components/user-foundation/DialogViewPost";
 
 const SectionFilterPost = () => {
   const dispatch = useDispatch();
   const { page, isSaving } = useSelector((state) => state.posts);
+  const { active } = useSelector((state) => state.posts);
   const { posts } = page;
 
   const { role } = useSelector((state) => state.persisted.auth);
@@ -28,6 +31,9 @@ const SectionFilterPost = () => {
     setOpenDialog(true);
   };
 
+  const handleCloseDialogPostView = () => {
+    dispatch(setActivePost(null));
+  };
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
@@ -66,39 +72,6 @@ const SectionFilterPost = () => {
               >
                 <CardPostShelter post={post} />
               </Grid>
-
-              <Tooltip
-                title={
-                  <span style={{ fontSize: "16px" }}>Crear Publicación</span>
-                }
-                arrow
-                placement="left"
-                open={tooltipOpen}
-                onClose={handleTooltipClose}
-                onOpen={handleTooltipOpen}
-              >
-                <Fab
-                  aria-label="add"
-                  onClick={handleOpenDialog}
-                  sx={{
-                    position: "fixed",
-                    bottom: "16px",
-                    right: "25px",
-                    backgroundColor: "#E1A26A",
-                    "&:hover": {
-                      backgroundColor: "#da9054",
-                    },
-                  }}
-                >
-                  <AddIcon sx={{ color: "white" }} />
-                </Fab>
-              </Tooltip>
-
-              <ModalAddPet
-                open={openDialog}
-                onClose={handleCloseDialog}
-                onAdd={handleAddPet}
-              />
             </React.Fragment>
           ) : (
             <Grid item xs={12} key={post.id}>
@@ -106,6 +79,13 @@ const SectionFilterPost = () => {
             </Grid>
           )
         )}
+
+      {active != null && role === "s" && (
+        <DialogViewPost
+          open={active != null}
+          onClose={handleCloseDialogPostView}
+        />
+      )}
     </>
   );
 };

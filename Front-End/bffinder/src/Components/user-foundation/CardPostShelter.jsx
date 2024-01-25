@@ -26,7 +26,6 @@ import FormattedDatePost from "../FormattedDatePost";
 
 const CardPostShelter = ({ post }) => {
   const dispatch = useDispatch();
-  const { active } = useSelector((state) => state.posts);
 
   const { petPartialResponse, images, date, user, status, id } = post;
   const { name, breedDetails, specie, profileImageUrl } = petPartialResponse;
@@ -40,10 +39,6 @@ const CardPostShelter = ({ post }) => {
     // setOpenDialog(true);
   };
 
-  const handleCloseDialog = () => {
-    dispatch(setActivePost(null));
-    // setOpenDialog(false);
-  };
 
   const handleStatusChange = ({ target }) => {
     const { value } = target.dataset;
@@ -209,9 +204,6 @@ const CardPostShelter = ({ post }) => {
           </Grid>
         </CardActions>
       </Card>
-      {active != null && (
-        <DialogViewPost open={active != null} onClose={handleCloseDialog} />
-      )}
     </div>
   );
 };

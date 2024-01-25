@@ -80,8 +80,8 @@ export function RegisterFoundationPage() {
         onSubmit={handleRegistration}
         validationSchema={Yup.object({
           name: Yup.string()
-            .min(3, "El nombre debe tener al menos 3 caracteres")
-            .max(20, "El nombre debe tener 20 caracteres o menos")
+            // .min(3, "El nombre debe tener al menos 3 caracteres")
+            // .max(20, "El nombre debe tener 20 caracteres o menos")
             .required("El nombre es obligatorio"),
           email: Yup.string()
             .email("Correo no válido")

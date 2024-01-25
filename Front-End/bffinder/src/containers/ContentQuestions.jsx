@@ -14,19 +14,22 @@ const ContentQuestions = () => {
 
   useEffect(() => {
     // console.log('useEffect== 11 : ', questions);
-    if (questions.length === 0) {
+    if (!questions) {
       dispatch(startFetchQuestionsByShelter());
     }
   }, []);
 
 
-  const answeredQuestions = questions
-    .filter((question) => question.answer && question.answer.trim().length > 0)
-    .sort((a, b) => new Date(b.answerDate) - new Date(a.answerDate));
+  const answeredQuestions = questions ?
+    questions.filter((question) => question.answer && question.answer.trim().length > 0)
+      .sort((a, b) => new Date(b.answerDate) - new Date(a.answerDate))
+    : [];
 
-  const unAnsweredQuestions = questions
-    .filter((question) => !question.answer || question.answer.trim().length === 0)
-    .sort((a, b) => new Date(b.date) - new Date(a.date));
+  const unAnsweredQuestions = questions ?
+    questions.filter((question) => !question.answer || question.answer.trim().length === 0)
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+    : []
+    ;
 
   // console.log('answeredQuestions: ', answeredQuestions);
   // console.log('unAnsweredQuestions: ', unAnsweredQuestions);
@@ -92,8 +95,8 @@ const ContentQuestions = () => {
   // console.log("unAnsweredQuestions:", unAnsweredQuestions);
 
   return (
-    <Card elevation={0} sx={{ borderRadius: "5px" }}>
-      <CardContent sx={{ margin: 1 }}>
+    <Card elevation={0} sx={{ borderRadius: "5px", height: "85vh" }}>
+      <CardContent sx={{ margin: 1, overflowY: "auto", height: "-webkit-fill-available" }}>
         <Typography variant="h5" component="div" sx={{ marginBottom: 4 }}>
           Gestión de preguntas y respuestas
         </Typography>
@@ -104,7 +107,7 @@ const ContentQuestions = () => {
 
         {tabValue === 0 && (
           unAnsweredQuestions.length === 0 ? (
-            <Typography variant="body1" component="div" sx={{ marginBottom: 4 }}>
+            <Typography variant="body1" sx={{ marginTop: 4 }}>
               No hay preguntas pendientes!
             </Typography>
           ) : (
@@ -117,7 +120,7 @@ const ContentQuestions = () => {
           ))}
         {tabValue === 1 && (
           answeredQuestionsGroups.length === 0 ? (
-            <Typography variant="body1" component="div" sx={{ marginBottom: 4 }}>
+            <Typography variant="body1" sx={{ marginTop: 4 }}>
               Aun no has respondido ninguna pregunta
             </Typography>
           ) : (

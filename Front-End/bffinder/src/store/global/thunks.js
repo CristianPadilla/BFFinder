@@ -1,5 +1,5 @@
 import { get } from "react-scroll/modules/mixins/scroller"
-import { setActiveModule, startContentLoading } from "./globalSlice"
+import { setActiveModule, startContentLoading, stopContentLoading } from "./globalSlice"
 import { specieApi } from "../../api/specieApi"
 import { setErrorMessage } from "../pet"
 import { HttpStatusCode } from "axios"
@@ -29,9 +29,10 @@ export const getBreedsBySpecieId = (specieId) => async (dispatch, getState) => {
 
 export const startGetLoggedUserInformation = () => async (dispatch, getState) => {
     console.log("startGetLoggedUserInformation");
-
+    // dispatch(startContentLoading());
     const { userId } = getState().persisted.auth;
     const { data, status } = await userApi.get("/" + userId);
     if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+    // dispatch(stopContentLoading());
     return data;
 }

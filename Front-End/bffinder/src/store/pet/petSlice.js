@@ -20,7 +20,7 @@ const initialState = {
         sort: "",
         desc: false,
         page: 0,
-        page_size: 2,
+        page_size: 10,
     },
     species: [],
     breeds: [],

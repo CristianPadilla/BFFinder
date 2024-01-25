@@ -38,7 +38,7 @@ const HorizontalCard = ({ post }) => {
     });
   };
 
-  console.log("post del card horizontal: ", post);
+  // console.log("post del card horizontal: ", post);
 
   return (
     <>

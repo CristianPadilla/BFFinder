@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import Stack from "@mui/material/Stack";
-import { Grid, Pagination } from "@mui/material";
+import { Fab, Grid, Pagination, Tooltip } from "@mui/material";
 import "styles/SectionAllPosts.scss";
 import "styles/Home.scss";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,9 +11,12 @@ import { changePetsRequest } from "../store/pet";
 import DialogSelectSpecie from "../Components/DialogSelectSpecie";
 import { specieApi } from "../api/specieApi";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Add } from "@mui/icons-material";
+import ModalAddPet from "../Components/user-foundation/ModalAddPet";
 
-const MainContent = () => {
+const MainContent = ({ noResult }) => {
   const { activeModule } = useSelector((state) => state.persisted.global);
+  const [tooltipOpen, setTooltipOpen] = useState(true);
   const sectionRef = useRef(null);
   const dispatch = useDispatch();
   const { totalPages, pageNumber } =
@@ -37,6 +40,14 @@ const MainContent = () => {
 
   const handleOpenDialog = () => {
     setOpenDialog(true);
+  };
+
+  const handleTooltipClose = () => {
+    setTooltipOpen(false);
+  };
+
+  const handleTooltipOpen = () => {
+    setTooltipOpen(true);
   };
 
   // useEffect(() => {
@@ -66,47 +77,91 @@ const MainContent = () => {
             },
             "&:hover": {
               backgroundColor: "#E1A26A",
-              color: "white", 
+              color: "white",
             },
           },
         },
       },
     },
   });
-
+  console.log("noResult", noResult);
   return (
-    <div className="layout-container">
-      {/* <section ref={sectionRef} className="inicio-user-comun"> */}
-      <Grid container spacing={1} className="grid-container">
-        {activeModule === "posts" ? (
-          <SectionFilterPost />
-        ) : (
-          <SectionFilterPet />
-        )}
-        <Grid item>
-          <DialogSelectSpecie onClose={handleCloseDialog} open={openDialog} />
-        </Grid>
-      </Grid>
-      <Grid
-        container
-        className="grid-container"
-        justifyContent="center"
-        alignItems="end"
+    <>
+      {noResult != null ? (
+        noResult
+      ) : (
+        <div className="layout-container">
+          {/* <section ref={sectionRef} className="inicio-user-comun"> */}
+          <Grid container spacing={1} className="grid-container">
+            {activeModule === "posts" ? (
+              <SectionFilterPost />
+            ) : (
+              <SectionFilterPet />
+            )}
+            <Grid item>
+              <DialogSelectSpecie
+                onClose={handleCloseDialog}
+                open={openDialog}
+              />
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            className="grid-container"
+            justifyContent="center"
+            alignItems="end"
+          >
+            <Stack spacing={2}>
+              <ThemeProvider theme={theme}>
+                <Pagination
+                  count={totalPages}
+                  // style={{ color: "#E1A26A", "& .Mui-selected": { backgroundColor: "#E1A26A" } }}
+                  className="pagination-custom"
+                  page={pageNumber + 1}
+                  onChange={handlePageChange}
+                />
+              </ThemeProvider>
+            </Stack>
+          </Grid>
+        </div>
+      )}
+
+      <Tooltip
+        title={
+          <span style={{ fontSize: "16px" }}>
+            {activeModule === "posts" ? "Crear Publicación" : "Agregar mascota"}
+            {/* Crear Publicación Agregar mascota */}
+          </span>
+        }
+        arrow
+        placement="left"
+        open={tooltipOpen}
+        onClose={handleTooltipClose}
+        onOpen={handleTooltipOpen}
       >
-        <Stack spacing={2}>
-          <ThemeProvider theme={theme}>
-            <Pagination
-              count={totalPages}
-              // style={{ color: "#E1A26A", "& .Mui-selected": { backgroundColor: "#E1A26A" } }}
-              className="pagination-custom"
-              page={pageNumber + 1}
-              onChange={handlePageChange}
-            />
-          </ThemeProvider>
-        </Stack>
-      </Grid>
-      {/* </section> */}
-    </div>
+        <Fab
+          aria-label="add"
+          onClick={handleOpenDialog}
+          sx={{
+            position: "fixed",
+            bottom: "16px",
+            right: "25px",
+            backgroundColor: "#E1A26A",
+            "&:hover": {
+              backgroundColor: "#da9054",
+            },
+          }}
+        >
+          <Add sx={{ color: "white" }} />
+        </Fab>
+      </Tooltip>
+
+      <ModalAddPet
+        open={openDialog}
+        onClose={handleCloseDialog}
+        // onAdd={handleAddPet}
+      />
+    </>
   );
 };
 

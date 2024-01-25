@@ -5,6 +5,7 @@ import { HttpStatusCode } from "axios"
 import { clearPostsLogout } from "../post"
 import { clearGlobalLogout, setActiveModule } from "../global"
 import { clearPetsLogout } from "../pet"
+import { clearQuestionsLogout } from "../questions"
 
 export const checkingAuthentication = (email, password) =>
     async (dispatch, getState) => {
@@ -88,6 +89,7 @@ export const startLogout = (error) =>
             dispatch(clearPostsLogout())
             dispatch(clearPetsLogout())
             dispatch(clearGlobalLogout())
+            dispatch(clearQuestionsLogout())
             dispatch(logout(error?.message))
 
         }, 1000);

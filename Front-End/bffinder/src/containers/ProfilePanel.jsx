@@ -21,6 +21,7 @@ import { setActiveModule } from "../store/global";
 const ProfilePanel = () => {
   const dispatch = useDispatch();
   const { name, photoUrl } = useSelector((state) => state.persisted.auth);
+  const { role } = useSelector((state) => state.persisted.auth);
   const user = {
     name: name || "Usuario",
     joinDate: "01/01/2022",
@@ -32,19 +33,36 @@ const ProfilePanel = () => {
   //   { text: "Preguntas", icon: <QuestionAnswer />, link: "/preguntas" },
   //   { text: "Favoritos", icon: <Favorite />, link: "/favoritos" },
   // ];
-  const navigationItems = [
-    { value: "profile", text: "Perfil", icon: <AccountCircle /> },
-    { value: "config", text: "Configuración", icon: <Settings /> },
-    { value: "questions", text: "Preguntas", icon: <QuestionAnswer /> },
-    { value: "favs", text: "Favoritos", icon: <Favorite /> },
-  ];
+  let navigationItems = [];
+  navigationItems.push({
+    value: "profile",
+    text: "Perfil",
+    icon: <AccountCircle />,
+  });
+  role === "s" &&
+    navigationItems.push({
+      value: "questions",
+      text: "Preguntas",
+      icon: <QuestionAnswer />,
+    });
+
+  role === "u" &&
+    navigationItems.push({
+      value: "favs",
+      text: "Favoritos",
+      icon: <Favorite />,
+    });
+
+  navigationItems.push({
+    value: "config",
+    text: "Configuración",
+    icon: <Settings />,
+  });
 
   const handleModuleChange = (e) => {
     console.log("handleModuleChange===", e.currentTarget.dataset.value);
     dispatch(setActiveModule({ module: e.currentTarget.dataset.value }));
   };
-
-
 
   return (
     <>
