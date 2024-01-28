@@ -9,8 +9,11 @@ const SectionFundation = () => {
     axios
       .get("http://localhost:9090/user/all/shelters")
       .then((response) => {
-        console.log("Respuesta de la petición:", response.data);
-        setSheltersList(response.data);
+        // console.log("Respuesta de la petición:", response.data);
+        const shelters = response.data.filter(
+          (shelter) => shelter.profileImageUrl !== null
+        );
+        setSheltersList(shelters);
       })
       .catch((error) => {
         console.error("Error al obtener datos:", error.response.data);

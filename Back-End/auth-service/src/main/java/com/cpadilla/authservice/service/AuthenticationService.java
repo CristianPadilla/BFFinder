@@ -91,7 +91,7 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse registerShelter(ShelterRegisterRequest request) {
-
+        log.info("requesttttt {}", request);
         if (request == null // provitional validation
                 || request.getEmail() == null || request.getEmail().isBlank() || request.getEmail().isEmpty()
                 || request.getName() == null || request.getName().isBlank() || request.getName().isEmpty()
@@ -102,10 +102,16 @@ public class AuthenticationService {
         if (repository.findByEmail(request.getEmail()).isPresent())
             throw new UserAlreadyExistException("Shelter with email " + request.getEmail() + " is already registered");
 
+        var location = locationService.saveAddress(LocationRequest.builder()
+                .cityId(request.getLocation().getCityId())
+                .address(request.getLocation().getAddress())
+                .build()).getBody();
+
         var user = UserEntity.builder()
                 .name(request.getName())
                 .email(request.getEmail())
                 .role('s')
+                .addressId(location)
                 .nit(request.getNit())
                 .comercialRegistrationNumber(request.getComercialRegistrationNumber())
                 .password(passwordEncoder.encode(request.getPassword()))

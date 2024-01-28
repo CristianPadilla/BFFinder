@@ -44,7 +44,7 @@ export function RegisterUserPage() {
   }, [status]);
 
   const handleRegistration = (values) => {
-    console.log("Holaaa ", values);
+    // console.log("Holaaa ", values);
     const user = {
       firstname: values.firstname,
       lastname: values.lastname,
@@ -94,12 +94,12 @@ export function RegisterUserPage() {
               (val) => !val || val.length === 10
             ),
           email: Yup.string()
-            .email("Correo no válido")
-            .required("El correo es obligatorio"),
+            .email("Correo electrónico no válido")
+            .required("El correo electrónico es obligatorio"),
           email2: Yup.string()
-            .email("El email no es valido")
-            .oneOf([Yup.ref("email"), null], "Los correos no coinciden")
-            .required("El email es obligatorio"),
+            .email("El correo electrónico no es valido")
+            .oneOf([Yup.ref("email"), null], "Los correos electrónicos no coinciden")
+            .required("El correo electrónico es obligatorio"),
 
           password: Yup.string()
             .min(8, "La contraseña debe tener al menos 8 caracteres")
@@ -151,7 +151,7 @@ export function RegisterUserPage() {
             />
             <TextInputComponent
               type="email"
-              label="Confirma tu correo"
+              label="Confirma tu correo electrónico"
               name="email2"
               placeholder="repite tu correo electrónico"
               value={formik.values.email2}
@@ -189,7 +189,9 @@ export function RegisterUserPage() {
               name="terms"
               className="slider round"
               labelClassName="switch"
+              value={formik.values.terms}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               spanClassName="slider round"
             />
             <Grid item xs={12} display={!!errorMessage ? "" : "none"}>

@@ -63,7 +63,12 @@ const Home = () => {
         <main>
           <div className="head-title">
             <div className="left">
-              <h2>Mascotas Registradas</h2>
+              {role === "u" ? (
+                <h2>Encuentra tu mejor amigo</h2>
+              ) : activeModule === "posts" ?  
+                <h2>Publicaciones de tus mascotas</h2> 
+                : <h2>Tus mascotas</h2>
+              }
             </div>
             <SearchBar />
             <div>

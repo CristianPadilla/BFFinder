@@ -23,12 +23,12 @@ import CurrentDate from "../CurrentDate";
 
 const CardPost = ({ post }) => {
   const navigate = useNavigate();
-  const { petPartialResponse, date, locationResponse, user } = post;
+  const { petPartialResponse, date, locationResponse, user, questionsQuantity } = post;
   const { name, breedDetails, specie } = petPartialResponse;
   const { city } = locationResponse;
 
   const handleVerClick = () => {
-    console.log("post : ", post);
+    // console.log("post : ", post);
     // dispatch(setActivePost(post));
     navigate("/ver-publicacion/" + post.id);
   };
@@ -138,23 +138,23 @@ const CardPost = ({ post }) => {
                 justifyContent="flex-end"
               >
                 <Grid item>
-                  <Typography variant="body2">2</Typography>
+                  <Typography variant="body2">{(post.questionsQuantity)+3 || 0}</Typography>
                 </Grid>
                 <Grid item>
                   <Checkbox
-                    icon={<FavoriteBorder style={{ fontSize: 30 }} />}
+                    icon={<FavoriteBorder style={{ fontSize: 30, paddingLeft: "0px" }} />}
                     checkedIcon={
-                      <Favorite style={{ fontSize: 30, color: "red" }} />
+                      <Favorite style={{ fontSize: 30, color: "red", paddingLeft: "0px" }} />
                     }
-                    sx={{ paddingLeft: "0px" }}
+                    // sx={{ paddingLeft: "0px" }}
                   />
                 </Grid>
 
                 <Grid item>
-                  <Typography variant="body2">4</Typography>
+                  <Typography variant="body2">{post.questionsQuantity || 0}</Typography>
                 </Grid>
                 <Grid item>
-                  <QuestionAnswerIcon sx={{ marginRight: "10px" }} />
+                  <QuestionAnswerIcon sx={{ marginRight: "10px", fontSize: 30, color: "steelblue", marginBottom: "-8px" }} />
                 </Grid>
 
                 {/* <Button variant="contained" size="small" sx={{ fontSize: '1rem' }} onClick={handleVerClick}>

@@ -51,8 +51,8 @@ export default function SignIn() {
         onSubmit={handleLogin}
         validationSchema={Yup.object({
           email: Yup.string()
-            .email("Correo no válido")
-            .required("El correo es obligatorio"),
+            .email("Correo electrónico no válido")
+            .required("El correo electrónico es obligatorio"),
           password: Yup.string()
             .min(4, "La contraseña debe tener al menos 4 caracteres")
             .max(15, "La contraseña debe tener 15 caracteres o menos")
@@ -65,7 +65,7 @@ export default function SignIn() {
             {error && <div className="error-message">{error}</div>}
             <TextInputComponent
               type="text"
-              label="Correo Electronico"
+              label="Correo Electrónico"
               name="email"
               placeholder="ejemplo@mail.com"
               value={formik.values.email}

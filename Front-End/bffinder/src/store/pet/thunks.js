@@ -84,7 +84,7 @@ export const startAddNewPet = (pet) => async (dispatch, getState) => {
 
     if (pet.image !== null) {
         // console.log("actualizando imagen de mascota ");
-        dispatch(updatePetProfileImage(data.id, pet.image));
+        await dispatch(updatePetProfileImage(data.id, pet.image));
 
     };
     dispatch(setActivePet(null)); // no concluido
@@ -105,7 +105,7 @@ export const startUpdatePet = (pet) => async (dispatch, getState) => {
 
     if (pet.image !== null) {
         // console.log("actualizando imagen de mascota ");
-        dispatch(updatePetProfileImage(data.id, pet.image));
+        await dispatch(updatePetProfileImage(data.id, pet.image));
 
     };
     dispatch(setActivePet(null));

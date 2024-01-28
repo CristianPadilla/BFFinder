@@ -20,49 +20,45 @@ import { getPetsByUserId } from "../../store/pet";
 import { t } from "i18next";
 import { startCreatePost, startUpdatePost } from "../../store/post";
 
-
-
-const images = [
-  {
-    original: "https://picsum.photos/id/1018/1000/600/",
-    thumbnail: "https://picsum.photos/id/1018/250/150/",
-  },
-  {
-    original: "https://picsum.photos/id/1015/1000/600/",
-    thumbnail: "https://picsum.photos/id/1015/250/150/",
-  },
-  {
-    original: "https://picsum.photos/id/1019/1000/600/",
-    thumbnail: "https://picsum.photos/id/1019/250/150/",
-  },
-];
-
 const FormAddPost = () => {
   const { active: post, isSaving } = useSelector((state) => state.posts);
   const [selectPets, setSelectPets] = useState([]);
   const [currentSelectedPet, setCurrentSelectedPet] = useState(null);
   const dispatch = useDispatch();
 
-
   useEffect(async () => {
     // console.log('useEffect==  : ', pet);
     const pets = await dispatch(getPetsByUserId());
-    console.log('useEffect==  : ', pets);
+    console.log("useEffect==  : ", pets);
     setSelectPets(pets);
-    post && setCurrentSelectedPet(post.petResponse)
-
+    post && setCurrentSelectedPet(post.petResponse);
   }, []);
 
-  let petsOptions = (selectPets.map((pet) => {
+  let petsOptions = selectPets.map((pet) => {
     return {
-      label: `${pet.name} - ${t(`species.${pet.breedDetails.specie.name}`)} - ${t(`breeds.${pet.breedDetails.name}`)}`,
-      value: pet.id
-    }
-  }));
-  post && petsOptions.push({ label: `${post.petResponse.name} - ${t(`species.${post.petResponse.breedDetails.specie.name}`)} - ${t(`breeds.${post.petResponse.breedDetails.name}`)}`, value: post.petResponse.id });
-
+      label: `${pet.name} - ${t(
+        `species.${pet.breedDetails.specie.name}`
+      )} - ${t(`breeds.${pet.breedDetails.name}`)}`,
+      value: pet.id,
+    };
+  });
+  post &&
+    petsOptions.push({
+      label: `${post.petResponse.name} - ${t(
+        `species.${post.petResponse.breedDetails.specie.name}`
+      )} - ${t(`breeds.${post.petResponse.breedDetails.name}`)}`,
+      value: post.petResponse.id,
+    });
 
   const handleSubmit = (values) => {
+    console.log("handleSubmit==  : ", values);
+    // if (values.image.length === 0) {
+    //   // Si no hay ninguna imagen seleccionada, establece un error en el campo 'image'
+    //   setErrors({ image: "Debe seleccionar al menos una imagen" });
+    //   setSubmitting(false);
+    //   return;
+    // }
+
     const postToSave = {
       postId: post ? post.id : null,
       description: values.description,
@@ -70,49 +66,40 @@ const FormAddPost = () => {
       images: values.images,
     };
     if (post) {
-      dispatch(startUpdatePost(postToSave))
+      dispatch(startUpdatePost(postToSave));
     } else {
-      dispatch(startCreatePost(postToSave))
+      dispatch(startCreatePost(postToSave));
     }
-
   };
-
-  const onImageInputChange = ({ target }) => {
-    // console.log('onImageInputChange==  : ', target.files.length);
-  }
 
   const initialValues = post
     ? {
-      description: post.description,
-      pet: petsOptions.find((option) => option.value === post.petResponse.id),
-      images: [],
-    }
+        description: post.description,
+        pet: petsOptions.find((option) => option.value === post.petResponse.id),
+        images: [],
+      }
     : {
-      description: "",
-      pet: { label: "", value: null },
-      images: [],
-    }
+        description: "",
+        pet: { label: "", value: null },
+        images: [],
+      };
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={handleSubmit}
       validationSchema={Yup.object({
-        description: Yup.string()
-          .required("La descripción es obligatorio"),
-        pet: Yup.object()
-          .shape({
-            value: Yup.number().required("Selecciona una raza válida")
-          }),
-        image: Yup.mixed()
-          .test("fileFormat", "Formato de imagen no permitido", (value) => {
-            if (!value || !value.type) return true;
-
-            const allowedFormats = ["image/jpeg", "image/png", "image/jpg"];
-            const fileType = value.type.toLowerCase();
-
-            return allowedFormats.includes(fileType);
-          })
-          .notRequired(),
+        description: Yup.string().required("La descripción es obligatorio"),
+        pet: Yup.object().shape({
+          value: Yup.number().required("Selecciona una raza válida"),
+        }),
+        images: post
+          ? Yup.array().max(6, "Solo se permiten 6 imágenes por publicación")
+          : Yup.array()
+              .min(
+                1,
+                "Debe agregar al menos una foto adicional del animal a publicar "
+              )
+              .max(6, "Solo se permiten 6 imágenes por publicación"),
       })}
     >
       {(formik) => (
@@ -134,7 +121,8 @@ const FormAddPost = () => {
                 setImages={(imagesFiles) => {
                   formik.setFieldValue("images", imagesFiles);
                 }}
-                name="image" />
+                name="images"
+              />
             </Grid>
             <Grid container spacing={1} sx={{ margin: "1rem" }}>
               <Grid item xs={6}>
@@ -159,11 +147,13 @@ const FormAddPost = () => {
                   spacing={2}
                   // justifyContent="space-between" // Alinea los elementos con espacio entre ellos
                   alignItems="center"
-                // sx={{ height: "100%" }}
+                  // sx={{ height: "100%" }}
                 >
                   <Grid item xs={6}>
                     <Typography variant="subtitle1">
-                      Reasignación de mascota
+                      {post
+                        ? `Reasignar mascota`
+                        : `¿Cuál mascota quieres publicar?`}
                     </Typography>
                     <SelecInputComponent
                       label="Seleccione la mascota*"
@@ -171,26 +161,36 @@ const FormAddPost = () => {
                       name="pet"
                       // onChange={formik.handleChange}
                       onChange={({ target }) => {
-                        const petOption = petsOptions.find((option) => option.value === target.value);
+                        const petOption = petsOptions.find(
+                          (option) => option.value === target.value
+                        );
                         formik.setFieldValue("pet", petOption);
-                        setCurrentSelectedPet(selectPets.find((pet) => pet.id === petOption.value))
-                      }
-                      }
+                        setCurrentSelectedPet(
+                          selectPets.find((pet) => pet.id === petOption.value)
+                        );
+                      }}
                       value={formik.values.pet}
                       options={petsOptions}
                     />
                   </Grid>
-                  <Grid item xs={6} sx={{ height: "100%", marginTop: "1rem", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="success"
-                    >
+                  <Grid
+                    item
+                    xs={6}
+                    sx={{
+                      height: "100%",
+                      marginTop: "1rem",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Button type="submit" variant="contained" color="success">
                       <Typography
                         component="div"
                         style={{ whiteSpace: "pre-line" }}
                       >
-                        Guardar <br /> cambios
+                        {post ? `Guardar\nCambios` : `Publicar`}
+                        {/* Guardar <br /> cambios */}
                       </Typography>
                     </Button>
                   </Grid>

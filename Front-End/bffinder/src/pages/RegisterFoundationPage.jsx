@@ -14,7 +14,12 @@ import { startRegisterUser } from "../store/auth";
 import SwitchInputComponent from "../Components/form/SwitchInputComponent";
 import SelectComponent from "../Components/form/SelectComponent";
 import SelectInputComponent from "../Components/form/SelectInputComponent";
-import { startCleanCities, startGetCitiesByDepartmentId, startGetDepartments } from "../store/post";
+import {
+  startCleanCities,
+  startGetCitiesByDepartmentId,
+  startGetDepartments,
+} from "../store/post";
+import { TRUE } from "sass";
 
 const formFields = {
   name: "",
@@ -32,14 +37,14 @@ const formFields = {
 
 export function RegisterFoundationPage() {
   const dispatch = useDispatch();
-  const { status, errorMessage } = useSelector(state => state.persisted.auth);
-  const isCheckingAuth = useMemo(() => status === 'checking', [status]);
+  const { status, errorMessage } = useSelector((state) => state.persisted.auth);
+  const isCheckingAuth = useMemo(() => status === "checking", [status]);
   const [openConfirmationAlert, setOpenConfirmationAlert] = useState(false);
   const { departments, cities } = useSelector((state) => state.posts);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (status === 'authenticated') {
+    if (status === "authenticated") {
       setOpenConfirmationAlert(true);
       setTimeout(() => {
         setOpenConfirmationAlert(false);
@@ -49,9 +54,9 @@ export function RegisterFoundationPage() {
   }, [status]);
 
   useEffect(() => {
-    if (!departments || departments.length === 0) dispatch(startGetDepartments());
+    if (!departments || departments.length === 0)
+      dispatch(startGetDepartments());
   }, []);
-
 
   // DEPARTAMENTOS y CIUDADES
   const departmentsOptions = departments.map((department) => {
@@ -73,43 +78,36 @@ export function RegisterFoundationPage() {
     dispatch(startGetCitiesByDepartmentId(departmentId));
   };
 
-
-
-
-
   const handleRegistration = async (values) => {
-    console.log("valuesssssssssss ", values);
     const user = {
       name: values.name,
       email: values.email,
       password: values.password,
       nit: values.nit,
-      address: values.address,
-      city: values.city.value,
       department: values.department.value,
       commercial_registration_number:
         values.commercial_registration_number !== ""
           ? values.commercial_registration_number
           : null,
-      type: 's'
-    }
-    console.log("userrrr ", user);
-    // dispatch(startRegisterUser(user))
+      type: "s",
+      location: {
+        address: values.address,
+        city_id: values.city.value,
+      },
+    };
+    // console.log("userrrr ", user);
+    dispatch(startRegisterUser(user));
   };
-
 
   return (
     <>
-      <Snackbar open={openConfirmationAlert} autoHideDuration={2000} >
+      <Snackbar open={openConfirmationAlert} autoHideDuration={2000}>
         <Alert
           // onClose={handleClose}
           severity="success"
           sx={{ width: "100%", backgroundColor: "#FFCF9F" }}
           icon={
-            <CheckCircleIcon
-              fontSize="inherit"
-              style={{ color: "white" }}
-            />
+            <CheckCircleIcon fontSize="inherit" style={{ color: "white" }} />
           }
         >
           Usuario Fundación creado exitosamente.
@@ -124,12 +122,15 @@ export function RegisterFoundationPage() {
             // .max(20, "El nombre debe tener 20 caracteres o menos")
             .required("El nombre es obligatorio"),
           email: Yup.string()
-            .email("Correo no válido")
-            .required("El correo es obligatorio"),
+            .email("Correo electrónico no válido")
+            .required("El correo electrónico es obligatorio"),
           email2: Yup.string()
-            .email("El correo no es valido")
-            .oneOf([Yup.ref("email"), null], "Los correos no coinciden")
-            .required("El correo es obligatorio"),
+            .email("El correo electrónico no es valido")
+            .oneOf(
+              [Yup.ref("email"), null],
+              "Los correos electrónicos no coinciden"
+            )
+            .required("El correo electrónico es obligatorio"),
           department: Yup.object().shape({
             value: Yup.number().required("Selecciona un departamento"),
           }),
@@ -139,7 +140,7 @@ export function RegisterFoundationPage() {
           address: Yup.string()
             .min(5, "La direccion debe tener almenos 5 caracteres")
             .max(40, "La direccion debe tener 40 caracteres o menos")
-            .required("El nombre es obligatorio"),
+            .required("La dirección es obligatoria"),
           password: Yup.string()
             .min(8, "La contraseña debe tener al menos 8 caracteres")
             .max(15, "La contraseña debe tener 15 caracteres o menos")
@@ -153,8 +154,10 @@ export function RegisterFoundationPage() {
           nit: Yup.string()
             .required("El nit es obligatorio")
             .matches(/^\d{9}$/, "El número debe tener exactamente 9 dígitos"),
-          commercial_registration_number: Yup.string()
-            .matches(/^\d{11}$/, "El número debe tener exactamente 11 dígitos"),
+          commercial_registration_number: Yup.string().matches(
+            /^\d{11}$/,
+            "El número debe tener exactamente 11 dígitos"
+          ),
           terms: Yup.boolean().oneOf(
             [true],
             "Debes aceptar los términos y condiciones"
@@ -206,7 +209,7 @@ export function RegisterFoundationPage() {
             />
             <TextInputComponent
               type="email"
-              label="Confirma tu correo"
+              label="Confirma tu correo electrónico"
               name="email2"
               placeholder="repite tu correo electrónico"
               value={formik.values.email2}
@@ -221,7 +224,6 @@ export function RegisterFoundationPage() {
               placeholder="Departamento"
               value={formik.values.department}
               onChange={({ target }) => {
-
                 if (target.value === null || target.value === "") {
                   console.log("target.value === null ", target);
                   // formik.setFieldValue("department", 0);
@@ -244,7 +246,6 @@ export function RegisterFoundationPage() {
               }}
               // onChange={formik.handleChange}
               sx={{ width: "27ch" }}
-
             />
             <SelectInputComponent
               label="Ciudad"
@@ -295,11 +296,19 @@ export function RegisterFoundationPage() {
             <SwitchInputComponent
               label="Términos y condiciones"
               name="terms"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              value={formik.values.terms}
             />
-            <Grid item xs={12} display={!!errorMessage ? '' : 'none'}>
+            <Grid item xs={12} display={!!errorMessage ? "" : "none"}>
               <Alert severity="error">{errorMessage}</Alert>
             </Grid>
-            <button disabled={isCheckingAuth} type="submit" className="btn" style={{ marginTop: "1.2rem" }}>
+            <button
+              disabled={isCheckingAuth}
+              type="submit"
+              className="btn"
+              style={{ marginTop: "1.2rem" }}
+            >
               Registrarse
             </button>
             <p className="social-text">O</p>

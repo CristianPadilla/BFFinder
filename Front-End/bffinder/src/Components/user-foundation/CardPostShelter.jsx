@@ -147,7 +147,7 @@ const CardPostShelter = ({ post }) => {
               </Grid>
               <Grid item>
                 <Typography variant="caption">
-                  2 personas guardaron en favoritos
+                  {(post.questionsQuantity)+3 || 0} personas guardaron en favoritos
                 </Typography>
               </Grid>
 
@@ -160,7 +160,7 @@ const CardPostShelter = ({ post }) => {
               </Grid>
               <Grid item>
                 <Typography variant="caption">
-                  4 personas preguntaron
+                  {post.questionsQuantity || 0} personas preguntaron
                 </Typography>
               </Grid>
               <Grid

@@ -20,6 +20,7 @@ import { use } from "i18next";
 import Swal from "sweetalert2";
 import ProgressCircular from "../Components/ProgressCircular";
 import { Send } from "@mui/icons-material";
+import FormattedDate from "../Components/FormattedDate";
 
 const images = [
   {
@@ -52,7 +53,7 @@ const SectionPost = ({ post }) => {
           post.petResponse.profileImageUrl,
           post.images.map((image) => image.imageUrl),
         ]
-      : [];
+      : [post.petResponse.profileImageUrl];
 
   const handleSaveQuestion = () => {
     if (question.length < 10 || question.length > 250) {
@@ -144,12 +145,13 @@ const SectionPost = ({ post }) => {
               )}
             </Box>
 
-            {}
             <Typography
               variant="h6"
               sx={{ marginTop: "2rem", marginBottom: ".3rem" }}
             >
-              Preguntas realizadas por otros usuarios
+              {answeredQuestions.length > 0
+                ? "Preguntas realizadas por otros usuarios"
+                : "Aun no hay preguntas realizadas para esta publicación"}
             </Typography>
 
             <List>
@@ -178,7 +180,7 @@ const SectionPost = ({ post }) => {
                               variant="caption"
                               color="text.secondary"
                             >
-                              Realizado el: {question.date || ""}
+                              <FormattedDate date={question.date} />
                             </Typography>
                           </Grid>
                         </Grid>
@@ -193,9 +195,9 @@ const SectionPost = ({ post }) => {
                             sx={{ marginLeft: "10px" }}
                           >
                             <>
-                              {question.answer || ""}
+                              {question.answer || ""}{"   "}
                               <span style={{ fontSize: "0.7rem" }}>
-                                {question.answerDate || ""}
+                              {"   "}<FormattedDate date={question.answerDate} />
                               </span>
                             </>
                           </Typography>

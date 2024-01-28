@@ -18,5 +18,4 @@ public class UserRegisterRequest {
     private String password;
     private String phone;
 //    private String dateOfBirth;
-//    private LocationRequest location;
 }

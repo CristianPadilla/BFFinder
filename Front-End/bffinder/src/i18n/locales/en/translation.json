@@ -5,7 +5,8 @@
     "equine": "Horse",
     "rodent": "Rodent",
     "bird": "Bird",
-    "other": "Other"
+    "other": "Other",
+    "fish": "Fish"
   },
   "pluralSpecies": {
     "cat": "Cats",

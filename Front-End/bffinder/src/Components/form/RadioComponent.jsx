@@ -5,6 +5,7 @@ import {
   RadioGroup as MuiRadioGroup,
   FormControlLabel,
   Radio,
+  FormHelperText,
 } from "@mui/material";
 
 const RadioComponent = (props) => {
@@ -18,6 +19,7 @@ const RadioComponent = (props) => {
     onClick,
     className,
     style,
+    helperText,
     ...otherProps
   } = props;
 
@@ -63,6 +65,7 @@ const RadioComponent = (props) => {
           />
         ))}
       </MuiRadioGroup>
+      <FormHelperText>{helperText}</FormHelperText>
     </FormGroup>
   );
 };

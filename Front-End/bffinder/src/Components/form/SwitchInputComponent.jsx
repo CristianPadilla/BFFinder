@@ -2,16 +2,16 @@ import React from "react";
 import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import FormHelperText from "@mui/material/FormHelperText";
-import { useField } from "formik";
+import { ErrorMessage, useField } from "formik";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
-const SwitchInputComponent = ({ label, name, ...props }) => {
+const SwitchInputComponent = ({ label, value, onChange, name, onBlur, ...props }) => {
   const [field, meta, helpers] = useField({ name, type: "checkbox" });
   // const theme = useTheme();
-  const handleChange = (e) => {
-    helpers.setValue(e.target.checked);
-    helpers.setTouched(true);
-  };
+  // const handleChange = (e) => {
+  //   helpers.setValue(e.target.checked);
+  //   helpers.setTouched(true);
+  // };
 
   const theme = createTheme({
     palette: {
@@ -26,10 +26,12 @@ const SwitchInputComponent = ({ label, name, ...props }) => {
       <div style={{ display: "flex", alignItems: "center" }}>
       <ThemeProvider theme={theme}>
         <Switch
-          {...field}
-          onChange={handleChange}
-          checked={field.value}
+          // {...field}
+          onChange={onChange}
+          // checked={field.value}
           name={name}
+          onBlur={onBlur}
+          value={value}
           // sx={{
           //   "& .MuiSwitch-thumb": {
           //     backgroundColor: field.value
@@ -44,9 +46,17 @@ const SwitchInputComponent = ({ label, name, ...props }) => {
         </ThemeProvider>
         <Typography>{label}</Typography>
       </div>
-      <FormHelperText error={meta.touched && !!meta.error}>
+      <div style={{ textAlign: 'center' }}>
+        <ErrorMessage
+        name={name}
+        component="span"
+        // className={props.errorClassName}
+        style={{ fontSize: '.7rem', color: 'red' }}
+      />
+      </div>
+      {/* <FormHelperText error={meta.touched && !!meta.error}>
         {meta.error}
-      </FormHelperText>
+      </FormHelperText> */}
     </>
   );
 };

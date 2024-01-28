@@ -52,7 +52,7 @@ const SectionFilterPost = () => {
     setTooltipOpen(true);
   };
 
-  // console.log("ANTESSSS CARDSSSSSSPOST", posts.post);
+  // console.log("HHHHHHHHHHHHHHHHHHHHH ", isSaving);
 
   return isSaving ? (
     <ProgressCircular />

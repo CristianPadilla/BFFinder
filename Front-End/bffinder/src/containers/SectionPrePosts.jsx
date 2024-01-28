@@ -14,7 +14,7 @@ const SectionPrePosts = () => {
   useEffect(() => {
     axios.get('http://localhost:9090/post/all/sort/date/true')
       .then((response) => {
-        // console.log('Respuesta de la petición:', response.data);
+        console.log('Respuesta de la petición:', response.data);
         setPostList(response.data);
       })
       .catch((error) => {

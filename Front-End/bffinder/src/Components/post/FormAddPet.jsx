@@ -152,7 +152,7 @@ const FormAddPet = () => {
             }),
             weight: Yup.number()
               .min(0, "El peso debe ser un número positivo")
-              .max(500, "El peso del animal no debe superar los 500 kg")
+              .max(1000, "El peso del animal no debe superar los 1000 kg")
               .typeError("Digita un péso válido")
               .positive("El peso debe ser un número positivo")
               .required(
@@ -173,25 +173,82 @@ const FormAddPet = () => {
             dewormed: Yup.boolean().required(
               "El estado de desparacitacion de la mascota permite conocer su estado de salud"
             ),
-            image: Yup.mixed()
-              .test("fileFormat", "Formato de imagen no permitido", (value) => {
-                if (!value || !value.type) return true;
+            image: pet
+              ? Yup.mixed()
+                  .test(
+                    "fileFormat",
+                    "Formato de imagen no permitido",
+                    (value) => {
+                      if (!value || !value.type) return true;
 
-                const allowedFormats = ["image/jpeg", "image/png", "image/jpg"];
-                const fileType = value.type.toLowerCase();
+                      const allowedFormats = [
+                        "image/jpeg",
+                        "image/png",
+                        "image/jpg",
+                      ];
+                      const fileType = value.type.toLowerCase();
 
-                return allowedFormats.includes(fileType);
-              })
-              .test(
-                "fileSize",
-                "La imagen es demasiado grande, el tamaño debe ser menor a 10MB",
-                (value) => {
-                  if (!value || !value.size) return true;
-                  const maxSizeInBytes = 1048576; // 1MB
-                  return value.size <= maxSizeInBytes;
-                }
-              )
-              .notRequired(),
+                      return allowedFormats.includes(fileType);
+                    }
+                  )
+                  .test(
+                    "fileSize",
+                    "La imagen es demasiado grande, el tamaño debe ser menor a 10MB",
+                    (value) => {
+                      if (!value || !value.size) return true;
+                      const maxSizeInBytes = 1048576; // 1MB
+                      return value.size <= maxSizeInBytes;
+                    }
+                  )
+                  .notRequired()
+              : Yup.mixed()
+                  .test(
+                    "fileFormat",
+                    "Formato de imagen no permitido",
+                    (value) => {
+                      if (!value || !value.type) return true;
+                      const allowedFormats = [
+                        "image/jpeg",
+                        "image/png",
+                        "image/jpg",
+                      ];
+                      const fileType = value.type.toLowerCase();
+
+                      return allowedFormats.includes(fileType);
+                    }
+                  )
+                  .test(
+                    "fileSize",
+                    "La imagen es demasiado grande, el tamaño debe ser menor a 10MB",
+                    (value) => {
+                      if (!value || !value.size) return true;
+                      const maxSizeInBytes = 1048576; // 1MB
+                      return value.size <= maxSizeInBytes;
+                    }
+                  )
+                  .required("Por favor agrega una foto de perfil"),
+
+            // Yup.mixed()
+            //   .required(pet ? false : "Por favor agrega una foto de perfil")
+            //   // .required("Por favor selecciona una imagen")
+            //   .test("fileFormat", "Formato de imagen no permitido", (value) => {
+            //     if (!value || !value.type) return true;
+
+            //     const allowedFormats = ["image/jpeg", "image/png", "image/jpg"];
+            //     const fileType = value.type.toLowerCase();
+
+            //     return allowedFormats.includes(fileType);
+            //   })
+            //   .test(
+            //     "fileSize",
+            //     "La imagen es demasiado grande, el tamaño debe ser menor a 10MB",
+            //     (value) => {
+            //       if (!value || !value.size) return true;
+            //       const maxSizeInBytes = 1048576; // 1MB
+            //       return value.size <= maxSizeInBytes;
+            //     }
+            //   ),
+            // // .notRequired(),
           })}
         >
           {(formik) => (
@@ -298,7 +355,7 @@ const FormAddPet = () => {
                           </Grid>
                           <Grid item xs={6} sx={{ textAlign: "center" }}>
                             <SelectInputComponent
-                              label="Talla *"
+                              label="Tamaño *"
                               name="size"
                               value={formik.values.size}
                               options={sizeOptions}
@@ -437,7 +494,7 @@ const FormAddPet = () => {
                         </Grid>
                       </Paper>
                       <Button variant="contained" type="submit" color="success">
-                        Guardar Cambios
+                        {pet ? "Guardar Cambios" : "Guardar Mascota"}
                       </Button>
                     </Form>
                   </Grid>

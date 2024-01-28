@@ -18,7 +18,7 @@ public class ShelterRegisterRequest {
     private String nit;
     @JsonProperty(value = "commercial_registration_number")
     private String comercialRegistrationNumber;
-//    private LocationRequest location;
+    private LocationRequest location;
 //    private String description;
 //    private String phone;
 //    private String dateOfCreation;

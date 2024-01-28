@@ -16,6 +16,7 @@ import ModalAddPet from "../Components/user-foundation/ModalAddPet";
 
 const MainContent = ({ noResult }) => {
   const { activeModule } = useSelector((state) => state.persisted.global);
+  const { role } = useSelector((state) => state.persisted.auth);
   const [tooltipOpen, setTooltipOpen] = useState(true);
   const sectionRef = useRef(null);
   const dispatch = useDispatch();
@@ -126,7 +127,9 @@ const MainContent = ({ noResult }) => {
         </div>
       )}
 
-      <Tooltip
+{ role === "s" && (
+  <>
+  <Tooltip
         title={
           <span style={{ fontSize: "16px" }}>
             {activeModule === "posts" ? "Crear Publicación" : "Agregar mascota"}
@@ -161,6 +164,9 @@ const MainContent = ({ noResult }) => {
         onClose={handleCloseDialog}
         // onAdd={handleAddPet}
       />
+      </>
+)}
+      
     </>
   );
 };

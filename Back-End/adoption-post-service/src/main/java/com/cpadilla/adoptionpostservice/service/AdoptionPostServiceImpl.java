@@ -549,13 +549,14 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
 
         var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDate = formatter.format(postEntity.getDate().atZone(ZoneId.of("UTC")));
-
+        var questionsQuantity = questionRepository.countByPostId(postEntity.getId());
         return AdoptionPostResponse.builder()
                 .id(postEntity.getId())
                 .description(postEntity.getDescription())
                 .date(formattedDate)
                 .petResponse(petDetails)
                 .locationResponse(locationResponse)
+                .questionsQuantity(questionsQuantity)
                 .user(ownerDetails)
                 .images(images)
                 .build();

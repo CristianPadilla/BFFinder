@@ -18,6 +18,7 @@ public class AdoptionPostResponse {
     private int id;
     private String description;
     private String date;
+    private int questionsQuantity;
     private UserResponse user;
     private PetResponse petResponse;
     private LocationResponse locationResponse;

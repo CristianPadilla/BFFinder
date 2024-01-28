@@ -5,6 +5,7 @@ import "styles/ViewPost.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { setActivePost, startGetPostById } from "../store/post";
 import { useParams } from "react-router";
+import ProgressCircular from "../Components/ProgressCircular";
 
 const ViewPost = () => {
   const dispatch = useDispatch();
@@ -14,10 +15,10 @@ const ViewPost = () => {
 
   useEffect(async () => {
     dispatch(setActivePost(null));
-    console.log("usefect viweposttt  ", post);
+    // console.log("usefect viweposttt  ", post);
     dispatch(startGetPostById(id));
     return () => {
-      console.log("LIMPIEZAAAAAAAAAA  ", post);
+      // console.log("LIMPIEZAAAAAAAAAA  ", post);
       dispatch(setActivePost(null));
     };
   }, [id]);
@@ -36,7 +37,7 @@ const ViewPost = () => {
             </div> */}
           <div className="main-content-post">
             {contentLoading ? (
-              <h1>Cargando...</h1>
+              <ProgressCircular />
             ) : (
               post && <SectionPost post={post} />
             )}

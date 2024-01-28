@@ -24,7 +24,7 @@ import { startDeletePet } from "../../store/pet";
 const DialogViewPet = ({ open, onClose }) => {
   const [editing, setEditing] = useState(false);
   const { active: pet } = useSelector((state) => state.pets);
-
+const dispatch = useDispatch();
   
 
   console.log("pet del dialog: ", pet);

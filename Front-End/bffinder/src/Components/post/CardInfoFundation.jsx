@@ -191,7 +191,7 @@ const CardInfoFundation = ({ post }) => {
                     fontSize="small"
                     style={{ marginBottom: "-3px", marginRight: ".3rem" }}
                   />{" "}
-                  Whatsapp: (123) 456-7890
+                  Whatsapp: {postToDisplay.user.phoneNumber}
                 </Typography>
               </Grid>
               <Grid item xs={12}>

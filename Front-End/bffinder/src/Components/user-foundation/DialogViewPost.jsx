@@ -23,45 +23,6 @@ import { useSelector } from "react-redux";
 import FormattedDatePost from "../FormattedDatePost";
 import { Favorite, QuestionAnswer } from "@mui/icons-material";
 
-const photos = [
-  {
-    original: "https://picsum.photos/id/1018/1000/600/",
-    thumbnail: "https://picsum.photos/id/1018/250/150/",
-  },
-  {
-    original: "https://picsum.photos/id/1015/1000/600/",
-    thumbnail: "https://picsum.photos/id/1015/250/150/",
-  },
-  {
-    original: "https://picsum.photos/id/1019/1000/600/",
-    thumbnail: "https://picsum.photos/id/1019/250/150/",
-  },
-  {
-    original: "https://picsum.photos/id/1018/1000/600/",
-    thumbnail: "https://picsum.photos/id/1018/250/150/",
-  },
-  {
-    original: "https://picsum.photos/id/1015/1000/600/",
-    thumbnail: "https://picsum.photos/id/1015/250/150/",
-  },
-  {
-    original: "https://picsum.photos/id/1019/1000/600/",
-    thumbnail: "https://picsum.photos/id/1019/250/150/",
-  },
-  {
-    original: "https://picsum.photos/id/1018/1000/600/",
-    thumbnail: "https://picsum.photos/id/1018/250/150/",
-  },
-  {
-    original: "https://picsum.photos/id/1015/1000/600/",
-    thumbnail: "https://picsum.photos/id/1015/250/150/",
-  },
-  {
-    original: "https://picsum.photos/id/1019/1000/600/",
-    thumbnail: "https://picsum.photos/id/1019/250/150/",
-  },
-];
-
 const DialogViewPost = ({ open, onClose }) => {
   const { active: post } = useSelector((state) => state.posts);
   const [editing, setEditing] = useState(false);
@@ -81,7 +42,7 @@ const DialogViewPost = ({ open, onClose }) => {
         images: imagesToDisplay,
       };
 
-  // console.log("INFO DIALOG", imagesToDisplay);
+  // console.log("INFO DIALOG POST", post);
 
   const renderInformationSection = () => (
     <>
@@ -122,7 +83,7 @@ const DialogViewPost = ({ open, onClose }) => {
               </Grid>
               <Grid item>
                 <Typography variant="body2" sx={{ marginLeft: 1 }}>
-                  2 personas guardaron en favoritos
+                {(post.questionsQuantity)+3 || 0} personas guardaron en favoritos
                 </Typography>
               </Grid>
             </Grid>
@@ -136,7 +97,7 @@ const DialogViewPost = ({ open, onClose }) => {
               </Grid>
               <Grid item>
                 <Typography variant="body2" sx={{ marginLeft: 1 }}>
-                  4 personas preguntaron
+                  {post.questionsQuantity || 0} personas preguntaron
                 </Typography>
               </Grid>
             </Grid>

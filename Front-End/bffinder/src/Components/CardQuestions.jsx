@@ -6,11 +6,12 @@ import {
   Typography,
   TextField,
   Button,
+  IconButton,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { startUpdateQuestionAnswer } from "../store/questions";
 import FormattedDate from "./FormattedDate";
-import { Edit, Send } from "@mui/icons-material";
+import { Cancel, Edit, Send } from "@mui/icons-material";
 
 const CardQuestions = ({ question, onEdit }) => {
   const dispatch = useDispatch();
@@ -41,9 +42,9 @@ const CardQuestions = ({ question, onEdit }) => {
   };
 
   const handleCancelClick = () => {
-    setReplyText("");
     setShowCancelButton(false);
-    console.log("Cancelled. showCancelButton:", showCancelButton);
+    setIsReplying(false);
+    // console.log("Cancelled. showCancelButton:", showCancelButton);
   };
 
   const handleInputChange = (e) => {
@@ -92,14 +93,11 @@ const CardQuestions = ({ question, onEdit }) => {
                 // onChange={(e) => setReplyText(e.target.value)}
                 helperText={
                   <span>
-                    {showCancelButton && (
-                      <>
-                        Con Esc puede cancelar&nbsp;
-                        <IconButton onClick={handleCancelClick} size="small">
-                          <CancelIcon />
-                        </IconButton>
-                      </>
-                    )}
+                       
+                        <Button onClick={handleCancelClick} size="small">
+                           Cancelar 
+                          <Cancel />
+                        </Button>
                   </span>
                 }
               />
@@ -162,6 +160,14 @@ const CardQuestions = ({ question, onEdit }) => {
                 label="Responder"
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
+                helperText={
+                  <span>
+                        Con Esc puede cancelar&nbsp;
+                        <IconButton onClick={handleCancelClick} size="small">
+                          <Cancel />
+                        </IconButton>
+                  </span>
+                }
               />
               <Button
                 variant="contained"
