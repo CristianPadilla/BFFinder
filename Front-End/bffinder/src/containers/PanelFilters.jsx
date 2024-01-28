@@ -172,7 +172,7 @@ const PanelFilters = ({ module }) => {
       // console.log("consultando ciudades == ", cities);
 
       if (filters.department_id === 0 && departments.length > 0) {
-        console.log("cityId: ", city_location, departmentsOptions);
+        // console.log("cityId: ", city_location, departmentsOptions);
         // const cityId = citiesOptions.find((option) => option.label === city_location);
         const departmentId = departmentsOptions.find(
           (option) => option.label === department_location

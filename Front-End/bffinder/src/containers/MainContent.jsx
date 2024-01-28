@@ -85,7 +85,7 @@ const MainContent = ({ noResult }) => {
       },
     },
   });
-  console.log("noResult", noResult);
+  // console.log("noResult", noResult);
   return (
     <>
       {noResult != null ? (

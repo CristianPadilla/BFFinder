@@ -115,8 +115,7 @@ export const startUpdatePost = (post) => async (dispatch, getState) => {
     }
 
     if (post.images.length > 0) {
-        // console.log("actualizando imagenes de la publicacion");
-        dispatch(startCleanPostImages(currentPost.id));
+        await dispatch(startCleanPostImages(currentPost.id));
         const imagesUploadPromises = [];
         for (const image of post.images) {
             // console.log("GGGGGGGGGGGGGGG  ", image);
@@ -166,7 +165,7 @@ export const startCreatePost = (post) => async (dispatch, getState) => {
         dispatch(setErrorMessage(data));
         throw new Error("Error al crear la publicacion ");
     }
-
+    
     if (post.images.length > 0) {
         const imagesUploadPromises = [];
         for (const image of post.images) {
