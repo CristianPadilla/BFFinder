@@ -43,17 +43,12 @@ const SectionPost = ({ post }) => {
   const answeredQuestions = post.questions.filter(
     (question) => question.answer && question.answer !== ""
   );
-  // const { active: post } = useSelector((state) => state.posts);
   const { contentLoading } = useSelector((state) => state.persisted.global);
   const dispatch = useDispatch();
 
-  const imagesToDisplay =
-    post.images.length > 0
-      ? [
-          post.petResponse.profileImageUrl,
-          post.images.map((image) => image.imageUrl),
-        ]
-      : [post.petResponse.profileImageUrl];
+  const imagesToDisplay = [post.petResponse.profileImageUrl];
+  post.images.length > 0 &&
+    post.images.map((image) => imagesToDisplay.push(image.imageUrl));
 
   const handleSaveQuestion = () => {
     if (question.length < 10 || question.length > 250) {
@@ -80,6 +75,8 @@ const SectionPost = ({ post }) => {
         });
     }
   };
+
+  // console.log("post VIEW PET", imagesToDisplay);
 
   return (
     <>
@@ -195,9 +192,11 @@ const SectionPost = ({ post }) => {
                             sx={{ marginLeft: "10px" }}
                           >
                             <>
-                              {question.answer || ""}{"   "}
+                              {question.answer || ""}
+                              {"   "}
                               <span style={{ fontSize: "0.7rem" }}>
-                              {"   "}<FormattedDate date={question.answerDate} />
+                                {"   "}
+                                <FormattedDate date={question.answerDate} />
                               </span>
                             </>
                           </Typography>

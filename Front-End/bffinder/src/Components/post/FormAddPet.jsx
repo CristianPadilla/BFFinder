@@ -10,10 +10,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { getBreedsBySpecieId, getSpecies } from "../../store/global";
 import { t } from "i18next";
 import { startAddNewPet, startUpdatePet } from "../../store/pet";
+import ProgressCircular from "../ProgressCircular";
 
 const FormAddPet = () => {
   const dispatch = useDispatch();
   const { active: pet, isSaving } = useSelector((state) => state.pets);
+  const { contentLoading } = useSelector((state) => state.persisted.global);
   const [species, setSpecies] = useState([]);
   const [breeds, setBreeds] = useState([]);
 
@@ -119,10 +121,11 @@ const FormAddPet = () => {
           image: null,
         };
   return (
-    // isSaving
-    //   ? <h2> Loadinggg</h2 >
-    //   :
+    isSaving
+      ?<ProgressCircular />
+      :
     <>
+
       <Grid container spacing={2}>
         {/* <Grid container spacing={2} sx={{ height: "100vh" }}> */}
         <Formik

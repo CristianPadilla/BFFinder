@@ -541,7 +541,7 @@ const PanelFilters = ({ module }) => {
           onChange={handleDatePickerChange}
           label="Fecha de publicación"
           value={filters.from_date ? filters.from_date : ""}
-          placeholder="DD/MM/AAAA"
+          // placeholder="DD/MM/AAAA"
           // helperText={
           //   "Abre el calendario y selecciona 'borrar' para limpiar el filtro"
           // }

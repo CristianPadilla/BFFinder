@@ -101,6 +101,7 @@ export const startGetPostById = (id) => async (dispatch) => {
 };
 
 export const startUpdatePost = (post) => async (dispatch, getState) => {
+    dispatch(stopContentLoading())
     dispatch(setIsSaving(true))
     const currentPost = getState().posts.active;
     // console.log("startUpdatePost from thunk ", currentPost);
@@ -127,6 +128,7 @@ export const startUpdatePost = (post) => async (dispatch, getState) => {
 
     dispatch(setActivePost(null));
     dispatch(setIsSaving(false));
+    dispatch(stopContentLoading())
     dispatch(fetchPosts());
 }
 
@@ -146,8 +148,9 @@ export const startUpdatePostImage = (postId, image) => async (dispatch) => {
 }
 
 export const startCreatePost = (post) => async (dispatch, getState) => {
+    dispatch(stopContentLoading())
     dispatch(setIsSaving(true))
-    // console.log("startCreatePost from thunk ", postToCreate);
+    // console.log("startCreatePost from thunk ", post.images);
     const { userId } = getState().persisted.auth;
     const postToCreate = {
         userId: userId,
@@ -174,6 +177,7 @@ export const startCreatePost = (post) => async (dispatch, getState) => {
     }
 
     dispatch(setActivePost(null));
+    dispatch(stopContentLoading())
     dispatch(setIsSaving(false))
     dispatch(fetchPosts());
 }
@@ -206,7 +210,7 @@ export const startChangePostStatus = (postId, statusToSet) => async (dispatch) =
     } else if (statusToSet === "disable") {
         response = await postApi.put('/disable/' + postId);
     }
-    const {status, data} = response;
+    const { status, data } = response;
     if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage("Error al deshabilitar la publicacion"));
 
     dispatch(setActivePost(null));

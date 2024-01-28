@@ -93,11 +93,10 @@ const CardQuestions = ({ question, onEdit }) => {
                 // onChange={(e) => setReplyText(e.target.value)}
                 helperText={
                   <span>
-                       
-                        <Button onClick={handleCancelClick} size="small">
-                           Cancelar 
-                          <Cancel />
-                        </Button>
+                    <Button onClick={handleCancelClick} size="small">
+                      Cancelar
+                      <Cancel />
+                    </Button>
                   </span>
                 }
               />
@@ -162,10 +161,9 @@ const CardQuestions = ({ question, onEdit }) => {
                 onChange={(e) => setReplyText(e.target.value)}
                 helperText={
                   <span>
-                        Con Esc puede cancelar&nbsp;
-                        <IconButton onClick={handleCancelClick} size="small">
-                          <Cancel />
-                        </IconButton>
+                    <IconButton onClick={handleCancelClick} size="small">
+                      Cancelar <Cancel />
+                    </IconButton>
                   </span>
                 }
               />

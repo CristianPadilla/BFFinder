@@ -35,6 +35,8 @@ const SlidersImages = ({
   handleTouchStart,
   ...otherProps
 }) => {
+  // console.log("IMAGES XXXXXX", images);
+
   const imagesToDisplay = images.map((image) => {
     return {
       original: image,

@@ -1,6 +1,6 @@
 import React from "react";
 import NavProfile from "../Components/NavProfile";
-import "styles/Account.scss";
+import "../styles/Account.scss";
 import ProfilePanel from "../containers/ProfilePanel";
 import { Typography } from "@mui/material";
 import ContentMainAccount from "../Components/ContentMainAccount";

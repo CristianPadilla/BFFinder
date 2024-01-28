@@ -52,6 +52,7 @@ export const startFetchPets = () => async (dispatch, getState) => {
         }
 
         ));
+        dispatch(startGetShelterAvailableSpecies())
         dispatch(stopContentLoading())
     } catch (error) {
         console.log(error);
@@ -70,6 +71,7 @@ export const changePetsRequest = (filters) => async (dispatch, getState) => {
 };
 
 export const startAddNewPet = (pet) => async (dispatch, getState) => {
+    dispatch(startContentLoading())
     const { userId } = getState().persisted.auth;
 
     dispatch(savingNewPet(true))
@@ -89,6 +91,7 @@ export const startAddNewPet = (pet) => async (dispatch, getState) => {
     };
     dispatch(setActivePet(null)); // no concluido
     dispatch(savingNewPet(false));
+    dispatch(stopContentLoading())
     dispatch(changePetsRequest([{ page: 0 }]))
     dispatch(startFetchPets());
 };
@@ -96,6 +99,7 @@ export const startAddNewPet = (pet) => async (dispatch, getState) => {
 
 export const startUpdatePet = (pet) => async (dispatch, getState) => {
 
+    dispatch(startContentLoading())
     dispatch(savingNewPet(true))
     // console.log("startUpdatePet from thunk ", pet);
 
@@ -110,6 +114,7 @@ export const startUpdatePet = (pet) => async (dispatch, getState) => {
     };
     dispatch(setActivePet(null));
     dispatch(savingNewPet(false));
+    dispatch(stopContentLoading())
     dispatch(changePetsRequest([{ page: 0 }]))
     dispatch(startFetchPets());
     dispatch(changePostsRequest([{ page: 0 }]))

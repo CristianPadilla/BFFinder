@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getPetsByUserId } from "../../store/pet";
 import { t } from "i18next";
 import { startCreatePost, startUpdatePost } from "../../store/post";
+import ProgressCircular from "../ProgressCircular";
 
 const FormAddPost = () => {
   const { active: post, isSaving } = useSelector((state) => state.posts);
@@ -65,6 +66,7 @@ const FormAddPost = () => {
       petId: values.pet.value,
       images: values.images,
     };
+    // console.log("postToSave==  : ", postToSave.images);
     if (post) {
       dispatch(startUpdatePost(postToSave));
     } else {
@@ -83,7 +85,9 @@ const FormAddPost = () => {
         pet: { label: "", value: null },
         images: [],
       };
-  return (
+  return isSaving ? (
+    <ProgressCircular />
+  ) : (
     <Formik
       initialValues={initialValues}
       onSubmit={handleSubmit}
