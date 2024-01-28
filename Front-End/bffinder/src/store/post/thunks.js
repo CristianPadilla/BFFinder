@@ -114,8 +114,7 @@ export const startUpdatePost = (post) => async (dispatch, getState) => {
     }
 
     if (post.images.length > 0) {
-        // console.log("actualizando imagenes de la publicacion");
-        dispatch(startCleanPostImages(currentPost.id));
+        await dispatch(startCleanPostImages(currentPost.id));
         const imagesUploadPromises = [];
         for (const image of post.images) {
             // console.log("GGGGGGGGGGGGGGG  ", image);
@@ -147,7 +146,6 @@ export const startUpdatePostImage = (postId, image) => async (dispatch) => {
 
 export const startCreatePost = (post) => async (dispatch, getState) => {
     dispatch(setIsSaving(true))
-    // console.log("startCreatePost from thunk ", postToCreate);
     const { userId } = getState().persisted.auth;
     const postToCreate = {
         userId: userId,
@@ -163,7 +161,7 @@ export const startCreatePost = (post) => async (dispatch, getState) => {
         dispatch(setErrorMessage(data));
         throw new Error("Error al crear la publicacion ");
     }
-
+    
     if (post.images.length > 0) {
         const imagesUploadPromises = [];
         for (const image of post.images) {
@@ -206,7 +204,7 @@ export const startChangePostStatus = (postId, statusToSet) => async (dispatch) =
     } else if (statusToSet === "disable") {
         response = await postApi.put('/disable/' + postId);
     }
-    const {status, data} = response;
+    const { status, data } = response;
     if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage("Error al deshabilitar la publicacion"));
 
     dispatch(setActivePost(null));

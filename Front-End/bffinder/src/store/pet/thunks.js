@@ -52,6 +52,7 @@ export const startFetchPets = () => async (dispatch, getState) => {
         }
 
         ));
+        dispatch(startGetShelterAvailableSpecies())
         dispatch(stopContentLoading())
     } catch (error) {
         console.log(error);

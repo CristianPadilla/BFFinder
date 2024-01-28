@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.Random;
 
 @Service
 @Log4j2
@@ -92,6 +93,8 @@ public class ImageServiceImpl implements ImageService {
 
         var imageName = generateImageName(postId);
         var blobname = "/" + postId + "/" + imageName; // image name must include user id folder
+//        log.info("NOMBRE IMAGEN {} ", image.getOriginalFilename());
+//        log.info("NOMBRE BLOB {} ", blobname);
         var createdBlobName = storageService.uploadPostImage(blobname, image);
 
         var imageEntity = ImageEntity.builder()
@@ -131,6 +134,8 @@ public class ImageServiceImpl implements ImageService {
     private String generateImageName(long identifier) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");// include milliseconds
         String timestamp = dateFormat.format(Date.from(Instant.now()));
-        return identifier + "_" + timestamp + ".png";
+        Random random = new Random();
+        int randomInt = random.nextInt(1000); // numero random ya que los milisegundos no fueron suficiente s y me duplicaba los nombres :(
+        return identifier + "_" + timestamp + "_" + randomInt + ".png";
     }
 }
