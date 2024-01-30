@@ -115,6 +115,7 @@ public class AuthenticationService {
                 .nit(request.getNit())
                 .comercialRegistrationNumber(request.getComercialRegistrationNumber())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .shelterEnabled('p')
                 .build();
 
         user = repository.save(user);

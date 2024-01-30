@@ -46,5 +46,7 @@ public class UserEntity {
     private String webPageUrl;
     @Column(name = "image_id")
     private Integer imageId;
+    @Column(name = "is_shelter_enabled")
+    private char shelterEnabled;
 
 }
