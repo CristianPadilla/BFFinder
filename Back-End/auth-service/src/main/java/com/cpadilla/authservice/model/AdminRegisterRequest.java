@@ -9,15 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserCredentialsResponse {
+public class AdminRegisterRequest {
 
-    private long userId;
     private String name;
-    private String lastname;
     private String email;
     private String password;
-    private String photoUrl;
-    private char role;
-    private Character shelterEnabled;
-
 }

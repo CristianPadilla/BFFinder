@@ -32,7 +32,7 @@ public class UserEntity {
     private String comercialRegistrationNumber;
     private char role;
     @Column(name = "is_shelter_enabled")
-    private char shelterEnabled;
+    private Character shelterEnabled;
     private String email;
     private String password;
 

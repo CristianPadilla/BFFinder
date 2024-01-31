@@ -1,9 +1,6 @@
 package com.cpadilla.authservice.controller;
 
-import com.cpadilla.authservice.model.AuthenticationRequest;
-import com.cpadilla.authservice.model.AuthenticationResponse;
-import com.cpadilla.authservice.model.ShelterRegisterRequest;
-import com.cpadilla.authservice.model.UserRegisterRequest;
+import com.cpadilla.authservice.model.*;
 import com.cpadilla.authservice.service.AuthenticationService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +43,18 @@ public class AuthController {
     @GetMapping("/validate")
     public ResponseEntity<AuthenticationResponse> validateToken(@RequestHeader("Authorization") String token) {
         return ResponseEntity.status(HttpStatus.OK).body(service.validateToken(token));
+    }
+
+    @PostMapping("/register/admin")
+    public ResponseEntity<AuthenticationResponse> registerAdmin(@RequestBody AdminRegisterRequest admin) {
+        log.info("saving  admin user from auth service CONTROLLER");
+        return new ResponseEntity<>(service.registerAdmin(admin), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/saludo")
+    public ResponseEntity<Void> registerAdmin() {
+        log.info("HOLA MUNDOOOOOOOOOOOOO");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

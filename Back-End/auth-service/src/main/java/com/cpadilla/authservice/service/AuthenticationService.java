@@ -63,6 +63,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .role('u')
                 .phone(request.getPhone())
+//                .shelterEnabled('e')
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
 
@@ -128,6 +129,7 @@ public class AuthenticationService {
                 .email(userDetails.getEmail())
                 .photoUrl(userDetails.getProfileImageUrl())
                 .role(userDetails.getRole())
+                .shelterEnabled(user.getShelterEnabled())
                 .build();
 
         var jwtToken = jwtService.generateToken(CustomUserDetails.builder()
@@ -137,6 +139,34 @@ public class AuthenticationService {
 
         return AuthenticationResponse.builder()
                 .user(userCredentials)
+                .token(jwtToken)
+                .build();
+    }
+
+    public AuthenticationResponse registerAdmin (AdminRegisterRequest request) {
+        if (repository.findByEmail(request.getEmail()).isPresent())
+            throw new UserAlreadyExistException("User with email " + request.getEmail() + " is already registered");
+
+        var user = UserEntity.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .role('a')
+                .password(passwordEncoder.encode(request.getPassword()))
+                .build();
+        user = repository.save(user);
+
+        var jwtToken = jwtService.generateToken(CustomUserDetails.builder()
+                .username(user.getEmail())
+                .password(user.getPassword())
+                .build());
+
+        return AuthenticationResponse.builder()
+                .user(UserCredentialsResponse.builder()
+                        .userId(user.getId())
+                        .email(user.getEmail())
+                        .name(user.getName())
+                        .role(user.getRole())
+                        .build())
                 .token(jwtToken)
                 .build();
     }
@@ -164,6 +194,7 @@ public class AuthenticationService {
                         .lastname(user.getSurname())
                         .photoUrl(userDetails.getProfileImageUrl())
                         .email(userDetails.getEmail())
+                        .shelterEnabled(user.getShelterEnabled())
                         .role(userDetails.getRole())
                         .build();
                 return AuthenticationResponse.builder()
@@ -175,6 +206,7 @@ public class AuthenticationService {
             }
 
         } catch (AuthenticationException e) {
+            log.info("error ", e);
             throw new InvalidCredentialsException("Wrong credentials for email: " + request.getUsername());
         }
     }

@@ -21,6 +21,7 @@ public class UserResponse {
     private String phoneNumber;
     private String profileImageUrl;
     private char role;
+    private Character shelterEnabled;
     private Instant birthDate;
     private LocationResponse location;
 }

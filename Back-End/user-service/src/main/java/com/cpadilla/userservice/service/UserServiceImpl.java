@@ -96,17 +96,17 @@ public class UserServiceImpl implements UserService {
         var shelters = repository.findAllByRoleOrderByBirthDate(Character.valueOf('s'));
 //        log.info("USUARIOSSSSS {}", shelters);
 
-        return shelters.stream().map(userEntity ->{
-            var profileImage =
-                    userEntity.getImageId() != null
-                            ? imageService.getImageById(userEntity.getImageId()).getBody().getImageUrl()
-                            : null;
+        return shelters.stream().map(userEntity -> {
+                    var profileImage =
+                            userEntity.getImageId() != null
+                                    ? imageService.getImageById(userEntity.getImageId()).getBody().getImageUrl()
+                                    : null;
 
-            return ShelterUserProfilePartialsResponse.builder()
-                    .id(userEntity.getUserId())
-                    .name(userEntity.getName())
-                    .profileImageUrl(profileImage)
-                    .build();
+                    return ShelterUserProfilePartialsResponse.builder()
+                            .id(userEntity.getUserId())
+                            .name(userEntity.getName())
+                            .profileImageUrl(profileImage)
+                            .build();
                 }
         ).collect(Collectors.toList());
     }
@@ -187,4 +187,57 @@ public class UserServiceImpl implements UserService {
                     .build();
         } else throw new UserServiceCustomException("user role is not valid", "ROLE_NOT_VALID");
     }
+
+    @Override
+    public UserResponse enableShelterUser(long userId) {
+        log.info("enabling shelter user with id: {} from service layer", userId);
+        var userEntity = repository.findById(userId)
+                .orElseThrow(() -> new UserServiceCustomException("user with given id not found", "USER_NOT_FOUND"));
+        userEntity.setShelterEnabled('e');
+        var updatedUser = repository.save(userEntity);
+
+        return buildShelterUserAdminProfileResponse(updatedUser);
+    }
+
+    @Override
+    public UserResponse disableShelterUser(long userId) {
+        log.info("disabling shelter user with id: {} from service layer", userId);
+        var userEntity = repository.findById(userId)
+                .orElseThrow(() -> new UserServiceCustomException("user with given id not found", "USER_NOT_FOUND"));
+        userEntity.setShelterEnabled('d');
+        var updatedUser = repository.save(userEntity);
+
+        return buildShelterUserAdminProfileResponse(updatedUser);
+
+
+    }
+
+    @Override
+    public List<UserResponse> findPendingShelterUsers() {
+        log.info("getting pending shelter users from service layer");
+        var users = repository.findAllByRoleAndAndShelterEnabled('s', 'p');
+
+        return users.stream().map(this::buildShelterUserAdminProfileResponse).collect(Collectors.toList());
+    }
+
+    public ShelterUserProfileResponse buildShelterUserAdminProfileResponse(UserEntity userEntity) {
+        var profileImage =
+                userEntity.getImageId() != null
+                        ? imageService.getImageById(userEntity.getImageId()).getBody().getImageUrl()
+                        : null;
+
+        return ShelterUserProfileResponse.builder()
+                .userId(userEntity.getUserId())
+                .name(userEntity.getName())
+                .email(userEntity.getEmail())
+                .phoneNumber(userEntity.getPhoneNumber())
+                .commercialRegistrationNumber(userEntity.getCommercialRegistrationNumber())
+                .nit(userEntity.getNit())
+                .profileImageUrl(profileImage)
+                .shelterEnabled(userEntity.getShelterEnabled())
+                .role('s')
+                .build();
+    }
+
+
 }

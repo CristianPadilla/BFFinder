@@ -54,5 +54,23 @@ public class UserController {
         return new ResponseEntity<>(service.findSheltersPartialsProfiles(), HttpStatus.OK);
     }
 
+    @PutMapping("/enable/shelter/{id}")
+    public ResponseEntity<UserResponse> enableShelterUser(@PathVariable("id") int userId) {
+        log.info("enabling shelter user with id: {} from controller layer", userId);
+        return new ResponseEntity<>(service.enableShelterUser(userId), HttpStatus.OK);
+    }
+
+    @PutMapping("/disable/shelter/{id}")
+    public ResponseEntity<UserResponse> disableShelterUser(@PathVariable("id") int userId) {
+        log.info("disabling shelter user with id: {} from controller layer", userId);
+        return new ResponseEntity<>(service.disableShelterUser(userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/pending/shelters")
+    public ResponseEntity<List<UserResponse>> findPendingShelterUsers() {
+        log.info("getting pending shelter users");
+        return new ResponseEntity<>(service.findPendingShelterUsers(), HttpStatus.OK);
+    }
+
 
 }

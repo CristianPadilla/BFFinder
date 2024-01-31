@@ -11,6 +11,7 @@ public interface UserService {
 //    long saveUser(UserRequest user);// responsability is now of auth service
 
     UserResponse getUserById(long userId);
+
     List<ShelterUserProfilePartialsResponse> findSheltersPartialsProfiles();
 
     UserCredentialsResponse getUserCredentialsByEmail(String email);
@@ -18,6 +19,11 @@ public interface UserService {
     UserCredentialsResponse getUserCredentialsById(long userId);
 
     UserResponse updateProfileImage(long userId, MultipartFile image);
+
+    UserResponse enableShelterUser(long userId);
+    UserResponse disableShelterUser(long userId);
+
+    List<UserResponse> findPendingShelterUsers();
 
 
 }

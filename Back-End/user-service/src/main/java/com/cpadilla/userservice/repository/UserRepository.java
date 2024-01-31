@@ -14,5 +14,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     List<UserEntity> findAllByRoleOrderByBirthDate(Character role);
 
+    List<UserEntity> findAllByRoleAndAndShelterEnabled(Character rol, Character shelterEnabled);
+
 
 }

@@ -47,6 +47,6 @@ public class UserEntity {
     @Column(name = "image_id")
     private Integer imageId;
     @Column(name = "is_shelter_enabled")
-    private char shelterEnabled;
+    private Character shelterEnabled;
 
 }
