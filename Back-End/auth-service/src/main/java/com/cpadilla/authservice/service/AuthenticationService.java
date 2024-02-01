@@ -143,7 +143,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AuthenticationResponse registerAdmin (AdminRegisterRequest request) {
+    public AuthenticationResponse registerAdmin(AdminRegisterRequest request) {
         if (repository.findByEmail(request.getEmail()).isPresent())
             throw new UserAlreadyExistException("User with email " + request.getEmail() + " is already registered");
 
@@ -186,17 +186,29 @@ public class AuthenticationService {
                         .username(user.getEmail())
                         .password(user.getPassword())
                         .build());
-                var userDetails = userService.getUserById(user.getId()).getBody();
 
-                var userCredentials = UserCredentialsResponse.builder()
-                        .userId(userDetails.getUserId())
-                        .name(userDetails.getName())
-                        .lastname(user.getSurname())
-                        .photoUrl(userDetails.getProfileImageUrl())
-                        .email(userDetails.getEmail())
-                        .shelterEnabled(user.getShelterEnabled())
-                        .role(userDetails.getRole())
-                        .build();
+                UserCredentialsResponse userCredentials = null;
+                if (user.getRole() == 'a') {
+                    userCredentials = UserCredentialsResponse.builder()
+                            .name(user.getName())
+                            .email(user.getEmail())
+                            .role(user.getRole())
+                            .userId(user.getId())
+                            .build();
+                } else {
+
+                    var userDetails = userService.getUserById(user.getId()).getBody();
+                    userCredentials = UserCredentialsResponse.builder()
+                            .userId(userDetails.getUserId())
+                            .name(userDetails.getName())
+                            .lastname(user.getSurname())
+                            .photoUrl(userDetails.getProfileImageUrl())
+                            .email(userDetails.getEmail())
+                            .shelterEnabled(user.getShelterEnabled())
+                            .role(userDetails.getRole())
+                            .build();
+                }
+
                 return AuthenticationResponse.builder()
                         .user(userCredentials)
                         .token(jwtToken)
