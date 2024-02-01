@@ -9,6 +9,8 @@ import {
   Typography,
   Grid,
   CardActionArea,
+  Alert,
+  AlertTitle,
 } from "@mui/material";
 import imgdefault from "imgs/logo-bffinder.png";
 import CloseIcon from "@mui/icons-material/Close";
@@ -97,7 +99,7 @@ const CardVertical = ({ pet }) => {
                       color="text.secondary"
                       sx={{ fontSize: ".9rem", marginBottom: "1rem" }}
                     >
-                      Genero: {t(`genders.${pet.gender}`)}
+                      Sexo: {t(`genders.${pet.gender}`)}
                     </Typography>
                   </Grid>
 
@@ -155,34 +157,21 @@ const CardVertical = ({ pet }) => {
               >
                 {pet.published ? (
                   <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{
-                      padding: ".4rem",
-                      backgroundColor: "lightgreen",
-                      borderRadius: "4px",
-                      letterSpacing: "1px",
-                      fontWeight: "600",
-                      // marginLeft: "8px",
-                    }}
+                    variant="button"
+                    display="block"
+                    gutterBottom
+                    color="seagreen"
+                    fontWeight="bold"
                   >
                     En proceso de adopción
                   </Typography>
                 ) : (
                   <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{
-                      padding: ".4rem",
-                      backgroundColor: "lightcoral",
-                      color: "white",
-                      borderRadius: "4px",
-                      fontWeight: "600",
-                      letterSpacing: "2px",
-                      // marginLeft: "8px",
-                      width: "178px",
-                      textAlign: "center",
-                    }}
+                    variant="button"
+                    display="block"
+                    gutterBottom
+                    color="firebrick"
+                    fontWeight="bold"
                   >
                     Sin publicar
                   </Typography>

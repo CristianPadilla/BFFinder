@@ -145,6 +145,28 @@ body {
 	background-color: $fondo-sections;
 	border-top-left-radius: 18px;
 }
+
+#content main .main-content-admin {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100vh; // O ajusta la altura que desees
+	overflow: hidden;
+	
+	h1 {
+	//   margin-left: 20px; // O el margen que prefieras para el título
+	}
+  
+	.table-container {
+	//   margin: 20px; // Ajusta los márgenes de la tabla según tus preferencias
+	max-height: 500px; // Ajusta la altura máxima según tus necesidades
+    overflow: auto;
+    margin: 20px;
+    width: 97%; 
+	}
+  }
+  
 /* MAIN */
 /* CONTENT */
 

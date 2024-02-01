@@ -49,7 +49,7 @@ const dispatch = useDispatch();
               {t(`breeds.${pet.breedDetails.name}`)}
             </Typography>
             <Typography sx={{ margin: ".2rem" }}>
-              Genero: {t(`genders.${pet.gender}`)}{" "}
+              Sexo: {t(`genders.${pet.gender}`)}{" "}
             </Typography>
             <Typography sx={{ margin: ".2rem" }}>
               Caracter: {t(`dangerous.${pet.dangerous}`)}

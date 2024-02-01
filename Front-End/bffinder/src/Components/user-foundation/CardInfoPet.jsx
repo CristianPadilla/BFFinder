@@ -41,7 +41,7 @@ const CardInfoPet = ({ pet }) => {
         size: "Tamaño",
         breed: "Raza",
         specie: "Especie",
-        gender: "Genero",
+        gender: "Sexo",
         character: "Caracter",
         weight: "Peso",
         age: "Edad",
@@ -136,7 +136,7 @@ const CardInfoPet = ({ pet }) => {
                         {petToDisplay.specie} - {petToDisplay.breed}
                       </Typography>
                       <Typography sx={{ margin: ".1rem" }}>
-                        Genero: {petToDisplay.gender}
+                        Sexo: {petToDisplay.gender}
                       </Typography>
                       <Typography sx={{ margin: ".1rem" }}>
                         Caracter: {petToDisplay.character}
