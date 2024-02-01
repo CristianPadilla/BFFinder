@@ -22,7 +22,7 @@ import UserAdministration from "../pages/UserAdministration";
 
 const MAPS_API_KEY = "AIzaSyCsrzjwPXU2CiwIfW4KmCXz5RklPHQ5TQ8";
 const App = () => {
-	const { status, token } = useSelector(state => state.persisted.auth);
+	const { status, token, role } = useSelector(state => state.persisted.auth);
 	const dispatch = useDispatch();
 
 
@@ -46,7 +46,7 @@ const App = () => {
 					const locationInfo = response.data.results[0].address_components;
 					const city = locationInfo.find(component => component.types.includes('locality')).long_name;
 					const department = locationInfo.find(component => component.types.includes('administrative_area_level_1')).long_name;
-					
+
 					dispatch(setLocation({ city, department }));
 					console.log(`City: ${city}, Department: ${department}`);
 				} catch (error) {
@@ -78,14 +78,27 @@ const App = () => {
 					{
 						(status === 'authenticated')
 							? <Route path="/*" element={
-								<Routes >
-									<Route path="/home" element={<Home />} />
-									<Route path="/*" element={<Navigate to="/home" />} />
-									<Route path="/perfil" element={<Perfil />} />
-									<Route path="/ver-publicacion/:id" element={<Verpublicacion />} />
-									<Route path="/account" element={<Account />} />
-									<Route path="/admin" element={<UserAdministration />} />
-								</Routes>
+
+								role === 'a'
+									? <Routes >
+										<Route path="/admin" element={<UserAdministration />} />
+										<Route path="/*" element={<Navigate to="/admin" />} />
+									</Routes>
+									:
+									<Routes >
+										<Route path="/home" element={<Home />} />
+										<Route path="/*" element={<Navigate to="/home" />} />
+										<Route path="/perfil" element={<Perfil />} />
+										<Route path="/ver-publicacion/:id" element={<Verpublicacion />} />
+										<Route path="/account" element={<Account />} />
+
+									</Routes>
+
+
+								// { role === 'a'
+								// 	? <Route path="/admin" element={<UserAdministration />} />
+								// 	: <Route path="/admin" element={<UserAdministration />} />
+								// }
 							} />
 							: <Route path="/*" element={
 								<Routes >

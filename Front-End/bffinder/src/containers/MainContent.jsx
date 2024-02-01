@@ -16,7 +16,7 @@ import ModalAddPet from "../Components/user-foundation/ModalAddPet";
 
 const MainContent = ({ noResult }) => {
   const { activeModule } = useSelector((state) => state.persisted.global);
-  const { role } = useSelector((state) => state.persisted.auth);
+  const { role, shelterEnabled } = useSelector((state) => state.persisted.auth);
   const [tooltipOpen, setTooltipOpen] = useState(true);
   const sectionRef = useRef(null);
   const dispatch = useDispatch();
@@ -127,46 +127,47 @@ const MainContent = ({ noResult }) => {
         </div>
       )}
 
-{ role === "s" && (
-  <>
-  <Tooltip
-        title={
-          <span style={{ fontSize: "16px" }}>
-            {activeModule === "posts" ? "Crear Publicación" : "Agregar mascota"}
-            {/* Crear Publicación Agregar mascota */}
-          </span>
-        }
-        arrow
-        placement="left"
-        open={tooltipOpen}
-        onClose={handleTooltipClose}
-        onOpen={handleTooltipOpen}
-      >
-        <Fab
-          aria-label="add"
-          onClick={handleOpenDialog}
-          sx={{
-            position: "fixed",
-            bottom: "16px",
-            right: "25px",
-            backgroundColor: "#E1A26A",
-            "&:hover": {
-              backgroundColor: "#da9054",
-            },
-          }}
-        >
-          <Add sx={{ color: "white" }} />
-        </Fab>
-      </Tooltip>
+      {role === "s" ?
+        (activeModule === "posts" && shelterEnabled !== 'e') ? null : (
+          <>
+            <Tooltip
+              title={
+                <span style={{ fontSize: "16px" }}>
+                  {activeModule === "posts" ? "Crear Publicación" : "Agregar mascota"}
+                  {/* Crear Publicación Agregar mascota */}
+                </span>
+              }
+              arrow
+              placement="left"
+              open={tooltipOpen}
+              onClose={handleTooltipClose}
+              onOpen={handleTooltipOpen}
+            >
+              <Fab
+                aria-label="add"
+                onClick={handleOpenDialog}
+                sx={{
+                  position: "fixed",
+                  bottom: "16px",
+                  right: "25px",
+                  backgroundColor: "#E1A26A",
+                  "&:hover": {
+                    backgroundColor: "#da9054",
+                  },
+                }}
+              >
+                <Add sx={{ color: "white" }} />
+              </Fab>
+            </Tooltip>
 
-      <ModalAddPet
-        open={openDialog}
-        onClose={handleCloseDialog}
-        // onAdd={handleAddPet}
-      />
-      </>
-)}
-      
+            <ModalAddPet
+              open={openDialog}
+              onClose={handleCloseDialog}
+            // onAdd={handleAddPet}
+            />
+          </>
+        ) : null}
+
     </>
   );
 };

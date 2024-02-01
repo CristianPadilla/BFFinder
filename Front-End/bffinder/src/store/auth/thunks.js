@@ -64,7 +64,8 @@ export const startLogin = ({ email, password }) =>
                 lastname: user.lastname || null,
                 email: user.email,
                 photoUrl: user.photoUrl,
-                role: user.role
+                role: user.role,
+                shelterEnabled: user.shelterEnabled
             }
             dispatch(setActiveModule({ module: user.role === "u" ? "posts" : "pets" }))
             dispatch(login(sent))

@@ -72,6 +72,14 @@ public class UserServiceImpl implements UserService {
                     .webPageUrl(userEntity.getWebPageUrl())
                     .commercialRegistrationNumber(userEntity.getCommercialRegistrationNumber())
                     .build();
+        } else if (userEntity.getRole() == 'a') {
+
+            return UserProfileResponse.builder()
+                    .userId(userEntity.getUserId())
+                    .name(userEntity.getName())
+                    .email(userEntity.getEmail())
+                    .role(userEntity.getRole())
+                    .build();
         } else throw new UserServiceCustomException("user role is not valid", "ROLE_NOT_VALID");
 
 

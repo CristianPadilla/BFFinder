@@ -1,8 +1,9 @@
 import { HttpStatusCode } from "axios";
 import { postApi } from "../../api/postApi";
 import { startContentLoading, stopContentLoading } from "../global";
-import { setQuestions } from "./questionSlice";
+import { setPendingShelters, setQuestions } from "./questionSlice";
 import { setErrorMessage } from "../pet";
+import { userApi } from "../../api/userApi";
 
 export const startFetchQuestionsByShelter = () =>
     async (dispatch, getState) => {
@@ -80,3 +81,49 @@ export const startCreateQuestion = (question, postId) =>
             }
         });
     };
+
+export const startGetPendingShelters = () =>
+    async (dispatch, getState) => {
+        try {
+            dispatch(startContentLoading())
+
+            const { status, data } = await userApi.get("/pending/shelters");
+
+            if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+
+            dispatch(setPendingShelters(data))
+            dispatch(stopContentLoading())
+        } catch (error) {
+            console.log(error);
+            dispatch(stopContentLoading())
+            throw new Error(error);
+        }
+    }
+
+export const startDisableShelter = (userId) =>
+    async (dispatch, getState) => {
+        try {
+            dispatch(startContentLoading())
+            const { status, data } = await userApi.put("/disable/shelter/" + userId);
+            if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+            dispatch(startGetPendingShelters())
+        } catch (error) {
+            console.log(error);
+            dispatch(stopContentLoading())
+            throw new Error(error);
+        }
+    }
+
+export const startEnableShelter = (userId) =>
+    async (dispatch, getState) => {
+        try {
+            dispatch(startContentLoading())
+            const { status, data } = await userApi.put("/enable/shelter/" + userId);
+            if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+            dispatch(startGetPendingShelters())
+        } catch (error) {
+            console.log(error);
+            dispatch(stopContentLoading())
+            throw new Error(error);
+        }
+    }

@@ -13,6 +13,8 @@ export const authSlice = createSlice({
         photoUrl: null,
         role: null,
         errorMessage: null,
+        shelterEnabled: 'p',
+
     },
     reducers: {
         login(state, { payload }) {
@@ -21,9 +23,10 @@ export const authSlice = createSlice({
             state.token = payload.token;
             state.userId = payload.userId;
             state.email = payload.email;
-            state.name = payload.name + (payload.role === 's' ? "" : " " + payload.lastname);
+            state.name = payload.name + (payload.role === 's' || payload.role === 'a' ? "" : " " + payload.lastname);
             state.photoUrl = payload.photoUrl;
             state.role = payload.role;
+            state.shelterEnabled = payload.shelterEnabled;
             state.errorMessage = null;
         },
         logout(state, { payload }) {
@@ -35,6 +38,7 @@ export const authSlice = createSlice({
             state.name = null;
             state.photoUrl = null;
             state.role = null;
+            state.shelterEnabled = 'p';
             state.errorMessage = payload != null ? payload.errorMessage : null;
         },
         checkingCredentials(state) {

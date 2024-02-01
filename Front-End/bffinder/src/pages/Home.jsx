@@ -12,13 +12,14 @@ import { use } from "i18next";
 import { LoadingFilters } from "../Components/LoadingFilters";
 import NoResults from "../Components/NoResults";
 import { setActiveModule } from "../store/global";
+import { act } from "react-dom/test-utils";
 
 const Home = () => {
   const dispatch = useDispatch();
   const { activeModule, contentLoading } = useSelector(
     (state) => state.persisted.global
   );
-  const { role } = useSelector((state) => state.persisted.auth);
+  const { role, shelterEnabled } = useSelector((state) => state.persisted.auth);
   const { page: petsPage } = useSelector((state) => state.pets);
   const { page: postsPage } = useSelector((state) => state.posts);
 
@@ -55,7 +56,13 @@ const Home = () => {
 
   // const content = !contentLoading &&
   // (activeModule === "posts" ? postsPage : petsPage);
+  const notAvailableForPosting = shelterEnabled === "d"
+    ? <div>Su solicitud de autenticación como refugio ha sido rechazada, si quiere hacer una reclamacion comuniquese con *sporte* </div>
+    : <div>Para publicar a tus animalitos debes enviar un correo electronico bffinder.suppurt@mail.com </div>;
 
+  console.log("role", role);
+  console.log("activeModule", activeModule);
+  console.log("shelterEnabled", shelterEnabled);
   return (
     <div>
       <section id="content">
@@ -65,8 +72,8 @@ const Home = () => {
             <div className="left">
               {role === "u" ? (
                 <h2>Encuentra tu mejor amigo</h2>
-              ) : activeModule === "posts" ?  
-                <h2>Publicaciones de tus mascotas</h2> 
+              ) : activeModule === "posts" ?
+                <h2>Publicaciones de tus mascotas</h2>
                 : <h2>Tus mascotas</h2>
               }
             </div>
@@ -82,15 +89,18 @@ const Home = () => {
               <PanelF />
             </div>
             <div className="main-content-scroll animate__animated animate__fadeIn animate__faster">
-              {noContent && contentLoading ? (
-                <LoadingFilters />
-              ) : noContent ? (
-                <MainContent noResult={<NoResults />} />
-              ) : !content ? (
-                <LoadingFilters />
-              ) : (
-                <MainContent />
-              )}
+              {(role === "s" && activeModule === "posts" && shelterEnabled !== 'e')
+                ? notAvailableForPosting
+                :
+                noContent && contentLoading ? (
+                  <LoadingFilters />
+                ) : noContent ? (
+                  <MainContent noResult={<NoResults />} />
+                ) : !content ? (
+                  <LoadingFilters />
+                ) : (
+                  <MainContent />
+                )}
 
               {/* {noContent ? (
                 <h2>No hay contenido</h2>
