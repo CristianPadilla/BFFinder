@@ -11,15 +11,14 @@ import {
   Tooltip,
   ToggleButton,
 } from "@mui/material";
-import { Settings, Logout, Favorite, Pets, QuestionAnswer } from "@mui/icons-material";
+import { Logout } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { startLogout } from "../store/auth";
 import { changeActiveModule, setActiveModule } from "../store/global";
 import { startGetLoggedUserInformation } from "../store/global";
 
-const PerfilMenu = () => {
-
+const PerfilMenuAdmin = () => {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -28,12 +27,8 @@ const PerfilMenu = () => {
   const { photoUrl } = useSelector((state) => state.persisted.auth);
   const { role } = useSelector((state) => state.persisted.auth);
 
-  const postsModuleTitle = role === "u" ? "Adoptar" : "Mis publicaciones";
-
   const commonButtonStyles = {
     borderRadius: "16px",
-    // color: "#A0A0A0",
-    // color: "black",
     color: "#BA8C63",
     mr: "1rem",
   };
@@ -57,12 +52,6 @@ const PerfilMenu = () => {
     setAnchorEl(null);
   };
 
-  const handleProfile = (e) => {
-    console.log("handleProfile===", e.currentTarget.dataset.value);
-    dispatch(setActiveModule({ module: e.currentTarget.dataset.value }));
-    navigate("/account");
-  };
-
   const handleChangeModule = (module) => {
     dispatch(changeActiveModule({ module }));
   };
@@ -71,52 +60,19 @@ const PerfilMenu = () => {
     dispatch(startLogout({}));
   };
 
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     const user = await dispatch(startGetLoggedUserInformation());
-  //     console.log("profile MENU: ", user);
-  //     if (isMounted.current) {
-  //       setUser(user);
-  //     }
-  //   };
-  //   fetchUser();
-
-  //   return () => {
-  //     isMounted.current = false;
-  //   };
-  // }, []);
-
-  // console.log("DATOSSS: ", photoUrl);
-
   return (
     <div>
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
-        <Tooltip
-          title={<span style={{ fontSize: "16px" }}>{postsModuleTitle}</span>}
-          arrow
-        >
-          <ToggleButton
-            value="posts"
-            selected={activeModule === "posts" ? true : false}
-            onClick={() => handleChangeModule("posts")}
-            sx={{
-              ...commonButtonStyles,
-              "&.Mui-selected": selectedButtonStyles,
-            }}
-          >
-            <Pets />{" "}
-            <Typography sx={{ minWidth: 100, marginLeft: 1 }}>{postsModuleTitle}</Typography>
-          </ToggleButton>
-        </Tooltip>
 
-        {role === "s" && (
+        {/* {role === "s" && ( */}
           <Tooltip
-            title={<span style={{ fontSize: "16px" }}>Mis mascotas</span>}
+            title={<span style={{ fontSize: "16px" }}>Gestión usuarios</span>}
             arrow
           >
             <ToggleButton
               value="pets"
-              selected={activeModule === "pets" ? true : false}
+            //   selected={activeModule === "pets" ? true : false}
+              selected={true}
               // style={buttonStyle}
               onClick={() => handleChangeModule("pets")}
               disabled={false}
@@ -125,13 +81,12 @@ const PerfilMenu = () => {
                 "&.Mui-selected": selectedButtonStyles,
               }}
             >
-              <Favorite />{" "}
-              <Typography sx={{ minWidth: 100, marginLeft: 1 }}>Mis Mascotas</Typography>
+              {/* <Favorite />{" "} */}
+              <Typography sx={{ minWidth: 100, marginLeft: 1 }}>Gestión usuarios</Typography>
             </ToggleButton>
           </Tooltip>
-        )}
+        {/* )} */}
 
-        <Tooltip title={<span style={{ fontSize: "16px" }}>Perfil</span>} arrow>
           <IconButton
             onClick={handleClick}
             size="small"
@@ -142,10 +97,10 @@ const PerfilMenu = () => {
           >
             <Avatar
               src={photoUrl || ""}
-              sx={{ width: 37, height: 37 }}>
-            </Avatar>
+              sx={{ width: 37, height: 37, marginRight: 1 }}>
+            </Avatar>Administrador
           </IconButton>
-        </Tooltip>
+
       </Box>
       <Menu
         anchorEl={anchorEl}
@@ -182,36 +137,6 @@ const PerfilMenu = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem data-value="profile" onClick={handleProfile}>
-          {/* <Avatar />  */}
-          Mi Cuenta
-        </MenuItem>
-        {/* <MenuItem onClick={handleClose}>
-          <Avatar /> My account
-        </MenuItem> */}
-        <Divider />
-        {/* <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Add another account
-        </MenuItem> */}
-        <MenuItem data-value="config" onClick={handleProfile}>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          Configuración
-        </MenuItem>
-        {
-          role === "s" &&
-          <MenuItem data-value="questions" onClick={handleProfile}>
-            <ListItemIcon>
-              <QuestionAnswer fontSize="small" />
-            </ListItemIcon>
-            Preguntas
-          </MenuItem>
-        }
-
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
@@ -223,4 +148,4 @@ const PerfilMenu = () => {
   );
 };
 
-export default PerfilMenu;
+export default PerfilMenuAdmin;

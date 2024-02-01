@@ -17,6 +17,7 @@ import { setAuthToken } from "../api";
 import { use } from "i18next";
 import axios from "axios";
 import { setLocation } from "../store/global";
+import UserAdministration from "../pages/UserAdministration";
 
 
 const MAPS_API_KEY = "AIzaSyCsrzjwPXU2CiwIfW4KmCXz5RklPHQ5TQ8";
@@ -83,6 +84,7 @@ const App = () => {
 									<Route path="/perfil" element={<Perfil />} />
 									<Route path="/ver-publicacion/:id" element={<Verpublicacion />} />
 									<Route path="/account" element={<Account />} />
+									<Route path="/admin" element={<UserAdministration />} />
 								</Routes>
 							} />
 							: <Route path="/*" element={
