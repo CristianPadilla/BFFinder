@@ -57,7 +57,7 @@ const PetDetails = ({ pet }) => {
               {t(`breeds.${petToDisplay.breed}`)}
             </Typography>
             <Typography sx={{ margin: ".2rem" }}>
-              Genero: {t(`genders.${petToDisplay.gender}`)}
+              Sexo: {t(`genders.${petToDisplay.gender}`)}
             </Typography>
             <Typography sx={{ margin: ".2rem" }}>
               Caracter: {t(`dangerous.${petToDisplay.character}`)}
