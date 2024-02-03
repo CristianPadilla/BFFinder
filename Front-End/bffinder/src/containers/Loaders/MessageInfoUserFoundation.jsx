@@ -1,5 +1,6 @@
 import { Grid, Typography } from "@mui/material";
 import React from "react";
+import pet from "../../assets/imgs/Pets/pug-through.png";
 
 const MessageSuccessUserFoundation = () => {
   return (
@@ -11,19 +12,18 @@ const MessageSuccessUserFoundation = () => {
         height: "100%",
       }}
     >
-      {/* <Grid container spacing={0} direction="column" alignItems="center" justifyContent="center" sx={{ position: "absolute"}}> */}
       <Grid
         container
         spacing={0}
-        direction="column"
+        direction="row"
         alignItems="center"
         justifyContent="center"
       >
-        <Grid item>
+        <Grid item xs={12} md={8}>
           <Typography
             variant="h6"
             color="textSecondary"
-            sx={{ fontWeight: "600", letterSpacing: "1px" }}
+            sx={{ fontWeight: "600", letterSpacing: "1px", margin: "0 5rem 0 2rem", textAlign: "justify"}}
           >
             Estimado refugio, fundación u organización para adopción de
             animalitos,
@@ -31,17 +31,25 @@ const MessageSuccessUserFoundation = () => {
             <br />
             Para publicar tus mascotas en Bffinder, requerimos la validación de
             tu identidad como refugio. Por favor, envía al correo electrónico{" "}
-            <a href="mailto:Bffinder.support@gmail.com">
-              Bffinder.support@gmail.com
+            <a href="mailto:bffindersoporte@gmail.com">
+            bffindersoporte@gmail.com
             </a> los documentos donde se pueda validar los siguientes datos:
             <br />
-            - No. de Matrícula Mercantil (Cámara de Comercio) de tu entidad.
+            - No. de Matrícula Mercantil (Cámara de Comercio).
             <br />
             - No. de Identificación Tributaria (NIT).
             <br />
             <br />
             Una vez verificada la información, podrás disfrutar de todas las funciones en Bffinder.
           </Typography>
+        </Grid>
+
+        <Grid item xs={12} md={2}>
+          <img
+            src={pet}
+            alt=""
+            style={{ bottom: "0" }}
+          />
         </Grid>
       </Grid>
     </div>

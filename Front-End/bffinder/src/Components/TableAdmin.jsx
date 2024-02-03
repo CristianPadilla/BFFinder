@@ -18,7 +18,11 @@ import { visuallyHidden } from "@mui/utils";
 import { useDispatch, useSelector } from "react-redux";
 import ProgressCircular from "../containers/Loaders/ProgressCircular";
 import { start } from "@popperjs/core";
-import { startDisableShelter, startEnableShelter, startGetPendingShelters } from "../store/questions";
+import {
+  startDisableShelter,
+  startEnableShelter,
+  startGetPendingShelters,
+} from "../store/questions";
 import Swal from "sweetalert2";
 
 function createData(
@@ -42,7 +46,6 @@ function createData(
     buttons,
   };
 }
-
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -73,11 +76,11 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  {
-    id: "photoProfile",
-    // numeric: false,
-    // label: "",
-  },
+  // {
+  //   id: "photoProfile",
+  //   // numeric: false,
+  //   // label: "",
+  // },
   {
     id: "name",
     numeric: true,
@@ -111,11 +114,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-  const {
-    order,
-    orderBy,
-    onRequestSort,
-  } = props;
+  const { order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -151,7 +150,7 @@ function EnhancedTableHead(props) {
 
 const TableAdmin = () => {
   const { contentLoading } = useSelector((state) => state.persisted.global);
-  const { pendingShelters } = useSelector((state) => state.questions)
+  const { pendingShelters } = useSelector((state) => state.questions);
 
   const dispatch = useDispatch();
   const [order, setOrder] = React.useState("asc");
@@ -167,111 +166,94 @@ const TableAdmin = () => {
     }
   }, []);
 
-
-  const rows = (pendingShelters && pendingShelters.length > 0) ? pendingShelters.map((shelter) => {
-    return createData(
-      shelter.userId,
-      <Avatar
-        src={shelter.photoUrl || ""}
-        sx={{ width: 37, height: 37 }}
-      ></Avatar>,
-      shelter.name,
-      shelter.nit,
-      shelter.commercialRegistrationNumber,
-      shelter.email,
-      shelter.phoneNumber,
-      <ButtonGroup
-        disableElevation
-        variant="contained"
-        aria-label="Disabled elevation buttons"
-        size="small"
-      >
-        <Button onClick={(e) => handleEnableShelter(e, shelter.userId)} color="success">Habilitar</Button>
-        <Button onClick={(e) => handleDisableShelter(e, shelter.userId)} color="error">Rechazar</Button>
-      </ButtonGroup>
-    )
-  }) : [];
+  const rows =
+    pendingShelters && pendingShelters.length > 0
+      ? pendingShelters.map((shelter) => {
+          return createData(
+            shelter.userId,
+            <Avatar
+              src={shelter.photoUrl || ""}
+              sx={{ width: 37, height: 37 }}
+            ></Avatar>,
+            shelter.name,
+            shelter.nit,
+            shelter.commercialRegistrationNumber,
+            shelter.email,
+            shelter.phoneNumber,
+            <ButtonGroup
+              disableElevation
+              variant="contained"
+              aria-label="Disabled elevation buttons"
+              size="small"
+            >
+              <Button
+                onClick={(e) => handleEnableShelter(e, shelter.userId)}
+                color="success"
+              >
+                Habilitar
+              </Button>
+              <Button
+                onClick={(e) => handleDisableShelter(e, shelter.userId)}
+                color="error"
+              >
+                Rechazar
+              </Button>
+            </ButtonGroup>
+          );
+        })
+      : [];
 
   const handleEnableShelter = (e, userId) => {
     console.log("handleEnableShelter== 11 : ", userId);
     Swal.fire({
       title: `Habilitar este refugio?`,
       text: `Esta organizacion podrá realizar publicaciones `,
-      icon: 'question',
-      confirmButtonText: 'Habilitar',
+      icon: "question",
+      confirmButtonText: "Habilitar",
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
       didOpen: () => {
-        const sweetAlertContainer = document.querySelector('.swal2-container');
+        const sweetAlertContainer = document.querySelector(".swal2-container");
         if (sweetAlertContainer) {
-          sweetAlertContainer.style.zIndex = '99999';
+          sweetAlertContainer.style.zIndex = "99999";
         }
       },
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(startEnableShelter(userId));
       }
-    })
-  }
+    });
+  };
 
   const handleDisableShelter = (e, userId) => {
     console.log("handleDisableShelter== 11 : ", userId);
     Swal.fire({
       title: `Deshabilitar este refugio?`,
       text: `Esta organizacion no podrá realizar publicaciones permanentemente`,
-      icon: 'question',
-      confirmButtonText: 'Deshabilitar',
+      icon: "question",
+      confirmButtonText: "Deshabilitar",
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
       didOpen: () => {
-        const sweetAlertContainer = document.querySelector('.swal2-container');
+        const sweetAlertContainer = document.querySelector(".swal2-container");
         if (sweetAlertContainer) {
-          sweetAlertContainer.style.zIndex = '99999';
+          sweetAlertContainer.style.zIndex = "99999";
         }
       },
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(startDisableShelter(userId));
       }
-    })
-  }
+    });
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-
-  // const handleSelectAllClick = (event) => {
-  //   if (event.target.checked) {
-  //     const newSelected = rows.map((n) => n.id);
-  //     setSelected(newSelected);
-  //     return;
-  //   }
-  //   setSelected([]);
-  // };
-
-  // const handleClick = (event, id) => {
-  //   console.log("handleClick== 11 : ", id);
-  //   const selectedIndex = selected.indexOf(id);
-  //   let newSelected = [];
-
-  //   if (selectedIndex === -1) {
-  //     newSelected = newSelected.concat(selected, id);
-  //   } else if (selectedIndex === 0) {
-  //     newSelected = newSelected.concat(selected.slice(1));
-  //   } else if (selectedIndex === selected.length - 1) {
-  //     newSelected = newSelected.concat(selected.slice(0, -1));
-  //   } else if (selectedIndex > 0) {
-  //     newSelected = newSelected.concat(
-  //       selected.slice(0, selectedIndex),
-  //       selected.slice(selectedIndex + 1)
-  //     );
-  //   }
-  //   setSelected(newSelected);
-  // };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -282,7 +264,6 @@ const TableAdmin = () => {
     setPage(0);
   };
 
-
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
@@ -291,42 +272,40 @@ const TableAdmin = () => {
     page * rowsPerPage + rowsPerPage
   );
 
-  return (
-    contentLoading
-      ? <ProgressCircular />
-      : (pendingShelters && !pendingShelters.length > 0)
-        ? <h2>No hay Solicitudes de registro pendientes</h2>
-        :
-        <Box sx={{ width: "100%" }}>
-          <Paper sx={{ width: "100%", mb: 2 }}>
-            <TableContainer>
-              <Table
-                sx={{ minWidth: 750 }}
-                aria-labelledby="tableTitle"
-                size={dense ? "small" : "medium"}
-              >
-                <EnhancedTableHead
-                  numSelected={selected.length}
-                  order={order}
-                  orderBy={orderBy}
-                  // onSelectAllClick={handleSelectAllClick}
-                  onRequestSort={handleRequestSort}
-                  rowCount={rows.length}
-                />
-                <TableBody>
-                  {visibleRows.map((row, index) => {
-                    const labelId = `enhanced-table-checkbox-${index}`;
+  return contentLoading ? (
+    <ProgressCircular />
+  ) : pendingShelters && !pendingShelters.length > 0 ? (
+    <h2>No hay Solicitudes de registro pendientes</h2>
+  ) : (
+    <Box sx={{ width: "100%" }}>
+      <Paper sx={{ width: "100%", mb: 2 }}>
+        <TableContainer>
+          <Table
+            sx={{ minWidth: 750 }}
+            aria-labelledby="tableTitle"
+            size={dense ? "small" : "medium"}
+          >
+            <EnhancedTableHead
+              numSelected={selected.length}
+              order={order}
+              orderBy={orderBy}
+              // onSelectAllClick={handleSelectAllClick}
+              onRequestSort={handleRequestSort}
+              rowCount={rows.length}
+            />
+            <TableBody>
+              {visibleRows.map((row, index) => {
+                const labelId = `enhanced-table-checkbox-${index}`;
 
-                    return (
-                      <TableRow
-                        hover
-                        // onClick={(event) => handleClick(event, row.id)}
-                        tabIndex={-1}
-                        key={row.id}
-                        sx={{ cursor: "pointer" }}
-                      >
-
-                        <TableCell
+                return (
+                  <TableRow
+                    hover
+                    // onClick={(event) => handleClick(event, row.id)}
+                    tabIndex={-1}
+                    key={row.id}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    {/* <TableCell
                           component="th"
                           id={labelId}
                         // scope="row"
@@ -334,41 +313,45 @@ const TableAdmin = () => {
                         >
                           {row.photoProfile}
                         </TableCell>
-                        <TableCell >{row.name}</TableCell>
-                        <TableCell align="center">{row.numberMercantil}</TableCell>
-                        <TableCell align="center">{row.nit}</TableCell>
-                        <TableCell align="center">{row.mail}</TableCell>
-                        <TableCell align="center">{row.phone}</TableCell>
-                        <TableCell >{row.buttons}</TableCell>
-                      </TableRow>
-                    );
-                  })}
-                  {emptyRows > 0 && (
-                    <TableRow
-                      style={{
-                        height: (dense ? 33 : 53) * emptyRows,
-                      }}
-                    >
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, 50, 100]}
-              component="div"
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Paper>
-        </Box>
-
+                        <TableCell align="center">{row.name}</TableCell> */}
+                    <TableCell component="th" id={labelId} align="right">
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        {row.photoProfile}
+                        <span style={{ marginLeft: "1rem" }}>{row.name}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell align="right">{row.numberMercantil}</TableCell>
+                    <TableCell align="right">{row.nit}</TableCell>
+                    <TableCell align="right">{row.mail}</TableCell>
+                    <TableCell align="right">{row.phone}</TableCell>
+                    <TableCell>{row.buttons}</TableCell>
+                  </TableRow>
+                );
+              })}
+              {emptyRows > 0 && (
+                <TableRow
+                  style={{
+                    height: (dense ? 33 : 53) * emptyRows,
+                  }}
+                >
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25, 50, 100]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
+    </Box>
   );
 };
-
 
 export default TableAdmin;
