@@ -54,8 +54,8 @@ export default function SignUp() {
         onChange={handleChange}
         aria-label="basic tabs example"
       >
-        <Tab label="Usuario Regular" value={0} />
-        <Tab label="Fundación" value={1} />
+        <Tab label="¿Quieres adoptar?" value={0} />
+        <Tab label="¿Tienes un refugio?" value={1} />
       </Tabs>
 
       <CardContent sx={{ flex: "1" }}>

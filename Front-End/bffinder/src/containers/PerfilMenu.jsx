@@ -10,8 +10,15 @@ import {
   Typography,
   Tooltip,
   ToggleButton,
+  Badge,
 } from "@mui/material";
-import { Settings, Logout, Favorite, Pets, QuestionAnswer } from "@mui/icons-material";
+import {
+  Settings,
+  Logout,
+  Favorite,
+  Pets,
+  QuestionAnswer,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { startLogout } from "../store/auth";
@@ -19,7 +26,6 @@ import { changeActiveModule, setActiveModule } from "../store/global";
 import { startGetLoggedUserInformation } from "../store/global";
 
 const PerfilMenu = () => {
-
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -27,7 +33,7 @@ const PerfilMenu = () => {
   const { activeModule } = useSelector((state) => state.persisted.global);
   const { photoUrl } = useSelector((state) => state.persisted.auth);
   const { role } = useSelector((state) => state.persisted.auth);
-
+  const [count, setCount] = React.useState(1);
   const postsModuleTitle = role === "u" ? "Adoptar" : "Mis publicaciones";
 
   const commonButtonStyles = {
@@ -35,7 +41,7 @@ const PerfilMenu = () => {
     // color: "#A0A0A0",
     // color: "black",
     color: "#BA8C63",
-    mr: "1rem",
+    // mr: "1rem",
   };
 
   const selectedButtonStyles = {
@@ -102,10 +108,13 @@ const PerfilMenu = () => {
             sx={{
               ...commonButtonStyles,
               "&.Mui-selected": selectedButtonStyles,
+              marginRight: "1rem"
             }}
           >
             <Pets />{" "}
-            <Typography sx={{ minWidth: 100, marginLeft: 1 }}>{postsModuleTitle}</Typography>
+            <Typography sx={{ minWidth: 100, marginLeft: 1 }}>
+              {postsModuleTitle}
+            </Typography>
           </ToggleButton>
         </Tooltip>
 
@@ -126,7 +135,9 @@ const PerfilMenu = () => {
               }}
             >
               <Favorite />{" "}
-              <Typography sx={{ minWidth: 100, marginLeft: 1 }}>Mis Mascotas</Typography>
+              <Typography sx={{ minWidth: 100, marginLeft: 1 }}>
+                Mis Mascotas
+              </Typography>
             </ToggleButton>
           </Tooltip>
         )}
@@ -140,10 +151,17 @@ const PerfilMenu = () => {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar
-              src={photoUrl || ""}
-              sx={{ width: 37, height: 37 }}>
-            </Avatar>
+            <Badge color="warning" badgeContent={count}
+            // anchorOrigin={{
+            //   vertical: 'top',
+            //   horizontal: 'left',
+            // }}
+            >
+              <Avatar
+                src={photoUrl || ""}
+                sx={{ width: 37, height: 37 }}
+              ></Avatar>
+            </Badge>
           </IconButton>
         </Tooltip>
       </Box>
@@ -202,15 +220,21 @@ const PerfilMenu = () => {
           </ListItemIcon>
           Configuración
         </MenuItem>
-        {
-          role === "s" &&
+        {role === "s" && (
           <MenuItem data-value="questions" onClick={handleProfile}>
             <ListItemIcon>
+            <Badge color="warning" badgeContent={count}
+            // anchorOrigin={{
+            //   vertical: 'top',
+            //   horizontal: 'left',
+            // }}
+            >
               <QuestionAnswer fontSize="small" />
+              </Badge>
             </ListItemIcon>
             Preguntas
           </MenuItem>
-        }
+        )}
 
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>

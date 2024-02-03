@@ -9,10 +9,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts } from "../store/post";
 import { startFetchPets } from "../store/pet";
 import { use } from "i18next";
-import { LoadingFilters } from "../Components/LoadingFilters";
-import NoResults from "../Components/NoResults";
+import { LoadingFilters } from "../containers/Loaders/LoadingFilters";
+import NoResults from "../containers/Loaders/NoResults";
 import { setActiveModule } from "../store/global";
 import { act } from "react-dom/test-utils";
+import MessageInfoUserFoundation from "../containers/Loaders/MessageInfoUserFoundation";
+import MessageDeniedUserFoundation from "../containers/Loaders/MessageDeniedUserFoundation";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -56,15 +58,16 @@ const Home = () => {
 
   // const content = !contentLoading &&
   // (activeModule === "posts" ? postsPage : petsPage);
+  console.log("content  ", shelterEnabled);
   const notAvailableForPosting = shelterEnabled === "d"
-    ? <div>Su solicitud de autenticación como refugio ha sido rechazada, si quiere hacer una reclamacion comuniquese con *sporte* </div>
-    : <div>Para publicar a tus animalitos debes enviar un correo electronico bffinder.suppurt@mail.com </div>;
+    ? <MessageDeniedUserFoundation />
+    : <MessageInfoUserFoundation />;
 
   console.log("role", role);
   console.log("activeModule", activeModule);
   console.log("shelterEnabled", shelterEnabled);
   return (
-    <div>
+    <>
       <section id="content">
         <NavHome />
         <main>
@@ -77,8 +80,10 @@ const Home = () => {
                 : <h2>Tus mascotas</h2>
               }
             </div>
-            <SearchBar />
-            <div>
+            <div className="search-bar">
+               <SearchBar />
+            </div>
+            <div className="ordering">
               <Ordering />
             </div>
           </div>
@@ -115,7 +120,7 @@ const Home = () => {
           </div>
         </main>
       </section>
-    </div>
+    </>
   );
 };
 

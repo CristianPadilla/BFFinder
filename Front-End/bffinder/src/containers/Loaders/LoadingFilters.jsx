@@ -1,13 +1,13 @@
 import { Grid, Typography } from "@mui/material";
 import "styles/LoadingFilters.scss";
-import Dog from "../assets/icons/icons8-dog-48.png";
-import Cat from "../assets/icons/icons8-calico-cat-48.png";
-import Hamster from "../assets/icons/icons8-cute-hamster-48.png";
-import Parrot from "../assets/icons/icons8-budgie-48.png";
-import Fish from "../assets/icons/icons8-bream-48.png";
-import Horse from "../assets/icons/icons8-trotting-horse-48.png";
-import Duck from "../assets/icons/icons8-duck-48.png";
-import Chicken from "../assets/icons/icons8-chicken-48.png";
+import Dog from "../../assets/icons/icons8-dog-48.png";
+import Cat from "../../assets/icons/icons8-calico-cat-48.png";
+import Hamster from "../../assets/icons/icons8-cute-hamster-48.png";
+import Parrot from "../../assets/icons/icons8-budgie-48.png";
+import Fish from "../../assets/icons/icons8-bream-48.png";
+import Horse from "../../assets/icons/icons8-trotting-horse-48.png";
+import Duck from "../../assets/icons/icons8-duck-48.png";
+import Chicken from "../../assets/icons/icons8-chicken-48.png";
 import React from "react";
 
 const speciesData = [

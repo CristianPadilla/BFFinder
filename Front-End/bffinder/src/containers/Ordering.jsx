@@ -105,7 +105,7 @@ const Ordering = () => {
   };
 
   return (
-    <div>
+    <>
       <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
 
         {/* <Typography variant="body1" sx={{ marginRight: 1, fontSize: '1.1rem' }} >
@@ -214,7 +214,7 @@ const Ordering = () => {
       </Stack> */}
 
       </div>
-    </div>
+    </>
   );
 };
 

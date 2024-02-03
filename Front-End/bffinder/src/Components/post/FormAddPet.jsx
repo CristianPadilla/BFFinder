@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getBreedsBySpecieId, getSpecies } from "../../store/global";
 import { t } from "i18next";
 import { startAddNewPet, startUpdatePet } from "../../store/pet";
-import ProgressCircular from "../ProgressCircular";
+import ProgressCircular from "../../containers/Loaders/ProgressCircular";
 
 const FormAddPet = () => {
   const dispatch = useDispatch();

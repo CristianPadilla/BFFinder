@@ -5,7 +5,7 @@ import "styles/ViewPost.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { setActivePost, startGetPostById } from "../store/post";
 import { useParams } from "react-router";
-import ProgressCircular from "../Components/ProgressCircular";
+import ProgressCircular from "../containers/Loaders/ProgressCircular";
 
 const ViewPost = () => {
   const dispatch = useDispatch();

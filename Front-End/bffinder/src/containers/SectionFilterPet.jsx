@@ -4,7 +4,7 @@ import CardVertical from "../Components/CardVertical";
 import ModalAddPet from "../Components/user-foundation/ModalAddPet";
 import AddIcon from "@mui/icons-material/Add";
 import { useDispatch, useSelector } from "react-redux";
-import ProgressCircular from "../Components/ProgressCircular";
+import ProgressCircular from "./Loaders/ProgressCircular";
 import DialogViewPet from "../Components/user-foundation/DialogViewPet";
 import { setActivePet } from "../store/pet";
 

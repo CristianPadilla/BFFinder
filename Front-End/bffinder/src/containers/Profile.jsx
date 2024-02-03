@@ -12,15 +12,25 @@ import {
   Grid,
   Divider,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Input,
 } from "@mui/material";
 import imgdefault from "imgs/logo-bffinder.png";
-import ProgressCircular from "../Components/ProgressCircular";
+import ProgressCircular from "../containers/Loaders/ProgressCircular";
+import { Form, Formik } from "formik";
+import * as Yup from "yup";
+import DragAndDrop from "../Components/form/DragandDrop";
 
 const Profile = () => {
   const dispatch = useDispatch();
   const [user, setUser] = useState(null);
   const isMounted = useRef(true);
   const { role } = useSelector((state) => state.persisted.auth);
+  const { edit, setEdit } = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     // console.log("PRUEBAAAAAAAAAAAAAA ", role);
@@ -37,6 +47,130 @@ const Profile = () => {
       isMounted.current = false;
     };
   }, []);
+
+  const initialValues =
+    user != null
+      ? {
+          image: null,
+        }
+      : {
+          image: null,
+        };
+
+  const EditFormDialog = () => {
+    return (
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+        <DialogTitle>Agregar foto de perfil</DialogTitle>
+        <DialogContent>
+          <Formik
+            initialValues={initialValues}
+            // onSubmit={handleSubmit}
+            validationSchema={Yup.object({
+              image: user
+                ? Yup.mixed()
+                    .test(
+                      "fileFormat",
+                      "Formato de imagen no permitido",
+                      (value) => {
+                        if (!value || !value.type) return true;
+
+                        const allowedFormats = [
+                          "image/jpeg",
+                          "image/png",
+                          "image/jpg",
+                        ];
+                        const fileType = value.type.toLowerCase();
+
+                        return allowedFormats.includes(fileType);
+                      }
+                    )
+                    .test(
+                      "fileSize",
+                      "La imagen es demasiado grande, el tamaño debe ser menor a 10MB",
+                      (value) => {
+                        if (!value || !value.size) return true;
+                        const maxSizeInBytes = 1048576; // 1MB
+                        return value.size <= maxSizeInBytes;
+                      }
+                    )
+                    .notRequired()
+                : Yup.mixed()
+                    .test(
+                      "fileFormat",
+                      "Formato de imagen no permitido",
+                      (value) => {
+                        if (!value || !value.type) return true;
+                        const allowedFormats = [
+                          "image/jpeg",
+                          "image/png",
+                          "image/jpg",
+                        ];
+                        const fileType = value.type.toLowerCase();
+
+                        return allowedFormats.includes(fileType);
+                      }
+                    )
+                    .test(
+                      "fileSize",
+                      "La imagen es demasiado grande, el tamaño debe ser menor a 10MB",
+                      (value) => {
+                        if (!value || !value.size) return true;
+                        const maxSizeInBytes = 1048576; // 1MB
+                        return value.size <= maxSizeInBytes;
+                      }
+                    )
+                    .required("Por favor agrega una foto de perfil"),
+            })}
+          >
+            {(formik) => (
+              <>
+                <DragAndDrop
+                  onBlur={formik.handleBlur}
+                  name="image"
+                  errorClassName="error-message"
+                />
+              </>
+            )}
+          </Formik>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDialogOpen(false)}>Cancelar</Button>
+          <Button
+            variant="contained"
+            color="success"
+            // onClick={}
+          >
+            Guardar
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
+  const handleEditForm = () => {
+    console.log("Editando");
+    // setEdit(true);
+    setDialogOpen(true);
+  };
+
+  const ButtonAddPhotoProfile = () => {
+    return (
+      <Button
+        variant="contained"
+        color="info"
+        size="small"
+        sx={{
+          // marginTop: "6rem",
+          bottom: 0,
+          // left: "80%", // Opcional: centrar horizontalmente
+          // transform: "translateX(-50%)", // Opcional: centrar horizontalmente
+        }}
+        onClick={handleEditForm}
+      >
+        {userToDisplay.profileImageUrl ? "Actualizar foto de perfil" : "Subir foto de perfil"}
+      </Button>
+    );
+  };
 
   const userToDisplay = user
     ? {
@@ -70,8 +204,9 @@ const Profile = () => {
         more_info: "Mas información",
       };
 
-  console.log("PRUEBAA11 ", user);
-  console.log("PRUEBAA22 ", userToDisplay);
+  // console.log("PRUEBAA11 ", user);
+  // console.log("PRUEBAA22 ", userToDisplay);
+  console.log("PRUEBAA33 ", userToDisplay);
   if (!user) return <ProgressCircular />;
   return (
     <>
@@ -79,23 +214,34 @@ const Profile = () => {
         <CardContent sx={{ margin: ".7rem" }}>
           <Grid container spacing={2} justifyContent="center">
             <Grid item xs={12} sm={5}>
-              <div
-                style={{
-                  height: "230px",
-                  width: "230px",
-                  overflow: "hidden",
-                  margin: ".5rem",
-                  borderRadius: "3px",
-                }}
-              >
-                <img
-                  src={userToDisplay.profileImageUrl}
-                  alt=""
-                  style={{ height: "100%", width: "100%", objectFit: "cover" }}
-                />
-              </div>
+              {
+                // userToDisplay.profileImageUrl ? (
+                <>
+                  <div
+                    style={{
+                      height: "230px",
+                      width: "230px",
+                      overflow: "hidden",
+                      margin: ".5rem 0 1rem 0",
+                      borderRadius: "3px",
+                    }}
+                  >
+                    <img
+                      src={userToDisplay.profileImageUrl}
+                      alt=""
+                      style={{
+                        height: "100%",
+                        width: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+                  <ButtonAddPhotoProfile />
+                </>
+                // ) : (
 
-              {/* <input type="file" /> */}
+                // )
+              }
 
               <Divider
                 sx={{ marginBottom: 4, marginTop: 3, width: "80%" }}
@@ -200,6 +346,7 @@ const Profile = () => {
           </Grid>
         </CardContent>
       </Card>
+      <EditFormDialog />
     </>
   );
 };

@@ -69,7 +69,7 @@ body {
 #content main .head-title {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
+	// justify-content: space-between;
 	grid-gap: 16px;
 	flex-wrap: wrap;
 	position: sticky;
@@ -85,8 +85,17 @@ body {
 	font-size: 36px;
 	font-weight: 600;
 	margin-bottom: 10px;
-	color: var(--dark);
 }
+
+.ordering {
+	margin-left: auto;
+	margin-right: 2.3rem;
+}
+
+.search-bar {
+ margin-left: 13.3rem;
+}
+
 // #content main .head-title .left .breadcrumb {
 // 	display: flex;
 // 	align-items: center;

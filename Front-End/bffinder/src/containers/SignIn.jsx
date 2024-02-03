@@ -41,6 +41,7 @@ export default function SignIn() {
   };
 
   const handleLogin = async ({ email, password }) => {
+    console.log("handleLogin=== CCCCCCCCCCCCCCCs", email);
     dispatch(startLogin({ email, password }));
   };
 

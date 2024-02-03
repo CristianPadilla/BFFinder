@@ -196,7 +196,7 @@ public class AuthenticationService {
                             .userId(user.getId())
                             .build();
                 } else {
-
+                    log.info("userrr {}", user);
                     var userDetails = userService.getUserById(user.getId()).getBody();
                     userCredentials = UserCredentialsResponse.builder()
                             .userId(userDetails.getUserId())
@@ -208,7 +208,7 @@ public class AuthenticationService {
                             .role(userDetails.getRole())
                             .build();
                 }
-
+                log.info("userrr222 {}", userCredentials);
                 return AuthenticationResponse.builder()
                         .user(userCredentials)
                         .token(jwtToken)

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Typography } from '@mui/material';
-import Pet from '../assets/imgs/Pets/pug-behind.png';
+import Pet from '../../assets/imgs/Pets/pug-behind.png';
 
 const NoResults = () => {
   return (

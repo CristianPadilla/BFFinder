@@ -7,7 +7,6 @@ import PreHome from "pages/PreHome";
 import Home from "pages/Home";
 import NotFound from "pages/NotFound";
 import Account from "../pages/Account";
-import Perfil from "pages/Perfil";
 import Autenticacion from "pages/Autenticacion";
 import Verpublicacion from "pages/ViewPost";
 import { useDispatch, useSelector } from "react-redux";
@@ -88,7 +87,6 @@ const App = () => {
 									<Routes >
 										<Route path="/home" element={<Home />} />
 										<Route path="/*" element={<Navigate to="/home" />} />
-										<Route path="/perfil" element={<Perfil />} />
 										<Route path="/ver-publicacion/:id" element={<Verpublicacion />} />
 										<Route path="/account" element={<Account />} />
 

@@ -182,7 +182,7 @@ export function RegisterFoundationPage() {
             />
             <TextInputComponent
               type="number"
-              label="No. de Identificación Tributaria (Nit)"
+              label="No. de Identificación Tributaria (NIT)"
               name="nit"
               placeholder="123456789"
               value={formik.values.nit}

@@ -55,7 +55,7 @@ export const startLogin = ({ email, password }) =>
         try {
             const { status, data } = await authApi.post("/authenticate", { username: email, password })
             if (!status === HttpStatusCode.Ok) return dispatch(logout({ errorMessage: data.message }))
-
+            console.log("GGGGGGGGGGGGG ", data)
             const { user } = data
             const sent = {
                 token: data.token,

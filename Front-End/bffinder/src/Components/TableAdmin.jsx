@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 import { useDispatch, useSelector } from "react-redux";
-import ProgressCircular from "./ProgressCircular";
+import ProgressCircular from "../containers/Loaders/ProgressCircular";
 import { start } from "@popperjs/core";
 import { startDisableShelter, startEnableShelter, startGetPendingShelters } from "../store/questions";
 import Swal from "sweetalert2";

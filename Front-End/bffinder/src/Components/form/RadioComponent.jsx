@@ -6,6 +6,7 @@ import {
   FormControlLabel,
   Radio,
   FormHelperText,
+  Checkbox,
 } from "@mui/material";
 
 const RadioComponent = (props) => {
@@ -59,7 +60,7 @@ const RadioComponent = (props) => {
           <FormControlLabel
             key={option.value}
             value={option.value ? option.value.toString() : ""} // Asegúrate de que option.value no sea undefined ni null
-            control={<Radio />}
+            control={<Checkbox checked={option.value === value} sx={{ borderRadius: 0 }} />}
             label={option.label}
             // checked={option.value === value}
           />

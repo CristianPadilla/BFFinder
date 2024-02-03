@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { startCreateQuestion } from "../store/questions";
 import { use } from "i18next";
 import Swal from "sweetalert2";
-import ProgressCircular from "../Components/ProgressCircular";
+import ProgressCircular from "../containers/Loaders/ProgressCircular";
 import { Send } from "@mui/icons-material";
 import FormattedDate from "../Components/FormattedDate";
 

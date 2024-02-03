@@ -7,7 +7,7 @@ import "styles/SectionAllPosts.scss";
 import "styles/Home.scss";
 import { useDispatch, useSelector } from "react-redux";
 import CardPostShelter from "../Components/user-foundation/CardPostShelter";
-import ProgressCircular from "../Components/ProgressCircular";
+import ProgressCircular from "./Loaders/ProgressCircular";
 import { setActivePost } from "../store/post";
 import DialogViewPost from "../Components/user-foundation/DialogViewPost";
 
