@@ -411,7 +411,7 @@ const PanelFilters = ({ module }) => {
     newValue != null && dispatch(startGetCitiesByDepartmentId(newValue.value));
   };
   const handleCitySelectChange = (event, newValue) => {
-    console.log("handleCitySelectChange==  : ", newValue);
+    // console.log("handleCitySelectChange==  : ", newValue);
     if (!newValue && filters.city_id === 0) return;
     const filterObjet = { ["city_id"]: newValue ? newValue.value : 0 };
     activeModuleIsPosts
@@ -419,7 +419,7 @@ const PanelFilters = ({ module }) => {
       : dispatch(changePetsRequest([filterObjet, { page: 0 }]));
   };
   const handleDateSelectFilterChange = (event, newValue) => {
-    console.log("handledateSelectFilterChange==  : ", newValue);
+    // console.log("handledateSelectFilterChange==  : ", newValue);
     if (!newValue && filters.from_date === "") return;
     const filterObjet = { ["from_date"]: newValue ? newValue.value : "" };
     activeModuleIsPosts
@@ -437,12 +437,12 @@ const PanelFilters = ({ module }) => {
 
   const [sliderValue, setSliderValue] = useState(filters.age);
   const handleSliderChange = (event, newValue) => {
-    console.log("handleSliderChange==  : ", newValue);
+    // console.log("handleSliderChange==  : ", newValue);
     setSliderValue(newValue);
   };
   const handleAgeSliceChange = (event, newValue) => {
     const value = newValue;
-    console.log("handleAgeSliceChange==  : ", value);
+    // console.log("handleAgeSliceChange==  : ", value);
 
     const filterObjet = { ["age"]: value > 10 ? 50 : value }; // 50 años como edad maxima
     activeModuleIsPosts

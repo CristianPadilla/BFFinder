@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Avatar,
@@ -24,6 +24,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { startLogout } from "../store/auth";
 import { changeActiveModule, setActiveModule } from "../store/global";
 import { startGetLoggedUserInformation } from "../store/global";
+import { startFetchPendingQuestionsCount } from "../store/questions";
 
 const PerfilMenu = () => {
   const dispatch = useDispatch();
@@ -33,8 +34,19 @@ const PerfilMenu = () => {
   const { activeModule } = useSelector((state) => state.persisted.global);
   const { photoUrl } = useSelector((state) => state.persisted.auth);
   const { role } = useSelector((state) => state.persisted.auth);
-  const [count, setCount] = React.useState(1);
+  const { pendingQuestionsCount } = useSelector((state) => state.questions);
+
+
+  useEffect(() => {
+    // console.log('useEffect== 11 : ', questions);
+
+    dispatch(startFetchPendingQuestionsCount());
+  }, []);
+
+  const [count, setCount] = React.useState(Math.floor(Math.random() * 10) + 1);
   const postsModuleTitle = role === "u" ? "Adoptar" : "Mis publicaciones";
+
+
 
   const commonButtonStyles = {
     borderRadius: "16px",
@@ -151,7 +163,7 @@ const PerfilMenu = () => {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Badge color="warning" badgeContent={count}
+            <Badge color="warning" badgeContent={pendingQuestionsCount}
             // anchorOrigin={{
             //   vertical: 'top',
             //   horizontal: 'left',
@@ -223,13 +235,13 @@ const PerfilMenu = () => {
         {role === "s" && (
           <MenuItem data-value="questions" onClick={handleProfile}>
             <ListItemIcon>
-            <Badge color="warning" badgeContent={count}
-            // anchorOrigin={{
-            //   vertical: 'top',
-            //   horizontal: 'left',
-            // }}
-            >
-              <QuestionAnswer fontSize="small" />
+              <Badge color="warning" badgeContent={pendingQuestionsCount}
+              // anchorOrigin={{
+              //   vertical: 'top',
+              //   horizontal: 'left',
+              // }}
+              >
+                <QuestionAnswer fontSize="small" />
               </Badge>
             </ListItemIcon>
             Preguntas

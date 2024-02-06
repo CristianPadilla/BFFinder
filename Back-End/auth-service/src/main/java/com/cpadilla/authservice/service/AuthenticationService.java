@@ -242,6 +242,7 @@ public class AuthenticationService {
                 .photoUrl(userDetails.getProfileImageUrl())
                 .email(userDetails.getEmail())
                 .role(userDetails.getRole())
+                .shelterEnabled(user.getShelterEnabled())
                 .build();
         return AuthenticationResponse.builder()
                 .user(userCredentials)

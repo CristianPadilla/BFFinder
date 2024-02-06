@@ -52,7 +52,7 @@ const FormAddPost = () => {
     });
 
   const handleSubmit = (values) => {
-    console.log("handleSubmit==  : ", values);
+    // console.log("handleSubmit==  : ", values);
     // if (values.image.length === 0) {
     //   // Si no hay ninguna imagen seleccionada, establece un error en el campo 'image'
     //   setErrors({ image: "Debe seleccionar al menos una imagen" });

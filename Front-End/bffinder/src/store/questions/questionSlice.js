@@ -4,6 +4,7 @@ const initialState = {
     questions: null,
     active: null,
     pendingShelters: null, // provisionalmnte en este slice
+    pendingQuestionsCount: 0,
     // loading: false,
     // error: null,
 };
@@ -26,10 +27,14 @@ export const questionSlice = createSlice({
             state.questions = null;
             state.active = null;
             state.pendingShelters = null;
+            state.pendingQuestionsCount = 0;
         },
         setPendingShelters(state, { payload }) {
             state.pendingShelters = payload;
         },
+        setPendingQuestionsCount(state, { payload }) {
+            state.pendingQuestionsCount = payload;
+        }
     }
 },);
 
@@ -38,6 +43,7 @@ export const {
     cleanQuestions,
     setActive,
     clearQuestionsLogout,
-    setPendingShelters
+    setPendingShelters,
+    setPendingQuestionsCount
 } = questionSlice.actions;
 

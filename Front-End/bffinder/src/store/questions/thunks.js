@@ -1,7 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { postApi } from "../../api/postApi";
 import { startContentLoading, stopContentLoading } from "../global";
-import { setPendingShelters, setQuestions } from "./questionSlice";
+import { setPendingQuestionsCount, setPendingShelters, setQuestions } from "./questionSlice";
 import { setErrorMessage } from "../pet";
 import { userApi } from "../../api/userApi";
 
@@ -18,6 +18,28 @@ export const startFetchQuestionsByShelter = () =>
             if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
 
             dispatch(setQuestions(data))
+            dispatch(stopContentLoading())
+        } catch (error) {
+            console.log(error);
+            dispatch(stopContentLoading())
+            throw new Error(error);
+        }
+
+    };
+
+export const startFetchPendingQuestionsCount = () =>
+    async (dispatch, getState) => {
+        try {
+            dispatch(startContentLoading())
+            const { userId } = getState().persisted.auth;
+            if (!userId) throw new Error("No user id not exists");
+
+
+            const { status, data } = await postApi.get("/question/pending/count/shelter/" + userId);
+
+            if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+
+            dispatch(setPendingQuestionsCount(data))
             dispatch(stopContentLoading())
         } catch (error) {
             console.log(error);

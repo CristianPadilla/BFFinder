@@ -40,4 +40,10 @@ public class QuestionController {
         return ResponseEntity.status(HttpStatus.OK).body(adoptionPostService.findQuestionsByShelterUserId(userId));
     }
 
+    @GetMapping("/pending/count/shelter/{userId}")
+    ResponseEntity<Integer> getPendingQuestionsCountByShelter(@PathVariable("userId") int userId) {
+        log.info("Getting pending questions by shelter {} from CONTROLLER layer", userId);
+        return ResponseEntity.status(HttpStatus.OK).body(adoptionPostService.getPendingQuestionsCountByShelter(userId));
+    }
+
 }

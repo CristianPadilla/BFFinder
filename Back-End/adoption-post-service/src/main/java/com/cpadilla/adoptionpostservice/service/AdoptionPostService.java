@@ -32,6 +32,7 @@ public interface AdoptionPostService {
     int enablePost(int postId);
 
     List<Integer> findAvailablePostedSpecies();
+
     List<Integer> findAvailablePostedBreedsBySpecieId(int specieId);
 
     void deletePostByPetId(int petId);
@@ -41,6 +42,8 @@ public interface AdoptionPostService {
     List<ImageResponse> findPostImages(int postId);
 
     List<QuestionResponse> findQuestionsByShelterUserId(int userId);
+
+    int getPendingQuestionsCountByShelter(int userId);
 
     void deletePostImages(int postId);
 

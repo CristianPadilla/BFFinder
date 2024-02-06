@@ -129,7 +129,7 @@ const MainContent = ({ noResult }) => {
 
       {role === "s" ?
         (activeModule === "posts" && shelterEnabled !== 'e') ? null : (
-          <>
+          <> 
             <Tooltip
               title={
                 <span style={{ fontSize: "16px" }}>

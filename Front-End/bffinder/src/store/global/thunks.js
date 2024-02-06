@@ -28,7 +28,7 @@ export const getBreedsBySpecieId = (specieId) => async (dispatch, getState) => {
 };
 
 export const startGetLoggedUserInformation = () => async (dispatch, getState) => {
-    console.log("startGetLoggedUserInformation");
+    // console.log("startGetLoggedUserInformation");
     // dispatch(startContentLoading());
     const { userId } = getState().persisted.auth;
     const { data, status } = await userApi.get("/" + userId);
@@ -36,3 +36,24 @@ export const startGetLoggedUserInformation = () => async (dispatch, getState) =>
     // dispatch(stopContentLoading());
     return data;
 }
+
+export const startUpdateProfileImage = (imageBase64) =>
+    async (dispatch, getState) => {
+        // console.log("startUpdateLoggedUserInformation ", imageBase64);
+        dispatch(startContentLoading());
+
+        const formData = new FormData();
+        const response = await fetch(imageBase64);
+        const imageBlob = await response.blob();
+        formData.append('image', imageBlob, 'image.jpg');
+
+        const { userId } = getState().persisted.auth;
+        const { data, status } = await userApi.put("/update/photo/" + userId, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        if (status !== HttpStatusCode.Ok) dispatch(setErrorMessage(data));
+        dispatch(startGetLoggedUserInformation());
+        dispatch(stopContentLoading());
+
+        return data;
+    }   

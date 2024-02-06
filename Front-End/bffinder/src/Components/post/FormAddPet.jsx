@@ -56,7 +56,7 @@ const FormAddPet = () => {
   };
 
   const handleSubmit = (values) => {
-    console.log("handleSubmit==  : ", values);
+    // console.log("handleSubmit==  : ", values);
     const petToSave = {
       id: pet != null ? pet.id : null,
       name: values.name,

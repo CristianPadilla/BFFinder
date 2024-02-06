@@ -58,14 +58,14 @@ const Home = () => {
 
   // const content = !contentLoading &&
   // (activeModule === "posts" ? postsPage : petsPage);
-  console.log("content  ", shelterEnabled);
+  // console.log("content  ", shelterEnabled);
   const notAvailableForPosting = shelterEnabled === "d"
     ? <MessageDeniedUserFoundation />
     : <MessageInfoUserFoundation />;
 
-  console.log("role", role);
-  console.log("activeModule", activeModule);
-  console.log("shelterEnabled", shelterEnabled);
+  // console.log("role", role);
+  // console.log("activeModule", activeModule);
+  // console.log("shelterEnabled", shelterEnabled);
   return (
     <>
       <section id="content">

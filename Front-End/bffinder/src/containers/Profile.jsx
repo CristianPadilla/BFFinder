@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   startContentLoading,
   startGetLoggedUserInformation,
+  startUpdateProfileImage,
   stopContentLoading,
 } from "../store/global";
 import {
@@ -20,7 +21,7 @@ import {
 } from "@mui/material";
 import imgdefault from "imgs/logo-bffinder.png";
 import ProgressCircular from "../containers/Loaders/ProgressCircular";
-import { Form, Formik } from "formik";
+import { Form, Formik, useFormikContext } from "formik";
 import * as Yup from "yup";
 import DragAndDrop from "../Components/form/DragandDrop";
 
@@ -48,104 +49,12 @@ const Profile = () => {
     };
   }, []);
 
-  const initialValues =
-    user != null
-      ? {
-          image: null,
-        }
-      : {
-          image: null,
-        };
-
-  const EditFormDialog = () => {
-    return (
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <DialogTitle>Agregar foto de perfil</DialogTitle>
-        <DialogContent>
-          <Formik
-            initialValues={initialValues}
-            // onSubmit={handleSubmit}
-            validationSchema={Yup.object({
-              image: user
-                ? Yup.mixed()
-                    .test(
-                      "fileFormat",
-                      "Formato de imagen no permitido",
-                      (value) => {
-                        if (!value || !value.type) return true;
-
-                        const allowedFormats = [
-                          "image/jpeg",
-                          "image/png",
-                          "image/jpg",
-                        ];
-                        const fileType = value.type.toLowerCase();
-
-                        return allowedFormats.includes(fileType);
-                      }
-                    )
-                    .test(
-                      "fileSize",
-                      "La imagen es demasiado grande, el tamaño debe ser menor a 10MB",
-                      (value) => {
-                        if (!value || !value.size) return true;
-                        const maxSizeInBytes = 1048576; // 1MB
-                        return value.size <= maxSizeInBytes;
-                      }
-                    )
-                    .notRequired()
-                : Yup.mixed()
-                    .test(
-                      "fileFormat",
-                      "Formato de imagen no permitido",
-                      (value) => {
-                        if (!value || !value.type) return true;
-                        const allowedFormats = [
-                          "image/jpeg",
-                          "image/png",
-                          "image/jpg",
-                        ];
-                        const fileType = value.type.toLowerCase();
-
-                        return allowedFormats.includes(fileType);
-                      }
-                    )
-                    .test(
-                      "fileSize",
-                      "La imagen es demasiado grande, el tamaño debe ser menor a 10MB",
-                      (value) => {
-                        if (!value || !value.size) return true;
-                        const maxSizeInBytes = 1048576; // 1MB
-                        return value.size <= maxSizeInBytes;
-                      }
-                    )
-                    .required("Por favor agrega una foto de perfil"),
-            })}
-          >
-            {(formik) => (
-              <>
-                <DragAndDrop
-                  onBlur={formik.handleBlur}
-                  name="image"
-                  errorClassName="error-message"
-                />
-              </>
-            )}
-          </Formik>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>Cancelar</Button>
-          <Button
-            variant="contained"
-            color="success"
-            // onClick={}
-          >
-            Guardar
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
+  const handleUpdateProfileImage = (values) => {
+    console.log("valuesssssssssssss ", values.image);
+    dispatch(startUpdateProfileImage(values.image));  
   };
+
+
 
   const handleEditForm = () => {
     console.log("Editando");
@@ -172,41 +81,40 @@ const Profile = () => {
     );
   };
 
+
+
   const userToDisplay = user
     ? {
-        name: user.name,
-        birthDate: user.birthDate,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-        address: user.location ? user.location.address : "",
-        nit: user.nit,
-        commercialRegistrationNumber: user.commercialRegistrationNumber,
-        description: user.description,
-        profileImageUrl: user.profileImageUrl || imgdefault,
-        neighborhood: user.location ? user.location.neighborhood : "",
-        city: user.location ? user.location.city.name : "",
-        department: user.location ? user.location.city.department.name : "",
-        more_info: user.location ? user.location.more_info : "",
-      }
+      name: user.name,
+      birthDate: user.birthDate,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      address: user.location ? user.location.address : "",
+      nit: user.nit,
+      commercialRegistrationNumber: user.commercialRegistrationNumber,
+      description: user.description,
+      profileImageUrl: user.profileImageUrl || imgdefault,
+      neighborhood: user.location ? user.location.neighborhood : "",
+      city: user.location ? user.location.city.name : "",
+      department: user.location ? user.location.city.department.name : "",
+      more_info: user.location ? user.location.more_info : "",
+    }
     : {
-        name: "Nombre",
-        email: "Correo Electronico",
-        phoneNumber: "Numero de Celular",
-        address: "Dirección",
-        nit: "No. Identificación Tributaria (NIT)",
-        commercialRegistrationNumber:
-          "No. Matricula Mercantil (Camara de Comercio)",
-        description: "Descripción",
-        profileImageUrl: { imgdefault },
-        neighborhood: "Barrio",
-        city: "Ciudad",
-        department: "Departamento",
-        more_info: "Mas información",
-      };
+      name: "Nombre",
+      email: "Correo Electronico",
+      phoneNumber: "Numero de Celular",
+      address: "Dirección",
+      nit: "No. Identificación Tributaria (NIT)",
+      commercialRegistrationNumber:
+        "No. Matricula Mercantil (Camara de Comercio)",
+      description: "Descripción",
+      profileImageUrl: { imgdefault },
+      neighborhood: "Barrio",
+      city: "Ciudad",
+      department: "Departamento",
+      more_info: "Mas información",
+    };
 
-  // console.log("PRUEBAA11 ", user);
-  // console.log("PRUEBAA22 ", userToDisplay);
-  console.log("PRUEBAA33 ", userToDisplay);
   if (!user) return <ProgressCircular />;
   return (
     <>
@@ -335,10 +243,10 @@ const Profile = () => {
                 sx={{
                   marginTop: "4rem",
                   bottom: 0,
-                  left: "80%", // Opcional: centrar horizontalmente
-                  transform: "translateX(-50%)", // Opcional: centrar horizontalmente
+                  left: "80%",
+                  transform: "translateX(-50%)",
                 }}
-                // onClick={handleEditForm}
+              // onClick={handleEditForm}
               >
                 Editar Información
               </Button>
@@ -346,7 +254,71 @@ const Profile = () => {
           </Grid>
         </CardContent>
       </Card>
-      <EditFormDialog />
+      {/* <EditFormDialog /> */}
+      <Formik
+        initialValues={{
+          image: null,
+        }}
+        onSubmit={handleUpdateProfileImage}
+        validationSchema={Yup.object({
+          image: Yup.mixed()
+            // .test(
+            //   "fileFormat",
+            //   "Formato de imagen no permitido",
+            //   (value) => {
+            //     if (!value || !value.type) return true;
+            //     const allowedFormats = [
+            //       "image/jpeg",
+            //       "image/png",
+            //       "image/jpg",
+            //     ];
+            //     const fileType = value.type.toLowerCase();
+
+            //     return allowedFormats.includes(fileType);
+            //   }
+            // )
+            // .test(
+            //   "fileSize",
+            //   "La imagen es demasiado grande, el tamaño debe ser menor a 10MB",
+            //   (value) => {
+            //     if (!value || !value.size) return true;
+            //     const maxSizeInBytes = 1048576; // 1MB
+            //     return value.size <= maxSizeInBytes;
+            //   }
+            // )
+            .required("Por favor agrega una foto de perfil"),
+        })}
+      >
+        {(formik) => (
+          <>
+            <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+              <DialogTitle>Agregar foto de perfil</DialogTitle>
+              <DialogContent>
+                <Form>
+                  <DragAndDrop
+                    onBlur={formik.handleBlur}
+                    name="image"
+                    errorClassName="error-message"
+                  />
+
+                  <Button
+                    variant="contained"
+                    color="success"
+                    type="submit"
+                  >
+                    Guardar
+                  </Button>
+                </Form>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => setDialogOpen(false)}>Cancelar</Button>
+              </DialogActions>
+            </Dialog>
+
+
+          </>
+        )}
+      </Formik>
     </>
   );
 };

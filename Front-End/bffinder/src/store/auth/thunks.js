@@ -55,7 +55,7 @@ export const startLogin = ({ email, password }) =>
         try {
             const { status, data } = await authApi.post("/authenticate", { username: email, password })
             if (!status === HttpStatusCode.Ok) return dispatch(logout({ errorMessage: data.message }))
-            console.log("GGGGGGGGGGGGG ", data)
+            // console.log("GGGGGGGGGGGGG ", data)
             const { user } = data
             const sent = {
                 token: data.token,
@@ -105,8 +105,8 @@ export const validateAuth = ({ tokenToValidate }) =>
             const { status, data } = await authApi.get("/validate", { headers: { Authorization: `Bearer ${tokenToValidate}` } })
             if (!status === HttpStatusCode.Ok) return dispatch(logout({ errorMessage: data.message }))
 
-            const { userId, name, lastname, email, photoUrl, role } = data.user
-            dispatch(login({ token: tokenToValidate, userId, name, lastname, email, photoUrl, role }))
+            const { userId, name, lastname, email, photoUrl, role, shelterEnabled } = data.user
+            dispatch(login({ token: tokenToValidate, userId, name, lastname, email, photoUrl, role, shelterEnabled }))
 
         } catch (error) {
             const errorMessage = error.response.data.message

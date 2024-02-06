@@ -32,6 +32,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -99,11 +100,11 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
         var addressId = 0;
         if (adoptionPostRequest.getLocation() == null) addressId = user.getLocation().getId();
         else addressId = locationService.saveAddress(adoptionPostRequest.getLocation()).getBody();
-
+        var date = LocalDate.now();
         var postEntity = AdoptionPostEntity.builder()
                 .description(adoptionPostRequest.getDescription())
                 .status(true)
-                .date(Instant.now())
+                .date(date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())
                 .petId(petId)
                 .userId(request.getUserId())
                 .addressId(addressId)
@@ -430,8 +431,22 @@ public class AdoptionPostServiceImpl implements AdoptionPostService {
             });
         });
 
-//        log.info("questionss {}", questions);
         return questions;
+    }
+
+    @Override
+    public int getPendingQuestionsCountByShelter(int userId) {
+        log.info("Getting pending questions by shelter user with id {}", userId);
+        var postsIds = repository.findAllByUserIdAndStatusIsTrue(userId)
+                .stream().map(AdoptionPostEntity::getId).toList();
+        final AtomicInteger pendingQuestions = new AtomicInteger(0);
+        postsIds.forEach(postId -> {
+            var pendingQuestionsPerPost = questionRepository.countAllByPostIdAndAnswerIsNullAndAnswerDateIsNull(postId);
+            pendingQuestions.addAndGet(pendingQuestionsPerPost);
+        });
+
+
+        return pendingQuestions.get();
     }
 
     @Override

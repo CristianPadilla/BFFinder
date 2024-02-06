@@ -47,7 +47,7 @@ const App = () => {
 					const department = locationInfo.find(component => component.types.includes('administrative_area_level_1')).long_name;
 
 					dispatch(setLocation({ city, department }));
-					console.log(`City: ${city}, Department: ${department}`);
+					// console.log(`City: ${city}, Department: ${department}`);
 				} catch (error) {
 					console.error('Error getting location info:', error);
 				}
