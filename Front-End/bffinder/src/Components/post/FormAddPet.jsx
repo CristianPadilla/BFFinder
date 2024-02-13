@@ -349,7 +349,7 @@ const FormAddPet = () => {
                             />
                             <RadioGroupComponent
                               row
-                              label="Género *"
+                              label="Sexo *"
                               name="gender"
                               value={formik.values.gender}
                               onChange={formik.handleChange}

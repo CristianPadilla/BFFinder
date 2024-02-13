@@ -56,7 +56,7 @@ export default function Autenticacion() {
                         id="sign-up-btn"
                         onClick={handleSignUpClick}
                     >
-                        Registrate
+                        Regístrate
                     </button>
                 </div>
                 <img src={imglog} className="image" alt="imglog" />

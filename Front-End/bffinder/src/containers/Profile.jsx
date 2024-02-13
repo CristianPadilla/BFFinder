@@ -218,10 +218,11 @@ const Profile = () => {
               <Typography variant="h6" sx={{ marginBottom: 2 }}>
                 Ubicación
               </Typography>
-
+              {userToDisplay.city && (
               <Typography variant="subtitle1">
                 {userToDisplay.city} /{userToDisplay.department}
               </Typography>
+               )}
               <Typography variant="subtitle1">
                 Dirección: {userToDisplay.address}
               </Typography>
