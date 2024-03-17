@@ -6,6 +6,7 @@ import {
   DialogActions,
   Button,
   IconButton,
+  useMediaQuery
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import FormAddPet from "../post/FormAddPet";
@@ -13,10 +14,12 @@ import FormAddPost from "./FormAddPost";
 import { useSelector } from "react-redux";
 
 const ModalAddPet = ({ open, onClose, onAdd }) => {
-  const { activeModule } = useSelector((state) => state.persisted.global);
+const { activeModule } = useSelector((state) => state.persisted.global);
+const ScreenResponsive = useMediaQuery('(min-width:2000px)');
+const customWidth = ScreenResponsive ? 'xl' : 'lg';
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth={customWidth} fullWidth>
       <DialogTitle
         sx={{
           display: "flex",

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Fab, Tooltip, Grid, Pagination } from "@mui/material";
+import { Fab, Tooltip, Grid, Pagination, useMediaQuery } from "@mui/material";
 import CardVertical from "../Components/CardVertical";
 import ModalAddPet from "../Components/user-foundation/ModalAddPet";
 import AddIcon from "@mui/icons-material/Add";
@@ -28,7 +28,8 @@ export const SectionFilterPet = () => {
     setOpenDialog(false);
   };
 
-
+  const isLargeScreen = useMediaQuery('(min-width:2000px)');
+  const isExtraLargeScreenv2 = useMediaQuery('(min-width:2680px)');
 
   return isSaving ? (
     <ProgressCircular />
@@ -37,7 +38,9 @@ export const SectionFilterPet = () => {
       {
         pets &&
           pets.map((pet) => (
-            <Grid key={pet.id} item xs={5} sm={3} md={3} lg={4} xl={4}>
+            <Grid key={pet.id} item xs={12} sm={12} md={6} lg={4}
+            xl={isExtraLargeScreenv2 ? 2 : (isLargeScreen ? 3 : 4)}
+            >
               <CardVertical pet={pet} />
             </Grid>
           ))

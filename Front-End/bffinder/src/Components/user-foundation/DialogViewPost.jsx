@@ -11,6 +11,7 @@ import {
   Paper,
   Divider,
   Chip,
+  useMediaQuery,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import imgdefault from "imgs/logo-bffinder.png";
@@ -26,7 +27,8 @@ import { Favorite, QuestionAnswer } from "@mui/icons-material";
 const DialogViewPost = ({ open, onClose }) => {
   const { active: post } = useSelector((state) => state.posts);
   const [editing, setEditing] = useState(false);
-
+  const ScreenResponsive = useMediaQuery('(min-width:2000px)');
+  const customWidth = ScreenResponsive ? 'xl' : 'lg';
   const imagesToDisplay =
     post.images.length > 0 ? post.images.map((image) => image.imageUrl) : [];
 
@@ -158,7 +160,7 @@ const DialogViewPost = ({ open, onClose }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth={customWidth} fullWidth>
       <DialogTitle
         sx={{
           display: "flex",

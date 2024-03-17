@@ -10,6 +10,7 @@ import {
   IconButton,
   Paper,
   Divider,
+  useMediaQuery,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
@@ -186,8 +187,12 @@ const dispatch = useDispatch();
 
   };
 
+  const ScreenResponsive = useMediaQuery('(min-width:2000px)');
+  const customWidth = ScreenResponsive ? 'xl' : 'lg';
+
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth={customWidth} fullWidth>
+    {/* <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth> */}
       <DialogTitle
         sx={{
           display: "flex",

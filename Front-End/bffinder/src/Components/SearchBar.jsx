@@ -20,7 +20,6 @@ const SearchBar = () => {
       ? useSelector((state) => state.posts.postRequest)
       : useSelector((state) => state.pets.petsRequest);
 
-
   const [searchValue, setSearchValue] = useState(search);
 
   const handleSearchValueChange = ({ target }) => {
@@ -63,7 +62,7 @@ const SearchBar = () => {
               debouncedHandleSearch(e);
             }}
             value={searchValue} placeholder={placeholder} style={{ width: '300px' }} />
-          <button type="submit" className="search-btn">
+          <button type="submit">
             <Search />
           </button>
         </div>

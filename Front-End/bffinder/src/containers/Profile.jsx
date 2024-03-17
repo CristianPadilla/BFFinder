@@ -292,7 +292,7 @@ const Profile = () => {
       >
         {(formik) => (
           <>
-            <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+            <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} fullWidth>
               <DialogTitle>Agregar foto de perfil</DialogTitle>
               <DialogContent>
                 <Form>

@@ -93,7 +93,10 @@ const MainContent = ({ noResult }) => {
       ) : (
         <div className="layout-container">
           {/* <section ref={sectionRef} className="inicio-user-comun"> */}
-          <Grid container spacing={1} className="grid-container">
+          <Grid container 
+          // spacing={{ xs: 3, sm: 3, md: 3, lg: 3, xl: 6 }} 
+          spacing={1}
+          className="grid-container" justifyContent="flex-start">
             {activeModule === "posts" ? (
               <SectionFilterPost />
             ) : (
