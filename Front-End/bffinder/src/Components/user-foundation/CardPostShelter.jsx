@@ -139,7 +139,7 @@ const CardPostShelter = ({ post }) => {
               alignItems="center"
             //   justifyContent="justify-content"
             >
-              <Grid item>
+              {/* <Grid item>
                 <Favorite
                   fontSize="small"
                   style={{ color: "indianred", paddingLeft: "0px" }}
@@ -149,7 +149,7 @@ const CardPostShelter = ({ post }) => {
                 <Typography variant="caption">
                   {(post.questionsQuantity)+3 || 0} personas guardaron en favoritos
                 </Typography>
-              </Grid>
+              </Grid> */}
 
               <Grid item xs={2} />
               <Grid item>

@@ -137,7 +137,7 @@ const CardPost = ({ post }) => {
                 alignItems="center"
                 justifyContent="flex-end"
               >
-                <Grid item>
+                {/* <Grid item>
                   <Typography variant="body2">{(post.questionsQuantity)+3 || 0}</Typography>
                 </Grid>
                 <Grid item>
@@ -148,7 +148,7 @@ const CardPost = ({ post }) => {
                     }
                     // sx={{ paddingLeft: "0px" }}
                   />
-                </Grid>
+                </Grid> */}
 
                 <Grid item>
                   <Typography variant="body2">{post.questionsQuantity || 0}</Typography>

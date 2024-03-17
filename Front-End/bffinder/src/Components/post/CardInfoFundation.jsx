@@ -91,7 +91,7 @@ const CardInfoFundation = ({ post }) => {
           >
             <CurrentDate date={postToDisplay.date} />
           </Typography>
-          <Grid item>
+          {/* <Grid item>
             <Typography variant="caption" sx={{ marginRight: 1 }}>
               Agregar a favoritos
             </Typography>
@@ -99,7 +99,7 @@ const CardInfoFundation = ({ post }) => {
               icon={<FavoriteBorder style={{ fontSize: 25 }} />}
               checkedIcon={<Favorite style={{ fontSize: 25, color: "red" }} />}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
         <CardHeader
           title={

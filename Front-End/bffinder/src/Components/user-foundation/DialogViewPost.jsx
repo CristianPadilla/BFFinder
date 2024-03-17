@@ -72,7 +72,7 @@ const DialogViewPost = ({ open, onClose }) => {
             justifyContent="center"
             sx={{ marginTop: "1rem", marginBottom: "1.2rem" }}
           >
-            <Grid item container alignItems="center" spacing={1}>
+            {/* <Grid item container alignItems="center" spacing={1}>
               <Grid item>
                 <Favorite
                   fontSize="small"
@@ -88,7 +88,7 @@ const DialogViewPost = ({ open, onClose }) => {
                 {(post.questionsQuantity)+3 || 0} personas guardaron en favoritos
                 </Typography>
               </Grid>
-            </Grid>
+            </Grid> */}
 
             <Grid item container alignItems="center" spacing={1}>
               <Grid item>
