@@ -30,7 +30,10 @@ const DialogViewPost = ({ open, onClose }) => {
   const ScreenResponsive = useMediaQuery('(min-width:2000px)');
   const customWidth = ScreenResponsive ? 'xl' : 'lg';
   const imagesToDisplay =
-    post.images.length > 0 ? post.images.map((image) => image.imageUrl) : [];
+    post.images.length > 0 
+    ? [post.images.map((image) => image.imageUrl),post.petResponse.profileImageUrl ] 
+    : [post.petResponse.profileImageUrl];
+    
 
   const postToDisplay = post
     ? {
@@ -44,7 +47,7 @@ const DialogViewPost = ({ open, onClose }) => {
         images: imagesToDisplay,
       };
 
-  // console.log("INFO DIALOG POST", post);
+   console.log("aaaaaaaaaadahT", imagesToDisplay);
 
   const renderInformationSection = () => (
     <>
